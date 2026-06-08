@@ -1,0 +1,37 @@
+{
+  "name": "@tscircuit/ti",
+  "version": "0.0.1",
+  "description": "TI component library bootstrap for tscircuit",
+  "main": "index.ts",
+  "type": "module",
+  "keywords": [
+    "tscircuit",
+    "circuit",
+    "pcb",
+    "electronics",
+    "ti",
+    "analog"
+  ],
+  "scripts": {
+    "dev": "tsci dev",
+    "build": "tsci build",
+    "snapshot": "tsci snapshot",
+    "snapshot:update": "tsci snapshot --update",
+    "start": "tsci dev",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.22",
+    "@tscircuit/fake-ul-kicad-proxy": "github:tscircuit/fake-ul-kicad-proxy#d174c33c1b17a52d7a9dc3c2b5506d6fd593bed7",
+    "@tscircuit/ti-parts-engine": "github:tscircuit/ti-parts-engine",
+    "@types/react": "^19.2.16",
+    "bun-match-svg": "0.0.15",
+    "circuit-to-svg": "0.0.350",
+    "jszip": "^3.10.1",
+    "react": "^19.1.1",
+    "tscircuit": "^0.0.1824",
+    "typescript": "^5.0.0"
+  },
+  "author": "tscircuit"
+}
