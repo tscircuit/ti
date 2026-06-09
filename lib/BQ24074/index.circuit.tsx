@@ -3,7 +3,7 @@ import { sel } from "tscircuit";
 import { BQ24074RGTR } from "./imports/BQ24074RGTR";
 
 export default () => (
-  <board routingDisabled>
+  <board>
     <chip
       name="J1"
       footprint="pinrow2"
