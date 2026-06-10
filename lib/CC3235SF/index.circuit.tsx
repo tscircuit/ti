@@ -1,4 +1,4 @@
-import type { ChipProps } from "tscircuit"
+import type { ChipProps } from "tscircuit";
 
 const rtcPinLabels = {
   pin1: "RF1",
@@ -7,7 +7,7 @@ const rtcPinLabels = {
   pin4: "VC2",
   pin5: "RFC",
   pin6: "VC1",
-} as const
+} as const;
 const RTC6608OSP = (props: ChipProps<typeof rtcPinLabels>) => (
   <chip
     {...props}
@@ -15,7 +15,7 @@ const RTC6608OSP = (props: ChipProps<typeof rtcPinLabels>) => (
     manufacturerPartNumber="RTC6608OSP"
     pinLabels={rtcPinLabels}
   />
-)
+);
 
 export default () => (
   <subcircuit name="CC3235SF">
@@ -326,4 +326,4 @@ export default () => (
       schY={-1.8}
     />
   </subcircuit>
-)
+);

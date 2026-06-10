@@ -71,7 +71,7 @@ const pinLabels = {
   pin62: "PB10",
   pin63: "PB11",
   pin64: "PB12",
-} as const
+} as const;
 
 export default () => (
   <subcircuit name="MSPM0G3507SPMR">
@@ -252,4 +252,4 @@ export default () => (
       }}
     />
   </subcircuit>
-)
+);

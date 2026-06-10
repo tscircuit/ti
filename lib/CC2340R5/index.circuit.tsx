@@ -1,4 +1,4 @@
-import type { ChipProps } from "tscircuit"
+import type { ChipProps } from "tscircuit";
 
 const pinLabels = {
   pin1: "VDDR",
@@ -42,7 +42,7 @@ const pinLabels = {
   pin39: "ANT",
   pin40: "RFGND",
   pin41: "EGP",
-} as const
+} as const;
 
 export const CC2340R5 = (props: ChipProps<typeof pinLabels>) => (
   <chip
@@ -110,7 +110,7 @@ export const CC2340R5 = (props: ChipProps<typeof pinLabels>) => (
       },
     }}
   />
-)
+);
 
 export default () => (
   <subcircuit name="CC2340R5">
@@ -440,4 +440,4 @@ export default () => (
       connections={{ FEED: "net.RF_E", pin2: "net.GND", pin3: "net.GND" }}
     />
   </subcircuit>
-)
+);
