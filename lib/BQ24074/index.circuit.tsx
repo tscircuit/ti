@@ -3,7 +3,7 @@ import { sel } from "tscircuit";
 import { BQ24074RGTR } from "./imports/BQ24074RGTR";
 
 export default () => (
-  <board>
+  <subcircuit width={100} height={100}>
     <chip
       name="J1"
       footprint="pinrow2"
@@ -138,19 +138,6 @@ export default () => (
       }}
     />
 
-    <battery
-      name="B1"
-      voltage="3.7V"
-      footprint="pinrow2"
-      schX={-3.1}
-      schY={-3.05}
-      schRotation="90deg"
-      connections={{
-        pin1: sel.net.BAT,
-        pin2: sel.net.GND,
-      }}
-    />
-
     <capacitor
       name="C3"
       capacitance="4.7uF"
@@ -266,5 +253,5 @@ export default () => (
     />
     <netlabel net="OUT" schX={4.85} schY={0.8} anchorSide="left" />
     <schematicline x1={4.85} y1={0.8} x2={4.95} y2={0.8} strokeWidth={0.03} />
-  </board>
+  </subcircuit>
 );
