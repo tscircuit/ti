@@ -26,7 +26,7 @@ export default () => (
       }}
     />
 
-    <BQ24074RGTR
+    {/* <BQ24074RGTR
       name="U1"
       schX={0}
       schY={0}
@@ -86,7 +86,7 @@ export default () => (
         ISET: sel.net.ISET,
         EP: sel.net.GND,
       }}
-    />
+    /> */}
 
     <capacitor
       name="C1"
@@ -138,23 +138,12 @@ export default () => (
       }}
     />
 
-    <battery
-      name="B1"
-      voltage="3.7V"
-      footprint="pinrow2"
-      schX={-3.1}
-      schY={-3.05}
-      schRotation="90deg"
-      connections={{
-        pin1: sel.net.BAT,
-        pin2: sel.net.GND,
-      }}
-    />
-
     <capacitor
       name="C3"
       capacitance="4.7uF"
       footprint="0603"
+      pcbX={-2}
+      pcbY={-2.7}
       schX={-2.35}
       schY={-2.7}
       schRotation="270deg"
