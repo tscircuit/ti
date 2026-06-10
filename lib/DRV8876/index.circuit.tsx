@@ -1,6 +1,6 @@
 import { DRV8876 } from "./imports/DRV8876.circuit";
-import { CONTROLLER } from "./imports/CONTROLLER.circuit";
-import { MOTOR } from "./imports/MOTOR.circuit";
+import { CONTROLLER } from "./imports/Controller.circuit";
+import { MOTOR } from "./imports/Motor.circuit";
 
 export default () => (
   <board>
@@ -15,6 +15,7 @@ export default () => (
       schX={4}
       schY={-1.15}
       name="C3"
+      footprint="0402"
       capacitance="0.1uF"
       schRotation={90}
     />
@@ -24,16 +25,29 @@ export default () => (
       schX={5}
       schY={-1.15}
       name="C4"
+      footprint="1206"
       capacitance="Bulk"
       schRotation={90}
     />
     <trace to="net.VM" from=".C4 > .pin2" />
 
-    <capacitor schX={2.5} schY={1.2} name="C1" capacitance="0.022uF" />
+    <capacitor
+      schX={2.5}
+      schY={1.2}
+      name="C1"
+      footprint="0402"
+      capacitance="0.022uF"
+    />
     <trace from=".U1 > .CPL" to=".C1 > .pin1" />
     <trace from=".U1 > .CPH" to=".C1 > .pin2" />
 
-    <capacitor schX={2.5} schY={-0.4} name="C2" capacitance="0.1uF" />
+    <capacitor
+      schX={2.5}
+      schY={-0.4}
+      name="C2"
+      footprint="0402"
+      capacitance="0.1uF"
+    />
     <trace from=".U1 > .VCP" to=".C2 > .pin1" />
     <trace to="net.VM" from=".C2 > .pin2" />
     <trace from=".U1 > .VM" to="net.VM" />
@@ -42,6 +56,7 @@ export default () => (
       schX={-5}
       schY={-3.5}
       name="R1"
+      footprint="0402"
       resistance="100"
       schRotation={90}
     />
@@ -49,6 +64,7 @@ export default () => (
       schX={-5.5}
       schY={-5}
       name="R2"
+      footprint="0402"
       resistance="100"
       schRotation={90}
     />
@@ -57,11 +73,25 @@ export default () => (
     <trace to=".R2 > .pin1" from="net.GND" />
     <trace to=".R2 > .pin2" from="net.VREF" />
 
-    <resistor schX={-4} schY={-2} name="R4" resistance="100" schRotation={90} />
+    <resistor
+      schX={-4}
+      schY={-2}
+      name="R4"
+      footprint="0402"
+      resistance="100"
+      schRotation={90}
+    />
     <trace to=".R4 > .pin2" from="net.VCC" />
     <trace to=".R4 > .pin1" from="net.nFAULT" />
 
-    <resistor schX={-3} schY={-2} name="R3" resistance="100" schRotation={90} />
+    <resistor
+      schX={-3}
+      schY={-2}
+      name="R3"
+      footprint="0402"
+      resistance="100"
+      schRotation={90}
+    />
     <trace to=".R3 > .pin1" from="net.GND" />
     <trace to=".R3 > .pin2" from="net.ADC" />
 
