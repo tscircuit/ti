@@ -25,11 +25,7 @@ export default () => (
       schPinArrangement={{
         leftSide: {
           direction: "top-to-bottom",
-          pins: ["pin1", "pin2", "pin3", "pin4"],
-        },
-        bottomSide: {
-          direction: "left-to-right",
-          pins: ["pin5"],
+          pins: ["pin1", "pin2", "pin3", "pin4", "pin5"],
         },
       }}
       schPinStyle={{
@@ -58,11 +54,7 @@ export default () => (
       schPinArrangement={{
         rightSide: {
           direction: "top-to-bottom",
-          pins: ["VDD", "SCL", "SDA", "ALERT", "RESET", "ADDR", "ADDR1"],
-        },
-        bottomSide: {
-          direction: "left-to-right",
-          pins: ["GND"],
+          pins: ["VDD", "SCL", "SDA", "ALERT", "RESET", "ADDR", "ADDR1", "GND"],
         },
       }}
       schPinStyle={{
