@@ -1,7 +1,7 @@
 import { TPS22919 } from "./TPS22919";
 
 export default () => (
-  <board width="52mm" height="30mm">
+  <subcircuit name="TPS22919">
     <TPS22919
       name="U1"
       schPinArrangement={{
@@ -113,5 +113,5 @@ export default () => (
       schRotation={90}
     />
     <netlabel net="GND" connection="U1.GND" schX={-1.5} schY={-1.45} />
-  </board>
+  </subcircuit>
 );
