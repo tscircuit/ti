@@ -1,7 +1,7 @@
 import { BQ25895RTWR } from "./imports/BQ25895RTWR";
 
 export default () => (
-  <board>
+  <subcircuit width={50} height={50}>
     <BQ25895RTWR
       name="U1"
       schX={0}
@@ -394,5 +394,5 @@ export default () => (
     <trace from="R6.pin2" to="R7.pin1" />
     <trace from="R6.pin2" to="RT1.pin1" />
     <trace from="R6.pin2" to="U1.TS" />
-  </board>
+  </subcircuit>
 );

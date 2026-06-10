@@ -3,7 +3,7 @@ import { sel } from "tscircuit";
 import { BQ24074RGTR } from "./imports/BQ24074RGTR";
 
 export default () => (
-  <subcircuit>
+  <subcircuit width={100} height={100}>
     <chip
       name="J1"
       footprint="pinrow2"
@@ -26,7 +26,7 @@ export default () => (
       }}
     />
 
-    {/* <BQ24074RGTR
+    <BQ24074RGTR
       name="U1"
       schX={0}
       schY={0}
@@ -86,7 +86,7 @@ export default () => (
         ISET: sel.net.ISET,
         EP: sel.net.GND,
       }}
-    /> */}
+    />
 
     <capacitor
       name="C1"
@@ -142,8 +142,6 @@ export default () => (
       name="C3"
       capacitance="4.7uF"
       footprint="0603"
-      pcbX={-2}
-      pcbY={-2.7}
       schX={-2.35}
       schY={-2.7}
       schRotation="270deg"
