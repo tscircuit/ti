@@ -155,7 +155,7 @@ export const TPS63802 = (props: SubcircuitProps) => (
     <trace from="R2.pin2" to="net.GND" />
 
     <voltageprobe name="VOUT" connectsTo="U1.VOUT" />
-    <analogsimulation duration="5ms" timePerStep="5us" spiceEngine="ngspice" />
+    <analogsimulation duration="1ms" timePerStep="5us" spiceEngine="ngspice" />
   </subcircuit>
 );
 
