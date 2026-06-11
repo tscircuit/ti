@@ -96,7 +96,12 @@ export default (props: SubcircuitProps) => (
     <trace to=".R3 > .pin1" from="net.GND" />
     <trace to=".R3 > .pin2" from="net.ADC" />
 
-    <CONTROLLER schX={-6.5} schY={1.2} name="Controller" />
+    <CONTROLLER
+      footprint={"pinrow5"}
+      schX={-6.5}
+      schY={1.2}
+      name="Controller"
+    />
     <trace to=".Controller > .PWM" from=".U1 > .EN" />
     <trace to=".Controller > .pin2" from=".U1 > .PH" />
     <trace to=".Controller > .pin3" from=".U1 > .nSLEEP" />
@@ -105,7 +110,7 @@ export default (props: SubcircuitProps) => (
     <trace to=".Controller > .ADC" from="net.ADC" />
     <trace to=".U1 > .IPROPI" from="net.ADC" />
 
-    <MOTOR schX={1} schY={-4.5} name="Motor" />
+    <MOTOR schX={1} schY={-4.5} footprint={"pinrow2"} name="Motor" />
     <trace to=".U1 > .OUT1" from=".Motor > .pin1" />
     <trace to=".U1 > .OUT2" from=".Motor > .pin2" />
   </subcircuit>
