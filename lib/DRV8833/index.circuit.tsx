@@ -15,7 +15,7 @@ export default (props: SubcircuitProps) => (
       schX={3}
       schY={-1.8}
       name="R1"
-      footprint="0402"
+      footprint="0603"
       resistance="200"
       schRotation={-90}
     />
@@ -53,7 +53,13 @@ export default (props: SubcircuitProps) => (
     <trace from="net.VM" to=".C1 > .pin1" />
     <trace from=".U1 > .VCP" to=".C1 > .pin2" />
 
-    <MOTOR name="Motor" schX={4} schY={0.8} schWidth={0.75} />
+    <MOTOR
+      name="Motor"
+      footprint={"pinrow2"}
+      schX={4}
+      schY={0.8}
+      schWidth={0.75}
+    />
     <trace from=".U1 > .AOUT1" to=".Motor > .pin1" />
     <trace from=".U1 > .BOUT1" to=".Motor > .pin1" />
 
