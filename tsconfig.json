@@ -1,16 +1,22 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "jsx": "react-jsx",
+    "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
     "outDir": "dist",
-    "skipLibCheck": true,
+    "rootDir": ".",
+    "baseUrl": ".",
     "strict": true,
-    "target": "ES2022"
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "types": ["tscircuit"]
   },
-  "include": ["index.ts", "lib/**/*.ts", "lib/**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist", ".claude"]
 }

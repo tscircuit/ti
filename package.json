@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "A tscircuit component package",
   "main": "index.ts",
+  "module": "index.ts",
+  "type": "module",
   "keywords": [
     "tscircuit",
     "circuit",
@@ -15,6 +17,7 @@
     "snapshot": "tsci snapshot",
     "snapshot:update": "tsci snapshot --update",
     "start": "tsci dev",
+    "typecheck": "tsc --noEmit",
     "format": "biome format --write",
     "format:check": "biome format ."
   },
@@ -23,6 +26,9 @@
     "@types/react": "^19.2.17",
     "tscircuit": "^0.0.1846",
     "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   },
   "author": "imrishabh18"
 }
