@@ -29,7 +29,6 @@ export const TPS63802 = (props: SubcircuitProps) => (
 
     <capacitor
       name="C1"
-      capacitance="0uF"
       schX={-1.3}
       schY={-1.6}
       capacitance="1uF"
@@ -38,7 +37,6 @@ export const TPS63802 = (props: SubcircuitProps) => (
 
     <capacitor
       name="C2"
-      capacitance="0uF"
       schX={2}
       schY={-1}
       capacitance="1uF"

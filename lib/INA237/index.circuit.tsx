@@ -1,4 +1,3 @@
-import { sel } from "tscircuit";
 import type { SubcircuitProps } from "@tscircuit/props";
 import { INA237AQDGSRQ1 } from "./imports/INA237AQDGSRQ1";
 
@@ -32,16 +31,16 @@ export default (props: SubcircuitProps) => (
         N_ALERT: { marginTop: 0.15 },
       }}
       connections={{
-        VS: sel.net.VS,
-        VBUS: sel.net.BUS_HIGH,
-        IN_POS: sel.net.BUS_HIGH,
-        IN_NEG: sel.net.LOAD_CHARGER,
-        GND: sel.net.GND,
-        A0: sel.net.GND,
-        A1: sel.net.GND,
-        SCL: sel.net.SCL,
-        SDA: sel.net.SDA,
-        N_ALERT: sel.net.N_ALERT,
+        VS: "net.VS",
+        VBUS: "net.BUS_HIGH",
+        IN_POS: "net.BUS_HIGH",
+        IN_NEG: "net.LOAD_CHARGER",
+        GND: "net.GND",
+        A0: "net.GND",
+        A1: "net.GND",
+        SCL: "net.SCL",
+        SDA: "net.SDA",
+        N_ALERT: "net.N_ALERT",
       }}
     />
 
@@ -53,8 +52,8 @@ export default (props: SubcircuitProps) => (
       schY={2.05}
       schRotation="180deg"
       connections={{
-        pin1: sel.net.VS,
-        pin2: sel.net.GND,
+        pin1: "net.VS",
+        pin2: "net.GND",
       }}
     />
 
@@ -75,8 +74,8 @@ export default (props: SubcircuitProps) => (
       schY={-0.25}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.BUS_HIGH,
-        pin2: sel.net.LOAD_CHARGER,
+        pin1: "net.BUS_HIGH",
+        pin2: "net.LOAD_CHARGER",
       }}
     />
 
@@ -88,8 +87,8 @@ export default (props: SubcircuitProps) => (
       schY={-3.3}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.LOAD_CHARGER,
-        pin2: sel.net.GND,
+        pin1: "net.LOAD_CHARGER",
+        pin2: "net.GND",
       }}
     />
 
@@ -102,10 +101,10 @@ export default (props: SubcircuitProps) => (
       schRotation="270deg"
     />
 
-    <trace from=".B1 > .pin2" to={sel.net.BUS_HIGH} />
-    <trace from=".B1 > .pin1" to={sel.net.GND} />
-    <trace from=".CHARGER > .pin2" to={sel.net.LOAD_CHARGER} />
-    <trace from=".CHARGER > .pin1" to={sel.net.GND} />
+    <trace from=".B1 > .pin2" to={"net.BUS_HIGH"} />
+    <trace from=".B1 > .pin1" to={"net.GND"} />
+    <trace from=".CHARGER > .pin2" to={"net.LOAD_CHARGER"} />
+    <trace from=".CHARGER > .pin1" to={"net.GND"} />
 
     <resistor
       name="R1"
@@ -115,8 +114,8 @@ export default (props: SubcircuitProps) => (
       schY={2.2}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VS,
-        pin2: sel.net.SCL,
+        pin1: "net.VS",
+        pin2: "net.SCL",
       }}
     />
     <resistor
@@ -127,8 +126,8 @@ export default (props: SubcircuitProps) => (
       schY={2.2}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VS,
-        pin2: sel.net.SDA,
+        pin1: "net.VS",
+        pin2: "net.SDA",
       }}
     />
     <resistor
@@ -139,8 +138,8 @@ export default (props: SubcircuitProps) => (
       schY={2.2}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VS,
-        pin2: sel.net.N_ALERT,
+        pin1: "net.VS",
+        pin2: "net.N_ALERT",
       }}
     />
 
@@ -168,10 +167,10 @@ export default (props: SubcircuitProps) => (
         pin3: { marginTop: 0.25 },
       }}
       connections={{
-        pin1: sel.net.SCL,
-        pin2: sel.net.SDA,
-        pin3: sel.net.N_ALERT,
-        pin4: sel.net.GND,
+        pin1: "net.SCL",
+        pin2: "net.SDA",
+        pin3: "net.N_ALERT",
+        pin4: "net.GND",
       }}
     />
 

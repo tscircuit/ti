@@ -2,7 +2,7 @@
   "name": "@tsci/tscircuit.ti",
   "version": "1.0.0",
   "description": "A tscircuit component package",
-  "main": "dist/index.js",
+  "main": "index.ts",
   "keywords": [
     "tscircuit",
     "circuit",

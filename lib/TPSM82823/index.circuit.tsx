@@ -1,5 +1,5 @@
 import { TPSM82823 } from "./TPSM82823.circuit";
-import type { SubcircuitProps } from "tscircuit";
+import type { SubcircuitProps } from "@tscircuit/props";
 
 export default (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>

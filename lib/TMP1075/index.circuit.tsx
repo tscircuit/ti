@@ -1,4 +1,3 @@
-import { sel } from "tscircuit";
 import type { SubcircuitProps } from "@tscircuit/props";
 import { TMP1075DSGR } from "./imports/TMP1075DSGR";
 
@@ -34,9 +33,9 @@ export default (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        pin1: sel.net.SDA,
-        pin2: sel.net.SCL,
-        pin3: sel.net.ALERT,
+        pin1: "net.SDA",
+        pin2: "net.SCL",
+        pin3: "net.ALERT",
       }}
     />
 
@@ -79,14 +78,14 @@ export default (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        SDA: sel.net.SDA,
-        SCL: sel.net.SCL,
-        ALERT: sel.net.ALERT,
-        GND: sel.net.GND,
-        V_PLUS: sel.net.VDD,
-        A0: sel.net.GND,
-        A1: sel.net.GND,
-        A2: sel.net.GND,
+        SDA: "net.SDA",
+        SCL: "net.SCL",
+        ALERT: "net.ALERT",
+        GND: "net.GND",
+        V_PLUS: "net.VDD",
+        A0: "net.GND",
+        A1: "net.GND",
+        A2: "net.GND",
       }}
     />
 
@@ -101,8 +100,8 @@ export default (props: SubcircuitProps) => (
       pcbRotation={180}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SDA,
+        pin1: "net.VDD",
+        pin2: "net.SDA",
       }}
     />
     <resistor
@@ -115,8 +114,8 @@ export default (props: SubcircuitProps) => (
       schY={2.0}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SCL,
+        pin1: "net.VDD",
+        pin2: "net.SCL",
       }}
     />
     <resistor
@@ -129,8 +128,8 @@ export default (props: SubcircuitProps) => (
       schY={2.0}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.ALERT,
+        pin1: "net.VDD",
+        pin2: "net.ALERT",
       }}
     />
     <capacitor
@@ -143,8 +142,8 @@ export default (props: SubcircuitProps) => (
       schY={1.1}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.GND,
+        pin1: "net.VDD",
+        pin2: "net.GND",
       }}
     />
   </subcircuit>

@@ -1,4 +1,3 @@
-import { sel } from "tscircuit";
 import type { SubcircuitProps } from "@tscircuit/props";
 import { BQ24074RGTR } from "./imports/BQ24074RGTR";
 
@@ -21,8 +20,8 @@ export default (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        pin1: sel.net.IN,
-        pin2: sel.net.GND,
+        pin1: "net.IN",
+        pin2: "net.GND",
       }}
     />
 
@@ -68,23 +67,23 @@ export default (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        IN: sel.net.IN,
-        VSS: sel.net.GND,
-        TS: sel.net.TS,
-        BAT: sel.net.BAT,
-        BAT2: sel.net.BAT,
-        N_PGOOD: sel.net.N_PGOOD_LED,
-        N_CHG: sel.net.N_CHG_LED,
-        OUT: sel.net.OUT,
-        OUT2: sel.net.OUT,
-        EN2: sel.net.OUT,
-        EN1: sel.net.GND,
-        TMR: sel.net.GND,
-        N_CE: sel.net.GND,
-        ITERM: sel.net.ITERM,
-        ILIM: sel.net.ILIM,
-        ISET: sel.net.ISET,
-        EP: sel.net.GND,
+        IN: "net.IN",
+        VSS: "net.GND",
+        TS: "net.TS",
+        BAT: "net.BAT",
+        BAT2: "net.BAT",
+        N_PGOOD: "net.N_PGOOD_LED",
+        N_CHG: "net.N_CHG_LED",
+        OUT: "net.OUT",
+        OUT2: "net.OUT",
+        EN2: "net.OUT",
+        EN1: "net.GND",
+        TMR: "net.GND",
+        N_CE: "net.GND",
+        ITERM: "net.ITERM",
+        ILIM: "net.ILIM",
+        ISET: "net.ISET",
+        EP: "net.GND",
       }}
     />
 
@@ -96,8 +95,8 @@ export default (props: SubcircuitProps) => (
       schY={0.75}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.IN,
-        pin2: sel.net.GND,
+        pin1: "net.IN",
+        pin2: "net.GND",
       }}
     />
 
@@ -109,8 +108,8 @@ export default (props: SubcircuitProps) => (
       schY={0.6}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.OUT,
-        pin2: sel.net.GND,
+        pin1: "net.OUT",
+        pin2: "net.GND",
       }}
     />
 
@@ -132,9 +131,9 @@ export default (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        pin1: sel.net.TS,
-        pin2: sel.net.BAT,
-        pin3: sel.net.GND,
+        pin1: "net.TS",
+        pin2: "net.BAT",
+        pin3: "net.GND",
       }}
     />
 
@@ -146,8 +145,8 @@ export default (props: SubcircuitProps) => (
       schY={-2.7}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.BAT,
-        pin2: sel.net.GND,
+        pin1: "net.BAT",
+        pin2: "net.GND",
       }}
     />
 
@@ -159,8 +158,8 @@ export default (props: SubcircuitProps) => (
       schY={-3.75}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.ITERM,
-        pin2: sel.net.GND,
+        pin1: "net.ITERM",
+        pin2: "net.GND",
       }}
     />
 
@@ -172,8 +171,8 @@ export default (props: SubcircuitProps) => (
       schY={-3.75}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.ILIM,
-        pin2: sel.net.GND,
+        pin1: "net.ILIM",
+        pin2: "net.GND",
       }}
     />
 
@@ -185,8 +184,8 @@ export default (props: SubcircuitProps) => (
       schY={-3.75}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.ISET,
-        pin2: sel.net.GND,
+        pin1: "net.ISET",
+        pin2: "net.GND",
       }}
     />
 
@@ -198,8 +197,8 @@ export default (props: SubcircuitProps) => (
       schY={6.35}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.OUT,
-        pin2: sel.net.N_PGOOD_LED_A,
+        pin1: "net.OUT",
+        pin2: "net.N_PGOOD_LED_A",
       }}
     />
     <led
@@ -210,8 +209,8 @@ export default (props: SubcircuitProps) => (
       schY={4.4}
       schRotation="270deg"
       connections={{
-        anode: sel.net.N_PGOOD_LED_A,
-        cathode: sel.net.N_PGOOD_LED,
+        anode: "net.N_PGOOD_LED_A",
+        cathode: "net.N_PGOOD_LED",
       }}
     />
 
@@ -223,8 +222,8 @@ export default (props: SubcircuitProps) => (
       schY={6.35}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.OUT,
-        pin2: sel.net.N_CHG_LED_A,
+        pin1: "net.OUT",
+        pin2: "net.N_CHG_LED_A",
       }}
     />
     <led
@@ -235,8 +234,8 @@ export default (props: SubcircuitProps) => (
       schY={4.4}
       schRotation="270deg"
       connections={{
-        anode: sel.net.N_CHG_LED_A,
-        cathode: sel.net.N_CHG_LED,
+        anode: "net.N_CHG_LED_A",
+        cathode: "net.N_CHG_LED",
       }}
     />
 

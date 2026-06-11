@@ -1,4 +1,3 @@
-import { sel } from "tscircuit";
 import type { SubcircuitProps } from "@tscircuit/props";
 import { HDC2080DMBR } from "./imports/HDC2080DMBR";
 
@@ -34,11 +33,11 @@ export default (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SCL,
-        pin3: sel.net.SDA,
-        pin4: sel.net.DRDY_INT,
-        pin5: sel.net.GND,
+        pin1: "net.VDD",
+        pin2: "net.SCL",
+        pin3: "net.SDA",
+        pin4: "net.DRDY_INT",
+        pin5: "net.GND",
       }}
     />
 
@@ -69,12 +68,12 @@ export default (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        SDA: sel.net.SDA,
-        SCL: sel.net.SCL,
-        DRDY_INT: sel.net.DRDY_INT,
-        VDD: sel.net.VDD,
-        ADDR: sel.net.GND,
-        GND: sel.net.GND,
+        SDA: "net.SDA",
+        SCL: "net.SCL",
+        DRDY_INT: "net.DRDY_INT",
+        VDD: "net.VDD",
+        ADDR: "net.GND",
+        GND: "net.GND",
       }}
     />
 
@@ -86,8 +85,8 @@ export default (props: SubcircuitProps) => (
       schY={1.3}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SCL,
+        pin1: "net.VDD",
+        pin2: "net.SCL",
       }}
     />
     <resistor
@@ -98,8 +97,8 @@ export default (props: SubcircuitProps) => (
       schY={1.3}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SDA,
+        pin1: "net.VDD",
+        pin2: "net.SDA",
       }}
     />
   </subcircuit>
