@@ -1,4 +1,4 @@
-import { BQ25180 } from "./BQ25180";
+import { BQ25180 } from "./BQ25180.tsx";
 
 export default () => (
   <board width="36mm" height="28mm">
@@ -9,10 +9,7 @@ export default () => (
           direction: "top-to-bottom",
           pins: ["IN", "N_INT", "SCL", "SDA"],
         },
-        rightSide: {
-          direction: "top-to-bottom",
-          pins: ["SYS", "BAT", "TSMR"],
-        },
+        rightSide: { direction: "top-to-bottom", pins: ["SYS", "BAT", "TSMR"] },
         bottomSide: { direction: "left-to-right", pins: ["GND"] },
       }}
       schWidth="3mm"
@@ -134,34 +131,6 @@ export default () => (
             dashLength={0.3}
             dashGap={0.15}
           />
-          <schematicline
-            x1={-4.8}
-            y1={-2.45}
-            x2={-4.5}
-            y2={-2.45}
-            strokeWidth={0.02}
-          />
-          <schematicline
-            x1={-4.8}
-            y1={0.1}
-            x2={-4.5}
-            y2={0.1}
-            strokeWidth={0.02}
-          />
-          <schematicline
-            x1={-4.8}
-            y1={-0.3}
-            x2={-4.5}
-            y2={-0.3}
-            strokeWidth={0.02}
-          />
-          <schematicline
-            x1={-4.8}
-            y1={-0.7}
-            x2={-4.5}
-            y2={-0.7}
-            strokeWidth={0.02}
-          />
           <schematictext
             text="HOST"
             schX={-5.4}
@@ -169,10 +138,35 @@ export default () => (
             color="red"
             fontSize={0.16}
           />
-          <port name="pin1" direction="left" schX={-4.5} schY={0.1} />
-          <port name="pin2" direction="left" schX={-4.5} schY={-0.3} />
-          <port name="pin3" direction="left" schX={-4.5} schY={-0.7} />
-          <port name="pin4" direction="left" schX={-4.5} schY={-2.45} />
+
+          <port
+            name="pin1"
+            schX={-4.3}
+            schY={0.1}
+            direction="right"
+            schStemLength={0.5}
+          />
+          <port
+            name="pin2"
+            schX={-4.3}
+            schY={-0.3}
+            direction="right"
+            schStemLength={0.5}
+          />
+          <port
+            name="pin3"
+            schX={-4.3}
+            schY={-0.7}
+            direction="right"
+            schStemLength={0.5}
+          />
+          <port
+            name="pin4"
+            schX={-4.3}
+            schY={-2.45}
+            direction="right"
+            schStemLength={0.5}
+          />
         </symbol>
       }
       connections={{ pin1: "U1.N_INT", pin2: "U1.SCL", pin3: "U1.SDA" }}
