@@ -1,6 +1,8 @@
 import { TPS7A0230PDBVR } from "./TPS7A0230PDBVR";
-export const TPS63802 = () => (
-  <subcircuit name="TPS7A0230PDBVR" routingDisabled>
+import type { SubcircuitProps } from "@tscircuit/props";
+
+export const TPS63802 = (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <TPS7A0230PDBVR
       name="U1"
       schX={0}

@@ -1,9 +1,9 @@
 import { sel } from "tscircuit";
-
+import type { SubcircuitProps } from "@tscircuit/props";
 import { TMP1075DSGR } from "./imports/TMP1075DSGR";
 
-export default () => (
-  <subcircuit>
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
       manufacturerPartNumber="Two-Wire Host Controller"

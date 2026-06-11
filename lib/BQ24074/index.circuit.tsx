@@ -1,9 +1,9 @@
 import { sel } from "tscircuit";
-
+import type { SubcircuitProps } from "@tscircuit/props";
 import { BQ24074RGTR } from "./imports/BQ24074RGTR";
 
-export default () => (
-  <subcircuit width={100} height={100}>
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <chip
       name="J1"
       footprint="pinrow2"
@@ -251,7 +251,7 @@ export default () => (
       titleFontSize={0.35}
       strokeStyle="dashed"
     />
-    <netlabel net="OUT" schX={4.85} schY={0.8} anchorSide="left" />
-    <schematicline x1={4.85} y1={0.8} x2={4.95} y2={0.8} strokeWidth={0.03} />
+    <netlabel net="OUT" schX={4.75} schY={0.8} anchorSide="right" />
+    <schematicline x1={4.75} y1={0.8} x2={4.85} y2={0.8} strokeWidth={0.03} />
   </subcircuit>
 );

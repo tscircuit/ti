@@ -1,9 +1,9 @@
 import { sel } from "tscircuit";
-
+import type { SubcircuitProps } from "@tscircuit/props";
 import { HDC2080DMBR } from "./imports/HDC2080DMBR";
 
-export default () => (
-  <subcircuit>
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
       manufacturerPartNumber="MCU"

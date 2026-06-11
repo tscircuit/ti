@@ -1,5 +1,5 @@
 import type { ChipProps } from "tscircuit";
-
+import type { SubcircuitProps } from "@tscircuit/props";
 const pinLabels = {
   pin1: "VDDR",
   pin2: "DIO8",
@@ -112,8 +112,8 @@ export const CC2340R5 = (props: ChipProps<typeof pinLabels>) => (
   />
 );
 
-export default () => (
-  <subcircuit name="CC2340R5">
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <CC2340R5
       name="U1"
       schX={0}

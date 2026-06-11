@@ -1,7 +1,8 @@
 import { TPS6293 } from "./TPS6293.circuit";
+import type { SubcircuitProps } from "tscircuit";
 
-export default () => (
-  <board>
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <TPS6293 schX={0} schY={0} name="U1" />
     <trace from=".U1 > .VIN" to="net.VIN" />
     <trace from=".U1 > .GND" to="net.GND" />
@@ -176,5 +177,5 @@ export default () => (
     />
     <trace from=".R7 > .pin2" to="net.GND" />
     <trace from=".R7 > .pin1" to="net.FB" />
-  </board>
+  </subcircuit>
 );

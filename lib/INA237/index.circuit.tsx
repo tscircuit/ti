@@ -1,9 +1,9 @@
 import { sel } from "tscircuit";
-
+import type { SubcircuitProps } from "@tscircuit/props";
 import { INA237AQDGSRQ1 } from "./imports/INA237AQDGSRQ1";
 
-export default () => (
-  <subcircuit width={140} height={80}>
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <INA237AQDGSRQ1
       name="U1"
       schX={0}

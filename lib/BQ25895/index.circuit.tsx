@@ -1,7 +1,8 @@
 import { BQ25895RTWR } from "./imports/BQ25895RTWR";
+import type { SubcircuitProps } from "@tscircuit/props";
 
-export default () => (
-  <subcircuit width={50} height={50}>
+export default (props: SubcircuitProps) => (
+  <subcircuit schMaxTraceDistance={20} width={100} height={100} {...props}>
     <BQ25895RTWR
       name="U1"
       schX={0}

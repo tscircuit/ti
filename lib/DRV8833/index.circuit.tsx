@@ -1,8 +1,9 @@
 import { DRV8833 } from "./imports/DRV8833.circuit";
 import { MOTOR } from "./imports/MOTOR.circuit";
+import type { SubcircuitProps } from "@tscircuit/props";
 
-export default () => (
-  <board>
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <DRV8833 schX={0} schY={0} name="U1" />
     <trace from=".U1 > .GND" to="net.GND" />
     <trace from=".U1 > .BIN1" to="net.IN1" />
@@ -58,5 +59,5 @@ export default () => (
 
     <trace from=".Motor > .pin2" to=".U1 > .BOUT2" />
     <trace from=".Motor > .pin2" to=".U1 > .AOUT2" schDisplayLabel="BOUT" />
-  </board>
+  </subcircuit>
 );
