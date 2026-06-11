@@ -4,30 +4,24 @@ import { TPS7A02_SPICE_MODEL } from "./spice/tps7a02-behavioral-spice-model"
 /**
  * SPICE simulation demo for the TPS7A02 LDO.
  *
- * A noisy battery rail (3.8 V DC with a 1 kHz, +/-1 V ripple, so VIN swings
- * 2.8 V to 4.8 V) feeds the LDO. The transient simulation shows VOUT held flat
- * at 3.0 V while VIN moves, and tracking VIN minus dropout when VIN sags below
- * ~3.1 V.
+ * A 1 kHz +/-5 V sine input feeds the LDO. The transient simulation shows the
+ * input swinging wildly while VOUT is held at a clean, regulated 3.0 V plateau
+ * whenever the input is above dropout (~3.1 V), and clamped to 0 V otherwise.
  *
- * Open the "Simulation" view after running `bun run dev` to see the waveforms.
+ * Note: the SPICE netlist generator references every voltage source to ground,
+ * so the input must be a single ground-referenced source.
+ *
+ * Open the simulation view after running `bun run dev` to see the waveforms.
  */
 export default () => (
   <board routingDisabled schMaxTraceDistance={10}>
-    {/* Battery rail: DC source stacked with a sine ripple source */}
     <voltagesource
-      name="VBAT"
-      voltage="3.8V"
-      schX={-6}
-      schY={-1.5}
-      schRotation="270deg"
-    />
-    <voltagesource
-      name="VRIPPLE"
-      voltage="1V"
+      name="V1"
+      voltage="5V"
       frequency="1kHz"
       waveShape="sinewave"
-      schX={-6}
-      schY={0.5}
+      schX={-5}
+      schY={-1}
       schRotation="270deg"
     />
 
@@ -86,10 +80,8 @@ export default () => (
       schOrientation="vertical"
     />
 
-    {/* Ripple rides on top of the battery rail */}
-    <trace from="VRIPPLE.neg" to="VBAT.pos" />
-    <trace from="VBAT.neg" to="net.GND" />
-    <trace from="VRIPPLE.pos" to="U1.IN" />
+    <trace from="V1.pin1" to="U1.IN" />
+    <trace from="V1.pin2" to="net.GND" />
     <trace from="U1.EN" to="U1.IN" />
     <trace from="U1.GND" to="net.GND" />
     <trace from="C1.pin1" to="U1.IN" />
