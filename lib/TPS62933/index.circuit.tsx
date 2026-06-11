@@ -106,7 +106,13 @@ export default (props: SubcircuitProps) => (
     <trace from=".C5 > .pin1" to=".R4 > .pin2" />
     <trace from=".C5 > .pin2" to="net.SW" />
 
-    <inductor schX={6.5} schY={0.62} name="L1" inductance="6.8uH" />
+    <inductor
+      schX={6.5}
+      schY={0.62}
+      name="L1"
+      footprint={"0402"}
+      inductance="6.8uH"
+    />
     <trace from=".L1 > .pin1" to="net.SW" />
     <trace from=".L1 > .pin2" to="net.VOUT" />
 
