@@ -14,6 +14,7 @@ export default () => (
       schX={3}
       schY={-1.8}
       name="R1"
+      footprint="0402"
       resistance="200"
       schRotation={-90}
     />
@@ -24,6 +25,7 @@ export default () => (
       schX={4}
       schY={-1.8}
       name="C2"
+      footprint="0603"
       capacitance="2.2uF"
       schRotation={-90}
     />
@@ -33,6 +35,7 @@ export default () => (
       schX={0.75}
       schY={2.75}
       name="C4"
+      footprint="0805"
       capacitance="10uF"
       schRotation={-90}
     />
@@ -42,6 +45,7 @@ export default () => (
       schX={1.5}
       schY={2.75}
       name="C1"
+      footprint="0402"
       capacitance="0.01uF"
       schRotation={-90}
     />

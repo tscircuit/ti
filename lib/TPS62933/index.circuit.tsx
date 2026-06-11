@@ -50,6 +50,7 @@ export default () => (
       schX={-4.5}
       schY={-0.5}
       name="R1"
+      footprint="0402"
       schRotation={-90}
       resistance="511k"
     />
@@ -60,6 +61,7 @@ export default () => (
       schX={-4.5}
       schY={-1.8}
       name="R2"
+      footprint="0402"
       schRotation={-90}
       resistance="88.7k"
     />
@@ -70,6 +72,7 @@ export default () => (
       schX={-1.8}
       schY={-1.5}
       name="C4"
+      footprint="0402"
       schRotation={-90}
       capacitance="33nF"
     />
@@ -83,14 +86,21 @@ export default () => (
       schX={0.3}
       schY={-2.5}
       name="R3"
+      footprint="0402"
       schRotation={-90}
       resistance="0"
     />
     <trace from=".R3 > .pin1" to=".JP2 > .pin2" />
     <trace from=".R3 > .pin2" to="net.GND" />
 
-    <resistor schX={3} schY={0.6} name="R4" resistance="0" />
-    <capacitor schX={5} schY={0.6} name="C5" capacitance="100nF" />
+    <resistor schX={3} schY={0.6} name="R4" footprint="0402" resistance="0" />
+    <capacitor
+      schX={5}
+      schY={0.6}
+      name="C5"
+      footprint="0402"
+      capacitance="100nF"
+    />
     <trace from=".U1 > .BST" to=".R4 > .pin1" />
     <trace from=".C5 > .pin1" to=".R4 > .pin2" />
     <trace from=".C5 > .pin2" to="net.SW" />
@@ -103,6 +113,7 @@ export default () => (
       schX={8}
       schY={-0.15}
       name="C6"
+      footprint="0805"
       capacitance="22µF"
       schRotation={-90}
     />
@@ -113,6 +124,7 @@ export default () => (
       schX={10}
       schY={-0.15}
       name="C7"
+      footprint="0805"
       capacitance="22µF"
       schRotation={-90}
     />
@@ -123,21 +135,34 @@ export default () => (
       schX={12}
       schY={-0.15}
       name="C8"
+      footprint="0402"
       capacitance="100nF"
       schRotation={-90}
     />
     <trace from=".C8 > .pin1" to="net.VOUT" />
     <trace from=".C8 > .pin2" to="net.GND" />
 
-    <resistor schX={7} schY={-2} name="R5" resistance="49.9" />
+    <resistor schX={7} schY={-2} name="R5" footprint="0402" resistance="49.9" />
     <trace from=".R5 > .pin2" to="net.VOUT" />
     <trace from=".R5 > .pin1" to="net.FB_COMP" />
 
-    <resistor schX={4.6} schY={-0.2} name="R6" resistance="53.6k" />
+    <resistor
+      schX={4.6}
+      schY={-0.2}
+      name="R6"
+      footprint="0402"
+      resistance="53.6k"
+    />
     <trace from=".R6 > .pin1" to="net.FB" />
     <trace from=".R6 > .pin2" to="net.FB_COMP" />
 
-    <capacitor schX={4.6} schY={-2} name="C9" capacitance="10pF" />
+    <capacitor
+      schX={4.6}
+      schY={-2}
+      name="C9"
+      footprint="0402"
+      capacitance="10pF"
+    />
     <trace from=".C9 > .pin1" to="net.FB" />
     <trace from=".C9 > .pin2" to="net.FB_COMP" />
 
@@ -145,6 +170,7 @@ export default () => (
       schX={3}
       schY={-1}
       name="R7"
+      footprint="0402"
       resistance="10.2k"
       schRotation={-90}
     />
