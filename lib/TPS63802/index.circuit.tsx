@@ -1,5 +1,4 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import tps63802Trans from "./TPS63802_PSPICE_TRANS/TPS63802_TRANS.json";
 import { TPS63802DLAR } from "./TPS63802DLAR";
 
 export const TPS63802 = (props: SubcircuitProps) => (
@@ -31,23 +30,6 @@ export const TPS63802 = (props: SubcircuitProps) => (
         PG: { marginBottom: 1 },
         FB: { marginBottom: 1 },
       }}
-      spiceModel={
-        <spicemodel
-          source={tps63802Trans.source}
-          spicePinMapping={{
-            AGND: "AGND",
-            EN: "EN",
-            FB: "FB",
-            GND: "GND",
-            L1: "L1",
-            L2: "L2",
-            MODE: "MODE",
-            PG: "PG",
-            VIN: "VIN",
-            VOUT: "VOUT",
-          }}
-        />
-      }
     />
 
     <inductor
@@ -153,9 +135,6 @@ export const TPS63802 = (props: SubcircuitProps) => (
     <trace from="C1.pin2" to="net.GND" />
     <trace from="C2.pin2" to="net.GND" />
     <trace from="R2.pin2" to="net.GND" />
-
-    <voltageprobe name="VOUT" connectsTo="U1.VOUT" />
-    <analogsimulation duration="1ms" timePerStep="5us" spiceEngine="ngspice" />
   </subcircuit>
 );
 
