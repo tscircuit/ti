@@ -2,6 +2,7 @@
 
 - lib/chips
 - lib/subcircuits
+- lib/demos
 
 This repo contains hand-curated tscircuit TSX schematics for TI
 devices and common circuit primitives.
