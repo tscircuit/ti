@@ -18,7 +18,7 @@ const RTC6608OSP = (props: ChipProps<typeof rtcPinLabels>) => (
   />
 );
 
-export default (props: SubcircuitProps) => (
+export const CC3235SFSubcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <RTC6608OSP
       name="U3"
@@ -374,3 +374,5 @@ export default (props: SubcircuitProps) => (
     />
   </subcircuit>
 );
+
+export default CC3235SFSubcircuit;

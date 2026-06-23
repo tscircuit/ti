@@ -1,9 +1,9 @@
-import { DRV8876 } from "./imports/DRV8876.circuit";
-import { CONTROLLER } from "./imports/Controller.circuit";
-import { MOTOR } from "./imports/Motor.circuit";
+import { DRV8876 } from "../chips/DRV8876.circuit";
+import { CONTROLLER } from "../chips/DRV8876-controller.circuit";
+import { MOTOR } from "../chips/DRV8876-motor.circuit";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export default (props: SubcircuitProps) => (
+export const DRV8876Subcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <DRV8876 schX={0} schY={0} name="U1" />
     <trace from=".U1 > .PMODE" to="net.GND" />
@@ -115,3 +115,5 @@ export default (props: SubcircuitProps) => (
     <trace to=".U1 > .OUT2" from=".Motor > .pin2" />
   </subcircuit>
 );
+
+export default DRV8876Subcircuit;

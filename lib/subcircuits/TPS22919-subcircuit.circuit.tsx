@@ -1,7 +1,7 @@
-import { TPS22919 } from "./TPS22919";
+import { TPS22919 } from "../chips/TPS22919";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export default (props: SubcircuitProps) => (
+export const TPS22919Subcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <TPS22919
       name="U1"
@@ -116,3 +116,5 @@ export default (props: SubcircuitProps) => (
     <netlabel net="GND" connection="U1.GND" schX={-1.5} schY={-1.45} />
   </subcircuit>
 );
+
+export default TPS22919Subcircuit;

@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TMP1075DSGR } from "./imports/TMP1075DSGR";
+import { TMP1075DSGR } from "../chips/TMP1075DSGR";
 
-export default (props: SubcircuitProps) => (
+export const TMP1075Subcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
@@ -148,3 +148,5 @@ export default (props: SubcircuitProps) => (
     />
   </subcircuit>
 );
+
+export default TMP1075Subcircuit;

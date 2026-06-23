@@ -1,7 +1,7 @@
-import { BQ25895RTWR } from "./imports/BQ25895RTWR";
+import { BQ25895RTWR } from "../chips/BQ25895RTWR";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export default (props: SubcircuitProps) => (
+export const BQ25895Subcircuit = (props: SubcircuitProps) => (
   <subcircuit schMaxTraceDistance={20} width={100} height={100} {...props}>
     <BQ25895RTWR
       name="U1"
@@ -397,3 +397,5 @@ export default (props: SubcircuitProps) => (
     <trace from="R6.pin2" to="U1.TS" />
   </subcircuit>
 );
+
+export default BQ25895Subcircuit;

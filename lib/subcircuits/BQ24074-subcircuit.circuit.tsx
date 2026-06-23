@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { BQ24074RGTR } from "./imports/BQ24074RGTR";
+import { BQ24074RGTR } from "../chips/BQ24074RGTR";
 
-export default (props: SubcircuitProps) => (
+export const BQ24074Subcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <chip
       name="J1"
@@ -254,3 +254,5 @@ export default (props: SubcircuitProps) => (
     <schematicline x1={4.75} y1={0.8} x2={4.85} y2={0.8} strokeWidth={0.03} />
   </subcircuit>
 );
+
+export default BQ24074Subcircuit;
