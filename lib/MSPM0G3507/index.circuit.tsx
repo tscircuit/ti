@@ -1,3 +1,5 @@
+import type { SubcircuitProps } from "@tscircuit/props";
+
 const pinLabels = {
   pin1: "PB13",
   pin2: "PB14",
@@ -73,8 +75,8 @@ const pinLabels = {
   pin64: "PB12",
 } as const;
 
-export default () => (
-  <subcircuit name="MSPM0G3507SPMR">
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <chip
       footprint="lqfp64"
       manufacturerPartNumber="MSPM0G3507SPMR"

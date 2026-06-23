@@ -1,9 +1,8 @@
-import { sel } from "tscircuit";
-
+import type { SubcircuitProps } from "@tscircuit/props";
 import { HDC3020DEFR } from "./imports/HDC3020DEFR";
 
-export default () => (
-  <subcircuit>
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
       manufacturerPartNumber="MCU"
@@ -31,11 +30,11 @@ export default () => (
         },
       }}
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SCL,
-        pin3: sel.net.SDA,
-        pin4: sel.net.ALERT,
-        pin5: sel.net.GND,
+        pin1: "net.VDD",
+        pin2: "net.SCL",
+        pin3: "net.SDA",
+        pin4: "net.ALERT",
+        pin5: "net.GND",
       }}
     />
 
@@ -69,14 +68,14 @@ export default () => (
         },
       }}
       connections={{
-        SDA: sel.net.SDA,
-        SCL: sel.net.SCL,
-        ALERT: sel.net.ALERT,
-        VDD: sel.net.VDD,
-        ADDR: sel.net.GND,
-        ADDR1: sel.net.GND,
-        GND: sel.net.GND,
-        EP: sel.net.GND,
+        SDA: "net.SDA",
+        SCL: "net.SCL",
+        ALERT: "net.ALERT",
+        VDD: "net.VDD",
+        ADDR: "net.GND",
+        ADDR1: "net.GND",
+        GND: "net.GND",
+        EP: "net.GND",
       }}
       noConnect={["RESET"]}
     />
@@ -89,8 +88,8 @@ export default () => (
       schY={2.15}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SCL,
+        pin1: "net.VDD",
+        pin2: "net.SCL",
       }}
     />
     <resistor
@@ -101,8 +100,8 @@ export default () => (
       schY={2.15}
       schRotation="270deg"
       connections={{
-        pin1: sel.net.VDD,
-        pin2: sel.net.SDA,
+        pin1: "net.VDD",
+        pin2: "net.SDA",
       }}
     />
   </subcircuit>

@@ -1,7 +1,8 @@
 import { TPS22919 } from "./TPS22919";
+import type { SubcircuitProps } from "@tscircuit/props";
 
-export default () => (
-  <subcircuit name="TPS22919">
+export default (props: SubcircuitProps) => (
+  <subcircuit width={100} height={100} {...props}>
     <TPS22919
       name="U1"
       schPinArrangement={{

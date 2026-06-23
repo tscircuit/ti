@@ -1,7 +1,8 @@
 import { BQ27441DRZR_G1B } from "./imports/BQ27441DRZR_G1B";
+import type { SubcircuitProps } from "@tscircuit/props";
 
-export default () => (
-  <subcircuit width={100} height={80} schMaxTraceDistance={20}>
+export default (props: SubcircuitProps) => (
+  <subcircuit schMaxTraceDistance={20} width={100} height={100} {...props}>
     <BQ27441DRZR_G1B
       name="U1"
       schX={0}

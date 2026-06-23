@@ -1,6 +1,8 @@
 import { TPS7A0230PDBVR } from "./TPS7A0230PDBVR";
-export const TPS63802 = () => (
-  <subcircuit name="TPS7A0230PDBVR" routingDisabled>
+import type { SubcircuitProps } from "@tscircuit/props";
+
+export const TPS63802 = (props: SubcircuitProps) => (
+  <subcircuit>
     <TPS7A0230PDBVR
       name="U1"
       schX={0}
@@ -23,22 +25,28 @@ export const TPS63802 = () => (
       }}
     />
 
-    <battery name="VBAT" schX={-3} schY={-1} schRotation="270deg" />
+    <battery
+      name="VBAT"
+      footprint={"kicad:Battery/BatteryHolder_TruPower_BH-331P_3xAA"}
+      schX={-3}
+      schY={-1}
+      schRotation="270deg"
+    />
 
     <capacitor
       name="C1"
-      capacitance="0uF"
       schX={-1.3}
       schY={-1.6}
+      footprint={"0402"}
       capacitance="1uF"
       schOrientation="vertical"
     />
 
     <capacitor
       name="C2"
-      capacitance="0uF"
       schX={2}
       schY={-1}
+      footprint={"0402"}
       capacitance="1uF"
       schOrientation="vertical"
     />
@@ -46,6 +54,7 @@ export const TPS63802 = () => (
       name="Load"
       schX={3.2}
       schY={-1}
+      footprint={"pinrow2"}
       schHeight={1}
       schWidth={1}
       schPinArrangement={{
