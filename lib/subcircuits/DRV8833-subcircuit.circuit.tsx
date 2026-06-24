@@ -1,5 +1,4 @@
-import { DRV8833 } from "../chips/DRV8833.circuit";
-import { MOTOR } from "../chips/DRV8833-motor.circuit";
+import { DRV8833 } from "../chips/DRV8833";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const DRV8833Subcircuit = (props: SubcircuitProps) => (
@@ -53,7 +52,7 @@ export const DRV8833Subcircuit = (props: SubcircuitProps) => (
     <trace from="net.VM" to=".C1 > .pin1" />
     <trace from=".U1 > .VCP" to=".C1 > .pin2" />
 
-    <MOTOR
+    <chip
       name="Motor"
       footprint={"pinrow2"}
       schX={4}

@@ -1,3 +1,4 @@
 {
-  "$schema": "https://cdn.jsdelivr.net/npm/@tscircuit/cli/types/tscircuit.config.schema.json"
+  "$schema": "https://cdn.jsdelivr.net/npm/@tscircuit/cli/types/tscircuit.config.schema.json",
+  "mainEntrypoint": "lib/subcircuits/BQ24074-subcircuit.circuit.tsx"
 }
