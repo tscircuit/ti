@@ -1,6 +1,4 @@
-import { DRV8876 } from "../chips/DRV8876.circuit";
-import { CONTROLLER } from "../chips/DRV8876-controller.circuit";
-import { MOTOR } from "../chips/DRV8876-motor.circuit";
+import { DRV8876 } from "../chips/DRV8876";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const DRV8876Subcircuit = (props: SubcircuitProps) => (
@@ -96,12 +94,7 @@ export const DRV8876Subcircuit = (props: SubcircuitProps) => (
     <trace to=".R3 > .pin1" from="net.GND" />
     <trace to=".R3 > .pin2" from="net.ADC" />
 
-    <CONTROLLER
-      footprint={"pinrow5"}
-      schX={-6.5}
-      schY={1.2}
-      name="Controller"
-    />
+    <chip footprint={"pinrow5"} schX={-6.5} schY={1.2} name="Controller" />
     <trace to=".Controller > .PWM" from=".U1 > .EN" />
     <trace to=".Controller > .pin2" from=".U1 > .PH" />
     <trace to=".Controller > .pin3" from=".U1 > .nSLEEP" />
@@ -110,7 +103,7 @@ export const DRV8876Subcircuit = (props: SubcircuitProps) => (
     <trace to=".Controller > .ADC" from="net.ADC" />
     <trace to=".U1 > .IPROPI" from="net.ADC" />
 
-    <MOTOR schX={1} schY={-4.5} footprint={"pinrow2"} name="Motor" />
+    <chip schX={1} schY={-4.5} footprint={"pinrow2"} name="Motor" />
     <trace to=".U1 > .OUT1" from=".Motor > .pin1" />
     <trace to=".U1 > .OUT2" from=".Motor > .pin2" />
   </subcircuit>
