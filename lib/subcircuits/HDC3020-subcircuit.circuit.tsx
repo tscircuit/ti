@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { HDC2080DMBR } from "./imports/HDC2080DMBR";
+import { HDC3020DEFR } from "../chips/HDC3020DEFR";
 
-export default (props: SubcircuitProps) => (
+export const HDC3020Subcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
@@ -9,7 +9,7 @@ export default (props: SubcircuitProps) => (
       footprint="pinrow5"
       schX={4.5}
       schY={0}
-      schWidth={2.6}
+      schWidth={3.2}
       schHeight={4.6}
       pinLabels={{
         pin1: "VDD",
@@ -25,64 +25,67 @@ export default (props: SubcircuitProps) => (
         },
       }}
       schPinStyle={{
-        pin2: {
+        pin3: {
           topMargin: 0.25,
-        },
-        pin5: {
-          topMargin: 0.65,
         },
       }}
       connections={{
         pin1: "net.VDD",
         pin2: "net.SCL",
         pin3: "net.SDA",
-        pin4: "net.DRDY_INT",
+        pin4: "net.ALERT",
         pin5: "net.GND",
       }}
     />
 
-    <HDC2080DMBR
+    <HDC3020DEFR
       name="U1"
       schX={-2.1}
       schY={0}
       schWidth={3.2}
-      schHeight={4.0}
+      schHeight={4.6}
       schPinArrangement={{
         rightSide: {
           direction: "top-to-bottom",
-          pins: ["VDD", "SCL", "SDA", "DRDY_INT", "ADDR", "GND"],
+          pins: ["VDD", "SCL", "SDA", "ALERT", "RESET", "ADDR", "ADDR1", "GND"],
         },
       }}
       schPinStyle={{
-        SCL: {
+        VDD: {
+          topMargin: 1.55,
+        },
+        SDA: {
           topMargin: 0.25,
         },
-        DRDY_INT: {
+        RESET: {
           topMargin: 0.25,
         },
         ADDR: {
           topMargin: 0.45,
         },
-        GND: {
-          topMargin: 0.45,
+        ADDR1: {
+          topMargin: 0.25,
         },
       }}
       connections={{
         SDA: "net.SDA",
         SCL: "net.SCL",
-        DRDY_INT: "net.DRDY_INT",
+        ALERT: "net.ALERT",
         VDD: "net.VDD",
         ADDR: "net.GND",
+        ADDR1: "net.GND",
         GND: "net.GND",
+        EP: "net.GND",
       }}
+      noConnect={["RESET"]}
     />
 
     <resistor
       name="R1"
-      resistance="10k"
+      resistance="5k"
       footprint="0402"
       schX={0.7}
-      schY={1.3}
+      schY={2.15}
       schRotation="270deg"
       connections={{
         pin1: "net.VDD",
@@ -91,10 +94,10 @@ export default (props: SubcircuitProps) => (
     />
     <resistor
       name="R2"
-      resistance="10k"
+      resistance="5k"
       footprint="0402"
       schX={1.5}
-      schY={1.3}
+      schY={2.15}
       schRotation="270deg"
       connections={{
         pin1: "net.VDD",
@@ -103,3 +106,5 @@ export default (props: SubcircuitProps) => (
     />
   </subcircuit>
 );
+
+export default HDC3020Subcircuit;

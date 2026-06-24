@@ -1,7 +1,7 @@
-import { TPS7A0230PDBVR } from "./TPS7A0230PDBVR";
+import { TPS7A0230PDBVR } from "../chips/TPS7A0230PDBVR";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const TPS63802 = (props: SubcircuitProps) => (
+export const TPS7A02Subcircuit = (props: SubcircuitProps) => (
   <subcircuit>
     <TPS7A0230PDBVR
       name="U1"
@@ -86,4 +86,4 @@ export const TPS63802 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default TPS63802;
+export default TPS7A02Subcircuit;

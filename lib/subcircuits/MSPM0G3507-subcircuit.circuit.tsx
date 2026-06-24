@@ -75,7 +75,7 @@ const pinLabels = {
   pin64: "PB12",
 } as const;
 
-export default (props: SubcircuitProps) => (
+export const MSPM0G3507Subcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <chip
       footprint="lqfp64"
@@ -255,3 +255,5 @@ export default (props: SubcircuitProps) => (
     />
   </subcircuit>
 );
+
+export default MSPM0G3507Subcircuit;

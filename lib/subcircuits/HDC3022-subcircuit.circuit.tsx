@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { HDC3022DEJR } from "./imports/HDC3022DEJR";
+import { HDC3022DEJR } from "../chips/HDC3022DEJR";
 
-export default (props: SubcircuitProps) => (
+export const HDC3022Subcircuit = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
@@ -118,3 +118,5 @@ export default (props: SubcircuitProps) => (
     />
   </subcircuit>
 );
+
+export default HDC3022Subcircuit;
