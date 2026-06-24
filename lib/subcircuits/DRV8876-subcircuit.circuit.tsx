@@ -94,12 +94,7 @@ export const DRV8876Subcircuit = (props: SubcircuitProps) => (
     <trace to=".R3 > .pin1" from="net.GND" />
     <trace to=".R3 > .pin2" from="net.ADC" />
 
-    <chip
-      footprint={"pinrow5"}
-      schX={-6.5}
-      schY={1.2}
-      name="Controller"
-    />
+    <chip footprint={"pinrow5"} schX={-6.5} schY={1.2} name="Controller" />
     <trace to=".Controller > .PWM" from=".U1 > .EN" />
     <trace to=".Controller > .pin2" from=".U1 > .PH" />
     <trace to=".Controller > .pin3" from=".U1 > .nSLEEP" />

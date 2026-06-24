@@ -39,4 +39,5 @@ export const TiSubcircuitComponents = {
 } as const;
 
 export type TiSubcircuitName = keyof typeof TiSubcircuitComponents;
-export type TiSubcircuitComponent = (typeof TiSubcircuitComponents)[TiSubcircuitName];
+export type TiSubcircuitComponent =
+  (typeof TiSubcircuitComponents)[TiSubcircuitName];
