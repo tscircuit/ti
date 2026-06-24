@@ -1,21 +1,21 @@
-export { BQ24074Subcircuit } from "./lib/subcircuits/BQ24074-subcircuit.circuit";
-export { BQ25895Subcircuit } from "./lib/subcircuits/BQ25895-subcircuit.circuit";
-export { BQ27441G1Subcircuit } from "./lib/subcircuits/BQ27441-G1-subcircuit.circuit";
-export { CC2340R5Subcircuit } from "./lib/subcircuits/CC2340R5-subcircuit.circuit";
-export { CC3235SFSubcircuit } from "./lib/subcircuits/CC3235SF-subcircuit.circuit";
-export { DRV8833Subcircuit } from "./lib/subcircuits/DRV8833-subcircuit.circuit";
-export { DRV8876Subcircuit } from "./lib/subcircuits/DRV8876-subcircuit.circuit";
-export { HDC2080Subcircuit } from "./lib/subcircuits/HDC2080-subcircuit.circuit";
-export { HDC3020Subcircuit } from "./lib/subcircuits/HDC3020-subcircuit.circuit";
-export { HDC3022Subcircuit } from "./lib/subcircuits/HDC3022-subcircuit.circuit";
-export { INA237Subcircuit } from "./lib/subcircuits/INA237-subcircuit.circuit";
-export { MSPM0G3507Subcircuit } from "./lib/subcircuits/MSPM0G3507-subcircuit.circuit";
-export { TMP1075Subcircuit } from "./lib/subcircuits/TMP1075-subcircuit.circuit";
-export { TPS22919Subcircuit } from "./lib/subcircuits/TPS22919-subcircuit.circuit";
-export { TPS62933Subcircuit } from "./lib/subcircuits/TPS62933-subcircuit.circuit";
-export { TPS63802Subcircuit } from "./lib/subcircuits/TPS63802-subcircuit.circuit";
-export { TPS7A02Subcircuit } from "./lib/subcircuits/TPS7A02-subcircuit.circuit";
-export { TPSM82823Subcircuit } from "./lib/subcircuits/TPSM82823-subcircuit.circuit";
+import { BQ24074Subcircuit } from "./lib/subcircuits/BQ24074-subcircuit.circuit";
+import { BQ25895Subcircuit } from "./lib/subcircuits/BQ25895-subcircuit.circuit";
+import { BQ27441G1Subcircuit } from "./lib/subcircuits/BQ27441-G1-subcircuit.circuit";
+import { CC2340R5Subcircuit } from "./lib/subcircuits/CC2340R5-subcircuit.circuit";
+import { CC3235SFSubcircuit } from "./lib/subcircuits/CC3235SF-subcircuit.circuit";
+import { DRV8833Subcircuit } from "./lib/subcircuits/DRV8833-subcircuit.circuit";
+import { DRV8876Subcircuit } from "./lib/subcircuits/DRV8876-subcircuit.circuit";
+import { HDC2080Subcircuit } from "./lib/subcircuits/HDC2080-subcircuit.circuit";
+import { HDC3020Subcircuit } from "./lib/subcircuits/HDC3020-subcircuit.circuit";
+import { HDC3022Subcircuit } from "./lib/subcircuits/HDC3022-subcircuit.circuit";
+import { INA237Subcircuit } from "./lib/subcircuits/INA237-subcircuit.circuit";
+import { MSPM0G3507Subcircuit } from "./lib/subcircuits/MSPM0G3507-subcircuit.circuit";
+import { TMP1075Subcircuit } from "./lib/subcircuits/TMP1075-subcircuit.circuit";
+import { TPS22919Subcircuit } from "./lib/subcircuits/TPS22919-subcircuit.circuit";
+import { TPS62933Subcircuit } from "./lib/subcircuits/TPS62933-subcircuit.circuit";
+import { TPS63802Subcircuit } from "./lib/subcircuits/TPS63802-subcircuit.circuit";
+import { TPS7A02Subcircuit } from "./lib/subcircuits/TPS7A02-subcircuit.circuit";
+import { TPSM82823Subcircuit } from "./lib/subcircuits/TPSM82823-subcircuit.circuit";
 
 export const TiSubcircuitComponents = {
   BQ24074Subcircuit,
