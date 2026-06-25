@@ -15,9 +15,9 @@ export const TPS6293 = (props: ChipProps<any>) => (
   <chip
     {...props}
     pinLabels={TPS6293_PIN_LABELS}
-    supplierPartNumbers={{
-      jlcpcb: ["C3200405"],
-    }}
+    // supplierPartNumbers={{
+    //   jlcpcb: ["C3200405"],
+    // }}
     schPinStyle={{
       VIN: {
         marginBottom: 0.2,

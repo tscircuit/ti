@@ -13,9 +13,9 @@ export const TPSM82823 = (props: ChipProps<any>) => (
   <chip
     {...props}
     pinLabels={TPSM82823_PIN_LABELS}
-    supplierPartNumbers={{
-      jlcpcb: ["C5196953"],
-    }}
+    // supplierPartNumbers={{
+    //   jlcpcb: ["C5196953"],
+    // }}
     schPinStyle={{
       GND: {
         marginTop: 1.3,

@@ -1,4 +1,7 @@
 {
   "$schema": "https://cdn.jsdelivr.net/npm/@tscircuit/cli/types/tscircuit.config.schema.json",
-  "mainEntrypoint": "lib/subcircuits/BQ24074-subcircuit.circuit.tsx"
+  "mainEntrypoint": "lib/subcircuits/BQ24074-subcircuit.circuit.tsx",
+  "build": {
+    "workerTimeoutMs": 10000000
+  }
 }
