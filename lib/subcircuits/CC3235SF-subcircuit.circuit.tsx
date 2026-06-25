@@ -6,7 +6,6 @@ export const CC3235SFSubcircuit = (props: SubcircuitProps) => (
     width={100}
     height={100}
     {...props}
-    routingDisabled
     schMaxTraceDistance={10}
   >
     <CC3235SF12RGKR
