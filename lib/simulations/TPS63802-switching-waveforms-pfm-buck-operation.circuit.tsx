@@ -1,7 +1,7 @@
 import { TPS63802DLAR } from "../chips/TPS63802DLAR";
 
 export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
-  <board routingDisabled schMaxTraceDistance={3}>
+  <board bomDisabled routingDisabled schMaxTraceDistance={3}>
     <TPS63802DLAR
       name="U1"
       schX={0}
