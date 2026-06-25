@@ -7,6 +7,7 @@ export const DRV8876Subcircuit = (props: SubcircuitProps) => (
     <trace from=".U1 > .PMODE" to="net.GND" />
     <trace from=".U1 > .GND" to="net.GND" />
     <trace from=".U1 > .PGND" to="net.GND" />
+    <trace from=".U1 > .PAD" to="net.GND" />
     <trace from=".U1 > .IMODE" to="net.GND" />
     <trace from=".U1 > .VREF" to="net.VREF" />
 
