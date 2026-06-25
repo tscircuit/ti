@@ -1,4 +1,5 @@
 import { ChipProps } from "tscircuit";
+import drv8876SpiceModel from "./spice-models/DRV8876-spice-model.json";
 
 export const DRV8876_PIN_LABELS = {
   pin1: "EN",
@@ -17,6 +18,7 @@ export const DRV8876_PIN_LABELS = {
   pin14: "CPL",
   pin15: "GND",
   pin16: "PMODE",
+  pin17: "PAD",
 };
 
 export const DRV8876 = (props: ChipProps<any>) => (
@@ -26,6 +28,31 @@ export const DRV8876 = (props: ChipProps<any>) => (
     supplierPartNumbers={{
       jlcpcb: ["C575551"],
     }}
+    manufacturerPartNumber="DRV8876"
+    spiceModel={
+      <spicemodel
+        source={drv8876SpiceModel.source}
+        spicePinMapping={{
+          CPH: "CPH",
+          CPL: "CPL",
+          EN_IN1: "EN",
+          GND: "GND",
+          IMODE: "IMODE",
+          IPROPI: "IPROPI",
+          nFAULT: "nFAULT",
+          nSLEEP: "nSLEEP",
+          OUT1: "OUT1",
+          OUT2: "OUT2",
+          PGND: "PGND",
+          PAD: "PAD",
+          PH_IN2: "PH",
+          PMODE: "PMODE",
+          VCP: "VCP",
+          VM: "VM",
+          VREF: "VREF",
+        }}
+      />
+    }
     schPinStyle={{
       GND: {
         marginTop: 0.6,
@@ -55,6 +82,9 @@ export const DRV8876 = (props: ChipProps<any>) => (
         marginBottom: 0.6,
       },
       PH: {
+        marginTop: 0.6,
+      },
+      PAD: {
         marginTop: 0.6,
       },
     }}
@@ -204,9 +234,9 @@ export const DRV8876 = (props: ChipProps<any>) => (
           radius="0.1715008mm"
           shape="pill"
         />
-        {/* Thermal pad tied to GND (pin15) */}
+        {/* Exposed thermal pad. Tie to GND in the circuit. */}
         <smtpad
-          portHints={["pin15"]}
+          portHints={["pin17", "PAD"]}
           pcbX="0mm"
           pcbY="0mm"
           width="3.5500056mm"
