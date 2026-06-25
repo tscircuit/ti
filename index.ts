@@ -17,6 +17,27 @@ import { TPS63802Subcircuit } from "./lib/subcircuits/TPS63802-subcircuit.circui
 import { TPS7A02Subcircuit } from "./lib/subcircuits/TPS7A02-subcircuit.circuit";
 import { TPSM82823Subcircuit } from "./lib/subcircuits/TPSM82823-subcircuit.circuit";
 
+export {
+  BQ24074Subcircuit,
+  BQ25895Subcircuit,
+  BQ27441G1Subcircuit,
+  CC2340R5Subcircuit,
+  CC3235SFSubcircuit,
+  DRV8833Subcircuit,
+  DRV8876Subcircuit,
+  HDC2080Subcircuit,
+  HDC3020Subcircuit,
+  HDC3022Subcircuit,
+  INA237Subcircuit,
+  MSPM0G3507Subcircuit,
+  TMP1075Subcircuit,
+  TPS22919Subcircuit,
+  TPS62933Subcircuit,
+  TPS63802Subcircuit,
+  TPS7A02Subcircuit,
+  TPSM82823Subcircuit,
+};
+
 export const TiSubcircuitComponents = {
   BQ24074Subcircuit,
   BQ25895Subcircuit,

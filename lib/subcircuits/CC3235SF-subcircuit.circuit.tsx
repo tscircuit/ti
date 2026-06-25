@@ -1,7 +1,7 @@
 import { CC3235SF12RGKR } from "../chips/CC3235SF12RGKR";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const BQ27441G1Subcircuit = (props: SubcircuitProps) => (
+export const CC3235SFSubcircuit = (props: SubcircuitProps) => (
   <subcircuit
     width={100}
     height={100}
