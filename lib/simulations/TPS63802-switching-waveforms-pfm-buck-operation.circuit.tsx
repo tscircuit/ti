@@ -1,7 +1,7 @@
 import { TPS63802DLAR } from "../chips/TPS63802DLAR";
 
 export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
-  <board routingDisabled>
+  <board routingDisabled schMaxTraceDistance={3}>
     <TPS63802DLAR
       name="U1"
       schX={0}
@@ -35,7 +35,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       name="V_IN"
       voltage="4.2V"
       schX={-7.2}
-      schY={0.5}
+      schY={0}
       schRotation="270deg"
     />
 
@@ -44,7 +44,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       inductance={4.7e-7}
       footprint="0603"
       schX={0}
-      schY={4}
+      schY={5}
       schOrientation="horizontal"
     />
     <ammeter
@@ -55,6 +55,8 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       graphCenter={0}
       graphOffsetDivs={0}
       graphUnitsPerDiv={0.8}
+      schX={-1.8}
+      schY={5}
     />
 
     <resistor
@@ -62,7 +64,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       resistance="0.0076"
       footprint="0603"
       schX={1.4}
-      schY={4}
+      schY={5}
       schOrientation="horizontal"
     />
 
@@ -70,8 +72,8 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       name="C1"
       capacitance="5uF"
       footprint="0603"
-      schX={-4}
-      schY={1.1}
+      schX={-4.8}
+      schY={-2}
       schOrientation="vertical"
     />
     <resistor
@@ -79,7 +81,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       resistance="0.01"
       footprint="0603"
       schX={-4.8}
-      schY={1.1}
+      schY={0}
       schOrientation="vertical"
     />
 
@@ -87,15 +89,15 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       name="C2"
       capacitance="8.2uF"
       footprint="0805"
-      schX={6}
-      schY={0.5}
+      schX={5.5}
+      schY={-1}
       schOrientation="vertical"
     />
     <resistor
       name="R_COUT_ESR"
       resistance="0.01"
       footprint="0603"
-      schX={5.2}
+      schX={5.5}
       schY={0.5}
       schOrientation="vertical"
     />
@@ -104,7 +106,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       name="R1"
       resistance="511k"
       footprint="0603"
-      schX={3.8}
+      schX={4.1}
       schY={1}
       schOrientation="vertical"
     />
@@ -113,8 +115,8 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       name="R2"
       resistance="91k"
       footprint="0603"
-      schX={3.8}
-      schY={-1.2}
+      schX={4.1}
+      schY={-1}
       schOrientation="vertical"
     />
 
@@ -123,7 +125,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       resistance="100k"
       footprint="0603"
       schX={2.7}
-      schY={1.4}
+      schY={1.8}
       schOrientation="vertical"
     />
 
@@ -131,21 +133,21 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       name="R_LOAD"
       resistance="82.5"
       footprint="0603"
-      schX={7.7}
-      schY={0.1}
+      schX={7}
+      schY={-1}
       schOrientation="vertical"
     />
 
     <netlabel
       net="VIN"
       connection="U1.VIN"
-      schX={-5.7}
+      schX={-3.7}
       schY={1.8}
       anchorSide="right"
     />
     <schematictext
       text="VIN 1.3V-5.5V"
-      schX={-6}
+      schX={-4}
       schY={2.2}
       fontSize={0.18}
       anchor="center"
