@@ -45,8 +45,8 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
     <voltagesource
       name="V_VM"
       voltage="24V"
-      schX={5.8}
-      schY={2.7}
+      schX={8.3}
+      schY={3}
       schRotation="270deg"
     />
     <voltagesource
@@ -65,8 +65,8 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       pulseDelay="1.2ms"
       riseTime="100ns"
       fallTime="100ns"
-      schX={-6.8}
-      schY={1}
+      schX={-4}
+      schY={4.3}
       schRotation="270deg"
     />
     <voltagesource
@@ -78,8 +78,8 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       period="5ms"
       riseTime="100ns"
       fallTime="100ns"
-      schX={-6.8}
-      schY={-0.4}
+      schX={-4}
+      schY={1.5}
       schRotation="270deg"
     />
 
@@ -87,40 +87,40 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       name="C_VM_BYPASS"
       capacitance="0.1uF"
       footprint="0402"
-      schX={4.4}
-      schY={2.4}
+      schX={6.5}
+      schY={3}
       schOrientation="vertical"
     />
     <capacitor
       name="C_VM_BULK"
       capacitance="47uF"
       footprint="1206"
-      schX={5.1}
-      schY={2.4}
+      schX={5}
+      schY={3}
       schOrientation="vertical"
     />
     <capacitor
       name="C_VCP"
       capacitance="0.1uF"
       footprint="0402"
-      schX={4.2}
-      schY={1.2}
-      schOrientation="vertical"
+      schX={3.9}
+      schY={3}
+      schRotation={90}
     />
     <capacitor
       name="C_CP"
       capacitance="0.022uF"
       footprint="0402"
-      schX={3.8}
-      schY={0.2}
-      schOrientation="horizontal"
+      schX={4.1}
+      schY={1}
+      schOrientation="vertical"
     />
 
     <resistor
       name="R_REF1"
       resistance="16k"
       footprint="0402"
-      schX={-4.9}
+      schX={-6.9}
       schY={-0.8}
       schOrientation="vertical"
     />
@@ -128,7 +128,7 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       name="R_REF2"
       resistance="50k"
       footprint="0402"
-      schX={-4.9}
+      schX={-6.9}
       schY={-2.2}
       schOrientation="vertical"
     />
@@ -136,7 +136,7 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       name="R_IPROPI"
       resistance="2.5k"
       footprint="0402"
-      schX={-4}
+      schX={-5.1}
       schY={-2.2}
       schOrientation="vertical"
     />
@@ -144,7 +144,7 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       name="C_IPROPI"
       capacitance="10nF"
       footprint="0402"
-      schX={-3.3}
+      schX={-3.7}
       schY={-2.2}
       schOrientation="vertical"
     />
@@ -153,7 +153,7 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       resistance="10k"
       footprint="0402"
       schX={-5.7}
-      schY={-0.6}
+      schY={2.6}
       schOrientation="vertical"
     />
 
@@ -165,13 +165,14 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       graphCenter={0.5}
       graphOffsetDivs={-3}
       graphUnitsPerDiv={0.5}
+      schX={5.4}
     />
     <inductor
       name="L_MOTOR"
       inductance="10mH"
       footprint="0603"
-      schX={4}
-      schY={-2.1}
+      schX={7.3}
+      schY={0}
       schOrientation="horizontal"
     />
     <resistor
@@ -179,20 +180,13 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       resistance="24"
       footprint="0603"
       schX={5.4}
-      schY={-2.1}
-      schOrientation="horizontal"
+      schY={-1.3}
+      schOrientation="vertical"
     />
 
-    <netlabel
-      net="VM"
-      connection="U1.VM"
-      schX={2.2}
-      schY={2.7}
-      anchorSide="left"
-    />
     <schematictext
       text="VM = 24V"
-      schX={2.9}
+      schX={2.6}
       schY={3.1}
       fontSize={0.16}
       anchor="center"
@@ -200,14 +194,14 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
     <netlabel
       net="VCC"
       connection="V_CC.pin1"
-      schX={-6}
-      schY={3.3}
-      anchorSide="right"
+      schX={-6.8}
+      schY={3.5}
+      anchorSide="bottom"
     />
     <schematictext
       text="Figure 33 PH/EN PWM"
-      schX={-2.8}
-      schY={3.4}
+      schX={-2}
+      schY={4}
       fontSize={0.16}
       anchor="center"
     />
@@ -215,14 +209,7 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       net="VREF"
       connection="U1.VREF"
       schX={-2.1}
-      schY={-0.9}
-      anchorSide="right"
-    />
-    <netlabel
-      net="IPROPI"
-      connection="U1.IPROPI"
-      schX={-2.1}
-      schY={-2}
+      schY={-0.5}
       anchorSide="right"
     />
 
