@@ -7,6 +7,8 @@
 This repo contains hand-curated tscircuit TSX schematics for TI
 devices and common circuit primitives.
 
+Guide on how to use this library - https://docs.tscircuit.com/guides/importing-modules-and-chips/using-tscircuit-ti-library
+
 List of chips present:
 - [x] MSPM0G3507
 - [x] CC2340R5
