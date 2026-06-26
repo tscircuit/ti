@@ -1,6 +1,26 @@
 import { BQ24074Subcircuit } from "./lib/subcircuits/BQ24074-subcircuit.circuit";
 import { BQ25895Subcircuit } from "./lib/subcircuits/BQ25895-subcircuit.circuit";
 import { BQ27441G1Subcircuit } from "./lib/subcircuits/BQ27441-G1-subcircuit.circuit";
+import {
+  BQ24074,
+  BQ25895,
+  BQ27441G1,
+  CC2340R5,
+  CC3235SF,
+  DRV8833,
+  DRV8876,
+  HDC2080,
+  HDC3020,
+  HDC3022,
+  INA237,
+  MSPM0G3507,
+  TMP1075,
+  TPS22919,
+  TPS6293,
+  TPS63802,
+  TPS7A02,
+  TPSM82823,
+} from "./lib/chips";
 import { CC2340R5Subcircuit } from "./lib/subcircuits/CC2340R5-subcircuit.circuit";
 import { CC3235SFSubcircuit } from "./lib/subcircuits/CC3235SF-subcircuit.circuit";
 import { DRV8833Subcircuit } from "./lib/subcircuits/DRV8833-subcircuit.circuit";
@@ -16,6 +36,8 @@ import { TPS62933Subcircuit } from "./lib/subcircuits/TPS62933-subcircuit.circui
 import { TPS63802Subcircuit } from "./lib/subcircuits/TPS63802-subcircuit.circuit";
 import { TPS7A02Subcircuit } from "./lib/subcircuits/TPS7A02-subcircuit.circuit";
 import { TPSM82823Subcircuit } from "./lib/subcircuits/TPSM82823-subcircuit.circuit";
+
+export * from "./lib/chips";
 
 export {
   BQ24074Subcircuit,
@@ -38,6 +60,27 @@ export {
   TPSM82823Subcircuit,
 };
 
+export const TiChipComponents = {
+  BQ24074,
+  BQ25895,
+  BQ27441G1,
+  CC2340R5,
+  CC3235SF,
+  DRV8833,
+  DRV8876,
+  HDC2080,
+  HDC3020,
+  HDC3022,
+  INA237,
+  MSPM0G3507,
+  TMP1075,
+  TPS22919,
+  TPS6293,
+  TPS63802,
+  TPS7A02,
+  TPSM82823,
+} as const;
+
 export const TiSubcircuitComponents = {
   BQ24074Subcircuit,
   BQ25895Subcircuit,
@@ -59,6 +102,8 @@ export const TiSubcircuitComponents = {
   TPSM82823Subcircuit,
 } as const;
 
+export type TiChipName = keyof typeof TiChipComponents;
+export type TiChipComponent = (typeof TiChipComponents)[TiChipName];
 export type TiSubcircuitName = keyof typeof TiSubcircuitComponents;
 export type TiSubcircuitComponent =
   (typeof TiSubcircuitComponents)[TiSubcircuitName];

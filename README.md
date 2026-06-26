@@ -1,11 +1,12 @@
 # TI tscircuit library
 
 This repo contains hand-curated tscircuit TSX schematics for Texas Instruments
-devices and reusable TI reference subcircuits.
+devices, reusable TI reference subcircuits, and raw TI chip definitions.
 
 The published package is `@tsci/tscircuit.ti`. It provides ready-to-use
-subcircuit components that can be imported into a local tscircuit project,
-placed on a board, and connected to from the surrounding circuit.
+subcircuit components and low-level chip components that can be imported into a
+local tscircuit project, placed on a board, and connected to from the
+surrounding circuit.
 
 ## Installation
 
@@ -26,6 +27,27 @@ export default () => (
   </board>
 )
 ```
+
+## Raw Chip Usage
+
+When you need the bare chip package instead of a full reference design, import
+the chip by its short TI part name. If that chip currently maps to a specific
+package footprint in `lib/chips`, the package keeps the underlying MPN-named
+definition available and exposes the short-name wrapper from the package
+entrypoint.
+
+```tsx
+import { BQ24074 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="14mm" height="14mm">
+    <BQ24074 name="U1" footprintVariant="rgtr" pcbX={0} pcbY={0} />
+  </board>
+)
+```
+
+`footprintVariant` is optional today and defaults to the currently available
+chip footprint for that short-name export.
 
 ## Connecting to Pins Inside a Subcircuit
 
@@ -86,8 +108,39 @@ The package currently exports these subcircuit components:
 - `TPS7A02Subcircuit`
 - `TPSM82823Subcircuit`
 
+## Exported Chips
+
+The package also exports these low-level chip components from `lib/chips`:
+
+| Chip Export | Current Chip Definition |
+| --- | --- |
+| `BQ24074` | `BQ24074RGTR` |
+| `BQ25895` | `BQ25895RTWR` |
+| `BQ27441G1` | `BQ27441DRZR_G1B` |
+| `CC2340R5` | `CC2340R5` |
+| `CC3235SF` | `CC3235SF12RGKR` |
+| `DRV8833` | `DRV8833` |
+| `DRV8876` | `DRV8876` |
+| `HDC2080` | `HDC2080DMBR` |
+| `HDC3020` | `HDC3020DEFR` |
+| `HDC3022` | `HDC3022DEJR` |
+| `INA237` | `INA237AQDGSRQ1` |
+| `MSPM0G3507` | `MSPM0G3507SPMR` |
+| `TMP1075` | `TMP1075DSGR` |
+| `TPS22919` | `TPS22919` |
+| `TPS6293` | `TPS6293` |
+| `TPS63802` | `TPS63802DLAR` |
+| `TPS7A02` | `TPS7A0230PDBVR` |
+| `TPSM82823` | `TPSM82823` |
+
+The MPN-named chip definitions are also re-exported from the package when you
+want to import the exact underlying component directly.
+
 The package also exports:
 
+- `TiChipComponents`: an object map of all exported short-name chip components.
+- `TiChipName`: a TypeScript union of keys in `TiChipComponents`.
+- `TiChipComponent`: a TypeScript type for any exported chip component.
 - `TiSubcircuitComponents`: an object map of all exported subcircuit components.
 - `TiSubcircuitName`: a TypeScript union of keys in `TiSubcircuitComponents`.
 - `TiSubcircuitComponent`: a TypeScript type for any exported subcircuit
@@ -97,14 +150,16 @@ The package also exports:
 
 ### `lib/chips`
 
-The `lib/chips` directory contains the low-level TI chip components. Each file
-represents an individual manufacturer part number and defines details such as
-pin labels, aliases, supplier part numbers, and the physical footprint used by
+The `lib/chips` directory contains the low-level TI chip components. Most files
+represent an individual manufacturer part number and define details such as pin
+labels, aliases, supplier part numbers, and the physical footprint used by
 tscircuit.
 
-Use these files when you need the raw chip package itself. Most users should
-import the higher-level subcircuits instead, but the chip definitions are the
-building blocks those subcircuits use internally.
+Import chips from the package entrypoint by their short names, such as
+`BQ24074`, `INA237`, or `TPS7A02`. The underlying MPN-named definitions remain
+available as direct exports when you need to pin a specific source component.
+Most users should still start with the higher-level subcircuits, but the chip
+definitions are the building blocks those subcircuits use internally.
 
 ### `lib/subcircuits`
 
