@@ -1,7 +1,7 @@
 import { TPS6293 } from "../chips/TPS6293";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const TPS62933Subcircuit = (props: SubcircuitProps) => (
+export const BuckConverter_TPS62933 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <TPS6293 schX={0} schY={0} name="U1" />
     <trace from=".U1 > .VIN" to="net.VIN" />
@@ -186,4 +186,4 @@ export const TPS62933Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default TPS62933Subcircuit;
+export default BuckConverter_TPS62933;

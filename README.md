@@ -18,11 +18,11 @@ bun add @tsci/tscircuit.ti
 Import the TI part you need from the package and place it inside a board.
 
 ```tsx
-import { INA237Subcircuit } from "@tsci/tscircuit.ti"
+import { PowerMonitor_INA237 } from "@tsci/tscircuit.ti"
 
 export default () => (
   <board width="18mm" height="14mm">
-    <INA237Subcircuit name="INA237" />
+    <PowerMonitor_INA237 name="INA237" />
   </board>
 )
 ```
@@ -34,11 +34,11 @@ inside one of those subcircuits, use a selector string that starts with the
 placed subcircuit name, then selects the internal component and pin.
 
 ```tsx
-import { INA237Subcircuit } from "@tsci/tscircuit.ti"
+import { PowerMonitor_INA237 } from "@tsci/tscircuit.ti"
 
 export default () => (
   <board width="22mm" height="16mm">
-    <INA237Subcircuit name="INA237" />
+    <PowerMonitor_INA237 name="INA237" />
     <resistor
       name="R11"
       resistance="1k"
@@ -67,24 +67,24 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 The package currently exports these subcircuit components:
 
-- `BQ24074Subcircuit`
-- `BQ25895Subcircuit`
-- `BQ27441G1Subcircuit`
-- `CC2340R5Subcircuit`
-- `CC3235SFSubcircuit`
-- `DRV8833Subcircuit`
-- `DRV8876Subcircuit`
-- `HDC2080Subcircuit`
-- `HDC3020Subcircuit`
-- `HDC3022Subcircuit`
-- `INA237Subcircuit`
-- `MSPM0G3507Subcircuit`
-- `TMP1075Subcircuit`
-- `TPS22919Subcircuit`
-- `TPS62933Subcircuit`
-- `TPS63802Subcircuit`
-- `TPS7A02Subcircuit`
-- `TPSM82823Subcircuit`
+- `BatteryManagement_BQ24074`
+- `BatteryManagement_BQ25895`
+- `BatteryManagement_BQ27441G1`
+- `WirelessMCU_CC2340R5`
+- `WirelessMCU_CC3235SF`
+- `MotorDriver_DRV8833`
+- `MotorDriver_DRV8876`
+- `EnvironmentalSensor_HDC2080`
+- `EnvironmentalSensor_HDC3020`
+- `EnvironmentalSensor_HDC3022`
+- `PowerMonitor_INA237`
+- `Microcontroller_MSPM0G3507`
+- `TemperatureSensor_TMP1075`
+- `LoadSwitch_TPS22919`
+- `BuckConverter_TPS62933`
+- `BuckBoostConverter_TPS63802`
+- `LDO_TPS7A02`
+- `PowerModule_TPSM82823`
 
 The package also exports:
 
@@ -114,7 +114,7 @@ supporting components such as capacitors, resistors, connectors, net labels, and
 traces.
 
 These are the components exported from the package entrypoint in `index.ts`.
-For example, `INA237Subcircuit` comes from
+For example, `PowerMonitor_INA237` comes from
 `lib/subcircuits/INA237-subcircuit.circuit.tsx` and can be imported from
 `@tsci/tscircuit.ti`.
 

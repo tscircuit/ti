@@ -1,7 +1,7 @@
 import { CC3235SF12RGKR } from "../chips/CC3235SF12RGKR";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const CC3235SFSubcircuit = (props: SubcircuitProps) => (
+export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props} schMaxTraceDistance={10}>
     <CC3235SF12RGKR
       name="U2"
@@ -703,3 +703,5 @@ export const CC3235SFSubcircuit = (props: SubcircuitProps) => (
     <trace name="TP5_SOP2" from=".TP5 .pin1" to="net.SOP2" />
   </subcircuit>
 );
+
+export default WirelessMCU_CC3235SF;

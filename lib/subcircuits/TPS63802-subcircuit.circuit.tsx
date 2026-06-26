@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { TPS63802DLAR } from "../chips/TPS63802DLAR";
 
-export const TPS63802Subcircuit = (props: SubcircuitProps) => (
+export const BuckBoostConverter_TPS63802 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <TPS63802DLAR
       name="U1"
@@ -138,4 +138,4 @@ export const TPS63802Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default TPS63802Subcircuit;
+export default BuckBoostConverter_TPS63802;

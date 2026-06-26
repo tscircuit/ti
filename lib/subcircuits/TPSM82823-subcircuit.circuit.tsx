@@ -1,7 +1,7 @@
 import { TPSM82823 } from "../chips/TPSM82823";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const TPSM82823Subcircuit = (props: SubcircuitProps) => (
+export const PowerModule_TPSM82823 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <TPSM82823 schX={0} schY={0} name="U1" />
     <trace from=".U1 > .GND" to="net.GND" />
@@ -79,4 +79,4 @@ export const TPSM82823Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default TPSM82823Subcircuit;
+export default PowerModule_TPSM82823;

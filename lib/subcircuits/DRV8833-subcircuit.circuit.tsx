@@ -1,7 +1,7 @@
 import { DRV8833 } from "../chips/DRV8833";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const DRV8833Subcircuit = (props: SubcircuitProps) => (
+export const MotorDriver_DRV8833 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <DRV8833 schX={0} schY={0} name="U1" />
     <trace from=".U1 > .GND" to="net.GND" />
@@ -67,4 +67,4 @@ export const DRV8833Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default DRV8833Subcircuit;
+export default MotorDriver_DRV8833;

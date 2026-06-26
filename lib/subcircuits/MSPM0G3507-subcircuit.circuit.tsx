@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { MSPM0G3507SPMR } from "../chips/MSPM0G3507SPMR";
 
-export const MSPM0G3507Subcircuit = (props: SubcircuitProps) => (
+export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <MSPM0G3507SPMR
       name="U1"
@@ -139,4 +139,4 @@ export const MSPM0G3507Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default MSPM0G3507Subcircuit;
+export default Microcontroller_MSPM0G3507;

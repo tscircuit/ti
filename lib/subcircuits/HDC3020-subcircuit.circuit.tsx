@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { HDC3020DEFR } from "../chips/HDC3020DEFR";
 
-export const HDC3020Subcircuit = (props: SubcircuitProps) => (
+export const EnvironmentalSensor_HDC3020 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
@@ -107,4 +107,4 @@ export const HDC3020Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default HDC3020Subcircuit;
+export default EnvironmentalSensor_HDC3020;
