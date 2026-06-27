@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { CC2340R5 } from "../chips/CC2340R5";
 
-export const CC2340R5Subcircuit = (props: SubcircuitProps) => (
+export const WirelessMCU_CC2340R5 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <CC2340R5
       name="U1"
@@ -397,4 +397,4 @@ export const CC2340R5Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default CC2340R5Subcircuit;
+export default WirelessMCU_CC2340R5;

@@ -1,7 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { INA237AQDGSRQ1 } from "../chips/INA237AQDGSRQ1";
 
-export const INA237Subcircuit = (props: SubcircuitProps) => (
+export const PowerMonitor_INA237 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <INA237AQDGSRQ1
       name="U1"
@@ -212,4 +212,4 @@ export const INA237Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default INA237Subcircuit;
+export default PowerMonitor_INA237;

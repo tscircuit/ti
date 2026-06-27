@@ -1,18 +1,15 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { HDC3022DEJR } from "../chips/HDC3022DEJR";
+import { HDC2080DMBR } from "../chips/HDC2080DMBR";
 
-export const HDC3022Subcircuit = (props: SubcircuitProps) => (
+export const EnvironmentalSensor_HDC2080 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
     <chip
       name="U2"
       manufacturerPartNumber="MCU"
       footprint="pinrow5"
-      pcbX={2.1}
-      pcbY={-4.85}
-      pcbRotation="180deg"
       schX={4.5}
       schY={0}
-      schWidth={3.2}
+      schWidth={2.6}
       schHeight={4.6}
       pinLabels={{
         pin1: "VDD",
@@ -28,73 +25,64 @@ export const HDC3022Subcircuit = (props: SubcircuitProps) => (
         },
       }}
       schPinStyle={{
-        pin3: {
+        pin2: {
           topMargin: 0.25,
+        },
+        pin5: {
+          topMargin: 0.65,
         },
       }}
       connections={{
         pin1: "net.VDD",
         pin2: "net.SCL",
         pin3: "net.SDA",
-        pin4: "net.ALERT",
+        pin4: "net.DRDY_INT",
         pin5: "net.GND",
       }}
     />
 
-    <HDC3022DEJR
+    <HDC2080DMBR
       name="U1"
-      pcbX={0}
-      pcbY={0}
-      pcbRotation="0deg"
       schX={-2.1}
       schY={0}
       schWidth={3.2}
-      schHeight={4.6}
+      schHeight={4.0}
       schPinArrangement={{
         rightSide: {
           direction: "top-to-bottom",
-          pins: ["VDD", "SCL", "SDA", "ALERT", "RESET", "ADDR", "ADDR1", "GND"],
+          pins: ["VDD", "SCL", "SDA", "DRDY_INT", "ADDR", "GND"],
         },
       }}
       schPinStyle={{
-        VDD: {
-          topMargin: 1.55,
-        },
-        SDA: {
+        SCL: {
           topMargin: 0.25,
         },
-        RESET: {
+        DRDY_INT: {
           topMargin: 0.25,
         },
         ADDR: {
           topMargin: 0.45,
         },
-        ADDR1: {
-          topMargin: 0.25,
+        GND: {
+          topMargin: 0.45,
         },
       }}
       connections={{
         SDA: "net.SDA",
         SCL: "net.SCL",
-        ALERT: "net.ALERT",
+        DRDY_INT: "net.DRDY_INT",
         VDD: "net.VDD",
         ADDR: "net.GND",
-        ADDR1: "net.GND",
         GND: "net.GND",
-        EP: "net.GND",
       }}
-      noConnect={["RESET"]}
     />
 
     <resistor
       name="R1"
-      resistance="5k"
+      resistance="10k"
       footprint="0402"
-      pcbX={1.8}
-      pcbY={2.9}
-      pcbRotation="0deg"
       schX={0.7}
-      schY={2.15}
+      schY={1.3}
       schRotation="270deg"
       connections={{
         pin1: "net.VDD",
@@ -103,13 +91,10 @@ export const HDC3022Subcircuit = (props: SubcircuitProps) => (
     />
     <resistor
       name="R2"
-      resistance="5k"
+      resistance="10k"
       footprint="0402"
-      pcbX={-1.8}
-      pcbY={2.9}
-      pcbRotation="0deg"
       schX={1.5}
-      schY={2.15}
+      schY={1.3}
       schRotation="270deg"
       connections={{
         pin1: "net.VDD",
@@ -119,4 +104,4 @@ export const HDC3022Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default HDC3022Subcircuit;
+export default EnvironmentalSensor_HDC2080;

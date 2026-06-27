@@ -1,7 +1,7 @@
 import { BQ27441DRZR_G1B } from "../chips/BQ27441DRZR_G1B";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const BQ27441G1Subcircuit = (props: SubcircuitProps) => (
+export const BatteryManagement_BQ27441G1 = (props: SubcircuitProps) => (
   <subcircuit schMaxTraceDistance={20} width={100} height={100} {...props}>
     <BQ27441DRZR_G1B
       name="U1"
@@ -249,4 +249,4 @@ export const BQ27441G1Subcircuit = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default BQ27441G1Subcircuit;
+export default BatteryManagement_BQ27441G1;
