@@ -1,7 +1,7 @@
 import { TPS7A0230PDBVR } from "../chips/TPS7A0230PDBVR";
 import type { SubcircuitProps } from "@tscircuit/props";
 
-export const LDO_TPS7A02 = (props: SubcircuitProps) => (
+export const PowerManagement_TPS7A02 = (props: SubcircuitProps) => (
   <subcircuit>
     <TPS7A0230PDBVR
       name="U1"
