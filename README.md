@@ -83,7 +83,7 @@ The package currently exports these subcircuit components:
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BuckBoostConverter_TPS63802`
-- `LDO_TPS7A02`
+- `PowerManagement_TPS7A02`
 - `PowerModule_TPSM82823`
 
 The package also exports:

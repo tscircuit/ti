@@ -86,4 +86,4 @@ export const PowerManagement_TPS7A02 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default LDO_TPS7A02;
+export default PowerManagement_TPS7A02;
