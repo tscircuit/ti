@@ -802,5 +802,3 @@ export const MSPM0G3507SPMR = (props: ChipProps<typeof pinLabels>) => {
     />
   );
 };
-
-export const MSPM0G3507 = MSPM0G3507SPMR;

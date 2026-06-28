@@ -41,13 +41,14 @@ import { BQ24074 } from "@tsci/tscircuit.ti"
 
 export default () => (
   <board width="14mm" height="14mm">
-    <BQ24074 name="U1" footprintVariant="rgtr" pcbX={0} pcbY={0} />
+    <BQ24074 name="U1" footprintVariant="vqfn-16-ep-3x3" pcbX={0} pcbY={0} />
   </board>
 )
 ```
 
 `footprintVariant` is optional today and defaults to the currently available
-chip footprint for that short-name export.
+chip footprint for that short-name export. New code should use readable package
+names such as `vqfn-16-ep-3x3` or `sot-23-5`.
 
 ## Connecting to Pins Inside a Subcircuit
 
@@ -110,31 +111,35 @@ The package currently exports these subcircuit components:
 
 ## Exported Chips
 
-The package also exports these low-level chip components from `lib/chips`:
+The package also exports these low-level chip components from `lib/chips`. Each
+chip is listed individually below, including whether it supports a
+`footprintVariant` selector on the short-name export.
 
-| Chip Export | Current Chip Definition |
-| --- | --- |
-| `BQ24074` | `BQ24074RGTR` |
-| `BQ25895` | `BQ25895RTWR` |
-| `BQ27441G1` | `BQ27441DRZR_G1B` |
-| `CC2340R5` | `CC2340R5` |
-| `CC3235SF` | `CC3235SF12RGKR` |
-| `DRV8833` | `DRV8833` |
-| `DRV8876` | `DRV8876` |
-| `HDC2080` | `HDC2080DMBR` |
-| `HDC3020` | `HDC3020DEFR` |
-| `HDC3022` | `HDC3022DEJR` |
-| `INA237` | `INA237AQDGSRQ1` |
-| `MSPM0G3507` | `MSPM0G3507SPMR` |
-| `TMP1075` | `TMP1075DSGR` |
-| `TPS22919` | `TPS22919` |
-| `TPS6293` | `TPS6293` |
-| `TPS63802` | `TPS63802DLAR` |
-| `TPS7A02` | `TPS7A0230PDBVR` |
-| `TPSM82823` | `TPSM82823` |
+| Chip Export | `footprintVariant` | Underlying Component Export |
+| --- | --- | --- |
+| `BQ24074` | `vqfn-16-ep-3x3` | `BQ24074RGTR` |
+| `BQ25895` | `wqfn-24-ep-4x4` | `BQ25895RTWR` |
+| `BQ27441G1` | `vson-12-ep-2.5x4` | `BQ27441DRZR_G1B` |
+| `CC2340R5` | `-` | `CC2340R5` |
+| `CC3235SF` | `vqfn-64-ep` | `CC3235SF12RGKR` |
+| `DRV8833` | `-` | `DRV8833` |
+| `DRV8876` | `-` | `DRV8876` |
+| `HDC2080` | `wson-6-ep-3x3` | `HDC2080DMBR` |
+| `HDC3020` | `wson-8-ep-2.5x2.5` | `HDC3020DEFR` |
+| `HDC3022` | `wson-8-ep-2.5x2.5` | `HDC3022DEJR` |
+| `INA237` | `vssop-10` | `INA237AQDGSRQ1` |
+| `MSPM0G3507` | `lqfp-64` | `MSPM0G3507SPMR` |
+| `TMP1075` | `wson-8-ep-2x2` | `TMP1075DSGR` |
+| `TPS22919` | `-` | `TPS22919` |
+| `TPS6293` | `-` | `TPS6293` |
+| `TPS63802` | `vson-hr-10` | `TPS63802DLAR` |
+| `TPS7A02` | `sot-23-5` | `TPS7A0230PDBVR` |
+| `TPSM82823` | `-` | `TPSM82823` |
 
-The MPN-named chip definitions are also re-exported from the package when you
-want to import the exact underlying component directly.
+Rows with `-` are direct chip exports and do not currently expose a
+`footprintVariant` prop. For the wrapper exports, the underlying component
+exports are also re-exported from the package when you want to import the exact
+low-level definition directly.
 
 The package also exports:
 
@@ -170,7 +175,7 @@ traces.
 
 These are the components exported from the package entrypoint in `index.ts`.
 For example, `PowerMonitor_INA237` comes from
-`lib/subcircuits/INA237-subcircuit.circuit.tsx` and can be imported from
+`lib/subcircuits/PowerMonitor_INA237.circuit.tsx` and can be imported from
 `@tsci/tscircuit.ti`.
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
