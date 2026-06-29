@@ -2,9 +2,9 @@ import { CC3235SF12RGKR } from "../chips/CC3235SF12RGKR";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props} schMaxTraceDistance={10}>
+  <subcircuit width={100} height={100} schMaxTraceDistance={10}>
     <CC3235SF12RGKR
-      name="U2"
+      name={props.name || "U2"}
       schX={0}
       schY={0}
       schWidth={3.5}

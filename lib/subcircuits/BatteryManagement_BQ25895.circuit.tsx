@@ -2,9 +2,9 @@ import { BQ25895RTWR } from "../chips/BQ25895RTWR";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance={20} width={100} height={100} {...props}>
+  <subcircuit schMaxTraceDistance={20} width={100} height={100}>
     <BQ25895RTWR
-      name="U1"
+      name={props.name || "U1"}
       schX={0}
       schY={0}
       schWidth={2.6}

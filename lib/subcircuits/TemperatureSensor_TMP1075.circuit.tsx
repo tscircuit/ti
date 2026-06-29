@@ -2,9 +2,9 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import { TMP1075DSGR } from "../chips/TMP1075DSGR";
 
 export const TemperatureSensor_TMP1075 = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props}>
+  <subcircuit width={100} height={100}>
     <chip
-      name="U2"
+      name={props.name || "U2"}
       manufacturerPartNumber="Two-Wire Host Controller"
       footprint="pinrow3"
       pcbX={0}

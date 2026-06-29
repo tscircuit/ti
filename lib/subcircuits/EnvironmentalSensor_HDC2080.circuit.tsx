@@ -2,9 +2,9 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import { HDC2080DMBR } from "../chips/HDC2080DMBR";
 
 export const EnvironmentalSensor_HDC2080 = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props}>
+  <subcircuit width={100} height={100}>
     <chip
-      name="U2"
+      name={props.name || "U2"}
       manufacturerPartNumber="MCU"
       footprint="pinrow5"
       schX={4.5}

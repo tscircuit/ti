@@ -2,8 +2,8 @@ import { DRV8876 } from "../chips/DRV8876";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const MotorDriver_DRV8876 = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props}>
-    <DRV8876 schX={0} schY={0} name="U1" />
+  <subcircuit width={100} height={100}>
+    <DRV8876 schX={0} schY={0} name={props.name || "U1"} />
     <trace from=".U1 > .PMODE" to="net.GND" />
     <trace from=".U1 > .GND" to="net.GND" />
     <trace from=".U1 > .PGND" to="net.GND" />

@@ -4,7 +4,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 export const PowerManagement_TPS7A02 = (props: SubcircuitProps) => (
   <subcircuit>
     <TPS7A0230PDBVR
-      name="U1"
+      name={props.name || "U1"}
       schX={0}
       schY={0}
       schWidth={1.5}

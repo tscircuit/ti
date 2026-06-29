@@ -2,9 +2,9 @@ import { TPS22919 } from "../chips/TPS22919";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const LoadSwitch_TPS22919 = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props}>
+  <subcircuit width={100} height={100}>
     <TPS22919
-      name="U1"
+      name={props.name || "U1"}
       schPinArrangement={{
         leftSide: {
           direction: "top-to-bottom",

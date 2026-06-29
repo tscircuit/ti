@@ -2,9 +2,9 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import { BQ24074RGTR } from "../chips/BQ24074RGTR";
 
 export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props}>
+  <subcircuit width={100} height={100}>
     <chip
-      name="J1"
+      name={props.name || "J1"}
       footprint="pinrow2"
       manufacturerPartNumber="Adapter"
       pinLabels={{
