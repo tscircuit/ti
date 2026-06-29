@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { BQ25895RTWR } from "./BQ25895RTWR";
+import { BQ25895RTWR } from "./BQ25895RTWR.circuit.tsx";
 
 type BQ25895FootprintVariant = "wqfn_24_ep_4x4" | (string & {});
 

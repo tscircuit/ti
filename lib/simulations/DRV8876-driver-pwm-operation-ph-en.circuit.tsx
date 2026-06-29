@@ -1,4 +1,4 @@
-import { DRV8876 } from "../chips/DRV8876";
+import { DRV8876 } from "../chips/DRV8876.circuit.tsx";
 
 export const DRV8876DriverPwmOperationPhEnCircuit = () => (
   <board routingDisabled>

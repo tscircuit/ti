@@ -1,4 +1,4 @@
-import { TPS22919 } from "../chips/TPS22919";
+import { TPS22919 } from "../chips/TPS22919.circuit.tsx";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const LoadSwitch_TPS22919 = (props: SubcircuitProps) => (

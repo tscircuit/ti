@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { BQ27441DRZR_G1B } from "./BQ27441DRZR_G1B";
+import { BQ27441DRZR_G1B } from "./BQ27441DRZR_G1B.circuit.tsx";
 
 type BQ27441G1FootprintVariant = "vson_12_ep_2p5x4" | (string & {});
 

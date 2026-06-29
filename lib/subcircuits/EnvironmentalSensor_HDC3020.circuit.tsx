@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { HDC3020DEFR } from "../chips/HDC3020DEFR";
+import { HDC3020DEFR } from "../chips/HDC3020DEFR.circuit.tsx";
 
 export const EnvironmentalSensor_HDC3020 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100}>

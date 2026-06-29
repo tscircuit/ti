@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { TMP1075DSGR } from "./TMP1075DSGR";
+import { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
 
 type TMP1075FootprintVariant = "wson_8_ep_2x2" | (string & {});
 

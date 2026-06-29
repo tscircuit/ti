@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { HDC3020DEFR } from "./HDC3020DEFR";
+import { HDC3020DEFR } from "./HDC3020DEFR.circuit.tsx";
 
 type HDC3020FootprintVariant = "wson_8_ep_2p5x2p5" | (string & {});
 

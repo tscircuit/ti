@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { MSPM0G3507SPMR } from "./MSPM0G3507SPMR";
+import { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
 
 type MSPM0G3507FootprintVariant = "lqfp_64" | (string & {});
 
