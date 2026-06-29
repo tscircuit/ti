@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { MSPM0G3507SPMR } from "../chips/MSPM0G3507SPMR";
+import { MSPM0G3507SPMR } from "../chips/MSPM0G3507SPMR.circuit.tsx";
 
 export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100}>

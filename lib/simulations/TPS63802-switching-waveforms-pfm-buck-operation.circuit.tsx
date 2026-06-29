@@ -1,4 +1,4 @@
-import { TPS63802DLAR } from "../chips/TPS63802DLAR";
+import { TPS63802DLAR } from "../chips/TPS63802DLAR.circuit.tsx";
 
 export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
   <board bomDisabled routingDisabled schMaxTraceDistance={3}>

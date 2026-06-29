@@ -1,4 +1,4 @@
-import { BQ27441DRZR_G1B } from "../chips/BQ27441DRZR_G1B";
+import { BQ27441DRZR_G1B } from "../chips/BQ27441DRZR_G1B.circuit.tsx";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const BatteryManagement_BQ27441G1 = (props: SubcircuitProps) => (

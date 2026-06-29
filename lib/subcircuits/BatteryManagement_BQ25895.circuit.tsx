@@ -1,4 +1,4 @@
-import { BQ25895RTWR } from "../chips/BQ25895RTWR";
+import { BQ25895RTWR } from "../chips/BQ25895RTWR.circuit.tsx";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (

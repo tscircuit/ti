@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1";
+import { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1.circuit.tsx";
 
 type INA237FootprintVariant = "vssop_10" | (string & {});
 

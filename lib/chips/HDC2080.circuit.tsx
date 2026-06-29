@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { HDC2080DMBR } from "./HDC2080DMBR";
+import { HDC2080DMBR } from "./HDC2080DMBR.circuit.tsx";
 
 type HDC2080FootprintVariant = "wson_6_ep_3x3" | (string & {});
 

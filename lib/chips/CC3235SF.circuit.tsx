@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { CC3235SF12RGKR } from "./CC3235SF12RGKR";
+import { CC3235SF12RGKR } from "./CC3235SF12RGKR.circuit.tsx";
 
 type CC3235SFFootprintVariant = "vqfn_64_ep" | (string & {});
 

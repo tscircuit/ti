@@ -1,4 +1,4 @@
-import { DRV8876 } from "../chips/DRV8876";
+import { DRV8876 } from "../chips/DRV8876.circuit.tsx";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const MotorDriver_DRV8876 = (props: SubcircuitProps) => (

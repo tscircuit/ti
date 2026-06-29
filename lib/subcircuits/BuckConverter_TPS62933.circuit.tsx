@@ -1,4 +1,4 @@
-import { TPS6293 } from "../chips/TPS6293";
+import { TPS6293 } from "../chips/TPS6293.circuit.tsx";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const BuckConverter_TPS62933 = (props: SubcircuitProps) => (

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { BQ24074RGTR } from "./BQ24074RGTR";
+import { BQ24074RGTR } from "./BQ24074RGTR.circuit.tsx";
 
 type BQ24074FootprintVariant = "vqfn_16_ep_3x3" | (string & {});
 

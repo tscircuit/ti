@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { BQ24074RGTR } from "../chips/BQ24074RGTR";
+import { BQ24074RGTR } from "../chips/BQ24074RGTR.circuit.tsx";
 
 export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100}>

@@ -1,4 +1,4 @@
-import { TPSM82823 } from "../chips/TPSM82823";
+import { TPSM82823 } from "../chips/TPSM82823.circuit.tsx";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const PowerModule_TPSM82823 = (props: SubcircuitProps) => (

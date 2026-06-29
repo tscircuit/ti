@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { TPS63802DLAR } from "./TPS63802DLAR";
+import { TPS63802DLAR } from "./TPS63802DLAR.circuit.tsx";
 
 type TPS63802FootprintVariant = "vson_hr_10" | (string & {});
 

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import { TPS7A0230PDBVR } from "./TPS7A0230PDBVR";
+import { TPS7A0230PDBVR } from "./TPS7A0230PDBVR.circuit.tsx";
 
 type TPS7A02FootprintVariant = "sot_23_5" | (string & {});
 
