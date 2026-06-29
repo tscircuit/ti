@@ -41,14 +41,14 @@ import { BQ24074 } from "@tsci/tscircuit.ti"
 
 export default () => (
   <board width="14mm" height="14mm">
-    <BQ24074 name="U1" footprintVariant="vqfn-16-ep-3x3" pcbX={0} pcbY={0} />
+    <BQ24074 name="U1" footprintVariant="vqfn_16_ep_3x3" pcbX={0} pcbY={0} />
   </board>
 )
 ```
 
 `footprintVariant` is optional today and defaults to the currently available
 chip footprint for that short-name export. New code should use readable package
-names such as `vqfn-16-ep-3x3` or `sot-23-5`.
+names such as `vqfn_16_ep_3x3` or `sot_23_5`.
 
 ## Connecting to Pins Inside a Subcircuit
 
@@ -117,23 +117,23 @@ chip is listed individually below, including whether it supports a
 
 | Chip Export | `footprintVariant` | Underlying Component Export |
 | --- | --- | --- |
-| `BQ24074` | `vqfn-16-ep-3x3` | `BQ24074RGTR` |
-| `BQ25895` | `wqfn-24-ep-4x4` | `BQ25895RTWR` |
-| `BQ27441G1` | `vson-12-ep-2.5x4` | `BQ27441DRZR_G1B` |
+| `BQ24074` | `vqfn_16_ep_3x3` | `BQ24074RGTR` |
+| `BQ25895` | `wqfn_24_ep_4x4` | `BQ25895RTWR` |
+| `BQ27441G1` | `vson_12_ep_2p5x4` | `BQ27441DRZR_G1B` |
 | `CC2340R5` | `-` | `CC2340R5` |
-| `CC3235SF` | `vqfn-64-ep` | `CC3235SF12RGKR` |
+| `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
-| `HDC2080` | `wson-6-ep-3x3` | `HDC2080DMBR` |
-| `HDC3020` | `wson-8-ep-2.5x2.5` | `HDC3020DEFR` |
-| `HDC3022` | `wson-8-ep-2.5x2.5` | `HDC3022DEJR` |
-| `INA237` | `vssop-10` | `INA237AQDGSRQ1` |
-| `MSPM0G3507` | `lqfp-64` | `MSPM0G3507SPMR` |
-| `TMP1075` | `wson-8-ep-2x2` | `TMP1075DSGR` |
+| `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
+| `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
+| `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
+| `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
+| `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
+| `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS6293` | `-` | `TPS6293` |
-| `TPS63802` | `vson-hr-10` | `TPS63802DLAR` |
-| `TPS7A02` | `sot-23-5` | `TPS7A0230PDBVR` |
+| `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
+| `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPSM82823` | `-` | `TPSM82823` |
 
 Rows with `-` are direct chip exports and do not currently expose a
