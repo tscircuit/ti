@@ -17,7 +17,7 @@ import {
   TPS63802,
   TPS7A02,
   TPSM82823,
-} from "./lib/chips/index.circuit.tsx";
+} from "./lib/chips/index";
 import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit";
 import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
 import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit";
