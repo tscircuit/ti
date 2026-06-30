@@ -1,4 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
+import bq24074SpiceModel from "./spice-models/BQ24074-spice-model.json";
 
 const pinLabels = {
   pin1: ["TS"],
@@ -28,6 +29,28 @@ export const BQ24074RGTR = (props: ChipProps<typeof pinLabels>) => {
         jlcpcb: ["C54313"],
       }}
       manufacturerPartNumber="BQ24074RGTR"
+      spiceModel={
+        <spicemodel
+          source={bq24074SpiceModel.source}
+          spicePinMapping={{
+            TS: "TS",
+            BAT: "BAT",
+            N_CE: "N_CE",
+            EN2: "EN2",
+            EN1: "EN1",
+            N_PGOOD: "N_PGOOD",
+            VSS: "VSS",
+            N_CHG: "N_CHG",
+            OUT: "OUT",
+            ILIM: "ILIM",
+            IN: "IN",
+            TMR: "TMR",
+            ITERM: "ITERM",
+            ISET: "ISET",
+            EP: "EP",
+          }}
+        />
+      }
       footprint={
         <footprint>
           <smtpad
