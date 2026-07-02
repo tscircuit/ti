@@ -13,7 +13,7 @@ export const MotorDriver_DRV8876 = (props: SubcircuitProps) => (
 
     <capacitor
       schX={4}
-      schY={-1.15}
+      schY={-1.6}
       name="C3"
       footprint="0402"
       capacitance="0.1uF"
@@ -23,7 +23,7 @@ export const MotorDriver_DRV8876 = (props: SubcircuitProps) => (
 
     <capacitor
       schX={5}
-      schY={-1.15}
+      schY={-1.6}
       name="C4"
       footprint="1206"
       capacitance="Bulk"
@@ -33,7 +33,7 @@ export const MotorDriver_DRV8876 = (props: SubcircuitProps) => (
 
     <capacitor
       schX={2.5}
-      schY={1.2}
+      schY={1}
       name="C1"
       footprint="0402"
       capacitance="0.022uF"
@@ -43,7 +43,7 @@ export const MotorDriver_DRV8876 = (props: SubcircuitProps) => (
 
     <capacitor
       schX={2.5}
-      schY={-0.4}
+      schY={-0.9}
       name="C2"
       footprint="0402"
       capacitance="0.1uF"
@@ -96,16 +96,16 @@ export const MotorDriver_DRV8876 = (props: SubcircuitProps) => (
     <trace to=".R3 > .pin2" from="net.ADC" />
 
     <chip footprint={"pinrow5"} schX={-6.5} schY={1.2} name="Controller" />
-    <trace to=".Controller > .PWM" from=".U1 > .EN" />
+    <trace name="CTRL_PWM_EN" to=".Controller > .PWM" from=".U1 > .EN" />
     <trace to=".Controller > .pin2" from=".U1 > .PH" />
-    <trace to=".Controller > .pin3" from=".U1 > .nSLEEP" />
-    <trace to=".Controller > .pin4" from="net.nFAULT" />
+    <trace name="CTRL_SLEEP" to=".Controller > .pin3" from=".U1 > .nSLEEP" />
+    <trace name="CTRL_nFAULT" to=".Controller > .pin4" from="net.nFAULT" />
     <trace to=".U1 > .nFAULT" from="net.nFAULT" />
-    <trace to=".Controller > .ADC" from="net.ADC" />
+    <trace name="CTRL_IPROPI_ADC" to=".Controller > .ADC" from="net.ADC" />
     <trace to=".U1 > .IPROPI" from="net.ADC" />
 
     <chip schX={1} schY={-4.5} footprint={"pinrow2"} name="Motor" />
-    <trace to=".U1 > .OUT1" from=".Motor > .pin1" />
+    <trace name="MOTOR_OUT1" to=".U1 > .OUT1" from=".Motor > .pin1" />
     <trace to=".U1 > .OUT2" from=".Motor > .pin2" />
   </subcircuit>
 );

@@ -86,13 +86,7 @@ export const BuckBoostConverter_TPS63802 = (props: SubcircuitProps) => (
       schOrientation="vertical"
     />
 
-    <netlabel
-      net="VIN"
-      connection="U1.VIN"
-      schX={-5.7}
-      schY={1.8}
-      anchorSide="right"
-    />
+    <trace from="U1.VIN" to="net.VIN" />
     <schematictext
       text="VIN 1.3V-5.5V"
       schX={-6}
@@ -100,13 +94,7 @@ export const BuckBoostConverter_TPS63802 = (props: SubcircuitProps) => (
       fontSize={0.18}
       anchor="center"
     />
-    <netlabel
-      net="VOUT"
-      connection="U1.pin6"
-      schX={1.7}
-      schY={1.8}
-      anchorSide="left"
-    />
+    <trace from="U1.pin6" to="net.VOUT" />
     <schematictext
       text="VOUT = 3.3V"
       schX={2}
