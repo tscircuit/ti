@@ -147,7 +147,7 @@ export const PowerMonitor_INA237 = (props: SubcircuitProps) => (
       name="J1"
       manufacturerPartNumber="MCU I2C Interface"
       footprint="pinrow4"
-      schX={8.25}
+      schX={8.55}
       schY={-0.55}
       schWidth={2.3}
       schHeight={2.9}
@@ -201,7 +201,7 @@ export const PowerMonitor_INA237 = (props: SubcircuitProps) => (
     />
     <schematictext
       text="To MCU"
-      schX={9.95}
+      schX={10.2}
       schY={-0.55}
       fontSize={0.24}
       anchor="center"
