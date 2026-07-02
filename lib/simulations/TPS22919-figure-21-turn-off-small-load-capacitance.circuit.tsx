@@ -60,18 +60,18 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
     <voltagesource
       name="V_IN"
       voltage="3.3V"
-      schX={-5.3}
+      schX={-5}
       schY={1.1}
       schRotation="270deg"
     />
 
-    <OnFallingPulse name="V_ON" schX={-5.3} schY={-0.6} />
+    <OnFallingPulse name="V_ON" schX={-4.3} schY={-1} />
 
     <resistor
       name="R_L"
       resistance="100"
       footprint="0603"
-      schX={4.8}
+      schX={3.8}
       schY={0.4}
       schOrientation="vertical"
     />
