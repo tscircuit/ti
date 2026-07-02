@@ -84,9 +84,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       resistance="100k"
       footprint="0402"
       schX={2.3}
-      schY={2.05}
+      schY={1.2}
       pcbX={11}
       pcbY={-4}
+      schRotation={270}
       connections={{ pin1: "U1.ROSC", pin2: "net.GND" }}
     />
 
@@ -95,7 +96,7 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       resistance="4.7k"
       footprint="0402"
       schRotation={90}
-      schX={4.7}
+      schX={5}
       schY={0.6}
       pcbX={-9}
       pcbY={6}
