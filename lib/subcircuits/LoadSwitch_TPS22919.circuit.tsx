@@ -113,7 +113,7 @@ export const LoadSwitch_TPS22919 = (props: SubcircuitProps) => (
       pcbY={2}
       schRotation={90}
     />
-    <netlabel net="GND" connection="U1.GND" schX={-1.5} schY={-1.45} />
+    <trace from="U1.GND" to="net.GND" />
   </subcircuit>
 );
 

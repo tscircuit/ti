@@ -250,8 +250,7 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
       titleFontSize={0.35}
       strokeStyle="dashed"
     />
-    <netlabel net="OUT" schX={4.75} schY={0.8} anchorSide="right" />
-    <schematicline x1={4.75} y1={0.8} x2={4.85} y2={0.8} strokeWidth={0.03} />
+    <trace from="U1.OUT" to="net.OUT" />
   </subcircuit>
 );
 

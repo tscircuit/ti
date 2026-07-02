@@ -105,7 +105,7 @@ export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (
         pin1: "5V",
         pin2: "GND",
       }}
-      schX={-3.5}
+      schX={-4.5}
       schY={4.05}
       schPinArrangement={{
         rightSide: {
@@ -118,7 +118,7 @@ export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (
 
     <schematictext
       text="5V at 2.4A OTG"
-      schX={-3.45}
+      schX={-3.8}
       schY={4.85}
       fontSize={0.18}
       anchor="center"
@@ -127,8 +127,8 @@ export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (
       name="C2"
       capacitance="40uF"
       footprint="0805"
-      schX={-2.25}
-      schY={3.15}
+      schX={-2.7}
+      schY={3.3}
       schRotation={90}
       connections={{ pin2: "net.GND" }}
     />
@@ -353,9 +353,9 @@ export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (
     />
 
     <trace from="J1.pin1" to="C1.pin1" />
-    <trace from="C1.pin1" to="U1.VBUS" />
-    <trace from="J1.pin2" to="U1.D_POS" />
-    <trace from="J1.pin3" to="U1.D_NEG" />
+    <trace name="VBUS_C1_U1" from="C1.pin1" to="U1.VBUS" />
+    <trace name="USB_DP_U1" from="J1.pin2" to="U1.D_POS" />
+    <trace name="USB_DN_U1" from="J1.pin3" to="U1.D_NEG" />
 
     <trace from="J2.pin1" to="C2.pin1" />
     <trace from="C2.pin1" to="U1.PMID" />
@@ -371,7 +371,7 @@ export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (
     <trace from="J3.pin5" to="U1.OTG" />
     <trace from="J3.pin6" to="U1.CE" />
 
-    <trace from="R5.pin1" to="L1.pin2" />
+    <trace name="SYS_STAT_PULLUP" from="R5.pin1" to="L1.pin2" />
     <trace from="R5.pin2" to="D1.anode" />
     <trace from="D1.cathode" to="U1.STAT" />
 
@@ -380,15 +380,15 @@ export const BatteryManagement_BQ25895 = (props: SubcircuitProps) => (
     <trace from="C3.pin1" to="L1.pin1" />
     <trace from="C3.pin2" to="U1.BTST" />
     <trace from="U1.REGN" to="C4.pin1" />
-    <trace from="C4.pin1" to="R6.pin1" />
+    <trace name="REGN_TS_BIAS" from="C4.pin1" to="R6.pin1" />
     <trace from="L1.pin2" to="C5.pin1" />
     <trace from="C5.pin1" to="C6.pin1" />
-    <trace from="L1.pin2" to="U1.SYS1" />
-    <trace from="L1.pin2" to="U1.SYS2" />
+    <trace name="SYS_L1_U1_1" from="L1.pin2" to="U1.SYS1" />
+    <trace name="SYS_L1_U1_2" from="L1.pin2" to="U1.SYS2" />
 
     <trace from="BT1.pin1" to="C7.pin1" />
-    <trace from="C7.pin1" to="U1.BAT1" />
-    <trace from="C7.pin1" to="U1.BAT2" />
+    <trace name="BAT_C7_U1_1" from="C7.pin1" to="U1.BAT1" />
+    <trace name="BAT_C7_U1_2" from="C7.pin1" to="U1.BAT2" />
 
     <trace from="SW1.pin1" to="U1.QON" />
 

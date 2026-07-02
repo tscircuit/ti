@@ -191,26 +191,12 @@ export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = () => (
       fontSize={0.16}
       anchor="center"
     />
-    <netlabel
-      net="VCC"
-      connection="V_CC.pin1"
-      schX={-6.8}
-      schY={3.5}
-      anchorSide="bottom"
-    />
     <schematictext
       text="Figure 34 PH/EN PWM"
       schX={-2}
       schY={4}
       fontSize={0.16}
       anchor="center"
-    />
-    <netlabel
-      net="VREF"
-      connection="U1.VREF"
-      schX={-2.1}
-      schY={-0.5}
-      anchorSide="right"
     />
 
     <trace from="V_VM.pin1" to="net.VM" />

@@ -137,63 +137,12 @@ export const BatteryManagement_BQ27441G1 = (props: SubcircuitProps) => (
       }}
     />
 
-    <netlabel
-      net="SDA"
-      connection="U1.SDA"
-      schX={-9.55}
-      schY={2.28}
-      anchorSide="right"
-    />
-    <netlabel
-      net="SCL"
-      connection="U1.SCL"
-      schX={-9.55}
-      schY={1.46}
-      anchorSide="right"
-    />
-    <netlabel
-      net="GPOUT"
-      connection="U1.GPOUT"
-      schX={9.65}
-      schY={2.28}
-      anchorSide="left"
-    />
-    <netlabel
-      net="BIN"
-      connection="U1.BIN"
-      schX={9.65}
-      schY={0.66}
-      anchorSide="left"
-    />
-    <netlabel
-      net="BIN"
-      connection="J5.pin2"
-      schX={-6.55}
-      schY={-4.8}
-      anchorSide="left"
-    />
-    <netlabel
-      net="VSYS"
-      connection="R1.pin2"
-      schX={9.65}
-      schY={-4.8}
-      anchorSide="left"
-    />
-
-    <netlabel
-      net="PGND"
-      connection="U1.VSS"
-      schX={-4.6}
-      schY={0.2}
-      anchorSide="top"
-    />
-    <netlabel
-      net="PGND"
-      connection="U1.EP"
-      schX={0}
-      schY={-2.85}
-      anchorSide="top"
-    />
+    <trace from="U1.SDA" to="net.SDA" />
+    <trace from="U1.SCL" to="net.SCL" />
+    <trace from="U1.GPOUT" to="net.GPOUT" />
+    <trace from="U1.BIN" to="net.BIN" />
+    <trace from="J5.pin2" to="net.BIN" />
+    <trace from="R1.pin2" to="net.VSYS" />
 
     <schematictext
       text="VPU"

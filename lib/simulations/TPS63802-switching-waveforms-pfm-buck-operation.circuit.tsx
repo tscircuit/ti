@@ -138,13 +138,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       schOrientation="vertical"
     />
 
-    <netlabel
-      net="VIN"
-      connection="U1.VIN"
-      schX={-3.7}
-      schY={1.8}
-      anchorSide="right"
-    />
+    <trace from="U1.VIN" to="net.VIN" />
     <schematictext
       text="VIN 1.3V-5.5V"
       schX={-4}
@@ -152,13 +146,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       fontSize={0.18}
       anchor="center"
     />
-    <netlabel
-      net="VOUT"
-      connection="U1.pin6"
-      schX={1.7}
-      schY={1.8}
-      anchorSide="left"
-    />
+    <trace from="U1.pin6" to="net.VOUT" />
     <schematictext
       text="VOUT = 3.3V"
       schX={2}
