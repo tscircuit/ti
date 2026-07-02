@@ -98,7 +98,7 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
     <SysoffStepSource
       name="V_SYSOFF"
       schX={-4.4}
-      schY={1.3}
+      schY={0.55}
       schWidth={1.8}
       schHeight={0.45}
       connections={{ OUT: "net.SYSOFF", VSS: "net.GND" }}
@@ -106,8 +106,8 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
     <voltagesource
       name="V_BAT"
       voltage="4.05V"
-      schX={4.1}
-      schY={0.5}
+      schX={6}
+      schY={-2.6}
       schRotation="270deg"
       connections={{ pin1: "net.BAT_SRC", pin2: "net.GND" }}
     />
@@ -119,16 +119,16 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       graphCenter={0}
       graphOffsetDivs={-6}
       graphUnitsPerDiv={0.5}
-      schX={6.8}
-      schY={-2.45}
+      schX={3.8}
+      schY={-2}
     />
 
     <resistor
       name="R_LOAD"
       resistance="10"
       footprint="0603"
-      schX={5.9}
-      schY={-1}
+      schX={3.9}
+      schY={0}
       schOrientation="vertical"
       connections={{ pin1: "net.OUT", pin2: "net.GND" }}
     />

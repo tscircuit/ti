@@ -69,8 +69,8 @@ export const BQ24074OvpFaultCircuit = () => (
 
     <BQ24074OvpInputStep
       name="V_IN"
-      schX={-4.3}
-      schY={1.4}
+      schX={-4.4}
+      schY={1.55}
       schWidth={1.8}
       schHeight={0.45}
       connections={{ OUT: "net.VIN", VSS: "net.GND" }}
@@ -78,15 +78,15 @@ export const BQ24074OvpFaultCircuit = () => (
     <voltagesource
       name="V_LOGIC"
       voltage="3.3V"
-      schX={-4.2}
-      schY={-0.8}
+      schX={-5.2}
+      schY={-1.35}
       schRotation="270deg"
       connections={{ pin1: "net.EN2", pin2: "net.GND" }}
     />
     <voltagesource
       name="V_BAT"
       voltage="4.2V"
-      schX={4.2}
+      schX={9.6}
       schY={-0.5}
       schRotation="270deg"
       connections={{ pin1: "net.BAT_SRC", pin2: "net.GND" }}
@@ -95,8 +95,9 @@ export const BQ24074OvpFaultCircuit = () => (
       name="R_BAT_SRC"
       resistance="0.1"
       footprint="0603"
-      schX={5.2}
-      schY={-0.5}
+      schX={7.5}
+      schY={0.5}
+      schRotation={180}
       connections={{ pin1: "net.BAT_SRC", pin2: "net.BAT_PROBE_SRC" }}
     />
 
@@ -108,15 +109,15 @@ export const BQ24074OvpFaultCircuit = () => (
       graphCenter={0}
       graphOffsetDivs={0}
       graphUnitsPerDiv={0.5}
-      schX={6.8}
-      schY={-1.9}
+      schX={4.7}
+      schY={0.5}
     />
     <resistor
       name="R_LOAD"
       resistance="10"
       footprint="0603"
-      schX={5.9}
-      schY={0.7}
+      schX={6.4}
+      schY={2.5}
       schOrientation="vertical"
       connections={{ pin1: "net.OUT", pin2: "net.GND" }}
     />
@@ -124,8 +125,8 @@ export const BQ24074OvpFaultCircuit = () => (
       name="C_OUT"
       capacitance="4.7uF"
       footprint="0603"
-      schX={2.2}
-      schY={0.7}
+      schX={5.1}
+      schY={2.5}
       schOrientation="vertical"
       connections={{ pin1: "net.OUT", pin2: "net.GND" }}
     />
@@ -133,8 +134,8 @@ export const BQ24074OvpFaultCircuit = () => (
       name="C_BAT"
       capacitance="4.7uF"
       footprint="0603"
-      schX={2.2}
-      schY={-0.55}
+      schX={4.1}
+      schY={2.5}
       schOrientation="vertical"
       connections={{ pin1: "net.BAT", pin2: "net.GND" }}
     />
@@ -142,8 +143,8 @@ export const BQ24074OvpFaultCircuit = () => (
       name="R_ISET"
       resistance="1.13k"
       footprint="0603"
-      schX={6.3}
-      schY={-2.7}
+      schX={8.2}
+      schY={-2.2}
       schOrientation="vertical"
       connections={{ pin1: "net.ISET", pin2: "net.GND" }}
     />
@@ -151,8 +152,8 @@ export const BQ24074OvpFaultCircuit = () => (
       name="R_ILIM"
       resistance="1.18k"
       footprint="0603"
-      schX={5}
-      schY={-2.7}
+      schX={6.6}
+      schY={-2.2}
       schOrientation="vertical"
       connections={{ pin1: "net.ILIM", pin2: "net.GND" }}
     />
@@ -160,8 +161,8 @@ export const BQ24074OvpFaultCircuit = () => (
       name="R_ITERM"
       resistance="4.12k"
       footprint="0603"
-      schX={3.7}
-      schY={-2.7}
+      schX={5.0}
+      schY={-2.2}
       schOrientation="vertical"
       connections={{ pin1: "net.ITERM", pin2: "net.GND" }}
     />
@@ -169,8 +170,8 @@ export const BQ24074OvpFaultCircuit = () => (
       name="R_TMR"
       resistance="46.4k"
       footprint="0603"
-      schX={2.4}
-      schY={-2.7}
+      schX={3.4}
+      schY={-2.2}
       schOrientation="vertical"
       connections={{ pin1: "net.TMR", pin2: "net.GND" }}
     />
@@ -178,8 +179,8 @@ export const BQ24074OvpFaultCircuit = () => (
       name="R_TS"
       resistance="10k"
       footprint="0603"
-      schX={-3.2}
-      schY={-1.7}
+      schX={-3.8}
+      schY={-2.75}
       schOrientation="vertical"
       connections={{ pin1: "net.TS", pin2: "net.GND" }}
     />
@@ -187,7 +188,7 @@ export const BQ24074OvpFaultCircuit = () => (
     <schematictext
       text="VIN = 6 V to 15 V, RLOAD = 10 ohm"
       schX={0}
-      schY={2.5}
+      schY={3.35}
       fontSize={0.16}
       anchor="center"
     />
