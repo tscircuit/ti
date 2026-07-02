@@ -6,7 +6,11 @@ VON OUT GND PULSE(5 0 16u 100n 100n 120u 200u)
 .ENDS TPS22919_FIG21_ON_FALL
 `;
 
-const OnFallingPulse = (props: { name: string; schX?: number; schY?: number }) => (
+const OnFallingPulse = (props: {
+  name: string;
+  schX?: number;
+  schY?: number;
+}) => (
   <chip
     {...props}
     pinLabels={{
