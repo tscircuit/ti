@@ -1,4 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
+import tps22919SpiceModel from "./spice-models/TPS22919-spice-model.json";
 
 const pinLabels = {
   pin1: ["IN"],
@@ -17,6 +18,18 @@ export const TPS22919 = (props: ChipProps<typeof pinLabels>) => {
         jlcpcb: ["C2149796"],
       }}
       manufacturerPartNumber="TPS22919DCKR"
+      spiceModel={
+        <spicemodel
+          source={tps22919SpiceModel.source}
+          spicePinMapping={{
+            GND: "GND",
+            ON: "ON",
+            QOD: "QOD",
+            VIN: "IN",
+            VOUT: "OUT",
+          }}
+        />
+      }
       footprint={
         <footprint>
           <smtpad
