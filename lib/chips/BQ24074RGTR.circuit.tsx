@@ -1,5 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
-import bq24074SpiceModel from "./spice-models/BQ24074-spice-model.json";
+import bq24074SpiceModel from "./spice-models/BQ24074-spice-model.encrypted.json";
 
 const pinLabels = {
   pin1: ["TS"],

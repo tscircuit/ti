@@ -258,7 +258,7 @@ export const BQ24074OvpFaultCircuit = () => (
       duration="240us"
       startTime="40us"
       timePerStep="200ns"
-      spiceEngine="ngspice"
+      spiceEngine="encrypted-pspice-ngspice"
       spiceOptions={{
         method: "gear",
         reltol: 0.01,
