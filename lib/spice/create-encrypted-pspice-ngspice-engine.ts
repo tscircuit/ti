@@ -13,10 +13,18 @@ const nativeImport = new Function("moduleUrl", "return import(moduleUrl)") as <
 
 const importNgspiceSpiceEngine = async () => {
   if (!ngspiceModulePromise) {
+    const processLike = (
+      globalThis as {
+        process?: { versions?: { node?: string } };
+      }
+    ).process;
+    const isNodeRuntime = Boolean(processLike?.versions?.node);
     ngspiceModulePromise = nativeImport<{
       default: () => Promise<SpiceEngine>;
     }>(
-      "https://jscdn.tscircuit.com/@tscircuit/ngspice-spice-engine/0.0.18/+esm",
+      isNodeRuntime
+        ? "@tscircuit/ngspice-spice-engine"
+        : "https://jscdn.tscircuit.com/@tscircuit/ngspice-spice-engine/0.0.18/+esm",
     );
   }
 
