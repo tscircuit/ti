@@ -107,8 +107,8 @@ export const BQ24074OvpFaultCircuit = () => (
       color="#00aec7"
       graphDisplayName="IBAT"
       graphCenter={0}
-      graphOffsetDivs={0}
-      graphUnitsPerDiv={0.5}
+      graphVerticalOffset={0}
+      graphCurrentPerDiv={0.5}
       schX={4.7}
       schY={0.5}
     />
@@ -229,8 +229,8 @@ export const BQ24074OvpFaultCircuit = () => (
       color="#394fbd"
       graphDisplayName="VIN"
       graphCenter={6}
-      graphOffsetDivs={6}
-      graphUnitsPerDiv={10}
+      graphVerticalOffset={6}
+      graphVoltagePerDiv={10}
     />
     <voltageprobe
       name="VOUT_PROBE"
@@ -239,8 +239,8 @@ export const BQ24074OvpFaultCircuit = () => (
       color="#a64acb"
       graphDisplayName="VOUT"
       graphCenter={4.4}
-      graphOffsetDivs={3}
-      graphUnitsPerDiv={0.3}
+      graphVerticalOffset={3}
+      graphVoltagePerDiv={0.3}
     />
     <voltageprobe
       name="VBAT_PROBE"
@@ -249,8 +249,8 @@ export const BQ24074OvpFaultCircuit = () => (
       color="#55a86c"
       graphDisplayName="VBAT"
       graphCenter={4.2}
-      graphOffsetDivs={2.4}
-      graphUnitsPerDiv={0.1}
+      graphVerticalOffset={2.4}
+      graphVoltagePerDiv={0.1}
     />
 
     <analogsimulation
@@ -259,6 +259,7 @@ export const BQ24074OvpFaultCircuit = () => (
       startTime="40us"
       timePerStep="200ns"
       spiceEngine="encrypted-pspice-ngspice"
+      graphIndependentAxes
       spiceOptions={{
         method: "gear",
         reltol: 0.01,

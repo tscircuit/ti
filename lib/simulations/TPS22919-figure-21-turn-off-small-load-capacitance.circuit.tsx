@@ -94,8 +94,8 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
       color="#1d4ed8"
       graphDisplayName="VIN"
       graphCenter={3.3}
-      graphOffsetDivs={0.5}
-      graphUnitsPerDiv={2}
+      graphVerticalOffset={0.5}
+      graphVoltagePerDiv={2}
     />
     <voltageprobe
       name="ON_PROBE"
@@ -104,8 +104,8 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
       color="#06b6d4"
       graphDisplayName="ON"
       graphCenter={2.5}
-      graphOffsetDivs={1.5}
-      graphUnitsPerDiv={5}
+      graphVerticalOffset={1.5}
+      graphVoltagePerDiv={5}
     />
     <voltageprobe
       name="VOUT_PROBE"
@@ -114,8 +114,8 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
       color="#d946ef"
       graphDisplayName="VOUT"
       graphCenter={1.65}
-      graphOffsetDivs={-0.4}
-      graphUnitsPerDiv={2}
+      graphVerticalOffset={-0.4}
+      graphVoltagePerDiv={2}
     />
 
     <analogsimulation
@@ -123,6 +123,7 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
       duration="80us"
       timePerStep="20ns"
       spiceEngine="ngspice"
+      graphIndependentAxes
       spiceOptions={{
         method: "gear",
         reltol: 0.01,

@@ -163,8 +163,8 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       color="#00d95f"
       graphDisplayName="IOUT"
       graphCenter={0.5}
-      graphOffsetDivs={-3}
-      graphUnitsPerDiv={0.5}
+      graphVerticalOffset={-3}
+      graphCurrentPerDiv={0.5}
       schX={5.4}
     />
     <inductor
@@ -250,8 +250,8 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       color="#f1d900"
       graphDisplayName="OUT1"
       graphCenter={12}
-      graphOffsetDivs={0}
-      graphUnitsPerDiv={5}
+      graphVerticalOffset={0}
+      graphVoltagePerDiv={5}
     />
     <voltageprobe
       name="OUT2_PROBE"
@@ -260,8 +260,8 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       color="#00cfe8"
       graphDisplayName="OUT2"
       graphCenter={12}
-      graphOffsetDivs={-0.5}
-      graphUnitsPerDiv={5}
+      graphVerticalOffset={-0.5}
+      graphVoltagePerDiv={5}
     />
     <voltageprobe
       name="EN_PROBE"
@@ -270,8 +270,8 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       color="#d946ef"
       graphDisplayName="EN/IN1"
       graphCenter={1.68}
-      graphOffsetDivs={3}
-      graphUnitsPerDiv={4}
+      graphVerticalOffset={3}
+      graphVoltagePerDiv={4}
     />
 
     <analogsimulation
@@ -280,6 +280,7 @@ export const DRV8876DriverPwmOperationPhEnCircuit = () => (
       startTime="1.8ms"
       timePerStep="100ns"
       spiceEngine="ngspice"
+      graphIndependentAxes
       spiceOptions={{
         method: "gear",
         reltol: 0.01,
