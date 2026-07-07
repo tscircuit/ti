@@ -117,7 +117,7 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       color="#00aec7"
       graphDisplayName="IBAT"
       graphCenter={0}
-      graphVerticalOffset={-6}
+      graphVerticalOffset={-3}
       graphCurrentPerDiv={0.5}
       schX={3.8}
       schY={-2}
@@ -158,7 +158,7 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       color="#394fbd"
       graphDisplayName="VSYSOFF"
       graphCenter={0}
-      graphVerticalOffset={6}
+      graphVerticalOffset={30}
       graphVoltagePerDiv={5}
     />
     <voltageprobe
@@ -178,7 +178,7 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       color="#a64acb"
       graphDisplayName="VOUT"
       graphCenter={4}
-      graphVerticalOffset={-2.4}
+      graphVerticalOffset={-4.8}
       graphVoltagePerDiv={2}
     />
 

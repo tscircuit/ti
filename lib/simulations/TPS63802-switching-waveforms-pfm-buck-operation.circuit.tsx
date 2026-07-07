@@ -193,7 +193,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       color="#315cff"
       graphDisplayName="VO"
       graphCenter={3.3}
-      graphVerticalOffset={3}
+      graphVerticalOffset={0.45}
       graphVoltagePerDiv={0.15}
     />
     <voltageprobe
@@ -203,7 +203,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       color="#00d98b"
       graphDisplayName="L1"
       graphCenter={0}
-      graphVerticalOffset={2}
+      graphVerticalOffset={13}
       graphVoltagePerDiv={6.5}
     />
     <voltageprobe
@@ -213,7 +213,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       color="#f1b400"
       graphDisplayName="L2"
       graphCenter={0}
-      graphVerticalOffset={1}
+      graphVerticalOffset={5.5}
       graphVoltagePerDiv={5.5}
     />
 
