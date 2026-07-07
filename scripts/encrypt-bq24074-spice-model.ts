@@ -20,7 +20,7 @@ if (!subcktMatch) {
 
 const encryptedModel = {
   source: toEncryptedPspiceModelSpiceSource(
-    encryptPspiceModelSource(sourceModel.source),
+    await encryptPspiceModelSource(sourceModel.source),
     {
       name: subcktMatch[1],
       pins: subcktMatch[2].trim().split(/\s+/),

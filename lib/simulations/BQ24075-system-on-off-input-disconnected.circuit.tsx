@@ -117,8 +117,8 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       color="#00aec7"
       graphDisplayName="IBAT"
       graphCenter={0}
-      graphOffsetDivs={-6}
-      graphUnitsPerDiv={0.5}
+      graphVerticalOffset={-6}
+      graphCurrentPerDiv={0.5}
       schX={3.8}
       schY={-2}
     />
@@ -158,8 +158,8 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       color="#394fbd"
       graphDisplayName="VSYSOFF"
       graphCenter={0}
-      graphOffsetDivs={6}
-      graphUnitsPerDiv={5}
+      graphVerticalOffset={6}
+      graphVoltagePerDiv={5}
     />
     <voltageprobe
       name="VBAT_PROBE"
@@ -168,8 +168,8 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       color="#55a86c"
       graphDisplayName="VBAT"
       graphCenter={4}
-      graphOffsetDivs={0}
-      graphUnitsPerDiv={2}
+      graphVerticalOffset={0}
+      graphVoltagePerDiv={2}
     />
     <voltageprobe
       name="VOUT_PROBE"
@@ -178,8 +178,8 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       color="#a64acb"
       graphDisplayName="VOUT"
       graphCenter={4}
-      graphOffsetDivs={-2.4}
-      graphUnitsPerDiv={2}
+      graphVerticalOffset={-2.4}
+      graphVoltagePerDiv={2}
     />
 
     <analogsimulation
@@ -187,6 +187,7 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
       duration="24ms"
       timePerStep="20us"
       spiceEngine="ngspice"
+      graphIndependentAxes
       spiceOptions={{
         method: "gear",
         reltol: 0.01,

@@ -53,8 +53,8 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       color="#d946ef"
       graphDisplayName="IL"
       graphCenter={0}
-      graphOffsetDivs={0}
-      graphUnitsPerDiv={0.8}
+      graphVerticalOffset={0}
+      graphCurrentPerDiv={0.8}
       schX={-1.8}
       schY={5}
     />
@@ -193,8 +193,8 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       color="#315cff"
       graphDisplayName="VO"
       graphCenter={3.3}
-      graphOffsetDivs={3}
-      graphUnitsPerDiv={0.15}
+      graphVerticalOffset={3}
+      graphVoltagePerDiv={0.15}
     />
     <voltageprobe
       name="L1_PROBE"
@@ -203,8 +203,8 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       color="#00d98b"
       graphDisplayName="L1"
       graphCenter={0}
-      graphOffsetDivs={2}
-      graphUnitsPerDiv={6.5}
+      graphVerticalOffset={2}
+      graphVoltagePerDiv={6.5}
     />
     <voltageprobe
       name="L2_PROBE"
@@ -213,8 +213,8 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       color="#f1b400"
       graphDisplayName="L2"
       graphCenter={0}
-      graphOffsetDivs={1}
-      graphUnitsPerDiv={5.5}
+      graphVerticalOffset={1}
+      graphVoltagePerDiv={5.5}
     />
 
     <analogsimulation
@@ -223,6 +223,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
       startTime="686us"
       timePerStep="5ns"
       spiceEngine="ngspice"
+      graphIndependentAxes
       spiceOptions={{
         method: "gear",
         reltol: 0.01,
