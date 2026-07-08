@@ -229,7 +229,7 @@ export const BQ24074OvpFaultCircuit = () => (
       color="#394fbd"
       graphDisplayName="VIN"
       graphCenter={6}
-      graphVerticalOffset={6}
+      graphVerticalOffset={60}
       graphVoltagePerDiv={10}
     />
     <voltageprobe
@@ -239,7 +239,7 @@ export const BQ24074OvpFaultCircuit = () => (
       color="#a64acb"
       graphDisplayName="VOUT"
       graphCenter={4.4}
-      graphVerticalOffset={3}
+      graphVerticalOffset={0.9}
       graphVoltagePerDiv={0.3}
     />
     <voltageprobe
@@ -249,7 +249,7 @@ export const BQ24074OvpFaultCircuit = () => (
       color="#55a86c"
       graphDisplayName="VBAT"
       graphCenter={4.2}
-      graphVerticalOffset={2.4}
+      graphVerticalOffset={0.24}
       graphVoltagePerDiv={0.1}
     />
 

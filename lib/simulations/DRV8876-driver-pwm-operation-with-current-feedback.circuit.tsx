@@ -163,7 +163,7 @@ export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = () => (
       color="#00d95f"
       graphDisplayName="IOUT"
       graphCenter={0.5}
-      graphVerticalOffset={-2}
+      graphVerticalOffset={-1}
       graphCurrentPerDiv={0.5}
       schX={5.4}
     />
@@ -250,7 +250,7 @@ export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = () => (
       color="#f1d900"
       graphDisplayName="OUT1"
       graphCenter={12}
-      graphVerticalOffset={3}
+      graphVerticalOffset={15}
       graphVoltagePerDiv={5}
     />
     <voltageprobe
@@ -260,7 +260,7 @@ export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = () => (
       color="#00cfe8"
       graphDisplayName="OUT2"
       graphCenter={12}
-      graphVerticalOffset={2}
+      graphVerticalOffset={10}
       graphVoltagePerDiv={5}
     />
     <voltageprobe

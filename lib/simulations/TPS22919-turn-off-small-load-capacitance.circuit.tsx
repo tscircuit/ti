@@ -1,9 +1,9 @@
 import { TPS22919 } from "../chips/TPS22919.circuit.tsx";
 
 const onFallingPulseSource = `
-.SUBCKT TPS22919_FIG21_ON_FALL OUT GND
+.SUBCKT TPS22919_ON_FALL OUT GND
 VON OUT GND PULSE(5 0 16u 100n 100n 120u 200u)
-.ENDS TPS22919_FIG21_ON_FALL
+.ENDS TPS22919_ON_FALL
 `;
 
 const OnFallingPulse = (props: {
@@ -31,7 +31,7 @@ const OnFallingPulse = (props: {
   />
 );
 
-export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
+export const TPS22919TurnOffSmallLoadCapacitanceCircuit = () => (
   <board bomDisabled routingDisabled schMaxTraceDistance={3}>
     <TPS22919
       name="U1"
@@ -94,7 +94,7 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
       color="#1d4ed8"
       graphDisplayName="VIN"
       graphCenter={3.3}
-      graphVerticalOffset={0.5}
+      graphVerticalOffset={1}
       graphVoltagePerDiv={2}
     />
     <voltageprobe
@@ -104,7 +104,7 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
       color="#06b6d4"
       graphDisplayName="ON"
       graphCenter={2.5}
-      graphVerticalOffset={1.5}
+      graphVerticalOffset={7.5}
       graphVoltagePerDiv={5}
     />
     <voltageprobe
@@ -114,12 +114,12 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
       color="#d946ef"
       graphDisplayName="VOUT"
       graphCenter={1.65}
-      graphVerticalOffset={-0.4}
+      graphVerticalOffset={-0.8}
       graphVoltagePerDiv={2}
     />
 
     <analogsimulation
-      name="TPS22919 Figure 21 Turn Off with Small Load Capacitance"
+      name="TPS22919 Turn Off with Small Load Capacitance"
       duration="80us"
       timePerStep="20ns"
       spiceEngine="ngspice"
@@ -134,4 +134,4 @@ export const TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit = () => (
   </board>
 );
 
-export default TPS22919Figure21TurnOffSmallLoadCapacitanceCircuit;
+export default TPS22919TurnOffSmallLoadCapacitanceCircuit;
