@@ -17,6 +17,7 @@ import {
   TPS63802,
   TPS7A02,
   TPSM82823,
+  TXB0104,
 } from "./lib/chips/index";
 import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit";
 import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
@@ -36,6 +37,7 @@ import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933
 import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit";
 import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit";
 import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit";
+import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
 
 export * from "./lib/chips";
 
@@ -58,6 +60,7 @@ export {
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
   PowerModule_TPSM82823,
+  LevelShifter_TXB0104,
 };
 
 export const TiChipComponents = {
@@ -79,6 +82,7 @@ export const TiChipComponents = {
   TPS63802,
   TPS7A02,
   TPSM82823,
+  TXB0104,
 } as const;
 
 export const TiSubcircuitComponents = {
@@ -100,6 +104,7 @@ export const TiSubcircuitComponents = {
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
   PowerModule_TPSM82823,
+  LevelShifter_TXB0104,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
