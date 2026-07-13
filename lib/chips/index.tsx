@@ -17,6 +17,7 @@ export { TPS63802 } from "./TPS63802.circuit.tsx";
 export { TPS7A02 } from "./TPS7A02.circuit.tsx";
 export { TPSM82823 } from "./TPSM82823.circuit.tsx";
 export { TXB0104 } from "./TXB0104.circuit.tsx";
+export { TXS0102 } from "./TXS0102.circuit.tsx";
 
 export { BQ24074RGTR } from "./BQ24074RGTR.circuit.tsx";
 export { BQ25895RTWR } from "./BQ25895RTWR.circuit.tsx";
@@ -31,3 +32,4 @@ export { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
 export { TPS63802DLAR } from "./TPS63802DLAR.circuit.tsx";
 export { TPS7A0230PDBVR } from "./TPS7A0230PDBVR.circuit.tsx";
 export { TXB0104RGYR } from "./TXB0104RGYR.circuit.tsx";
+export { TXS0102DCUR } from "./TXS0102DCUR.circuit.tsx";
