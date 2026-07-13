@@ -15,6 +15,7 @@ export const LevelShifter_TXS0102 = (props: SubcircuitProps) => (
         pin3: "net.V1_8",
         pin4: "net.A2",
         pin5: "net.A1",
+        pin6: "net.OE",
         pin7: "net.V3_3",
         pin8: "net.B1",
       }}
@@ -54,18 +55,6 @@ export const LevelShifter_TXS0102 = (props: SubcircuitProps) => (
       pcbX={7}
       pcbY={-9}
       connections={{ pin2: "net.GND", pin1: "net.V1_8" }}
-    />
-
-    <resistor
-      name="R1"
-      resistance="47k"
-      footprint="0402"
-      schRotation={90}
-      schX={-1.8}
-      schY={0}
-      pcbX={11}
-      pcbY={5}
-      connections={{ pin1: "net.GND", pin2: "U1.OE" }}
     />
   </subcircuit>
 );
