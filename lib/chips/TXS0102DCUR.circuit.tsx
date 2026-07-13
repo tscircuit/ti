@@ -269,7 +269,7 @@ export const TXS0102DCUR = (props: ChipProps<typeof pinLabels>) => (
       modelOriginPosition: {
         x: 0.00011430000006384944,
         y: 0.00012700000002041634,
-        z: 0.000795,
+        z: 0.00079500,
       },
     }}
     {...props}
