@@ -108,6 +108,7 @@ The package currently exports these subcircuit components:
 - `BuckBoostConverter_TPS63802`
 - `PowerManagement_TPS7A02`
 - `PowerModule_TPSM82823`
+- `LevelShifter_TXB0104`
 
 ## Exported Chips
 
@@ -135,6 +136,7 @@ chip is listed individually below, including whether it supports a
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPSM82823` | `-` | `TPSM82823` |
+| `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
 
 Rows with `-` are direct chip exports and do not currently expose a
 `footprintVariant` prop. For the wrapper exports, the underlying component
