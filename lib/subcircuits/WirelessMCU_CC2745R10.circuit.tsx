@@ -1,0 +1,910 @@
+import type { SubcircuitProps } from "@tscircuit/props";
+import { CC2745R10 } from "../chips/CC2745R10.circuit.tsx";
+
+export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
+  <subcircuit {...props}>
+    <schematictext
+      schX={0}
+      schY={11.4}
+      text="Wireless MCU RF"
+      fontSize={1.25}
+    />
+
+    <schematictext
+      schX={-20.3}
+      schY={6.2}
+      text="B1 is placeholder for ferrite bead"
+      fontSize={0.55}
+      anchor="left"
+    />
+
+    <CC2745R10
+      name="U1"
+      schX={-1}
+      schY={0}
+      schWidth="3mm"
+      schHeight="5.6mm"
+      connections={{
+        pin1: "net.VDDR",
+        pin2: "net.VDDR",
+        pin3: "net.DIO0",
+        pin4: "net.DIO1",
+        pin5: "net.DIO2",
+        pin6: "net.DIO3",
+        pin7: "net.DIO4",
+        pin8: "net.DIO5",
+        pin9: "C110.pin1",
+        pin10: "net.DIO7",
+        pin11: "net.DIO9_SWDIO",
+        pin12: "net.DIO10_SWDCK",
+        pin13: "net.DIO11",
+        pin14: "net.DIO12",
+        pin15: "net.DIO15",
+        pin16: "net.DIO16",
+        pin17: "C111.pin1",
+        pin18: "net.VDDS",
+        pin19: "net.DIO17",
+        pin20: "net.DIO18",
+        pin21: "net.DIO19",
+        pin22: "net.DIO20",
+        pin23: "net.DIO21",
+        pin24: "net.DIO22",
+        pin25: "R1.pin2",
+        pin26: "net.X32P",
+        pin27: "net.X32N",
+        pin28: "C9.pin1",
+        pin29: "C104.pin1",
+        pin31: "C103.pin1",
+        pin32: "net.DIO27",
+        pin33: "net.DIO28",
+        pin34: "net.VDDR",
+        pin35: "net.X48P",
+        pin36: "net.X48N",
+        pin38: "C102.pin1",
+        pin39: "C33.pin1",
+        pin40: "net.GND",
+        pin41: "net.GND",
+      }}
+      noConnect={["NC"]}
+    />
+
+    {/* VDDS input and decoupling */}
+    <resistor
+      name="B1"
+      resistance="10ohm"
+      footprint="0402"
+      schX={-20.2}
+      schY={3.5}
+      connections={{
+        pin1: "net.WMCU_VDD",
+        pin2: "net.VDDS",
+      }}
+    />
+
+    <capacitor
+      name="C99"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-18.8}
+      schY={1.5}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C101"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-16.9}
+      schY={1.5}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C104"
+      capacitance="10uF"
+      footprint="0805"
+      schX={-15}
+      schY={1.5}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C103"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-13.1}
+      schY={1.5}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C102"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-11.2}
+      schY={1.5}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
+    />
+
+    {/* VDDD and VDDIO decoupling */}
+    <capacitor
+      name="C9"
+      capacitance="1uF"
+      footprint="0402"
+      schX={-9.5}
+      schY={1.5}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDD", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C110"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-7.4}
+      schY={0}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C111"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-6}
+      schY={0}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
+    />
+
+    {/* VDDR rail and DCDC */}
+    <capacitor
+      name="C108"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-8.8}
+      schY={4.8}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDR", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C106"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-7}
+      schY={4.8}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDR", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C107"
+      capacitance="100nF"
+      footprint="0402"
+      schX={-5.2}
+      schY={4.8}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDR", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C105"
+      capacitance="10uF"
+      footprint="0805"
+      schX={-8.2}
+      schY={-5.4}
+      schOrientation="vertical"
+      connections={{ pin1: "net.VDDR", pin2: "net.GND" }}
+    />
+
+    <inductor
+      name="L1"
+      inductance="6.8uH"
+      footprint="0805"
+      schX={-6.2}
+      schY={-4.55}
+      schOrientation="horizontal"
+      connections={{
+        pin1: "C105.pin1",
+        pin2: "U1.pin30",
+      }}
+    />
+
+    <schematictext
+      schX={-7.2}
+      schY={-10}
+      text="Place L1 and C105 close to Pin 30"
+      fontSize={0.5}
+    />
+
+    {/* 32.768 kHz crystal */}
+    <crystal
+      name="Y3"
+      frequency="32.768kHz"
+      loadCapacitance={0}
+      footprint="0402"
+      schX={-13.1}
+      schY={-4.3}
+      schOrientation="horizontal"
+      connections={{
+        pin1: "U1.pin26",
+        pin2: "net.X32N",
+      }}
+    />
+
+    <capacitor
+      name="C81"
+      capacitance="12pF"
+      footprint="0402"
+      schX={-13.9}
+      schY={-4.75}
+      schOrientation="vertical"
+      connections={{ pin1: "R6.pin2", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="C91"
+      capacitance="15pF"
+      footprint="0402"
+      schX={-12.3}
+      schY={-4.75}
+      schOrientation="vertical"
+      connections={{ pin1: "net.X32N", pin2: "net.GND" }}
+    />
+
+    <resistor
+      name="R6"
+      resistance="10ohm"
+      footprint="0402"
+      doNotPlace
+      schX={-16}
+      schY={-4.3}
+      connections={{
+        pin1: "net.DIO23",
+        pin2: "Y3.pin1",
+      }}
+    />
+
+    <resistor
+      name="R7"
+      resistance="10ohm"
+      footprint="0402"
+      doNotPlace
+      schX={-10.2}
+      schY={-4.3}
+      connections={{
+        pin1: "net.X32N",
+        pin2: "net.DIO24",
+      }}
+    />
+    {/* 48 MHz crystal */}
+    <chip
+      name="Y2"
+      footprint="qfn4"
+      symbol={
+        <symbol>
+          {/* Reference designator: Y2 */}
+          <schematictext
+            text="{NAME}"
+            schX={4.7}
+            schY={-4.5}
+            anchor="left"
+            fontSize={0.22}
+          />
+
+          {/* Upper crystal case */}
+          <schematicline
+            x1={4.44}
+            y1={-4.96}
+            x2={5.36}
+            y2={-4.96}
+            strokeWidth={0.03}
+          />
+
+          <schematicline
+            x1={4.44}
+            y1={-4.96}
+            x2={4.44}
+            y2={-5.19}
+            strokeWidth={0.03}
+          />
+
+          <schematicline
+            x1={5.36}
+            y1={-4.96}
+            x2={5.36}
+            y2={-5.19}
+            strokeWidth={0.03}
+          />
+
+          {/* Lower crystal case */}
+          <schematicline
+            x1={4.44}
+            y1={-5.81}
+            x2={4.44}
+            y2={-6.01}
+            strokeWidth={0.03}
+          />
+
+          <schematicline
+            x1={5.36}
+            y1={-5.81}
+            x2={5.36}
+            y2={-6.01}
+            strokeWidth={0.03}
+          />
+
+          <schematicline
+            x1={4.44}
+            y1={-6.01}
+            x2={5.36}
+            y2={-6.01}
+            strokeWidth={0.03}
+          />
+
+          {/* Left crystal electrode */}
+          <schematicline
+            x1={4.68}
+            y1={-5.8}
+            x2={4.68}
+            y2={-5.2}
+            strokeWidth={0.03}
+          />
+
+          {/* Main quartz element — your original rectangle */}
+          <schematicrect
+            schX={4.9}
+            schY={-5.5}
+            width={0.25}
+            height={0.6}
+            isFilled={false}
+            strokeWidth={0.03}
+          />
+
+          {/* Right crystal electrode */}
+          <schematicline
+            x1={5.12}
+            y1={-5.8}
+            x2={5.12}
+            y2={-5.2}
+            strokeWidth={0.03}
+          />
+
+          {/*
+        Pin 1:
+        external point = 3.82
+        3.82 + 0.86 = 4.68
+        Stem ends exactly on the left electrode.
+      */}
+          <port
+            name="pin1"
+            pinNumber={1}
+            schX={3.82}
+            schY={-5.5}
+            direction="left"
+            schStemLength={0.86}
+          />
+
+          {/*
+        Pin 3:
+        external point = 5.98
+        5.98 - 0.86 = 5.12
+        Stem ends exactly on the right electrode.
+      */}
+          <port
+            name="pin3"
+            pinNumber={3}
+            schX={5.98}
+            schY={-5.5}
+            direction="right"
+            schStemLength={0.86}
+          />
+
+          {/*
+        Pin 2:
+        -6.52 + 0.51 = -6.01
+        Stem ends on the lower case line.
+      */}
+          <port
+            name="pin2"
+            pinNumber={2}
+            schX={4.44}
+            schY={-6.52}
+            direction="down"
+            schStemLength={0.51}
+          />
+
+          {/* Pin 4 */}
+          <port
+            name="pin4"
+            pinNumber={4}
+            schX={5.36}
+            schY={-6.52}
+            direction="down"
+            schStemLength={0.51}
+          />
+        </symbol>
+      }
+      connections={{
+        pin1: "net.X48N",
+        pin2: "net.GND",
+        pin4: "net.GND",
+        pin3: "net.X48P",
+      }}
+    />
+
+    <capacitor
+      name="C52"
+      capacitance={5}
+      footprint="0402"
+      doNotPlace
+      schX={3.35}
+      schY={-6.7}
+      schOrientation="vertical"
+      connections={{ pin1: "net.X48N", pin2: "net.GND" }}
+    />
+    <capacitor
+      name="C53"
+      capacitance={5}
+      footprint="0402"
+      doNotPlace
+      schX={6.45}
+      schY={-6.7}
+      schOrientation="vertical"
+      connections={{ pin1: "net.X48P", pin2: "net.GND" }}
+    />
+
+    {/* Reset */}
+    <resistor
+      name="R1"
+      resistance="100k"
+      footprint="0402"
+      schX={7.4}
+      schY={1.5}
+      schOrientation="vertical"
+      connections={{
+        pin1: "net.VDDS",
+        pin2: "C92.pin1",
+      }}
+    />
+
+    <capacitor
+      name="C92"
+      capacitance="100nF"
+      footprint="0402"
+      schX={7.4}
+      schY={0.5}
+      schOrientation="vertical"
+      connections={{ pin2: "net.GND" }}
+    />
+
+    {/* RF matching and filter */}
+    <inductor
+      name="L33"
+      inductance="3.4nH"
+      footprint="0402"
+      schX={5.1}
+      schY={6.25}
+      schOrientation="horizontal"
+      connections={{
+        pin2: "net.RF_MATCH_1",
+      }}
+    />
+
+    <capacitor
+      name="C33"
+      capacitance="0.82pF"
+      footprint="0402"
+      schX={3.5}
+      schY={5}
+      schOrientation="vertical"
+      connections={{
+        pin1: "L33.pin1",
+        pin2: "L34.pin1",
+      }}
+    />
+
+    <inductor
+      name="L34"
+      inductance="1.1nH"
+      footprint="0402"
+      schX={3.5}
+      schY={3.3}
+      schOrientation="vertical"
+      connections={{
+        pin2: "net.GND",
+      }}
+    />
+
+    <capacitor
+      name="C34"
+      capacitance="1.2pF"
+      footprint="0402"
+      schX={6.65}
+      schY={4.95}
+      schOrientation="vertical"
+      connections={{ pin1: "net.RF_MATCH_1", pin2: "net.GND" }}
+    />
+
+    <resistor
+      name="R78"
+      resistance="10ohm"
+      footprint="0402"
+      schX={8.25}
+      schY={6.25}
+      connections={{
+        pin1: "net.RF_MATCH_1",
+        pin2: "net.RF_FEED",
+      }}
+    />
+
+    <capacitor
+      name="C109"
+      capacitance={5}
+      footprint="0402"
+      doNotPlace
+      schX={9.85}
+      schY={5.5}
+      schOrientation="vertical"
+      connections={{ pin1: "net.RF_FEED", pin2: "net.GND" }}
+    />
+
+    <chip
+      name="CR10"
+      footprint="sod882"
+      symbol={
+        <symbol>
+          <port
+            name="pin2"
+            pinNumber={2}
+            schX={11.35}
+            schY={6.0}
+            direction="up"
+            schStemLength={0.63}
+          />
+
+          <schematicpath
+            points={[
+              { x: 11.07, y: 5.37 },
+              { x: 11.63, y: 5.37 },
+              { x: 11.35, y: 5.02 },
+              { x: 11.07, y: 5.37 },
+            ]}
+            isFilled
+            strokeWidth={0.025}
+          />
+
+          <schematicpath
+            points={[
+              { x: 11.07, y: 4.53 },
+              { x: 11.63, y: 4.53 },
+              { x: 11.35, y: 4.88 },
+              { x: 11.07, y: 4.53 },
+            ]}
+            isFilled
+            strokeWidth={0.025}
+          />
+
+          <schematicpath
+            points={[
+              { x: 10.97, y: 4.71 },
+              { x: 11.13, y: 4.95 },
+              { x: 11.57, y: 5.02 },
+              { x: 11.73, y: 5.19 },
+            ]}
+            strokeWidth={0.025}
+          />
+
+          <schematicpath
+            points={[
+              { x: 10.97, y: 4.71 },
+              { x: 11.13, y: 4.88 },
+              { x: 11.57, y: 4.95 },
+              { x: 11.73, y: 5.19 },
+            ]}
+            strokeWidth={0.025}
+          />
+
+          <port
+            name="pin1"
+            pinNumber={1}
+            schX={11.35}
+            schY={3.9}
+            direction="down"
+            schStemLength={0.63}
+          />
+        </symbol>
+      }
+      connections={{ pin2: "net.RF_FEED", pin1: "net.GND" }}
+    />
+
+    {/* Optional RF test connector */}
+    <chip
+      name="J7"
+      displayName="RF TEST"
+      footprint="sma"
+      symbol={
+        <symbol>
+          {/* Square connector body */}
+
+          <schematicrect
+            schX={14.1}
+            schY={11}
+            width={1.6}
+            height={1.6}
+            strokeWidth="0.04"
+            color="#c77700"
+            isFilled={false}
+          />
+
+          {/* Circular socket */}
+
+          <schematiccircle
+            center={{ x: 14.1, y: 11 }}
+            radius={0.56}
+            strokeWidth="0.04"
+            color="#c77700"
+            isFilled={false}
+          />
+
+          <schematiccircle
+            center={{ x: 14.1, y: 11 }}
+            radius={0.49}
+            strokeWidth="0.04"
+            color="#c77700"
+            isFilled={false}
+          />
+
+          {/* Center contact */}
+
+          <schematiccircle
+            center={{ x: 14.1, y: 11 }}
+            radius={0.1}
+            strokeWidth="0.04"
+            color="#c77700"
+            isFilled={false}
+          />
+
+          {/* Small line inside center contact */}
+
+          <schematicline
+            x1={14.1}
+            y1={11}
+            x2={14.1}
+            y2={10.2}
+            strokeWidth="0.04"
+            color="#c77700"
+          />
+
+          {/* Center contact to pin 1 */}
+
+          <port
+            name="pin3"
+            schX={12.5}
+            schY={11.4}
+            direction="left"
+            schStemLength={0.8}
+          />
+          <port
+            name="pin2"
+            schX={12.5}
+            schY={10.6}
+            direction="left"
+            schStemLength={0.8}
+          />
+          <port
+            name="pin1"
+            schX={14.1}
+            schY={9.4}
+            direction="down"
+            schStemLength={0.8}
+          />
+
+          <port
+            name="pin4"
+            schX={15.7}
+            schY={11.4}
+            direction="right"
+            schStemLength={0.8}
+          />
+          <port
+            name="pin5"
+            schX={15.7}
+            schY={10.6}
+            direction="right"
+            schStemLength={0.8}
+          />
+        </symbol>
+      }
+      connections={{
+        pin3: "net.GND",
+        pin2: "net.GND",
+        pin4: "net.GND",
+        pin5: "net.GND",
+        pin1: "net.RF_TEST",
+      }}
+    />
+
+    <capacitor
+      name="CA1"
+      capacitance={5}
+      footprint="0402"
+      doNotPlace
+      schX={14.1}
+      schY={7.25}
+      schOrientation="vertical"
+      connections={{
+        pin1: "net.RF_TEST",
+        pin2: "net.RF_FEED",
+      }}
+    />
+
+    {/* Antenna matching */}
+    <capacitor
+      name="CA2"
+      capacitance="15pF"
+      footprint="0402"
+      schX={14.1}
+      schY={4.45}
+      schOrientation="vertical"
+      connections={{
+        pin1: "net.RF_FEED",
+        pin2: "net.ANT_MATCH_IN",
+      }}
+    />
+
+    <inductor
+      name="Z61"
+      inductance="2.8nH"
+      footprint="0402"
+      schX={15.9}
+      schY={3.15}
+      schOrientation="horizontal"
+      connections={{
+        pin1: "net.ANT_MATCH_IN",
+        pin2: "net.ANT_MATCH_OUT",
+      }}
+    />
+
+    <capacitor
+      name="Z62"
+      capacitance="0.4pF"
+      footprint="0402"
+      schX={14.55}
+      schY={1.6}
+      schOrientation="vertical"
+      connections={{ pin1: "net.ANT_MATCH_IN", pin2: "net.GND" }}
+    />
+
+    <capacitor
+      name="Z60"
+      capacitance="1.6pF"
+      footprint="0402"
+      schX={17.25}
+      schY={1.6}
+      schOrientation="vertical"
+      connections={{ pin1: "net.ANT_MATCH_OUT", pin2: "net.GND" }}
+    />
+
+    <chip
+      name="ANT1"
+      footprint="sot23"
+      symbol={
+        <symbol>
+          <schematictext
+            text="{NAME}"
+            schX={20.1}
+            schY={4.2}
+            fontSize={0.22}
+            anchor="center"
+          />
+
+          <schematiccircle
+            center={{ x: 20.1, y: 3.15 }}
+            radius={0.7}
+            isFilled={false}
+            strokeWidth={0.04}
+          />
+
+          <schematicline
+            x1={20.1}
+            y1={2.45}
+            x2={20.1}
+            y2={3.67}
+            strokeWidth={0.04}
+          />
+
+          <schematicline
+            x1={20.1}
+            y1={3.17}
+            x2={19.83}
+            y2={3.67}
+            strokeWidth={0.04}
+          />
+
+          <schematicline
+            x1={20.1}
+            y1={3.17}
+            x2={20.37}
+            y2={3.67}
+            strokeWidth={0.04}
+          />
+
+          <schematictext text="2" schX={19.04} schY={3.33} fontSize={0.2} />
+
+          <schematictext text="1" schX={19.04} schY={2.63} fontSize={0.2} />
+
+          <schematictext text="3" schX={21.16} schY={3.33} fontSize={0.2} />
+
+          <schematictext
+            text="2.4GHz"
+            schX={20.1}
+            schY={2.1}
+            fontSize={0.22}
+            anchor="center"
+          />
+
+          <port
+            name="pin2"
+            schX={19.0}
+            schY={3.15}
+            direction="left"
+            schStemLength={0.4}
+          />
+
+          <port
+            name="pin1"
+            schX={19.0}
+            schY={2.45}
+            direction="left"
+            schStemLength={1.1}
+          />
+
+          <port
+            name="pin3"
+            schX={21.2}
+            schY={3.15}
+            direction="right"
+            schStemLength={0.4}
+          />
+        </symbol>
+      }
+      connections={{
+        pin1: "net.ANT_MATCH_OUT",
+        pin2: "net.GND",
+        pin3: "net.GND",
+      }}
+    />
+
+    <schematictext
+      schX={15.9}
+      schY={-0.05}
+      text="Z60-Z62 for antenna matching"
+      fontSize={0.52}
+    />
+
+    <schematictext
+      schX={-18.3}
+      schY={-10.25}
+      text="BOM Generation notes:"
+      fontSize={0.5}
+      anchor="left"
+    />
+
+    <schematictext
+      schX={-18.3}
+      schY={-10.95}
+      text="CR10 = DNM"
+      fontSize={0.5}
+      anchor="left"
+    />
+  </subcircuit>
+);
+
+export default WirelessMCU_CC2745R10;
