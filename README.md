@@ -106,6 +106,7 @@ The package currently exports these subcircuit components:
 - `TemperatureSensor_TMP1075`
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
+- `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
 - `BuckBoostConverter_TPS63802`
 - `PowerManagement_TPS7A02`
 - `PowerModule_TPSM82823`
@@ -136,6 +137,7 @@ chip is listed individually below, including whether it supports a
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS6293` | `-` | `TPS6293` |
+| `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPSM82823` | `-` | `TPSM82823` |
