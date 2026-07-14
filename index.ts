@@ -15,6 +15,7 @@ import {
   TMP1075,
   TPS22919,
   TPS6293,
+  TPS61299X,
   TPS63802,
   TPS7A02,
   TPSM82823,
@@ -37,6 +38,10 @@ import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MS
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit";
 import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit";
 import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit";
+import {
+  BoostConverter_TPS61299X,
+  TPS61299XBoostConverter,
+} from "./lib/subcircuits/BoostConverter_TPS61299X.circuit";
 import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit";
 import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit";
 import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit";
@@ -62,6 +67,8 @@ export {
   TemperatureSensor_TMP1075,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
+  BoostConverter_TPS61299X,
+  TPS61299XBoostConverter,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
   PowerModule_TPSM82823,
@@ -86,6 +93,7 @@ export const TiChipComponents = {
   TMP1075,
   TPS22919,
   TPS6293,
+  TPS61299X,
   TPS63802,
   TPS7A02,
   TPSM82823,
@@ -110,6 +118,7 @@ export const TiSubcircuitComponents = {
   TemperatureSensor_TMP1075,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
+  BoostConverter_TPS61299X,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
   PowerModule_TPSM82823,
