@@ -3,6 +3,7 @@ import {
   BQ25895,
   BQ27441G1,
   CC2340R5,
+  CC2745R10,
   CC3235SF,
   DRV8833,
   DRV8876,
@@ -24,6 +25,7 @@ import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_B
 import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
 import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit";
 import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit";
+import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit";
 import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit";
 import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit";
 import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit";
@@ -48,6 +50,7 @@ export {
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
   WirelessMCU_CC2340R5,
+  WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
@@ -71,6 +74,7 @@ export const TiChipComponents = {
   BQ25895,
   BQ27441G1,
   CC2340R5,
+  CC2745R10,
   CC3235SF,
   DRV8833,
   DRV8876,
@@ -94,6 +98,7 @@ export const TiSubcircuitComponents = {
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
   WirelessMCU_CC2340R5,
+  WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
