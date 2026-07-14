@@ -110,8 +110,8 @@ export const CC2745R10E0WRHARQ1 = (props: ChipProps<typeof pinLabels>) => (
         ],
       },
     }}
-       schWidth="3mm"
-      schHeight="5.6mm"
+    schWidth="3mm"
+    schHeight="5.6mm"
     manufacturerPartNumber="CC2745R10E0WRHARQ1"
     {...props}
   />
