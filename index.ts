@@ -48,7 +48,7 @@ import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.c
 import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit";
 
-export * from "./lib/chips";
+export * from "./lib/chips/index.tsx";
 
 export {
   BatteryManagement_BQ24074,
