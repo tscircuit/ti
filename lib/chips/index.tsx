@@ -5,7 +5,6 @@ export { BQ32002 } from "./BQ32002.circuit.tsx";
 export { CC2340R5 } from "./CC2340R5.circuit.tsx";
 export { CC2745R10 } from "./CC2745R10.circuit.tsx";
 export { CC3235SF } from "./CC3235SF.circuit.tsx";
-export { DebugTool } from "./DebugTool.circuit.tsx";
 export { DRV8833 } from "./DRV8833.circuit.tsx";
 export { DRV8876 } from "./DRV8876.circuit.tsx";
 export { HDC2080 } from "./HDC2080.circuit.tsx";
