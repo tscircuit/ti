@@ -6,8 +6,6 @@ import { TPS6521835 } from "../chips/TPS6521835.circuit.tsx";
 
 export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
   <subcircuit {...props}>
-
-
     <TPS6521835
       name="U1"
       schX={0}
@@ -21,9 +19,9 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
         pin21: "net.DCDC5_OUT",
         pin22: "net.DCDC6_OUT",
         pin27: "net.IN_BU",
-                pin29: "net.NC",
+        pin29: "net.NC",
 
-                        pin28: "net.NC",
+        pin28: "net.NC",
 
         pin31: "net.IN_LS1",
         pin32: "net.IN_LS2",
@@ -49,7 +47,7 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
       schX={-4}
       schY={5.5}
       schOrientation="vertical"
-      connections={{ pin2: "net.GND",pin1: "net.INT_LDO" }}
+      connections={{ pin2: "net.GND", pin1: "net.INT_LDO" }}
     />
     <resistor
       name="R_GPO2"
@@ -258,7 +256,7 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
       schX={6.5}
       schY={1.75}
       schOrientation="horizontal"
-      connections={{ pin1: "U1.pin23",  pin2: "net.IN_DCDC6" }}
+      connections={{ pin1: "U1.pin23", pin2: "net.IN_DCDC6" }}
     />
     <capacitor
       name="C_DCDC6"
@@ -267,7 +265,7 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
       schX={8}
       schY={1.2}
       schOrientation="vertical"
-      connections={{ pin2: "net.GND" ,  pin1: "net.IN_DCDC6" }}
+      connections={{ pin2: "net.GND", pin1: "net.IN_DCDC6" }}
     />
 
     <inductor
@@ -276,7 +274,7 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
       schX={5.5}
       schY={0.55}
       schOrientation="horizontal"
-      connections={{ pin1: "U1.20",  pin2: "net.IN_DCDC5" }}
+      connections={{ pin1: "U1.20", pin2: "net.IN_DCDC5" }}
     />
     <capacitor
       name="C_DCDC5"
@@ -285,7 +283,7 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
       schX={8}
       schY={-0.2}
       schOrientation="vertical"
-      connections={{ pin2: "net.GND" ,  pin1: "net.IN_DCDC5" }}
+      connections={{ pin2: "net.GND", pin1: "net.IN_DCDC5" }}
     />
 
     <resistor
@@ -451,8 +449,6 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
       schOrientation="vertical"
       connections={{ pin1: "U1.pin12", pin2: "net.GND" }}
     />
-
-
   </subcircuit>
 );
 

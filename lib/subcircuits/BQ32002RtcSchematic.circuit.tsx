@@ -3,10 +3,7 @@ import "tscircuit";
 import { BQ32002 } from "../chips/BQ32002.circuit.tsx";
 
 export const BQ32002RtcSchematic = (props: SubcircuitProps) => (
-  <subcircuit
-    {...props}
-
-  >
+  <subcircuit {...props}>
     <BQ32002
       name="U1"
       schX={0}
@@ -34,16 +31,9 @@ export const BQ32002RtcSchematic = (props: SubcircuitProps) => (
       }}
     />
 
-    <battery
-      name="BT1"
-      voltage="3V"
-      schX={-5}
-      schY={-1.8}
-      schRotation={-90}
-    />
+    <battery name="BT1" voltage="3V" schX={-5} schY={-1.8} schRotation={-90} />
     <trace from="BT1.pin2" to="U1.pin3" />
     <trace from="BT1.pin1" to="net.GND" />
-
 
     <capacitor
       name="C1"
@@ -76,7 +66,7 @@ export const BQ32002RtcSchematic = (props: SubcircuitProps) => (
       resistance="4.7k"
       footprint="0402"
       schX={5.2}
-        schY={1}
+      schY={1}
       schOrientation="vertical"
       connections={{
         pin1: "net.VCC",

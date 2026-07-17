@@ -3,12 +3,7 @@ import "tscircuit";
 import { MSPM33C3x } from "../chips/MSPM33C3x.circuit";
 
 export const MSPM33C3xBasicApplicationSchematic = (props: SubcircuitProps) => (
-  <subcircuit
-    {...props}
-
-  >
-
-
+  <subcircuit {...props}>
     <MSPM33C3x
       name="U1"
       schX={0}
