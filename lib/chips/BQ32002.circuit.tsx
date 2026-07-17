@@ -4,6 +4,7 @@ import "tscircuit";
 export const BQ32002 = (props: ChipProps) => (
   <chip
     manufacturerPartNumber="BQ32002D"
+    footprint="soic8"
     schWidth="3mm"
     schHeight="4mm"
     pinLabels={{
