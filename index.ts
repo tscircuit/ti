@@ -28,6 +28,7 @@ import {
   TRF7960RHB,
   TXB0104,
   TXS0102,
+  W25Q128JVSIQ,
 } from "./lib/chips/index";
 import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit";
 import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
@@ -60,6 +61,7 @@ import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.c
 import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit";
+import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit";
 
 export * from "./lib/chips/index.tsx";
 
@@ -93,6 +95,7 @@ export {
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
+  FlashMemory_W25Q128JVSIQ,
 };
 
 export const TiChipComponents = {
@@ -125,6 +128,7 @@ export const TiChipComponents = {
   TRF7960RHB,
   TXB0104,
   TXS0102,
+  W25Q128JVSIQ,
 } as const;
 
 export const TiSubcircuitComponents = {
@@ -156,6 +160,7 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
+  FlashMemory_W25Q128JVSIQ,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

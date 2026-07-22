@@ -39,6 +39,7 @@ export { HDC3022DEJR } from "./HDC3022DEJR.circuit.tsx";
 export { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
 export { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
+export { W25Q128JVSIQ } from "./W25Q128JVSIQ.circuit.tsx";
 export { TPS61299DRLR } from "./TPS61299DRLR.circuit.tsx";
 export { TPS63802DLAR } from "./TPS63802DLAR.circuit.tsx";
 export { TPS7A0230PDBVR } from "./TPS7A0230PDBVR.circuit.tsx";
