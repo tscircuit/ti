@@ -1,13 +1,13 @@
 import type { ChipProps } from "@tscircuit/props";
 
 const pinLabels = {
-  pin1: ["CS"],
-  pin2: ["DO_IO1", "DO", "IO1"],
-  pin3: ["WP_IO2", "WP", "IO2"],
+  pin1: ["QSPI_CS", "SPI_CS", "CS"],
+  pin2: ["QSPI_IO1", "SPI_MISO", "DO_IO1", "DO", "IO1"],
+  pin3: ["QSPI_IO2", "SPI_WP", "WP_IO2", "WP", "IO2"],
   pin4: ["VSS", "GND"],
-  pin5: ["DI_IO0", "DI", "IO0"],
-  pin6: ["CLK"],
-  pin7: ["HOLD_IO3", "HOLD", "IO3"],
+  pin5: ["QSPI_IO0", "SPI_MOSI", "DI_IO0", "DI", "IO0"],
+  pin6: ["QSPI_SCK", "SPI_SCK", "CLK"],
+  pin7: ["QSPI_IO3", "SPI_HOLD", "HOLD_IO3", "HOLD", "IO3"],
   pin8: ["VCC"],
 } as const;
 

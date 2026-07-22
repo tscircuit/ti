@@ -1,11 +1,11 @@
 import type { ChipProps } from "@tscircuit/props";
 
 const pinLabels = {
-  pin1: ["A1"],
-  pin2: ["A0"],
+  pin1: ["I2C_ADDR1", "A1"],
+  pin2: ["I2C_ADDR0", "A0"],
   pin3: ["N_ALERT"],
-  pin4: ["SDA"],
-  pin5: ["SCL"],
+  pin4: ["I2C_SDA", "SDA"],
+  pin5: ["I2C_SCL", "SCL"],
   pin6: ["VS"],
   pin7: ["GND"],
   pin8: ["VBUS"],

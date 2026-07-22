@@ -9,8 +9,8 @@ export const TPS6521835 = (props: ChipProps) => (
     schHeight="6mm"
     pinLabels={{
       pin1: "IN_DCDC1",
-      pin2: "SDA",
-      pin3: "SCL",
+      pin2: ["I2C_SDA", "SDA"],
+      pin3: ["I2C_SCL", "SCL"],
       pin4: "LDO1",
       pin5: "IN_LDO1",
       pin6: "IN_LS3",

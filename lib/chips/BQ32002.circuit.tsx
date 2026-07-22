@@ -12,8 +12,8 @@ export const BQ32002 = (props: ChipProps) => (
       pin2: "OSCO",
       pin3: "VBACK",
       pin4: "GND",
-      pin5: "SDA",
-      pin6: "SCL",
+      pin5: ["I2C_SDA", "SDA"],
+      pin6: ["I2C_SCL", "SCL"],
       pin7: "IRQ",
       pin8: "VCC",
     }}
