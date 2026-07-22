@@ -14,15 +14,19 @@ import {
   INA237,
   MSPM33C3x,
   MSPM0G3507,
+  SimpleGpioMcu,
   TLC59116,
+  TMP1827,
   TMP1075,
   TPS22919,
   TPS6293,
+  TPS61222,
   TPS61299X,
   TPS6521835,
   TPS63802,
   TPS7A02,
   TPSM82823,
+  TRF7960RHB,
   TXB0104,
   TXS0102,
 } from "./lib/chips/index";
@@ -43,6 +47,7 @@ import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MS
 import { MSPM33C3xBasicApplicationSchematic } from "./lib/subcircuits/MSPM33C3xBasicApplicationSchematic.circuit";
 import { TLC59116LedDriverSchematic } from "./lib/subcircuits/TLC59116LedDriverSchematic.circuit";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit";
+import { TMP1827MultidropSchematic } from "./lib/subcircuits/TMP1827MultidropSchematic.circuit";
 import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit";
 import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit";
 import {
@@ -55,6 +60,7 @@ import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A
 import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit";
 import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit";
+import { TRF7960TbModuleSchematic } from "./lib/subcircuits/TRF7960TbModuleSchematic.circuit";
 
 export * from "./lib/chips/index.tsx";
 
@@ -76,6 +82,7 @@ export {
   MSPM33C3xBasicApplicationSchematic,
   TLC59116LedDriverSchematic,
   TemperatureSensor_TMP1075,
+  TMP1827MultidropSchematic,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
@@ -86,6 +93,7 @@ export {
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
+  TRF7960TbModuleSchematic,
 };
 
 export const TiChipComponents = {
@@ -104,15 +112,19 @@ export const TiChipComponents = {
   INA237,
   MSPM33C3x,
   MSPM0G3507,
+  SimpleGpioMcu,
   TLC59116,
+  TMP1827,
   TMP1075,
   TPS22919,
   TPS6293,
+  TPS61222,
   TPS61299X,
   TPS6521835,
   TPS63802,
   TPS7A02,
   TPSM82823,
+  TRF7960RHB,
   TXB0104,
   TXS0102,
 } as const;
@@ -135,6 +147,7 @@ export const TiSubcircuitComponents = {
   MSPM33C3xBasicApplicationSchematic,
   TLC59116LedDriverSchematic,
   TemperatureSensor_TMP1075,
+  TMP1827MultidropSchematic,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
@@ -144,6 +157,7 @@ export const TiSubcircuitComponents = {
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
+  TRF7960TbModuleSchematic,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

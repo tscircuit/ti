@@ -104,6 +104,7 @@ The package currently exports these subcircuit components:
 - `PowerMonitor_INA237`
 - `Microcontroller_MSPM0G3507`
 - `TemperatureSensor_TMP1075`
+- `TMP1827MultidropSchematic`
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
@@ -134,6 +135,8 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
+| `SimpleGpioMcu` | `-` | `SimpleGpioMcu` |
+| `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS6293` | `-` | `TPS6293` |
