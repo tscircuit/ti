@@ -538,6 +538,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       name="Y1"
       frequency="32.768kHz"
       loadCapacitance="10pF"
+      footprint="0402"
       schX={13.61}
       schY={-3.3}
     />
@@ -567,6 +568,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       frequency="40MHz"
       loadCapacitance="6.2pF"
       pinVariant="four_pin"
+      footprint="qfn4"
       schX={9.8}
       schY={-4.9}
     />
