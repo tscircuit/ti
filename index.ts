@@ -32,7 +32,7 @@ import {
 import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit";
 import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
 import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit";
-import { BQ32002RtcSchematic } from "./lib/subcircuits/BQ32002RtcSchematic.circuit";
+import { RealTimeClock_BQ32002 } from "./lib/subcircuits/RealTimeClock_BQ32002.circuit";
 import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit";
 import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit";
 import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit";
@@ -43,23 +43,23 @@ import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit";
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit";
-import { MSPM33C3xBasicApplicationSchematic } from "./lib/subcircuits/MSPM33C3xBasicApplicationSchematic.circuit";
-import { TLC59116LedDriverSchematic } from "./lib/subcircuits/TLC59116LedDriverSchematic.circuit";
+import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit";
+import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit";
-import { TMP1827MultidropSchematic } from "./lib/subcircuits/TMP1827MultidropSchematic.circuit";
+import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit";
 import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit";
 import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit";
 import {
   BoostConverter_TPS61299X,
   TPS61299XBoostConverter,
 } from "./lib/subcircuits/BoostConverter_TPS61299X.circuit";
-import { TPS6521835SimplifiedSchematic } from "./lib/subcircuits/PowerManagement_TPS6521835.circuit";
+import { PowerManagement_TPS6521835 } from "./lib/subcircuits/PowerManagement_TPS6521835.circuit";
 import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit";
 import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit";
 import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit";
 import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit";
-import { TRF7960TbModuleSchematic } from "./lib/subcircuits/TRF7960TbModuleSchematic.circuit";
+import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit";
 
 export * from "./lib/chips/index.tsx";
 
@@ -67,7 +67,7 @@ export {
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
-  BQ32002RtcSchematic,
+  RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
@@ -78,21 +78,21 @@ export {
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
   Microcontroller_MSPM0G3507,
-  MSPM33C3xBasicApplicationSchematic,
-  TLC59116LedDriverSchematic,
+  Microcontroller_MSPM33C3x,
+  LEDDriver_TLC59116,
   TemperatureSensor_TMP1075,
-  TMP1827MultidropSchematic,
+  TemperatureSensor_TMP1827,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
   TPS61299XBoostConverter,
-  TPS6521835SimplifiedSchematic,
+  PowerManagement_TPS6521835,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
-  TRF7960TbModuleSchematic,
+  RFIDReader_TRF7960,
 };
 
 export const TiChipComponents = {
@@ -131,7 +131,7 @@ export const TiSubcircuitComponents = {
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
-  BQ32002RtcSchematic,
+  RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
@@ -142,20 +142,20 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
   Microcontroller_MSPM0G3507,
-  MSPM33C3xBasicApplicationSchematic,
-  TLC59116LedDriverSchematic,
+  Microcontroller_MSPM33C3x,
+  LEDDriver_TLC59116,
   TemperatureSensor_TMP1075,
-  TMP1827MultidropSchematic,
+  TemperatureSensor_TMP1827,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
-  TPS6521835SimplifiedSchematic,
+  PowerManagement_TPS6521835,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
-  TRF7960TbModuleSchematic,
+  RFIDReader_TRF7960,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
