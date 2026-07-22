@@ -7,10 +7,7 @@ import { TPS61222 } from "../chips/TPS61222.circuit";
 import { TRF7960RHB } from "../chips/TRF7960RHB.circuit";
 
 export const TRF7960TbModuleSchematic = (props: SubcircuitProps) => (
-  <subcircuit
-    {...props}
-
-  >
+  <subcircuit {...props}>
     <schematictext
       schX={0}
       schY={14.2}
