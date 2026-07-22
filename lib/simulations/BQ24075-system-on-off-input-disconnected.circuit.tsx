@@ -1,3 +1,5 @@
+import type { SubcircuitProps } from "@tscircuit/props";
+
 const bq24075PinLabels = {
   pin1: ["IN"],
   pin2: ["SYSOFF"],
@@ -63,8 +65,10 @@ V_SYSOFF OUT VSS PULSE(0 5 3.6m 20u 20u 12.3m 24m)
   />
 );
 
-export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
-  <board routingDisabled schMaxTraceDistance={3}>
+export const BQ24075SystemOnOffInputDisconnectedCircuit = (
+  props: SubcircuitProps,
+) => (
+  <subcircuit {...props}>
     <BQ24075SystemDisconnectModel
       name="U1"
       schX={0}
@@ -195,7 +199,7 @@ export const BQ24075SystemOnOffInputDisconnectedCircuit = () => (
         vntol: "1u",
       }}
     />
-  </board>
+  </subcircuit>
 );
 
 export default BQ24075SystemOnOffInputDisconnectedCircuit;

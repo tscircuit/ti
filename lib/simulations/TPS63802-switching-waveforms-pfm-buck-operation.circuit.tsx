@@ -1,7 +1,10 @@
+import type { SubcircuitProps } from "@tscircuit/props";
 import { TPS63802DLAR } from "../chips/TPS63802DLAR.circuit.tsx";
 
-export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
-  <board bomDisabled routingDisabled schMaxTraceDistance={3}>
+export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = (
+  props: SubcircuitProps,
+) => (
+  <subcircuit {...props}>
     <TPS63802DLAR
       name="U1"
       schX={0}
@@ -231,7 +234,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = () => (
         vntol: "1u",
       }}
     />
-  </board>
+  </subcircuit>
 );
 
 export default TPS63802SwitchingWaveformsPfmBuckOperationCircuit;

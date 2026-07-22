@@ -1,3 +1,4 @@
+import type { SubcircuitProps } from "@tscircuit/props";
 import { TPS22919 } from "../chips/TPS22919.circuit.tsx";
 
 const onFallingPulseSource = `
@@ -31,8 +32,10 @@ const OnFallingPulse = (props: {
   />
 );
 
-export const TPS22919TurnOffSmallLoadCapacitanceCircuit = () => (
-  <board bomDisabled routingDisabled schMaxTraceDistance={3}>
+export const TPS22919TurnOffSmallLoadCapacitanceCircuit = (
+  props: SubcircuitProps,
+) => (
+  <subcircuit {...props}>
     <TPS22919
       name="U1"
       schX={0}
@@ -131,7 +134,7 @@ export const TPS22919TurnOffSmallLoadCapacitanceCircuit = () => (
         vntol: "1u",
       }}
     />
-  </board>
+  </subcircuit>
 );
 
 export default TPS22919TurnOffSmallLoadCapacitanceCircuit;
