@@ -13,7 +13,6 @@ export { HDC3022 } from "./HDC3022.circuit.tsx";
 export { INA237 } from "./INA237.circuit.tsx";
 export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";
 export { MSPM0G3507 } from "./MSPM0G3507.circuit.tsx";
-export { SimpleGpioMcu } from "./SimpleGpioMcu.circuit.tsx";
 export { TLC59116 } from "./TLC59116.circuit.tsx";
 export { TMP1827 } from "./TMP1827.circuit.tsx";
 export { TMP1075 } from "./TMP1075.circuit.tsx";
