@@ -74,9 +74,9 @@ export const PowerManagement_TPS7A02 = (props: SubcircuitProps) => (
     />
 
     <trace from="U1.pin2" to="net.GND" />
-    <trace from="VBAT.pin2" to="U1.pin1" />
-    <trace from="VBAT.pin1" to="net.GND" />
-    <trace from="VBAT.pin2" to="U1.EN" />
+    <trace from="VBAT.pin1" to="U1.pin1" />
+    <trace from="VBAT.pin2" to="net.GND" />
+    <trace from="VBAT.pin1" to="U1.EN" />
     <trace from="C1.pin1" to="U1.IN" />
     <trace from="C1.pin2" to="net.GND" />
     <trace from="C2.pin1" to="U1.OUT" />

@@ -108,8 +108,8 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
       schOrientation="vertical"
       connections={{ pin2: "U1.pin25" }}
     />
-    <battery name="BT1" voltage="3V" schX={4.2} schY={6.45} schRotation={90} />
-    <trace from=".BT1 .pin1" to="net.GND" />
+    <battery name="BT1" voltage="3V" schX={4.2} schY={6.45} schRotation={270} />
+    <trace from=".BT1 .pin2" to="net.GND" />
     <trace from=".BT1 .pin2" to=".R_CC .pin1" />
 
     <capacitor
