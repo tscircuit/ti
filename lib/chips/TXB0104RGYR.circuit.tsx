@@ -25,27 +25,43 @@ export const TXB0104RGYR = (props: ChipProps<typeof pinLabels>) => (
     pinAttributes={{
       A1: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       A2: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       A3: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       A4: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       B1: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       B2: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       B3: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       B4: {
         requiresPower: true,
+        isGpio: true,
+        capabilities: ["spi_sck", "spi_mosi", "spi_miso", "spi_cs"],
       },
       GND: {
         requiresGround: true,

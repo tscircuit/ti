@@ -72,6 +72,45 @@ export const CC3235SF12RGKR = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
       pinLabels={pinLabels}
+      pinAttributes={{
+        GPIO0: { isGpio: true },
+        GPIO1: { isGpio: true },
+        GPIO2: { isGpio: true },
+        GPIO3: { isGpio: true },
+        GPIO4: { isGpio: true },
+        GPIO5: { isGpio: true },
+        GPIO6: { isGpio: true },
+        GPIO7: { isGpio: true },
+        GPIO8: { isGpio: true },
+        GPIO9: { isGpio: true },
+        GPIO10: { isGpio: true },
+        GPIO11: { isGpio: true },
+        GPIO12: { isGpio: true },
+        GPIO13: { isGpio: true },
+        GPIO14: { isGpio: true },
+        GPIO15: { isGpio: true },
+        GPIO16: { isGpio: true },
+        GPIO17: { isGpio: true },
+        GPIO22: { isGpio: true },
+        GPIO28: { isGpio: true },
+        GPIO30: { isGpio: true },
+        FLASH_SPI_CLK: {
+          capabilities: ["spi_sck"],
+          activeCapability: "spi_sck",
+        },
+        FLASH_SPI_DOUT: {
+          capabilities: ["spi_mosi"],
+          activeCapability: "spi_mosi",
+        },
+        FLASH_SPI_DIN: {
+          capabilities: ["spi_miso"],
+          activeCapability: "spi_miso",
+        },
+        FLASH_SPI_CS: {
+          capabilities: ["spi_cs"],
+          activeCapability: "spi_cs",
+        },
+      }}
       supplierPartNumbers={{
         jlcpcb: ["C2871569"],
       }}
