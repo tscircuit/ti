@@ -8,10 +8,10 @@ export const TLC59116 = (props: ChipProps) => (
     schHeight="7.5mm"
     pinLabels={{
       pin1: "REXT",
-      pin2: "A0",
-      pin3: "A1",
-      pin4: "A2",
-      pin5: "A3",
+      pin2: ["I2C_ADDR0", "A0"],
+      pin3: ["I2C_ADDR1", "A1"],
+      pin4: ["I2C_ADDR2", "A2"],
+      pin5: ["I2C_ADDR3", "A3"],
       pin6: "N_OUT0",
       pin7: "N_OUT1",
       pin8: "N_OUT2",
@@ -31,8 +31,8 @@ export const TLC59116 = (props: ChipProps) => (
       pin22: "N_OUT14",
       pin23: "N_OUT15",
       pin25: "N_RESET",
-      pin26: "SCL",
-      pin27: "SDA",
+      pin26: ["I2C_SCL", "SCL"],
+      pin27: ["I2C_SDA", "SDA"],
     }}
     schPinArrangement={{
       leftSide: {

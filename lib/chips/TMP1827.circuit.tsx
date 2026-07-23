@@ -11,7 +11,7 @@ export const TMP1827 = (props: ChipProps) => (
     schWidth="2mm"
     schHeight="2mm"
     pinLabels={{
-      pin1: "SDQ",
+      pin1: ["ONEWIRE_SDQ", "SDQ"],
       pin2: "VDD",
       pin3: "GND",
     }}

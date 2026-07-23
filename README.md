@@ -93,6 +93,7 @@ The package currently exports these subcircuit components:
 - `BatteryManagement_BQ24074`
 - `BatteryManagement_BQ25895`
 - `BatteryManagement_BQ27441G1`
+- `RealTimeClock_BQ32002`
 - `WirelessMCU_CC2340R5`
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
@@ -103,16 +104,20 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSPM33C3x`
+- `LEDDriver_TLC59116`
 - `TemperatureSensor_TMP1075`
-- `TMP1827MultidropSchematic`
+- `TemperatureSensor_TMP1827`
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
+- `PowerManagement_TPS6521835`
 - `BuckBoostConverter_TPS63802`
 - `PowerManagement_TPS7A02`
 - `PowerModule_TPSM82823`
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
+- `RFIDReader_TRF7960`
 
 ## Exported Chips
 

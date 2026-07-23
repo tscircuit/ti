@@ -2,7 +2,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { MSPM33C3x } from "../chips/MSPM33C3x.circuit";
 
-export const MSPM33C3xBasicApplicationSchematic = (props: SubcircuitProps) => (
+export const Microcontroller_MSPM33C3x = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <MSPM33C3x
       name="U1"
@@ -85,4 +85,4 @@ export const MSPM33C3xBasicApplicationSchematic = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default MSPM33C3xBasicApplicationSchematic;
+export default Microcontroller_MSPM33C3x;
