@@ -1,4 +1,4 @@
-import { ChipProps } from "tscircuit";
+import type { ChipProps } from "tscircuit";
 
 export const TPS6293_PIN_LABELS = {
   pin1: "VIN",
