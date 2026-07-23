@@ -32,8 +32,8 @@ export const RealTimeClock_BQ32002 = (props: SubcircuitProps) => (
     />
 
     <battery name="BT1" voltage="3V" schX={-5} schY={-1.8} schRotation={-90} />
-    <trace from="BT1.pin2" to="U1.pin3" />
-    <trace from="BT1.pin1" to="net.GND" />
+    <trace from="BT1.pin1" to="U1.pin3" />
+    <trace from="BT1.pin2" to="net.GND" />
 
     <capacitor
       name="C1"

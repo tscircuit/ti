@@ -63,7 +63,7 @@ export const PowerMonitor_INA237 = (props: SubcircuitProps) => (
       footprint="pinrow2"
       schX={-8.75}
       schY={-1.35}
-      schRotation="270deg"
+      schRotation="90deg"
     />
 
     <resistor
@@ -101,8 +101,8 @@ export const PowerMonitor_INA237 = (props: SubcircuitProps) => (
       schRotation="270deg"
     />
 
-    <trace from=".B1 > .pin2" to={"net.BUS_HIGH"} />
-    <trace from=".B1 > .pin1" to={"net.GND"} />
+    <trace from=".B1 > .pin1" to={"net.BUS_HIGH"} />
+    <trace from=".B1 > .pin2" to={"net.GND"} />
     <trace from=".CHARGER > .pin2" to={"net.LOAD_CHARGER"} />
     <trace from=".CHARGER > .pin1" to={"net.GND"} />
 
