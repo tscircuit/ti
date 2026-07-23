@@ -6,7 +6,7 @@ import { OscillatorCrystal4 } from "../chips/OscillatorCrystal4.circuit";
 import { TPS61222 } from "../chips/TPS61222.circuit";
 import { TRF7960RHB } from "../chips/TRF7960RHB.circuit";
 
-export const TRF7960TbModuleSchematic = (props: SubcircuitProps) => (
+export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <schematictext
       schX={0}
@@ -862,3 +862,5 @@ export const TRF7960TbModuleSchematic = (props: SubcircuitProps) => (
     />
   </subcircuit>
 );
+
+export default RFIDReader_TRF7960;

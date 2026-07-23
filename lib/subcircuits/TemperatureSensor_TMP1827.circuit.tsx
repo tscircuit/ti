@@ -2,7 +2,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { TMP1827 } from "../chips/TMP1827.circuit";
 
-export const TMP1827MultidropSchematic = (props: SubcircuitProps) => (
+export const TemperatureSensor_TMP1827 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <schematictext
       schX={2}
@@ -53,4 +53,4 @@ export const TMP1827MultidropSchematic = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default TMP1827MultidropSchematic;
+export default TemperatureSensor_TMP1827;

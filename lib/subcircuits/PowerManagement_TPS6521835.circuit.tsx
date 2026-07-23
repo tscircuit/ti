@@ -4,7 +4,7 @@ import "tscircuit";
 
 import { TPS6521835 } from "../chips/TPS6521835.circuit.tsx";
 
-export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
+export const PowerManagement_TPS6521835 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <TPS6521835
       name="U1"
@@ -452,4 +452,4 @@ export const TPS6521835SimplifiedSchematic = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default TPS6521835SimplifiedSchematic;
+export default PowerManagement_TPS6521835;

@@ -2,7 +2,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { BQ32002 } from "../chips/BQ32002.circuit.tsx";
 
-export const BQ32002RtcSchematic = (props: SubcircuitProps) => (
+export const RealTimeClock_BQ32002 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <BQ32002
       name="U1"
@@ -89,4 +89,4 @@ export const BQ32002RtcSchematic = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default BQ32002RtcSchematic;
+export default RealTimeClock_BQ32002;
