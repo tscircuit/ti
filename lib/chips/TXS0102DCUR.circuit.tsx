@@ -1,14 +1,14 @@
 import type { ChipProps } from "tscircuit";
 
 const pinLabels = {
-  pin1: "B2",
+  pin1: ["IO_B2", "B2"],
   pin2: "GND",
   pin3: "VCCA",
-  pin4: "A2",
-  pin5: "A1",
+  pin4: ["IO_A2", "A2"],
+  pin5: ["IO_A1", "A1"],
   pin6: "OE",
   pin7: "VCCB",
-  pin8: "B1",
+  pin8: ["IO_B1", "B1"],
 } as const;
 
 export const TXS0102DCUR = (props: ChipProps<typeof pinLabels>) => (
