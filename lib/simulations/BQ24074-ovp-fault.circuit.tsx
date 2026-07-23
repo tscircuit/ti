@@ -1,3 +1,4 @@
+import type { SubcircuitProps } from "@tscircuit/props";
 import { BQ24074RGTR } from "../chips/BQ24074RGTR.circuit";
 
 const ovpInputPinLabels = {
@@ -26,8 +27,8 @@ V_IN OUT VSS PWL(0 6 64u 6 70u 15 78u 15.8 90u 15 240u 15)
   />
 );
 
-export const BQ24074OvpFaultCircuit = () => (
-  <board routingDisabled schMaxTraceDistance={3}>
+export const BQ24074OvpFaultCircuit = (props: SubcircuitProps) => (
+  <subcircuit {...props}>
     <BQ24074RGTR
       name="U1"
       schX={0}
@@ -267,7 +268,7 @@ export const BQ24074OvpFaultCircuit = () => (
         vntol: "1u",
       }}
     />
-  </board>
+  </subcircuit>
 );
 
 export default BQ24074OvpFaultCircuit;

@@ -1,7 +1,10 @@
+import type { SubcircuitProps } from "@tscircuit/props";
 import { DRV8876 } from "../chips/DRV8876.circuit.tsx";
 
-export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = () => (
-  <board routingDisabled>
+export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = (
+  props: SubcircuitProps,
+) => (
+  <subcircuit {...props}>
     <DRV8876
       name="U1"
       schX={0}
@@ -288,7 +291,7 @@ export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = () => (
         vntol: "1u",
       }}
     />
-  </board>
+  </subcircuit>
 );
 
 export default DRV8876DriverPwmOperationWithCurrentFeedbackCircuit;
