@@ -7,30 +7,38 @@ import "tscircuit";
  */
 export const TMP1827 = (props: ChipProps) => (
   <chip
-    manufacturerPartNumber="TMP1827"
+    manufacturerPartNumber="TMP1827NGRR"
+    supplierPartNumbers={{ jlcpcb: ["C22364248"] }}
+    footprint="dfn8_thermalpad1.1mmx1.8mm_p0.5001mm_w2.9198mm_pw0.28mm_pl0.585mm"
     schWidth="2mm"
     schHeight="2mm"
     pinLabels={{
-      pin1: ["ONEWIRE_SDQ", "SDQ"],
-      pin2: "VDD",
-      pin3: "GND",
+      pin1: "VDD",
+      pin2: ["ONEWIRE_SDQ", "SDQ"],
+      pin3: "ADDR",
+      pin4: "GND",
+      pin5: "IO3",
+      pin6: "IO0",
+      pin7: "IO1",
+      pin8: ["IO2_ALERT", "ALERT"],
+      pin9: ["EP", "thermalpad"],
     }}
     schPinArrangement={{
       topSide: {
         direction: "left-to-right",
-        pins: [1],
+        pins: [2],
       },
       rightSide: {
         direction: "left-to-right",
-        pins: [2],
+        pins: [1],
       },
       bottomSide: {
         direction: "left-to-right",
-        pins: [3],
+        pins: [4],
       },
     }}
     schPinStyle={{
-      pin2: { marginBottom: 1 },
+      pin1: { marginBottom: 1 },
     }}
     {...props}
   />
