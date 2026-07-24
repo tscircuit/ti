@@ -1,4 +1,4 @@
-import { ChipProps } from "tscircuit";
+import type { ChipProps } from "tscircuit";
 import drv8876SpiceModel from "./spice-models/DRV8876-spice-model.json";
 
 export const DRV8876_PIN_LABELS = {

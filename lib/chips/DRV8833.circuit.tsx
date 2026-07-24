@@ -1,4 +1,4 @@
-import { ChipProps } from "tscircuit";
+import type { ChipProps } from "tscircuit";
 
 export const DRV8833_PIN_LABELS = {
   pin16: "AIN1",
