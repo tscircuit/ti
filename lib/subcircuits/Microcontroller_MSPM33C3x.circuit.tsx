@@ -92,11 +92,7 @@ export const Microcontroller_MSPM33C3x = (props: SubcircuitProps) => (
         pin2: "net.GND",
       }}
     />
-    <trace
-      name="route_vss_to_ground"
-      from="U1.VSS"
-      to="C2.pin2"
-    />
+    <trace name="route_vss_to_ground" from="U1.VSS" to="C2.pin2" />
   </subcircuit>
 );
 
