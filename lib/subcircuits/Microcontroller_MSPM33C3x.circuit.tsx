@@ -96,18 +96,6 @@ export const Microcontroller_MSPM33C3x = (props: SubcircuitProps) => (
       name="route_vss_to_ground"
       from="U1.VSS"
       to="C2.pin2"
-      pcbPathRelativeTo="U1.VSS"
-      pcbPath={[
-        { x: 0, y: 0, via: true, toLayer: "bottom" },
-        { x: -4.49, y: -1 },
-        {
-          x: -4.49,
-          y: -1,
-          via: true,
-          fromLayer: "bottom",
-          toLayer: "top",
-        },
-      ]}
     />
   </subcircuit>
 );
