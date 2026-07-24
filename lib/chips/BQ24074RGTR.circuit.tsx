@@ -272,6 +272,9 @@ export const BQ24074RGTR = (props: ChipProps<typeof pinLabels>) => {
         modelOriginPosition: { x: 0, y: 0.000012699999999199463, z: 0 },
       }}
       {...props}
+
+
+      
     />
   );
 };
