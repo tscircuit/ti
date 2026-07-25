@@ -1,9 +1,21 @@
 import type { SubcircuitProps } from "@tscircuit/props";
+import { analog } from "tscircuit";
 import { TPS63802DLAR } from "../chips/TPS63802DLAR.circuit.tsx";
 
-export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = (
-  props: SubcircuitProps,
-) => (
+type TPS63802SwitchingWaveformsFigureCircuitProps = SubcircuitProps & {
+  duration: string;
+  figureName: string;
+  inputVoltage: string;
+  startTime: string;
+};
+
+export const createTPS63802SwitchingWaveformsFigureCircuit = ({
+  duration,
+  figureName,
+  inputVoltage,
+  startTime,
+  ...props
+}: TPS63802SwitchingWaveformsFigureCircuitProps) => (
   <subcircuit {...props}>
     <TPS63802DLAR
       name="U1"
@@ -36,7 +48,7 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = (
 
     <voltagesource
       name="V_IN"
-      voltage="4.2V"
+      voltage={inputVoltage}
       schX={-7.2}
       schY={0}
       schRotation="270deg"
@@ -220,10 +232,10 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = (
       graphVoltagePerDiv={5.5}
     />
 
-    <analogsimulation
-      name="TPS63802 Switching Waveforms PFM Buck Operation"
-      duration="704us"
-      startTime="686us"
+    <analog.transientsimulation
+      name={figureName}
+      duration={duration}
+      startTime={startTime}
       timePerStep="5ns"
       spiceEngine="ngspice"
       graphIndependentAxes
@@ -236,5 +248,3 @@ export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = (
     />
   </subcircuit>
 );
-
-export default TPS63802SwitchingWaveformsPfmBuckOperationCircuit;
