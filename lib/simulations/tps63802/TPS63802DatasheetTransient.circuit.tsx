@@ -1,0 +1,197 @@
+import type { SubcircuitProps } from "@tscircuit/props";
+import { analog } from "tscircuit";
+import {
+  TPS63802DatasheetApplication,
+  type TPS63802OperatingMode,
+} from "./TPS63802DatasheetApplication.circuit";
+
+const spiceOptions = {
+  method: "gear" as const,
+  reltol: 0.01,
+  abstol: "1n",
+  vntol: "1u",
+};
+
+interface SwitchingWaveformsProps extends SubcircuitProps {
+  figure: string;
+  operation: "Boost" | "Buck-Boost" | "Buck";
+  inputVoltage: string;
+  mode: TPS63802OperatingMode;
+  displayMode?: "PFM" | "PWM";
+  loadResistance: string;
+}
+
+export const TPS63802SwitchingWaveforms = ({
+  figure,
+  operation,
+  inputVoltage,
+  mode,
+  displayMode,
+  loadResistance,
+  ...subcircuitProps
+}: SwitchingWaveformsProps) => (
+  <TPS63802DatasheetApplication
+    {...subcircuitProps}
+    inputVoltage={inputVoltage}
+    inputVoltageWaveform={[
+      { time: "0us", voltage: "0V" },
+      { time: "100us", voltage: inputVoltage },
+    ]}
+    mode={mode}
+    loadResistance={loadResistance}
+    probeSet="switching"
+  >
+    {displayMode === "PWM" && (
+      <>
+        <resistor name="R_DYNAMIC_LOAD_1" resistance="3.4375Ω" />
+        <resistor name="R_DYNAMIC_LOAD_2" resistance="3.3Ω" />
+        <switch name="SW_DYNAMIC_LOAD_1" simStartOpen simCloseAt="700us" />
+        <switch name="SW_DYNAMIC_LOAD_2" simStartOpen simCloseAt="780us" />
+        <trace from="net.VOUT" to=".SW_DYNAMIC_LOAD_1 > .pin1" />
+        <trace
+          from=".SW_DYNAMIC_LOAD_1 > .pin2"
+          to=".R_DYNAMIC_LOAD_1 > .pin1"
+        />
+        <trace from=".R_DYNAMIC_LOAD_1 > .pin2" to="net.GND" />
+        <trace from="net.VOUT" to=".SW_DYNAMIC_LOAD_2 > .pin1" />
+        <trace
+          from=".SW_DYNAMIC_LOAD_2 > .pin2"
+          to=".R_DYNAMIC_LOAD_2 > .pin1"
+        />
+        <trace from=".R_DYNAMIC_LOAD_2 > .pin2" to="net.GND" />
+      </>
+    )}
+    <analog.transientsimulation
+      name={`${figure}. Switching Waveforms, ${displayMode ?? (mode === "pfm" ? "PFM" : "PWM")} ${operation} Operation`}
+      duration={displayMode === "PWM" ? "900us" : "704us"}
+      startTime={displayMode === "PWM" ? "882us" : "686us"}
+      timePerStep="5ns"
+      spiceEngine="ngspice"
+      graphIndependentAxes
+      spiceOptions={spiceOptions}
+    />
+  </TPS63802DatasheetApplication>
+);
+
+interface LoadTransientProps extends SubcircuitProps {
+  figure: string;
+  operation: "Boost" | "Buck-Boost" | "Buck";
+  inputVoltage: string;
+  mode: TPS63802OperatingMode;
+}
+
+export const TPS63802LoadTransient = ({
+  figure,
+  operation,
+  inputVoltage,
+  mode,
+  ...subcircuitProps
+}: LoadTransientProps) => (
+  <TPS63802DatasheetApplication
+    {...subcircuitProps}
+    inputVoltage={inputVoltage}
+    mode={mode}
+    loadResistance="33Ω"
+    probeSet="load-transient"
+  >
+    <currentsource
+      name="I_DYNAMIC_LOAD"
+      current="0A"
+      currentWaveform={[
+        { time: "0us", current: "0A" },
+        { time: "1250us", current: "0A" },
+        { time: "1251us", current: "900mA" },
+        { time: "1750us", current: "900mA" },
+        { time: "1751us", current: "0A" },
+        { time: "1950us", current: "0A" },
+      ]}
+    />
+    <trace from="net.LOAD_INPUT" to=".I_DYNAMIC_LOAD > .pos" />
+    <trace from=".I_DYNAMIC_LOAD > .neg" to="net.GND" />
+    <analog.transientsimulation
+      name={`${figure}. Load Transient, ${mode === "pfm" ? "PFM/PWM" : "PWM"} ${operation} Operation`}
+      duration="1950us"
+      startTime="1150us"
+      timePerStep="5ns"
+      spiceEngine="ngspice"
+      graphIndependentAxes
+      spiceOptions={spiceOptions}
+    />
+  </TPS63802DatasheetApplication>
+);
+
+interface LineTransientProps extends SubcircuitProps {
+  figure: string;
+  initialInputVoltage: string;
+  steppedInputVoltage: string;
+  loadCurrent: string;
+}
+
+export const TPS63802LineTransient = ({
+  figure,
+  initialInputVoltage,
+  steppedInputVoltage,
+  loadCurrent,
+  ...subcircuitProps
+}: LineTransientProps) => (
+  <TPS63802DatasheetApplication
+    {...subcircuitProps}
+    inputVoltage={initialInputVoltage}
+    inputVoltageWaveform={[
+      { time: "0us", voltage: initialInputVoltage },
+      { time: "1400us", voltage: initialInputVoltage },
+      { time: "1401us", voltage: steppedInputVoltage },
+      { time: "2600us", voltage: steppedInputVoltage },
+      { time: "2601us", voltage: initialInputVoltage },
+      { time: "3200us", voltage: initialInputVoltage },
+    ]}
+    mode="pwm"
+    loadCurrent={loadCurrent}
+    loadConnectAt="700us"
+    probeSet="line-transient"
+  >
+    <analog.transientsimulation
+      name={`${figure}. Line Transient, PWM Operation`}
+      duration="3200us"
+      startTime="1200us"
+      timePerStep="5ns"
+      spiceEngine="ngspice"
+      graphIndependentAxes
+      spiceOptions={spiceOptions}
+    />
+  </TPS63802DatasheetApplication>
+);
+
+interface StartupProps extends SubcircuitProps {
+  figure: string;
+  mode: TPS63802OperatingMode;
+}
+
+export const TPS63802Startup = ({
+  figure,
+  mode,
+  ...subcircuitProps
+}: StartupProps) => (
+  <TPS63802DatasheetApplication
+    {...subcircuitProps}
+    inputVoltage="4.2V"
+    enableWaveform={[
+      { time: "0us", voltage: "0V" },
+      { time: "50us", voltage: "0V" },
+      { time: "50.01us", voltage: "4.2V" },
+      { time: "800us", voltage: "4.2V" },
+    ]}
+    mode={mode}
+    loadResistance="330Ω"
+    probeSet="startup"
+  >
+    <analog.transientsimulation
+      name={`${figure}. Start-up Behavior from Rising Enable, ${mode === "pfm" ? "PFM" : "PWM"} Operation`}
+      duration="800us"
+      timePerStep="5ns"
+      spiceEngine="ngspice"
+      graphIndependentAxes
+      spiceOptions={spiceOptions}
+    />
+  </TPS63802DatasheetApplication>
+);
