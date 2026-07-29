@@ -845,7 +845,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       }
       connections={{
         pin2: "net.GND",
-         pin1: "net.ANT_MATCH_OUT",
+        pin1: "net.ANT_MATCH_OUT",
         pin3: "net.GND",
       }}
     />
