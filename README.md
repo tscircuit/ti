@@ -239,3 +239,27 @@ changes:
 ```bash
 bun run snapshot:update
 ```
+
+The full TPS63802 datasheet transient checks use the vendor switching model at
+a 5 ns step and can take tens of minutes per figure. Run them explicitly:
+
+```bash
+RUN_TPS63802_DATASHEET_SIMULATIONS=1 bun test tests/TPS63802-transient-figures.test.tsx
+```
+
+The ordinary TPS63802 tests use deterministic engines to verify circuit
+generation, Cartesian sweep coordinates, measurements, graph grouping, and
+figure labels without replacing the vendor-model checks.
+
+TI's TPS63802 model states that it does not model quiescent current or
+temperature effects. As a result, low-current efficiency curves can be
+simulated structurally but cannot be expected to match TI's bench data
+quantitatively. Figures 10-30 and 10-31 also contain conflicting conditions:
+Table 10-7 specifies a 2.2 V input and 10 mA load, while the figure annotations
+specify 4.2 V and a physically impossible 100 mΩ load. The example circuits
+follow Table 10-7.
+
+Figure 10-2 records the settled regulation surface across input voltage and
+load current. The datasheet does not define the pass/fail criterion used to
+turn that surface into a single "maximum output current" boundary, so the
+example does not hard-code an arbitrary threshold.

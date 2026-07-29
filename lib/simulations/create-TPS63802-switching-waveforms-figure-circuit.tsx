@@ -6,6 +6,8 @@ type TPS63802SwitchingWaveformsFigureCircuitProps = SubcircuitProps & {
   duration: string;
   figureName: string;
   inputVoltage: string;
+  loadResistance?: string;
+  mode?: "pfm" | "pwm";
   startTime: string;
 };
 
@@ -13,6 +15,8 @@ export const createTPS63802SwitchingWaveformsFigureCircuit = ({
   duration,
   figureName,
   inputVoltage,
+  loadResistance = "82.5",
+  mode = "pfm",
   startTime,
   ...props
 }: TPS63802SwitchingWaveformsFigureCircuitProps) => (
@@ -146,7 +150,7 @@ export const createTPS63802SwitchingWaveformsFigureCircuit = ({
 
     <resistor
       name="R_LOAD"
-      resistance="82.5"
+      resistance={loadResistance}
       footprint="0603"
       schX={7}
       schY={-1}
@@ -194,7 +198,11 @@ export const createTPS63802SwitchingWaveformsFigureCircuit = ({
     <trace from="U1.FB" to="R1.pin2" />
     <trace from="U1.FB" to="R2.pin1" />
 
-    <trace from="U1.MODE" to="net.GND" />
+    {mode === "pwm" ? (
+      <trace from="U1.MODE" to="net.VIN" />
+    ) : (
+      <trace from="U1.MODE" to="net.GND" />
+    )}
     <trace from="U1.GND" to="net.GND" />
     <trace from="U1.AGND" to="net.GND" />
     <trace from="C1.pin2" to="net.GND" />
