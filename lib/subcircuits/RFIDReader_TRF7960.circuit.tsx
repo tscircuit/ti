@@ -8,8 +8,6 @@ import { TRF7960RHB } from "../chips/TRF7960RHB.circuit";
 
 const ReaderAndInterfaceSheet = () => (
   <>
-
-
     <TRF7960RHB
       name="U1"
       schX={-2.5}
