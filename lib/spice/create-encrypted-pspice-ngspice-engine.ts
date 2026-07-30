@@ -24,7 +24,7 @@ const importNgspiceSpiceEngine = async () => {
     }>(
       isNodeRuntime
         ? "@tscircuit/ngspice-spice-engine"
-        : "https://jscdn.tscircuit.com/@tscircuit/ngspice-spice-engine/0.0.18/+esm",
+        : "https://jscdn.tscircuit.com/@tscircuit/ngspice-spice-engine/0.0.21/+esm",
     );
   }
 

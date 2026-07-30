@@ -7,6 +7,7 @@ export const TPS63802Figure1026LoadTransientPwmBuckOperationCircuit = (
   createTPS63802LoadTransientFigureCircuit({
     ...props,
     figureName: "Figure 10-26. Load Transient, PWM Buck Operation",
+    // Figure 10-26 is annotated VI = 5 V; Table 10-7 says 4.2 V.
     inputVoltage: "5V",
     mode: "pwm",
   });

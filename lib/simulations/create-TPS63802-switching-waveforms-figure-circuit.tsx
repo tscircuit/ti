@@ -6,8 +6,11 @@ type TPS63802SwitchingWaveformsFigureCircuitProps = SubcircuitProps & {
   duration: string;
   figureName: string;
   inputVoltage: string;
-  loadResistance?: string;
+  inductorCurrentCenter?: number;
+  l1Center?: number;
+  loadCurrent?: string;
   mode?: "pfm" | "pwm";
+  outputVoltageCenter?: number;
   startTime: string;
 };
 
@@ -15,244 +18,261 @@ export const createTPS63802SwitchingWaveformsFigureCircuit = ({
   duration,
   figureName,
   inputVoltage,
-  loadResistance = "82.5",
+  inductorCurrentCenter,
+  l1Center,
+  loadCurrent = "40mA",
   mode = "pfm",
+  outputVoltageCenter,
   startTime,
   ...props
-}: TPS63802SwitchingWaveformsFigureCircuitProps) => (
-  <subcircuit {...props}>
-    <TPS63802DLAR
-      name="U1"
-      schX={0}
-      schY={0}
-      schWidth={2.5}
-      schHeight={6}
-      showPinAliases={false}
-      schPinArrangement={{
-        topSide: { pins: ["L1", "L2"], direction: "left-to-right" },
-        leftSide: {
-          pins: ["VIN", "EN", "MODE", "GND"],
-          direction: "top-to-bottom",
-        },
-        rightSide: {
-          pins: ["VOUT", "PG", "FB", "AGND"],
-          direction: "top-to-bottom",
-        },
-      }}
-      schPinStyle={{
-        L2: { marginLeft: 1 },
-        VIN: { marginBottom: 1 },
-        EN: { marginBottom: 1 },
-        MODE: { marginBottom: 1 },
-        VOUT: { marginBottom: 1 },
-        PG: { marginBottom: 1 },
-        FB: { marginBottom: 1 },
-      }}
-    />
+}: TPS63802SwitchingWaveformsFigureCircuitProps) => {
+  const isPwm = mode === "pwm";
+  const voltageCenter = outputVoltageCenter ?? (isPwm ? 3.24 : 3.15);
+  const currentCenter = inductorCurrentCenter ?? (isPwm ? 4.4 : 2);
+  const l1DisplayCenter = l1Center ?? -3;
 
-    <voltagesource
-      name="V_IN"
-      voltage={inputVoltage}
-      schX={-7.2}
-      schY={0}
-      schRotation="270deg"
-    />
+  return (
+    <subcircuit {...props}>
+      <TPS63802DLAR
+        name="U1"
+        schX={0}
+        schY={0}
+        schWidth={2.5}
+        schHeight={6}
+        showPinAliases={false}
+        schPinArrangement={{
+          topSide: { pins: ["L1", "L2"], direction: "left-to-right" },
+          leftSide: {
+            pins: ["VIN", "EN", "MODE", "GND"],
+            direction: "top-to-bottom",
+          },
+          rightSide: {
+            pins: ["VOUT", "PG", "FB", "AGND"],
+            direction: "top-to-bottom",
+          },
+        }}
+        schPinStyle={{
+          L2: { marginLeft: 1 },
+          VIN: { marginBottom: 1 },
+          EN: { marginBottom: 1 },
+          MODE: { marginBottom: 1 },
+          VOUT: { marginBottom: 1 },
+          PG: { marginBottom: 1 },
+          FB: { marginBottom: 1 },
+        }}
+      />
 
-    <inductor
-      name="L1"
-      inductance={4.7e-7}
-      footprint="0603"
-      schX={0}
-      schY={5}
-      schOrientation="horizontal"
-    />
-    <ammeter
-      name="IL_PROBE"
-      connections={{ pos: "U1.L1", neg: "L1.pin1" }}
-      color="#d946ef"
-      graphDisplayName="IL"
-      graphCenter={0}
-      graphVerticalOffset={0}
-      graphCurrentPerDiv={0.8}
-      schX={-1.8}
-      schY={5}
-    />
+      <voltagesource
+        name="V_IN"
+        voltage={inputVoltage}
+        schX={-7.2}
+        schY={0}
+        schRotation="270deg"
+      />
 
-    <resistor
-      name="R_L1_DCR"
-      resistance="0.0076"
-      footprint="0603"
-      schX={1.4}
-      schY={5}
-      schOrientation="horizontal"
-    />
+      <inductor
+        name="L1"
+        inductance={4.7e-7}
+        footprint="0603"
+        schX={0}
+        schY={5}
+        schOrientation="horizontal"
+      />
+      <ammeter
+        name="IL_PROBE"
+        connections={{ pos: "U1.L1", neg: "L1.pin1" }}
+        color="#d946ef"
+        graphDisplayName="IL"
+        graphCenter={currentCenter}
+        graphVerticalOffset={0}
+        graphCurrentPerDiv={0.5}
+        schX={-1.8}
+        schY={5}
+      />
 
-    <capacitor
-      name="C1"
-      capacitance="5uF"
-      footprint="0603"
-      schX={-4.8}
-      schY={-2}
-      schOrientation="vertical"
-    />
-    <resistor
-      name="R_CIN_ESR"
-      resistance="0.01"
-      footprint="0603"
-      schX={-4.8}
-      schY={0}
-      schOrientation="vertical"
-    />
+      <resistor
+        name="R_L1_DCR"
+        resistance="0.0076"
+        footprint="0603"
+        schX={1.4}
+        schY={5}
+        schOrientation="horizontal"
+      />
 
-    <capacitor
-      name="C2"
-      capacitance="8.2uF"
-      footprint="0805"
-      schX={5.5}
-      schY={-1}
-      schOrientation="vertical"
-    />
-    <resistor
-      name="R_COUT_ESR"
-      resistance="0.01"
-      footprint="0603"
-      schX={5.5}
-      schY={0.5}
-      schOrientation="vertical"
-    />
+      <capacitor
+        name="C1"
+        // TPS63802 Section 8.3 specifies 5 µF effective input capacitance.
+        // Table 10-6 obtains it from the nominal 10 µF Murata part after
+        // tolerance and DC-bias derating.
+        capacitance="5uF"
+        footprint="0603"
+        schX={-4.8}
+        schY={-2}
+        schOrientation="vertical"
+      />
+      {/* TPS63802 Tables 10-3 and 10-4 specify 10 mΩ ESR for both selected
+        Murata capacitors. */}
+      <resistor
+        name="R_CIN_ESR"
+        resistance="10mΩ"
+        footprint="0603"
+        schX={-4.8}
+        schY={0}
+        schOrientation="vertical"
+      />
 
-    <resistor
-      name="R1"
-      resistance="511k"
-      footprint="0603"
-      schX={4.1}
-      schY={1}
-      schOrientation="vertical"
-    />
+      <capacitor
+        name="C2"
+        // TPS63802 Section 8.3 specifies 8.2 µF effective output capacitance
+        // for VO > 2.3 V. Table 10-6 obtains it from the nominal 22 µF Murata
+        // part after tolerance and DC-bias derating.
+        capacitance="8.2uF"
+        footprint="0603"
+        schX={5.5}
+        schY={-1}
+        schOrientation="vertical"
+      />
+      <resistor
+        name="R_COUT_ESR"
+        resistance="10mΩ"
+        footprint="0603"
+        schX={5.5}
+        schY={0.5}
+        schOrientation="vertical"
+      />
 
-    <resistor
-      name="R2"
-      resistance="91k"
-      footprint="0603"
-      schX={4.1}
-      schY={-1}
-      schOrientation="vertical"
-    />
+      <resistor
+        name="R1"
+        resistance="511k"
+        footprint="0603"
+        schX={4.1}
+        schY={1}
+        schOrientation="vertical"
+      />
 
-    <resistor
-      name="R3"
-      resistance="100k"
-      footprint="0603"
-      schX={2.7}
-      schY={1.8}
-      schOrientation="vertical"
-    />
+      <resistor
+        name="R2"
+        resistance="91k"
+        footprint="0603"
+        schX={4.1}
+        schY={-1}
+        schOrientation="vertical"
+      />
 
-    <resistor
-      name="R_LOAD"
-      resistance={loadResistance}
-      footprint="0603"
-      schX={7}
-      schY={-1}
-      schOrientation="vertical"
-    />
+      <resistor
+        name="R3"
+        resistance="100k"
+        footprint="0603"
+        schX={2.7}
+        schY={1.8}
+        schOrientation="vertical"
+      />
 
-    <trace from="U1.VIN" to="net.VIN" />
-    <schematictext
-      text="VIN 1.3V-5.5V"
-      schX={-4}
-      schY={2.2}
-      fontSize={0.18}
-      anchor="center"
-    />
-    <trace from="U1.pin6" to="net.VOUT" />
-    <schematictext
-      text="VOUT = 3.3V"
-      schX={2}
-      schY={2.2}
-      fontSize={0.15}
-      anchor="center"
-    />
+      <currentsource
+        name="I_LOAD"
+        current={loadCurrent}
+        schX={7}
+        schY={-1}
+        schRotation="270deg"
+      />
 
-    <trace from="V_IN.pin1" to="U1.VIN" />
-    <trace from="V_IN.pin2" to="net.GND" />
+      <trace from="U1.VIN" to="net.VIN" />
+      <schematictext
+        text="VIN 1.3V-5.5V"
+        schX={-4}
+        schY={2.2}
+        fontSize={0.18}
+        anchor="center"
+      />
+      <trace from="U1.pin6" to="net.VOUT" />
+      <schematictext
+        text="VOUT = 3.3V"
+        schX={2}
+        schY={2.2}
+        fontSize={0.15}
+        anchor="center"
+      />
 
-    <trace from="U1.L1" to="IL_PROBE.pos" />
-    <trace from="IL_PROBE.neg" to="L1.pin1" />
-    <trace from="L1.pin2" to="R_L1_DCR.pin1" />
-    <trace from="R_L1_DCR.pin2" to="U1.L2" />
+      <trace from="V_IN.pin1" to="U1.VIN" />
+      <trace from="V_IN.pin2" to="net.GND" />
 
-    <trace from="U1.VIN" to="R_CIN_ESR.pin1" />
-    <trace from="R_CIN_ESR.pin2" to="C1.pin1" />
-    <trace from="U1.VIN" to="U1.EN" />
-    <trace from="U1.VIN" to="R3.pin1" />
+      <trace from="U1.L1" to="IL_PROBE.pos" />
+      <trace from="IL_PROBE.neg" to="L1.pin1" />
+      <trace from="L1.pin2" to="R_L1_DCR.pin1" />
+      <trace from="R_L1_DCR.pin2" to="U1.L2" />
 
-    <trace from="U1.VOUT" to="R_COUT_ESR.pin1" />
-    <trace from="R_COUT_ESR.pin2" to="C2.pin1" />
-    <trace from="R1.pin1" to="U1.VOUT" />
+      <trace from="U1.VIN" to="R_CIN_ESR.pin1" />
+      <trace from="R_CIN_ESR.pin2" to="C1.pin1" />
+      <trace from="U1.VIN" to="U1.EN" />
+      <trace from="U1.VIN" to="R3.pin1" />
 
-    <trace from="U1.VOUT" to="R_LOAD.pin1" />
-    <trace from="R_LOAD.pin2" to="net.GND" />
+      <trace from="U1.VOUT" to="R_COUT_ESR.pin1" />
+      <trace from="R_COUT_ESR.pin2" to="C2.pin1" />
+      <trace from="R1.pin1" to="U1.VOUT" />
 
-    <trace from="U1.PG" to="R3.pin2" />
-    <trace from="U1.FB" to="R1.pin2" />
-    <trace from="U1.FB" to="R2.pin1" />
+      <trace from="U1.VOUT" to="I_LOAD.pos" />
+      <trace from="I_LOAD.neg" to="net.GND" />
 
-    {mode === "pwm" ? (
-      <trace from="U1.MODE" to="net.VIN" />
-    ) : (
-      <trace from="U1.MODE" to="net.GND" />
-    )}
-    <trace from="U1.GND" to="net.GND" />
-    <trace from="U1.AGND" to="net.GND" />
-    <trace from="C1.pin2" to="net.GND" />
-    <trace from="C2.pin2" to="net.GND" />
-    <trace from="R2.pin2" to="net.GND" />
+      <trace from="U1.PG" to="R3.pin2" />
+      <trace from="U1.FB" to="R1.pin2" />
+      <trace from="U1.FB" to="R2.pin1" />
 
-    <voltageprobe
-      name="VOUT_PROBE"
-      connectsTo="U1.VOUT"
-      referenceTo="U1.GND"
-      color="#315cff"
-      graphDisplayName="VO"
-      graphCenter={3.3}
-      graphVerticalOffset={0.45}
-      graphVoltagePerDiv={0.15}
-    />
-    <voltageprobe
-      name="L1_PROBE"
-      connectsTo="U1.L1"
-      referenceTo="U1.GND"
-      color="#00d98b"
-      graphDisplayName="L1"
-      graphCenter={0}
-      graphVerticalOffset={13}
-      graphVoltagePerDiv={6.5}
-    />
-    <voltageprobe
-      name="L2_PROBE"
-      connectsTo="U1.L2"
-      referenceTo="U1.GND"
-      color="#f1b400"
-      graphDisplayName="L2"
-      graphCenter={0}
-      graphVerticalOffset={5.5}
-      graphVoltagePerDiv={5.5}
-    />
+      {mode === "pwm" ? (
+        <trace from="U1.MODE" to="net.VIN" />
+      ) : (
+        <trace from="U1.MODE" to="net.GND" />
+      )}
+      <trace from="U1.GND" to="net.GND" />
+      <trace from="U1.AGND" to="net.GND" />
+      <trace from="C1.pin2" to="net.GND" />
+      <trace from="C2.pin2" to="net.GND" />
+      <trace from="R2.pin2" to="net.GND" />
 
-    <analog.transientsimulation
-      name={figureName}
-      duration={duration}
-      startTime={startTime}
-      timePerStep="5ns"
-      spiceEngine="ngspice"
-      graphIndependentAxes
-      spiceOptions={{
-        method: "gear",
-        reltol: 0.01,
-        abstol: "1n",
-        vntol: "1u",
-      }}
-    />
-  </subcircuit>
-);
+      <voltageprobe
+        name="VOUT_PROBE"
+        connectsTo="U1.VOUT"
+        referenceTo="U1.GND"
+        color="#315cff"
+        graphDisplayName="VO"
+        graphCenter={voltageCenter}
+        graphVerticalOffset={0}
+        graphVoltagePerDiv={isPwm ? 0.02 : 0.05}
+      />
+      <voltageprobe
+        name="L1_PROBE"
+        connectsTo="U1.L1"
+        referenceTo="U1.GND"
+        color="#00d98b"
+        graphDisplayName="L1"
+        graphCenter={l1DisplayCenter}
+        graphVerticalOffset={0}
+        graphVoltagePerDiv={3}
+      />
+      <voltageprobe
+        name="L2_PROBE"
+        connectsTo="U1.L2"
+        referenceTo="U1.GND"
+        color="#f1b400"
+        graphDisplayName="L2"
+        graphCenter={3}
+        graphVerticalOffset={0}
+        graphVoltagePerDiv={3}
+      />
+
+      <analog.transientsimulation
+        name={figureName}
+        duration={duration}
+        startTime={startTime}
+        timePerStep="10ns"
+        spiceEngine="ngspice"
+        graphIndependentAxes
+        spiceOptions={{
+          method: "gear",
+          reltol: 0.01,
+          abstol: "1n",
+          vntol: "1u",
+        }}
+      />
+    </subcircuit>
+  );
+};

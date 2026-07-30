@@ -240,11 +240,37 @@ changes:
 bun run snapshot:update
 ```
 
-The full TPS63802 datasheet transient checks use the vendor switching model at
-a 5 ns step and can take tens of minutes per figure. Run them explicitly:
+The full TPS63802 datasheet waveform checks use the unmodified TI switching
+model at a 10 ns step and can take minutes to tens of minutes per figure. Run
+one figure explicitly:
 
 ```bash
-RUN_TPS63802_DATASHEET_SIMULATIONS=1 bun test tests/TPS63802-transient-figures.test.tsx
+RUN_TPS63802_DATASHEET_SIMULATIONS=1 \
+  bun test tests/TPS63802-datasheet-waveform-snapshots.test.tsx \
+  -t "Figure 10-21"
+```
+
+Add `UPDATE_TPS63802_DATASHEET_SNAPSHOTS=1` to update that figure's committed
+simulation SVG. Each completed run also stores its Circuit JSON and SPICE
+netlist in `/tmp`, so rendering changes can be checked without rerunning the
+vendor model.
+
+The waveform examples use the effective 5 µF input and 8.2 µF output
+capacitances from Section 8.3. Tables 10-3, 10-4, and 10-6 list the
+corresponding nominal 10 µF and 22 µF parts and their 10 mΩ ESR.
+For conflicting conditions, the annotation printed with the graph is used:
+Figures 10-23 and 10-26 use 5 V even though Table 10-7 says 4.2 V.
+
+The committed SVGs contain simulator output, not digitized datasheet traces.
+TI's figures are bench measurements, so the model can differ quantitatively.
+The wide line steps in Figures 10-27 and 10-28 show the largest difference
+around the automatic boost/buck mode transition.
+
+```bash
+RUN_TPS63802_DATASHEET_SIMULATIONS=1 \
+UPDATE_TPS63802_DATASHEET_SNAPSHOTS=1 \
+  bun test tests/TPS63802-datasheet-waveform-snapshots.test.tsx \
+  -t "Figure 10-21"
 ```
 
 The ordinary TPS63802 tests use deterministic engines to verify circuit
@@ -257,7 +283,7 @@ simulated structurally but cannot be expected to match TI's bench data
 quantitatively. Figures 10-30 and 10-31 also contain conflicting conditions:
 Table 10-7 specifies a 2.2 V input and 10 mA load, while the figure annotations
 specify 4.2 V and a physically impossible 100 mΩ load. The example circuits
-follow Table 10-7.
+use the figure's 4.2 V input and the table's physically coherent 10 mA load.
 
 Figure 10-2 records the settled regulation surface across input voltage and
 load current. The datasheet does not define the pass/fail criterion used to

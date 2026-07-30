@@ -8,9 +8,12 @@ export const TPS63802Figure1018SwitchingWaveformsPwmBoostOperationCircuit = (
     ...props,
     duration: "704us",
     figureName: "Figure 10-18. Switching Waveforms, PWM Boost Operation",
+    inductorCurrentCenter: 4.4,
     inputVoltage: "2.3V",
-    loadResistance: "1.65Ω",
+    l1Center: -1.02,
+    loadCurrent: "2A",
     mode: "pwm",
+    outputVoltageCenter: 3.23,
     startTime: "686us",
   });
 

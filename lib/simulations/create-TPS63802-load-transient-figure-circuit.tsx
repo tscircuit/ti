@@ -22,17 +22,27 @@ export const createTPS63802LoadTransientFigureCircuit = ({
       { time: "0us", current: "0A" },
       { time: "750us", current: "0A" },
       { time: "751us", current: "900mA" },
-      { time: "1150us", current: "900mA" },
-      { time: "1151us", current: "0A" },
+      { time: "1250us", current: "900mA" },
+      { time: "1251us", current: "0A" },
     ]}
     mode={mode}
     probeLoadCurrent
+    loadCurrentGraphDisplay={{
+      graphCenter: 1.8,
+      graphCurrentPerDiv: "400mA",
+      graphVerticalOffset: 0,
+    }}
+    outputVoltageGraphDisplay={{
+      graphCenter: 3.1,
+      graphVoltagePerDiv: "100mV",
+      graphVerticalOffset: 0,
+    }}
   >
     <analog.transientsimulation
       name={figureName}
-      startTime="650us"
-      duration="1450us"
-      timePerStep="5ns"
+      startTime="550us"
+      duration="1550us"
+      timePerStep="10ns"
       spiceEngine="ngspice"
       graphIndependentAxes
       spiceOptions={{

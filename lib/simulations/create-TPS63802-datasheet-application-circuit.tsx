@@ -6,12 +6,28 @@ import type {
 import type { ReactNode } from "react";
 import { TPS63802DLAR } from "../chips/TPS63802DLAR.circuit";
 
+type VoltageGraphDisplay = {
+  graphCenter?: number;
+  graphVerticalOffset?: number | string;
+  graphVoltagePerDiv?: number | string;
+};
+
+type CurrentGraphDisplay = {
+  graphCenter?: number;
+  graphCurrentPerDiv?: number | string;
+  graphVerticalOffset?: number | string;
+};
+
 type TPS63802DatasheetApplicationCircuitProps = SubcircuitProps & {
   children: ReactNode;
+  enableVoltageGraphDisplay?: VoltageGraphDisplay;
   enableVoltageWaveform?: VoltageSourceProps["voltageWaveform"];
+  inductorCurrentGraphDisplay?: CurrentGraphDisplay;
   inputVoltage?: number | string;
+  inputVoltageGraphDisplay?: VoltageGraphDisplay;
   inputVoltageWaveform?: VoltageSourceProps["voltageWaveform"];
   loadCurrent?: number | string;
+  loadCurrentGraphDisplay?: CurrentGraphDisplay;
   loadCurrentWaveform?: CurrentSourceProps["currentWaveform"];
   loadEnableTime?: number | string;
   loadResistance?: number | string;
@@ -24,14 +40,20 @@ type TPS63802DatasheetApplicationCircuitProps = SubcircuitProps & {
   probeInputVoltage?: boolean;
   probeLoadCurrent?: boolean;
   probePowerGoodVoltage?: boolean;
+  outputVoltageGraphDisplay?: VoltageGraphDisplay;
+  powerGoodVoltageGraphDisplay?: VoltageGraphDisplay;
 };
 
 export const TPS63802DatasheetApplicationCircuit = ({
   children,
+  enableVoltageGraphDisplay,
   enableVoltageWaveform,
+  inductorCurrentGraphDisplay,
   inputVoltage,
+  inputVoltageGraphDisplay,
   inputVoltageWaveform,
   loadCurrent = "100mA",
+  loadCurrentGraphDisplay,
   loadCurrentWaveform,
   loadEnableTime,
   loadResistance,
@@ -44,6 +66,8 @@ export const TPS63802DatasheetApplicationCircuit = ({
   probeInputVoltage = false,
   probeLoadCurrent = false,
   probePowerGoodVoltage = false,
+  outputVoltageGraphDisplay,
+  powerGoodVoltageGraphDisplay,
   ...props
 }: TPS63802DatasheetApplicationCircuitProps) => {
   const feedbackBottomResistance = 91_000;
@@ -56,7 +80,11 @@ export const TPS63802DatasheetApplicationCircuit = ({
   const feedbackTopResistance =
     recommendedFeedbackTopResistance.get(outputVoltage) ??
     feedbackBottomResistance * (outputVoltage / 0.5 - 1);
-  const outputCapacitance = outputVoltage <= 2.3 ? "10uF" : "8.2uF";
+  // TPS63802 Section 8.3 specifies the effective capacitances used by the
+  // converter after tolerance and DC-bias derating. Tables 10-3, 10-4, and
+  // 10-6 list the corresponding nominal 10 µF and 22 µF Murata parts.
+  const inputCapacitance = "5uF";
+  const outputCapacitance = outputVoltage <= 3.6 ? "8.2uF" : "16.4uF";
 
   return (
     <subcircuit {...props}>
@@ -151,6 +179,7 @@ export const TPS63802DatasheetApplicationCircuit = ({
           graphCenter={0}
           graphVerticalOffset={0}
           graphCurrentPerDiv={0.8}
+          {...inductorCurrentGraphDisplay}
           schX={-1.8}
           schY={5}
         />
@@ -166,6 +195,8 @@ export const TPS63802DatasheetApplicationCircuit = ({
         connections={{ pin1: "L1.pin2", pin2: "U1.L2" }}
       />
 
+      {/* TPS63802 Tables 10-3 and 10-4 specify 10 mΩ ESR for the
+          GRM188R60J106ME84 input and GRM188R60J226MEA0 output capacitors. */}
       <resistor
         name="R_CIN_ESR"
         resistance="10mΩ"
@@ -177,7 +208,7 @@ export const TPS63802DatasheetApplicationCircuit = ({
       />
       <capacitor
         name="C_IN"
-        capacitance="5uF"
+        capacitance={inputCapacitance}
         footprint="0603"
         schX={-4.5}
         schY={-2}
@@ -198,7 +229,7 @@ export const TPS63802DatasheetApplicationCircuit = ({
       <capacitor
         name="C_OUT"
         capacitance={outputCapacitance}
-        footprint="0805"
+        footprint="0603"
         schX={5}
         schY={-1}
         schOrientation="vertical"
@@ -253,8 +284,9 @@ export const TPS63802DatasheetApplicationCircuit = ({
           <ammeter
             name="I_LOAD_PROBE"
             connections={{ pos: "net.LOAD_SWITCHED", neg: "net.LOAD" }}
-            color="#f97316"
-            graphDisplayName="IO"
+            color="#d946ef"
+            graphDisplayName="I Load"
+            {...loadCurrentGraphDisplay}
             schX={6.8}
             schY={1}
           />
@@ -265,8 +297,9 @@ export const TPS63802DatasheetApplicationCircuit = ({
           <ammeter
             name="I_LOAD_PROBE"
             connections={{ pos: "net.VOUT", neg: "net.LOAD" }}
-            color="#f97316"
-            graphDisplayName="IO"
+            color="#d946ef"
+            graphDisplayName="I Load"
+            {...loadCurrentGraphDisplay}
             schX={6.2}
             schY={1}
           />
@@ -285,8 +318,9 @@ export const TPS63802DatasheetApplicationCircuit = ({
         <ammeter
           name="I_LOAD_PROBE"
           connections={{ pos: "net.VOUT", neg: "net.LOAD" }}
-          color="#f97316"
-          graphDisplayName="IO"
+          color="#d946ef"
+          graphDisplayName="I Load"
+          {...loadCurrentGraphDisplay}
           schX={6.2}
           schY={1}
         />
@@ -344,6 +378,7 @@ export const TPS63802DatasheetApplicationCircuit = ({
         graphDisplayName="VO"
         graphCenter={outputVoltage}
         graphVoltagePerDiv={0.1}
+        {...outputVoltageGraphDisplay}
       />
       {probeInputVoltage && (
         <voltageprobe
@@ -352,6 +387,7 @@ export const TPS63802DatasheetApplicationCircuit = ({
           referenceTo="U1.GND"
           color="#00a36c"
           graphDisplayName="VI"
+          {...inputVoltageGraphDisplay}
         />
       )}
       {probeFeedbackVoltage && (
@@ -368,6 +404,7 @@ export const TPS63802DatasheetApplicationCircuit = ({
           connectsTo="U1.EN"
           referenceTo="U1.GND"
           graphDisplayName="EN"
+          {...enableVoltageGraphDisplay}
         />
       )}
       {probePowerGoodVoltage && (
@@ -376,6 +413,7 @@ export const TPS63802DatasheetApplicationCircuit = ({
           connectsTo="U1.PG"
           referenceTo="U1.GND"
           graphDisplayName="PG"
+          {...powerGoodVoltageGraphDisplay}
         />
       )}
 

@@ -8,9 +8,11 @@ export const TPS63802Figure1020SwitchingWaveformsPwmBuckOperationCircuit = (
     ...props,
     duration: "704us",
     figureName: "Figure 10-20. Switching Waveforms, PWM Buck Operation",
+    inductorCurrentCenter: 3.62,
     inputVoltage: "4.2V",
-    loadResistance: "1.65Ω",
+    loadCurrent: "2A",
     mode: "pwm",
+    outputVoltageCenter: 3.24,
     startTime: "686us",
   });
 
