@@ -7,6 +7,7 @@
     "rootDir": ".",
     "baseUrl": ".",
     "strict": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
@@ -15,7 +16,7 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "types": ["tscircuit"]
+    "types": ["tscircuit", "bun"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist", ".claude"]
