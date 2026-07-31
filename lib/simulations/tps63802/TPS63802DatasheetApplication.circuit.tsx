@@ -78,6 +78,9 @@ export const TPS63802DatasheetApplication = ({
           connections={{ pos: "net.VIN_SOURCE", neg: "net.VIN" }}
         />
       )}
+      {showsMeasurementSignals && (
+        <currentsource name="I_QUIESCENT" current="11uA" />
+      )}
 
       <inductor name="L1" inductance="0.47uH" />
       {needsInductorAmmeter && (
@@ -149,6 +152,12 @@ export const TPS63802DatasheetApplication = ({
         </>
       )}
       {needsInputAmmeter && <trace from=".I_IN > .neg" to="U1.VIN" />}
+      {showsMeasurementSignals && (
+        <>
+          <trace from=".I_QUIESCENT > .pos" to="net.VIN" />
+          <trace from=".I_QUIESCENT > .neg" to="net.GND" />
+        </>
+      )}
 
       {needsInductorAmmeter ? (
         <>

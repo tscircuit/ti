@@ -99,20 +99,20 @@ export const TPS63802LoadTransient = ({
       current="0A"
       currentWaveform={[
         { time: "0us", current: "0A" },
-        { time: "1250us", current: "0A" },
-        { time: "1251us", current: "900mA" },
-        { time: "1750us", current: "900mA" },
-        { time: "1751us", current: "0A" },
-        { time: "1950us", current: "0A" },
+        { time: "650us", current: "0A" },
+        { time: "651us", current: "900mA" },
+        { time: "1150us", current: "900mA" },
+        { time: "1151us", current: "0A" },
+        { time: "1350us", current: "0A" },
       ]}
     />
     <trace from="net.LOAD_INPUT" to=".I_DYNAMIC_LOAD > .pos" />
     <trace from=".I_DYNAMIC_LOAD > .neg" to="net.GND" />
     <analog.transientsimulation
       name={`${figure}. Load Transient, ${mode === "pfm" ? "PFM/PWM" : "PWM"} ${operation} Operation`}
-      duration="1950us"
-      startTime="1150us"
-      timePerStep="5ns"
+      duration="1350us"
+      startTime="550us"
+      timePerStep="10ns"
       spiceEngine="ngspice"
       graphIndependentAxes
       spiceOptions={spiceOptions}
@@ -139,22 +139,22 @@ export const TPS63802LineTransient = ({
     inputVoltage={initialInputVoltage}
     inputVoltageWaveform={[
       { time: "0us", voltage: initialInputVoltage },
-      { time: "1400us", voltage: initialInputVoltage },
-      { time: "1401us", voltage: steppedInputVoltage },
-      { time: "2600us", voltage: steppedInputVoltage },
-      { time: "2601us", voltage: initialInputVoltage },
-      { time: "3200us", voltage: initialInputVoltage },
+      { time: "800us", voltage: initialInputVoltage },
+      { time: "801us", voltage: steppedInputVoltage },
+      { time: "2000us", voltage: steppedInputVoltage },
+      { time: "2001us", voltage: initialInputVoltage },
+      { time: "2600us", voltage: initialInputVoltage },
     ]}
     mode="pwm"
     loadCurrent={loadCurrent}
-    loadConnectAt="700us"
+    loadConnectAt="400us"
     probeSet="line-transient"
   >
     <analog.transientsimulation
       name={`${figure}. Line Transient, PWM Operation`}
-      duration="3200us"
-      startTime="1200us"
-      timePerStep="5ns"
+      duration="2600us"
+      startTime="600us"
+      timePerStep="10ns"
       spiceEngine="ngspice"
       graphIndependentAxes
       spiceOptions={spiceOptions}
