@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TPS63802SwitchingWaveforms } from "./tps63802/TPS63802DatasheetTransient.circuit";
+import { TPS63802SwitchingWaveforms } from "./tps63802/TPS63802DatasheetTransient";
 
 export const TPS63802Figure1017SwitchingWaveformsPfmBuck = (
   props: SubcircuitProps,

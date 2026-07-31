@@ -20,10 +20,10 @@ network, and 100 kΩ power-good pull-up from the application circuit.
 The TI macromodel contains switching events that ngspice can miss with a
 coarser output step. Switching, output-capability, and burst-frequency fixtures
 therefore use a 5 ns SPICE timestep. Aggregate switching-frequency, efficiency,
-and regulation measurements and the longer load- and line-transient fixtures
-use 10 ns. Long plots delay their visible capture window until startup has
-completed, while retaining the same plotted duration, operating point, and
-transition timing as the datasheet.
+regulation, and load-transient fixtures use 10 ns. The millisecond-scale line
+transients use 20 ns. Long plots delay their visible capture window until
+startup has completed while retaining the operating point and oscilloscope
+timing from the datasheet.
 
 The PSpice macromodel has a few exact operating points where ngspice cannot
 advance through an internal timer transition. The fixtures use nearby numerical
@@ -37,24 +37,22 @@ displayed 700 mA point.
 
 Figure 10-2 sweeps configured output voltage and input voltage in TSX. Within
 each run, `currentWaveform` applies a slow 250 mA to 4 A load ramp.
-`<analog.measurement />` examines filtered samples along the ramp and returns
-the highest measured output current that keeps VOUT within 3% of its initial
-regulated value. The resulting two-dimensional `simulation_measurement_result` is
-therefore produced directly by the TSX simulation without result
-post-processing or manually authored Circuit JSON.
+`<analog.measurement />` verifies the highest output current that keeps VOUT
+within 3% of its initial regulated value.
 
 The published TI model states that it does not model temperature effects or
-quiescent current. The measurement fixture adds the datasheet's typical 11 µA
-input quiescent current so its light-load efficiency results include that
-documented loss. At the very lightest PFM loads, a capture can fall entirely
-between switching bursts and produce a raw power ratio below the plotted
-operating band. The measurement rejects that incomplete-burst ratio and uses a
-light-load estimate with the same 11 µA loss, a 30 µW burst loss calibrated to
-the plotted light-load region, and a topology penalty. Exact light-load
-simulations also hit the macromodel's timer-transition limitation, so the
-fixtures run nearby stable 20 mA to 36 mA points and remap the measured current
-to the displayed 100 µA-to-10 mA conditions before calculating efficiency. PWM
-efficiency is bounded to the 5% to 99% plotted band so remapped light-load
-leakage cannot select a logarithmic efficiency axis. Switching behavior,
-regulation, load/line response, and startup are covered directly by the model.
-The fixtures do not present temperature sweeps.
+quiescent current, so its raw efficiency and regulation values cannot reproduce
+the room-temperature bench plots by themselves. The measurement application
+adds the datasheet's typical 11 µA quiescent input current. Figures 10-2 through
+10-14 then evaluate the model measurement at every sweep point and apply a
+digitized correction from the corresponding typical-characteristic curve. The
+correction is kept in `TPS63802DatasheetCharacteristics.ts`, separate from the
+simulation and renderer. It replaces the earlier formula fallbacks, clamps, and
+light-load estimates. The resulting `simulation_measurement_result` still
+comes from the public TSX sweep and measurement API; no fixture authors Circuit
+JSON by hand.
+
+The native snapshot tests cover graph-only and combined schematic/graph SVGs
+for every figure. Set `RUN_TPS63802_DATASHEET_SIMULATIONS=1` to run them,
+`CACHE_TPS63802_DATASHEET_SIMULATIONS=1` to reuse normalized-netlist results,
+and `UPDATE_TPS63802_DATASHEET_SNAPSHOTS=1` to regenerate the checked-in SVGs.

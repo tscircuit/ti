@@ -1,14 +1,15 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TPS63802EfficiencyVersusInputVoltage } from "./tps63802/TPS63802DatasheetMeasurements.circuit";
+import { TPS63802EfficiencyVersusInputVoltage } from "./tps63802/TPS63802DatasheetMeasurements";
 
 export const TPS63802Figure1010EfficiencyInputVoltagePwm = (
   props: SubcircuitProps,
 ) => (
   <TPS63802EfficiencyVersusInputVoltage
     {...props}
-    figure="Figure 10-10"
+    figure="10-10"
     mode="pwm"
-    outputVoltages={[1.8, 3.3, 5.2]}
+    simulatedOutputVoltagesV={[1.8, 3.3, 5.2]}
+    reportedOutputVoltagesV={[1.8, 3.3, 5.2]}
   />
 );
 

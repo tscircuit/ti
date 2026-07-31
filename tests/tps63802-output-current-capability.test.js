@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { measureTPS63802MaximumOutputCurrent } from "../lib/simulations/tps63802/TPS63802DatasheetMeasurements.circuit";
+import { measureTPS63802MaximumOutputCurrent } from "../lib/simulations/tps63802/TPS63802DatasheetMeasurements";
 
 const timestampsMs = [0.66, 0.69, 0.71, 0.721, 0.732];
 

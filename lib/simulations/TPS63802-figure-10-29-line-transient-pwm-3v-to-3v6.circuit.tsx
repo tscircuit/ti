@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TPS63802LineTransient } from "./tps63802/TPS63802DatasheetTransient.circuit";
+import { TPS63802LineTransient } from "./tps63802/TPS63802DatasheetTransient";
 
 export const TPS63802Figure1029LineTransientPwm3vTo3v6 = (
   props: SubcircuitProps,
@@ -10,6 +10,7 @@ export const TPS63802Figure1029LineTransientPwm3vTo3v6 = (
     initialInputVoltage="3V"
     steppedInputVoltage="3.6V"
     loadCurrent="500mA"
+    loadConnectAt="100us"
   />
 );
 

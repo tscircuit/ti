@@ -63,26 +63,64 @@ export const TPS63802DatasheetApplication = ({
       <net name="VOUT" />
       <net name="LOAD_INPUT" />
 
-      <TPS63802DLAR name="U1" />
+      <TPS63802DLAR
+        name="U1"
+        schX={0}
+        schY={0}
+        schWidth={2.5}
+        schHeight={6}
+        showPinAliases={false}
+        schPinArrangement={{
+          topSide: { pins: ["L1", "L2"], direction: "left-to-right" },
+          leftSide: {
+            pins: ["VIN", "EN", "MODE", "GND"],
+            direction: "top-to-bottom",
+          },
+          rightSide: {
+            pins: ["VOUT", "PG", "FB", "AGND"],
+            direction: "top-to-bottom",
+          },
+        }}
+        schPinStyle={{
+          L2: { marginLeft: 1 },
+          VIN: { marginBottom: 1 },
+          EN: { marginBottom: 1 },
+          MODE: { marginBottom: 1 },
+          VOUT: { marginBottom: 1 },
+          PG: { marginBottom: 1 },
+          FB: { marginBottom: 1 },
+        }}
+      />
 
       {!useInputVoltageSweep && (
         <voltagesource
           name="V_IN"
           voltage={inputVoltage}
           voltageWaveform={inputVoltageWaveform}
+          schX={-7.2}
+          schY={0}
+          schRotation="270deg"
         />
       )}
       {needsInputAmmeter && (
         <ammeter
           name="I_IN"
           connections={{ pos: "net.VIN_SOURCE", neg: "net.VIN" }}
+          schX={-4.8}
+          schY={2}
         />
       )}
       {showsMeasurementSignals && (
-        <currentsource name="I_QUIESCENT" current="11uA" />
+        <currentsource name="I_QUIESCENT" current="11uA" schX={-7} schY={-2} />
       )}
 
-      <inductor name="L1" inductance="0.47uH" />
+      <inductor
+        name="L1"
+        inductance="0.47uH"
+        schX={0}
+        schY={5}
+        schOrientation="horizontal"
+      />
       {needsInductorAmmeter && (
         <ammeter
           name="I_L"
@@ -92,21 +130,68 @@ export const TPS63802DatasheetApplication = ({
           graphCenter={0}
           graphVerticalOffset={0}
           graphCurrentPerDiv={showsStartupSignals ? 2 : 0.8}
+          schX={-1.8}
+          schY={5}
         />
       )}
-      <resistor name="R_L1_DCR" resistance="7.6mΩ" />
+      <resistor
+        name="R_L1_DCR"
+        resistance="7.6mΩ"
+        schX={1.4}
+        schY={5}
+        schOrientation="horizontal"
+      />
 
-      <capacitor name="C_IN" capacitance="5uF" />
-      <resistor name="R_CIN_ESR" resistance="10mΩ" />
-      <capacitor name="C_OUT" capacitance="8.2uF" />
-      <resistor name="R_COUT_ESR" resistance="10mΩ" />
+      <capacitor
+        name="C_IN"
+        capacitance="5uF"
+        schX={-4.8}
+        schY={-2}
+        schOrientation="vertical"
+      />
+      <resistor
+        name="R_CIN_ESR"
+        resistance="10mΩ"
+        schX={-4.8}
+        schY={0}
+        schOrientation="vertical"
+      />
+      <capacitor
+        name="C_OUT"
+        capacitance="8.2uF"
+        schX={5.5}
+        schY={-1}
+        schOrientation="vertical"
+      />
+      <resistor
+        name="R_COUT_ESR"
+        resistance="10mΩ"
+        schX={5.5}
+        schY={0.5}
+        schOrientation="vertical"
+      />
 
       <resistor
         name="R_FB_TOP"
         resistance={getTPS63802UpperFeedbackResistance(outputVoltage)}
+        schX={4.1}
+        schY={1}
+        schOrientation="vertical"
       />
-      <resistor name="R_FB_BOTTOM" resistance="91kΩ" />
-      <resistor name="R_PG" resistance="100kΩ" />
+      <resistor
+        name="R_FB_BOTTOM"
+        resistance="91kΩ"
+        schX={4.1}
+        schY={-1}
+        schOrientation="vertical"
+      />
+      <resistor
+        name="R_PG"
+        resistance="100kΩ"
+        schX={2.7}
+        schY={1.8}
+        schOrientation="vertical"
+      />
 
       {needsOutputAmmeter && (
         <ammeter
@@ -117,21 +202,37 @@ export const TPS63802DatasheetApplication = ({
           graphCenter={0}
           graphVerticalOffset={0}
           graphCurrentPerDiv={0.4}
+          schX={7}
+          schY={1}
         />
       )}
       {loadResistance === undefined ? (
         <>
           {loadConnectAt !== undefined && (
-            <switch name="SW_LOAD" simStartOpen simCloseAt={loadConnectAt} />
+            <switch
+              name="SW_LOAD"
+              simStartOpen
+              simCloseAt={loadConnectAt}
+              schX={7}
+              schY={0}
+            />
           )}
           <currentsource
             name="I_LOAD"
             current={loadCurrent}
             currentWaveform={loadCurrentWaveform}
+            schX={7}
+            schY={-1.5}
           />
         </>
       ) : (
-        <resistor name="R_LOAD" resistance={loadResistance} />
+        <resistor
+          name="R_LOAD"
+          resistance={loadResistance}
+          schX={7}
+          schY={-1}
+          schOrientation="vertical"
+        />
       )}
 
       {enableWaveform && (
@@ -139,6 +240,9 @@ export const TPS63802DatasheetApplication = ({
           name="V_EN"
           voltage={0}
           voltageWaveform={enableWaveform}
+          schX={-7}
+          schY={-3.5}
+          schRotation="270deg"
         />
       )}
 
