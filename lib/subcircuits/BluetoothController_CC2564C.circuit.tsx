@@ -234,9 +234,9 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
         pin4: "net.RF_FILTER_IN",
       }}
     />
-    <resistor
+    <inductor
       name="L1"
-      resistance="0ohm"
+      inductance="33nH"
       footprint="0402"
       schX={11.2}
       schY={8.5}
