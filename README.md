@@ -144,7 +144,7 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
-| `TLV755P` | `sot_23_5` | `TLV75533PDBVR` |
+| `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
