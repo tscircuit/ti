@@ -90,6 +90,8 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 The package currently exports these subcircuit components:
 
+- `BatteryManagement_BQ24072`
+- `BatteryManagement_BQ24073`
 - `BatteryManagement_BQ24074`
 - `BatteryManagement_BQ25895`
 - `BatteryManagement_BQ27441G1`
@@ -103,6 +105,7 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
+- `AudioAmplifier_TAS2505`
 - `Microcontroller_MSPM0G3507`
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
@@ -142,6 +145,7 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` |
+| `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TPS22919` | `-` | `TPS22919` |
