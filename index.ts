@@ -16,6 +16,7 @@ import {
   HDC3022,
   INA237,
   MSP430G2230ID,
+  MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
   TAS2505,
@@ -55,6 +56,7 @@ import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSens
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
 import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
+import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit.tsx";
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
@@ -98,6 +100,7 @@ export {
   PowerMonitor_INA237,
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
+  BluetoothAudioHost_MSP430F5229,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
@@ -137,6 +140,7 @@ export const TiChipComponents = {
   HDC3022,
   INA237,
   MSP430G2230ID,
+  MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
   TAS2505,
@@ -178,6 +182,7 @@ export const TiSubcircuitComponents = {
   PowerMonitor_INA237,
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
+  BluetoothAudioHost_MSP430F5229,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
