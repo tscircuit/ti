@@ -90,11 +90,14 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 The package currently exports these subcircuit components:
 
+- `BatteryManagement_BQ24072`
+- `BatteryManagement_BQ24073`
 - `BatteryManagement_BQ24074`
 - `BatteryManagement_BQ25895`
 - `BatteryManagement_BQ27441G1`
 - `RealTimeClock_BQ32002`
 - `WirelessMCU_CC2340R5`
+- `BluetoothController_CC2564C`
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
 - `MotorDriver_DRV8833`
@@ -103,6 +106,8 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
+- `AudioAmplifier_TAS2505`
+- `TargetSocket_MSPTS430D8`
 - `Microcontroller_MSPM0G3507`
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
@@ -115,6 +120,7 @@ The package currently exports these subcircuit components:
 - `BuckBoostConverter_TPS63802`
 - `PowerManagement_TPS7A02`
 - `PowerManagement_TPS7A20`
+- `PowerManagement_TLV755P`
 - `PowerModule_TPSM82823`
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
@@ -132,6 +138,7 @@ chip is listed individually below, including whether it supports a
 | `BQ25895` | `wqfn_24_ep_4x4` | `BQ25895RTWR` |
 | `BQ27441G1` | `vson_12_ep_2p5x4` | `BQ27441DRZR_G1B` |
 | `CC2340R5` | `-` | `CC2340R5` |
+| `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
 | `DRV8833` | `-` | `DRV8833` |
@@ -140,7 +147,10 @@ chip is listed individually below, including whether it supports a
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
+| `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
+| `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
+| `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TPS22919` | `-` | `TPS22919` |
