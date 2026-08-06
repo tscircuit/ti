@@ -1,4 +1,5 @@
 import {
+  AM62L,
   BQ24072,
   BQ24073,
   BQ24074,
@@ -125,6 +126,7 @@ export {
 };
 
 export const TiChipComponents = {
+  AM62L,
   BQ24072,
   BQ24073,
   BQ24074,
