@@ -23,8 +23,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
+    "@tscircuit/ngspice-spice-engine": "^0.0.20",
     "@types/react": "^19.2.17",
-    "tscircuit": "^0.0.2139",
+    "circuit-to-svg": "^0.0.394",
+    "tscircuit": "^0.0.2193",
     "typescript": "^5.0.0"
   },
   "peerDependencies": {
