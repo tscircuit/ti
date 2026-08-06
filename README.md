@@ -28,6 +28,13 @@ export default () => (
 )
 ```
 
+## Complete Examples
+
+The [`BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx`](examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx)
+example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
+audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
+connected Bluetooth speaker schematic.
+
 ## Raw Chip Usage
 
 When you need the bare chip package instead of a full reference design, import
@@ -121,6 +128,7 @@ The package currently exports these subcircuit components:
 - `BuckBoostConverter_TPS63802`
 - `PowerManagement_TPS7A02`
 - `PowerManagement_TPS7A20`
+- `PowerManagement_TPS7A2018`
 - `PowerManagement_TLV755P`
 - `PowerModule_TPSM82823`
 - `LevelShifter_TXB0104`
@@ -160,7 +168,7 @@ chip is listed individually below, including whether it supports a
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
-| `TPS7A20` | `sot_23_5` | `TPS7A2033PDBVR` |
+| `TPS7A20` | `sot_23_5` | `TPS7A2018PDBVR`, `TPS7A2033PDBVR` |
 | `TPSM82823` | `-` | `TPSM82823` |
 | `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
 | `TXS0102` | `vssop_8` | `TXS0102DCUR` |
