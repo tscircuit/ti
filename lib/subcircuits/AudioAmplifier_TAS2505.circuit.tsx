@@ -4,9 +4,7 @@ import { TAS2505 } from "../chips/TAS2505.circuit.tsx";
 
 /** TAS2505 typical application with host, analog, speaker and headphone I/O. */
 export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
-  <subcircuit
-    {...props}
-  >
+  <subcircuit {...props}>
     <TAS2505
       name="U1"
       schX={0}
