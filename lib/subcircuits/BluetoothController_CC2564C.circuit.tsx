@@ -274,7 +274,13 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
             anchor="center"
           />
 
-          <schematicline x1={13.5} y1={8.2} x2={13.5} y2={8.8} strokeWidth={0.02} />
+          <schematicline
+            x1={13.5}
+            y1={8.2}
+            x2={13.5}
+            y2={8.8}
+            strokeWidth={0.02}
+          />
 
           <schematicline
             x1={13.5}
