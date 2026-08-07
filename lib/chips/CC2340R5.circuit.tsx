@@ -41,7 +41,7 @@ const pinLabels = {
   pin38: "VDDS",
   pin39: ["RF_ANT", "ANT"],
   pin40: ["RF_GND", "RFGND"],
-  pin41: ["EP_GND", "EGP"],
+  pin41: ["EP_GND", "EGP", "thermalpad"],
 } as const;
 
 export const CC2340R5 = (props: ChipProps<typeof pinLabels>) => {
