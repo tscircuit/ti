@@ -1,7 +1,6 @@
 {
   "$schema": "https://cdn.jsdelivr.net/npm/@tscircuit/cli/types/tscircuit.config.schema.json",
   "mainEntrypoint": "index.ts",
-  "buildCommand": "bunx tscircuit build --ci --concurrency 2",
   "build": {
     "workerTimeoutMs": 10000000
   }
