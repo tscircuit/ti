@@ -9,7 +9,7 @@ export const TMP1827 = (props: ChipProps) => (
   <chip
     manufacturerPartNumber="TMP1827NGRR"
     supplierPartNumbers={{ jlcpcb: ["C22364248"] }}
-    footprint="dfn8_thermalpad1.1mmx1.8mm_p0.5001mm_w2.9198mm_pw0.28mm_pl0.585mm"
+    footprint="dfn8_thermalpad1.1mmx1.8mm_p0.5mm_w2.91mm_pw0.28mm_pl0.58mm"
     schWidth="2mm"
     schHeight="2mm"
     pinLabels={{
