@@ -9,6 +9,8 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
       name="U1"
       schX={0}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
         pin1: "net.GND",
         pin2: "net.nRST",
@@ -28,15 +30,25 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
         pin16: "net.MCLK",
         pin18: "net.GPIO_DOUT",
         pin19: "net.SCL_SSZ",
-        pin20: "net.SDA_MOSI",
         pin21: "net.GND",
-        pin22: "net.IOVDD",
-        pin23: "net.V1_8D",
         pin24: "net.GND",
-        pin25: "net.GND",
       }}
-      noConnect={["pin17"]}
+      noConnect={["pin17", "pin25"]}
     />
+
+    {/* Thermal-pad via: overlapping copper ties the exposed pad into GND while
+        giving the router a legal escape onto the bottom layer. */}
+    <via
+      name="V_EP_GND"
+      pcbX={0}
+      pcbY={0}
+      outerDiameter="0.6mm"
+      holeDiameter="0.3mm"
+      connectsTo="net.GND"
+    />
+    <trace from="U1.pin20" to="R1.pin2" pcbStraightLine />
+    <trace from="U1.pin22" to="C9.pin1" pcbStraightLine />
+    <trace from="U1.pin23" to="C7.pin1" pcbStraightLine />
 
     <schematictext schX={0} schY={0} text="TAS2505" fontSize={0.65} />
 

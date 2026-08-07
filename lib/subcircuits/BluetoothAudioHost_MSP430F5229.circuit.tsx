@@ -9,7 +9,6 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     <MSP430F5229IRGCR
       name="U10"
       displayName=""
-      manufacturerPartNumber=""
       schX={-4.8}
       schY={0.2}
       connections={{
@@ -81,6 +80,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* 32.768 kHz clock */}
     <crystal
       name="Y2"
+      footprint="kicad:Crystal/Crystal_SMD_3215-2Pin_3.2x1.5mm"
       frequency="32.768kHz"
       loadCapacitance={0}
       schX={-14.0}
@@ -188,6 +188,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* MSP430 JTAG connector */}
     <chip
       name="J2"
+      footprint="kicad:Connector_IDC/IDC-Header_2x07_P2.54mm_Vertical"
       schX={8.0}
       schY={8.0}
       manufacturerPartNumber="MSP430 JTAG"
@@ -249,6 +250,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <pinheader
       name="J6"
+      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x02_P2.54mm_Vertical"
       displayName="JTAG SENSE"
       pinCount={2}
       gender="male"
@@ -265,6 +267,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* 1.8 V and source selection */}
     <chip
       name="J5"
+      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x02_P2.54mm_Vertical"
       manufacturerPartNumber="VDD_1V8"
       schX={3}
       schY={0}
@@ -282,6 +285,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <chip
       name="S3"
+      footprint="kicad:Button_Switch_THT/SW_CuK_JS202011AQN_DPDT_Angled"
       manufacturerPartNumber="POS 2 SW"
       schX={8.2}
       schY={3.5}
@@ -316,6 +320,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* Debug and clock headers */}
     <chip
       name="J15"
+      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x02_P2.54mm_Vertical"
       manufacturerPartNumber="DEBUG"
       schX={2.0}
       schY={2.2}
@@ -333,6 +338,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <chip
       name="J17"
+      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x01_P2.54mm_Vertical"
       displayName="SMCLK"
       schX={-3.25}
       schY={-8}
@@ -350,6 +356,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* Scan switch, DNI in source design */}
     <chip
       name="S4"
+      footprint="kicad:Button_Switch_SMD/SW_SP3T_PCM13"
       displayName="ScanSW DNI"
       manufacturerPartNumber="SCAN-SWITCH"
       doNotPlace
@@ -499,6 +506,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* Capacitive-touch electrodes and feedback resistors */}
     <testpoint
       name="PAD1"
+      doNotPlace
       displayName="PREVIOUS / VOL_UP"
       schX={8.0}
       schY={-3.6}
@@ -509,6 +517,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <testpoint
       name="PAD2"
+      doNotPlace
       displayName="NEXT / VOL_DOWN"
       schX={8.0}
       schY={-4.8}
