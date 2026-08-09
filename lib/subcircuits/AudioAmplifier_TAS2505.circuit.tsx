@@ -187,18 +187,90 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
       connections={{ pin1: "net.IOVDD", pin2: "net.GND" }}
     />
 
-    {/* Differential speaker output */}
-    <pinheader
+    {/* Differential speaker output through a keyed 2-pin JST-PH connector. */}
+    <connector
       name="J_SPK"
-      displayName="Speaker"
-      pinCount={2}
-      gender="female"
-      pitch="2.54mm"
-      schFacingDirection="left"
+      displayName="Speaker Connector"
+      manufacturerPartNumber="B2B-PH-K-S(LF)(SN)"
+      supplierPartNumbers={{ jlcpcb: ["C131337"] }}
+      footprint={
+        <footprint>
+          {/* JST specifies 2.00 mm pitch and 0.70 mm finished holes. */}
+          <platedhole
+            portHints={["pin1"]}
+            pcbX="-1mm"
+            pcbY="0mm"
+            shape="circular_hole_with_rect_pad"
+            holeDiameter="0.8mm"
+            rectPadWidth="1.5mm"
+            rectPadHeight="1.5mm"
+          />
+          <platedhole
+            portHints={["pin2"]}
+            pcbX="1mm"
+            pcbY="0mm"
+            shape="circle"
+            holeDiameter="0.8mm"
+            outerDiameter="1.5mm"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="5.9mm"
+            height="4.5mm"
+            filled={false}
+            strokeWidth="0.15mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="6.4mm"
+            height="5mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       schX={7.3}
       schY={1.8}
-      pinLabels={["SPKP", "SPKM"]}
+      schWidth="1.6mm"
+      schHeight="1.4mm"
+      pinLabels={{
+        pin1: "SPKP",
+        pin2: "SPKM",
+      }}
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [1, 2],
+        },
+      }}
     />
+
+    {/* The speaker is wired to J_SPK and is external to the PCB. */}
+    <chip
+      name="LS1"
+      displayName="4 Ohm / 2 W External Speaker"
+      manufacturerPartNumber="AS02204MR-N50-R"
+      doNotPlace
+      schX={10.6}
+      schY={1.8}
+      schWidth="2.6mm"
+      schHeight="1.4mm"
+      pinLabels={{
+        pin1: "SPKP",
+        pin2: "SPKM",
+      }}
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [1, 2],
+        },
+      }}
+    />
+    <trace from="J_SPK.pin1" to="LS1.pin1" />
+    <trace from="J_SPK.pin2" to="LS1.pin2" />
 
     {/* AC-coupled mono headphone output */}
     <capacitor
