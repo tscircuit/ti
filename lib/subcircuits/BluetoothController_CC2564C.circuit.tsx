@@ -201,7 +201,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       connections={{ pin1: "net.TX_DBG" }}
     />
 
-    {/* Bluetooth RF filter and antenna match */}
+    {/* Bluetooth RF filter, antenna match, and 50 Ohm U.FL feed. */}
     <capacitor
       name="C1"
       capacitance="22pF"
@@ -261,75 +261,110 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
         pin2: "net.GND",
       }}
     />
-    <chip
-      name="ANT1"
-      footprint="kicad:RF_Antenna/Texas_SWRA117D_2.4GHz_Left"
-      manufacturerPartNumber="IIFA_CC2420"
+    <connector
+      name="J_ANT"
+      displayName="U.FL 50 Ohm Antenna Connector"
+      manufacturerPartNumber="U.FL-R-SMT-1(80)"
+      supplierPartNumbers={{ jlcpcb: ["C88374"] }}
+      footprint={
+        <footprint>
+          {/* Hirose U.FL-R-SMT-1 recommended land pattern. */}
+          <smtpad
+            portHints={["pin1"]}
+            pcbX="-1.05mm"
+            pcbY="0mm"
+            width="1.05mm"
+            height="1mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin2"]}
+            pcbX="0.475mm"
+            pcbY="1.475mm"
+            width="2.2mm"
+            height="1.05mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin3"]}
+            pcbX="0.475mm"
+            pcbY="-1.475mm"
+            width="2.2mm"
+            height="1.05mm"
+            shape="rect"
+          />
+          <silkscreenline
+            x1="-0.885mm"
+            y1="-1.4mm"
+            x2="-0.885mm"
+            y2="-0.76mm"
+            strokeWidth="0.12mm"
+          />
+          <silkscreenline
+            x1="-0.885mm"
+            y1="0.76mm"
+            x2="-0.885mm"
+            y2="1.4mm"
+            strokeWidth="0.12mm"
+          />
+          <silkscreenline
+            x1="1.835mm"
+            y1="-1.35mm"
+            x2="1.835mm"
+            y2="1.35mm"
+            strokeWidth="0.12mm"
+          />
+          <courtyardrect
+            pcbX="0.13mm"
+            pcbY="0mm"
+            width="4.3mm"
+            height="5mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
+      schX={14}
+      schY={9}
+      schWidth="2.8mm"
+      schHeight="1.8mm"
+      pinLabels={{
+        pin1: "RF_50OHM",
+        pin2: "GND_1",
+        pin3: "GND_2",
+      }}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [1] },
+        rightSide: { direction: "top-to-bottom", pins: [2, 3] },
+      }}
       connections={{
         pin1: "net.ANT_FEED",
         pin2: "net.GND",
+        pin3: "net.GND",
       }}
-      symbol={
-        <symbol>
-          <schematictext
-            text="{NAME}"
-            schX={13.5}
-            schY={9.5}
-            fontSize={0.22}
-            anchor="center"
-          />
-
-          <schematicline
-            x1={13.5}
-            y1={8.2}
-            x2={13.5}
-            y2={8.8}
-            strokeWidth={0.02}
-          />
-
-          <schematicline
-            x1={13.5}
-            y1={8.5}
-            x2={14}
-            y2={8.8}
-            strokeWidth={0.02}
-          />
-
-          <schematicline
-            x1={13.5}
-            y1={8.5}
-            x2={13}
-            y2={8.8}
-            strokeWidth={0.02}
-          />
-          <schematicline
-            x1={12.9}
-            y1={8.2}
-            x2={14.1}
-            y2={8.2}
-            strokeWidth={0.02}
-          />
-
-          <port
-            name="pin1"
-            schX={12.9}
-            schY={7.4}
-            direction="down"
-            schStemLength={0.8}
-            pinNumber={1}
-          />
-
-          <port
-            name="pin2"
-            schX={14.1}
-            schY={7.4}
-            direction="down"
-            schStemLength={0.8}
-            pinNumber={2}
-          />
-        </symbol>
-      }
     />
+
+    {/* ANT1 is supplied with a mating U.FL cable and mounts off-board. */}
+    <chip
+      name="ANT1"
+      displayName="External 2.4 GHz U.FL Antenna"
+      manufacturerPartNumber="CBD01.07.0100C"
+      doNotPlace
+      schX={18.5}
+      schY={9}
+      schWidth="4.2mm"
+      schHeight="1.8mm"
+      pinLabels={{
+        pin1: "RF",
+        pin2: "SHIELD",
+      }}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [1, 2] },
+      }}
+    />
+    <trace from="J_ANT.pin1" to="ANT1.pin1" />
+    <trace from="J_ANT.pin2" to="ANT1.pin2" />
 
     {/* VDD_IO decoupling, 1.62 V to 1.92 V */}
     <capacitor
