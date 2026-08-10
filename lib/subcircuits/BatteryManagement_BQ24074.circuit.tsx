@@ -295,17 +295,74 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
       }}
     />
 
-    <chip
-      name="BT1"
-      footprint="pinrow3"
-      manufacturerPartNumber="Battery Pack"
+    {/* Keyed 3-wire connection for a protected 1S pack with internal NTC. */}
+    <connector
+      name="J_BAT"
+      displayName="Li-ion Battery + NTC Connector"
+      manufacturerPartNumber="B3B-PH-K-S(LF)(SN)"
+      supplierPartNumbers={{ jlcpcb: ["C131339"] }}
+      footprint={
+        <footprint>
+          {/* JST-PH: 2.00 mm pitch, with a rectangular BAT+ pad. */}
+          <platedhole
+            portHints={["pin1"]}
+            pcbX="-2mm"
+            pcbY="0mm"
+            shape="circular_hole_with_rect_pad"
+            holeDiameter="0.8mm"
+            rectPadWidth="1.5mm"
+            rectPadHeight="1.5mm"
+          />
+          <platedhole
+            portHints={["pin2"]}
+            pcbX="0mm"
+            pcbY="0mm"
+            shape="circle"
+            holeDiameter="0.8mm"
+            outerDiameter="1.5mm"
+          />
+          <platedhole
+            portHints={["pin3"]}
+            pcbX="2mm"
+            pcbY="0mm"
+            shape="circle"
+            holeDiameter="0.8mm"
+            outerDiameter="1.5mm"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="7.9mm"
+            height="4.5mm"
+            filled={false}
+            strokeWidth="0.15mm"
+          />
+          <silkscreentext
+            text="+"
+            pcbX="-2mm"
+            pcbY="-1.45mm"
+            fontSize="0.8mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="8.4mm"
+            height="5mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       pinLabels={{
-        pin1: "TEMP",
-        pin2: "PACK_PLUS",
-        pin3: "PACK_MINUS",
+        pin1: "BAT_PLUS",
+        pin2: "TEMP_NTC",
+        pin3: "BAT_MINUS",
       }}
-      schX={-6.0}
-      schY={-2.9}
+      schX={-5.3}
+      schY={-5.0}
+      schWidth="2.8mm"
+      schHeight="2.4mm"
       schPinArrangement={{
         rightSide: {
           direction: "top-to-bottom",
@@ -313,9 +370,39 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
         },
       }}
       connections={{
-        pin1: "net.TS",
-        pin2: "net.BAT",
+        pin1: "net.BAT",
+        pin2: "net.TS",
         pin3: "net.GND",
+      }}
+    />
+
+    {/* These two parts are inside/off-board with the battery pack. */}
+    <battery
+      name="BT1"
+      displayName="External Protected 1S Li-ion Pack"
+      manufacturerPartNumber="PROTECTED-1S-LIION-PACK"
+      voltage="3.7V"
+      doNotPlace
+      schX={-9.2}
+      schY={-4.35}
+      connections={{
+        pin1: "net.BAT",
+        pin2: "net.GND",
+      }}
+    />
+    <resistor
+      name="RT1"
+      displayName="Battery-pack 10 kOhm NTC"
+      manufacturerPartNumber="103AT-2"
+      resistance="10k"
+      tolerance="1%"
+      doNotPlace
+      schX={-9.2}
+      schY={-6.0}
+      schOrientation="vertical"
+      connections={{
+        pin1: "net.TS",
+        pin2: "net.GND",
       }}
     />
 
