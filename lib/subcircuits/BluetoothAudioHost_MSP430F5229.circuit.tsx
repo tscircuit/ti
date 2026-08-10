@@ -185,28 +185,172 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       }}
     />
 
-    {/* MSP430 JTAG connector */}
-    <chip
+    {/* TI MSP-FET 14-pin, 4-wire JTAG programming/debug connector. */}
+    <connector
       name="J2"
-      footprint="kicad:Connector_IDC/IDC-Header_2x07_P2.54mm_Vertical"
+      displayName="MSP-FET JTAG Programming/Debug"
+      manufacturerPartNumber="5103308-2"
+      shouldBeOnEdgeOfBoard
+      footprint={
+        <footprint>
+          {/* TE 5103308-2: 2 x 7 positions on a 2.54 mm grid. */}
+          <platedhole
+            portHints={["pin1"]}
+            pcbX="-7.62mm"
+            pcbY="1.27mm"
+            shape="circular_hole_with_rect_pad"
+            holeDiameter="1mm"
+            rectPadWidth="1.7mm"
+            rectPadHeight="1.7mm"
+          />
+          <platedhole
+            portHints={["pin2"]}
+            pcbX="-7.62mm"
+            pcbY="-1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin3"]}
+            pcbX="-5.08mm"
+            pcbY="1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin4"]}
+            pcbX="-5.08mm"
+            pcbY="-1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin5"]}
+            pcbX="-2.54mm"
+            pcbY="1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin6"]}
+            pcbX="-2.54mm"
+            pcbY="-1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin7"]}
+            pcbX="0mm"
+            pcbY="1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin8"]}
+            pcbX="0mm"
+            pcbY="-1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin9"]}
+            pcbX="2.54mm"
+            pcbY="1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin10"]}
+            pcbX="2.54mm"
+            pcbY="-1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin11"]}
+            pcbX="5.08mm"
+            pcbY="1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin12"]}
+            pcbX="5.08mm"
+            pcbY="-1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin13"]}
+            pcbX="7.62mm"
+            pcbY="1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <platedhole
+            portHints={["pin14"]}
+            pcbX="7.62mm"
+            pcbY="-1.27mm"
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="25.4mm"
+            height="10.16mm"
+            filled={false}
+            strokeWidth="0.15mm"
+          />
+          <silkscreentext
+            text="1"
+            pcbX="-10.8mm"
+            pcbY="2.7mm"
+            fontSize="0.8mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="25.9mm"
+            height="10.66mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       schX={8.0}
       schY={8.0}
-      manufacturerPartNumber="MSP430 JTAG"
-      schWidth="1.5mm"
-      schHeight="3mm"
+      schWidth="2.8mm"
+      schHeight="5.2mm"
       pinLabels={{
         pin1: "TDO",
-        pin2: "VCC",
+        pin2: "VCC_TOOL",
         pin3: "TDI",
-        pin4: "SENSE",
+        pin4: "VCC_TARGET",
         pin5: "TMS",
-        pin6: "NC6",
+        pin6: "NC",
         pin7: "TCK",
-        pin8: "TEST_SBWTCK",
+        pin8: "TEST",
         pin9: "GND",
-        pin10: "NC10",
-        pin11: "nRST_SBWTDIO",
-        pin12: "NC12",
+        pin10: "NC_UART_CTS",
+        pin11: "nRST",
+        pin12: "NC_UART_TXD",
+        pin13: "NC_UART_RTS",
+        pin14: "NC_UART_RXD",
       }}
       schPinArrangement={{
         leftSide: {
@@ -234,7 +378,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
         pin13: { marginBottom: 0.2 },
         pin14: { marginBottom: 0.2 },
       }}
-      noConnect={["pin6", "pin10", "pin12"]}
+      noConnect={["pin6", "pin10", "pin12", "pin13", "pin14"]}
       connections={{
         pin1: "net.TDO_5229",
         pin2: "net.JTAG_PWR_3V3",
