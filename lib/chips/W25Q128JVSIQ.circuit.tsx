@@ -19,7 +19,7 @@ export const W25Q128JVSIQ = (props: ChipProps<typeof pinLabels>) => {
         jlcpcb: ["C97521"],
       }}
       manufacturerPartNumber="W25Q128JVSIQ"
-      footprint="soic8_pillpads_w9.31mm_pw0.63mm_pl2.25mm_pin1location(leftside,bottom)"
+      footprint="soic8_pillpads_w9.31mm_pw0.63mm_pl2.26mm_pin1location(leftside,bottom)"
       cadModel={{
         objUrl:
           "https://modelcdn.tscircuit.com/easyeda_models/assets/C97521.obj?uuid=4652e19b90fa4dbb8662aa4cba61a532",
