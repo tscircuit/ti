@@ -6,15 +6,8 @@ import { OscillatorCrystal4 } from "../chips/OscillatorCrystal4.circuit.tsx";
 import { TPS61222 } from "../chips/TPS61222.circuit.tsx";
 import { TRF7960RHB } from "../chips/TRF7960RHB.circuit.tsx";
 
-export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
-    <schematictext
-      schX={0}
-      schY={14.2}
-      text="TRF7960TB HF RFID Reader Module"
-      fontSize={1.0}
-    />
-
+const ReaderAndInterfaceSheet = () => (
+  <>
     <TRF7960RHB
       name="U1"
       schX={-2.5}
@@ -222,7 +215,13 @@ export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
         pin2: "net.GND",
       }}
     />
+  </>
+);
 
+const rfSheetOffset = { x: -18, y: 4 };
+
+const RfFrontEndSheet = () => (
+  <>
     <capacitor
       name="C13"
       capacitance="1500pF"
@@ -479,22 +478,22 @@ export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
           {/* Center contact to pin 1 */}
           <port
             name="pin1"
-            schX={18.6}
-            schY={1.1}
+            schX={18.6 + rfSheetOffset.x}
+            schY={1.1 + rfSheetOffset.y}
             direction="left"
             schStemLength={0.8}
           />
           <port
             name="pin2"
-            schX={20.2}
-            schY={2.3}
+            schX={20.2 + rfSheetOffset.x}
+            schY={2.3 + rfSheetOffset.y}
             direction="up"
             schStemLength={0.8}
           />
           <port
             name="pin3"
-            schX={18.6}
-            schY={0.3}
+            schX={18.6 + rfSheetOffset.x}
+            schY={0.3 + rfSheetOffset.y}
             direction="left"
             schStemLength={0.8}
           />
@@ -614,16 +613,16 @@ export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
 
           <port
             name="pin1"
-            schX={29.6}
-            schY={2}
+            schX={29.6 + rfSheetOffset.x}
+            schY={2 + rfSheetOffset.y}
             direction="left"
             schStemLength={0.8}
           />
 
           <port
             name="pin2"
-            schX={29.6}
-            schY={1.2}
+            schX={29.6 + rfSheetOffset.x}
+            schY={1.2 + rfSheetOffset.y}
             direction="left"
             schStemLength={0.8}
           />
@@ -634,7 +633,11 @@ export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
         pin2: "net.GND",
       }}
     />
+  </>
+);
 
+const PowerSupplySheet = () => (
+  <>
     <testpoint
       name="TP1"
       schX={-19.6}
@@ -860,6 +863,45 @@ export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
       schY={-11.2}
       connections={{ pin1: "net.ASK_OOK" }}
     />
+  </>
+);
+
+export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
+  <subcircuit {...props}>
+    <schematicsheet
+      name="Reader and Interface"
+      displayName="Reader and Interface"
+      sheetIndex={0}
+    />
+    <schematicsheet
+      name="RF and Power Supply"
+      displayName="RF and Power Supply"
+      sheetIndex={1}
+    />
+    <group
+      name="ReaderAndInterfaceSheet"
+      schSheetName="Reader and Interface"
+      schX={8}
+      schY={-5}
+    >
+      <ReaderAndInterfaceSheet />
+    </group>
+    <group
+      name="RfFrontEndSheet"
+      schSheetName="RF and Power Supply"
+      schX={rfSheetOffset.x}
+      schY={rfSheetOffset.y}
+    >
+      <RfFrontEndSheet />
+    </group>
+    <group
+      name="PowerSupplySheet"
+      schSheetName="RF and Power Supply"
+      schX={8}
+      schY={4}
+    >
+      <PowerSupplySheet />
+    </group>
   </subcircuit>
 );
 
