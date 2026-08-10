@@ -9,8 +9,6 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
       name="U1"
       schX={0}
       schY={0}
-      pcbX={0}
-      pcbY={0}
       connections={{
         pin1: "net.GND",
         pin2: "net.nRST",
@@ -37,16 +35,6 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
       noConnect={["pin17"]}
     />
 
-    {/* Thermal-pad via: overlapping copper ties the exposed pad into GND while
-        giving the router a legal escape onto the bottom layer. */}
-    <via
-      name="V_EP_GND"
-      pcbX={0}
-      pcbY={0}
-      outerDiameter="0.6mm"
-      holeDiameter="0.3mm"
-      connectsTo="net.GND"
-    />
     <trace from="U1.pin20" to="R1.pin2" pcbStraightLine />
     <trace from="U1.pin22" to="C9.pin1" pcbStraightLine />
     <trace from="U1.pin23" to="C7.pin1" pcbStraightLine />
@@ -192,6 +180,7 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
     <connector
       name="J_SPK"
       displayName="Speaker Connector"
+      shouldBeOnEdgeOfBoard
       manufacturerPartNumber="B2B-PH-K-S(LF)(SN)"
       supplierPartNumbers={{ jlcpcb: ["C131337"] }}
       footprint={
@@ -249,29 +238,13 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
       }}
     />
 
-    {/* The speaker is wired to J_SPK and is external to the PCB. */}
-    <chip
-      name="LS1"
-      displayName="4 Ohm / 2 W External Speaker"
-      manufacturerPartNumber="AS02204MR-N50-R"
-      doNotPlace
-      schX={10.6}
+    {/* LS1 is a loose wire-lead speaker, not a PCB-mounted component. */}
+    <schematictext
+      text="LS1 EXTERNAL 4 OHM / 2 W SPEAKER\nAS02204MR-N50-R · JLCPCB C3310538"
+      schX={11.2}
       schY={1.8}
-      schWidth="2.6mm"
-      schHeight="1.4mm"
-      pinLabels={{
-        pin1: "SPKP",
-        pin2: "SPKM",
-      }}
-      schPinArrangement={{
-        leftSide: {
-          direction: "top-to-bottom",
-          pins: [1, 2],
-        },
-      }}
+      fontSize={0.32}
     />
-    <trace from="J_SPK.pin1" to="LS1.pin1" />
-    <trace from="J_SPK.pin2" to="LS1.pin2" />
 
     {/* AC-coupled mono headphone output */}
     <capacitor

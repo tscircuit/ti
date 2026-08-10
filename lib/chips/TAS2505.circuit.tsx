@@ -44,6 +44,80 @@ export const TAS2505 = (props: ChipProps<typeof pinLabels>) => (
           height="2.7999944mm"
           shape="rect"
         />
+        {/* A 3 x 3 plated-via array connects the RGE exposed pad to the
+            ground planes. Tent the bottom openings to reduce solder wicking. */}
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="-0.8mm"
+          pcbY="-0.8mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="0mm"
+          pcbY="-0.8mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="0.8mm"
+          pcbY="-0.8mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="-0.8mm"
+          pcbY="0mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="0mm"
+          pcbY="0mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="0.8mm"
+          pcbY="0mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="-0.8mm"
+          pcbY="0.8mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="0mm"
+          pcbY="0.8mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
+        <platedhole
+          portHints={["pin25"]}
+          pcbX="0.8mm"
+          pcbY="0.8mm"
+          shape="circle"
+          holeDiameter="0.2mm"
+          outerDiameter="0.4mm"
+        />
         <smtpad
           portHints={["pin24"]}
           pcbX="-1.950085mm"

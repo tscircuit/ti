@@ -517,10 +517,9 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
         pin13: { marginBottom: 0.2 },
         pin14: { marginBottom: 0.2 },
       }}
-      noConnect={["pin6", "pin10", "pin12", "pin13", "pin14"]}
+      noConnect={["pin2", "pin6", "pin10", "pin12", "pin13", "pin14"]}
       connections={{
         pin1: "net.TDO_5229",
-        pin2: "net.JTAG_PWR_3V3",
         pin3: "net.TDI_5229",
         pin4: "net.JTAG_SENSE",
         pin5: "net.TMS_5229",
@@ -570,6 +569,9 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       }}
     />
 
+    {/* The target is powered only from the sequenced 2.8 V rail. The second
+        switch position leaves VCC open; the debugger cannot back-power VCC
+        and bypass the MSP430 DVIO-before-VCC sequencing requirement. */}
     <chip
       name="S3"
       footprint={
@@ -643,7 +645,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
           />
         </footprint>
       }
-      displayName="FET / LDO Power Select"
+      displayName="MSP430 2.8 V Enable"
       manufacturerPartNumber="JS202011CQN"
       supplierPartNumbers={{ jlcpcb: ["C221663"] }}
       schX={8.2}
@@ -671,9 +673,8 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       connections={{
         pin1: "net.VDD_2V8_LDO",
         pin2: "net.VCC_5229",
-        pin3: "net.JTAG_PWR_3V3",
       }}
-      noConnect={["pin4", "pin5", "pin6"]}
+      noConnect={["pin3", "pin4", "pin5", "pin6"]}
     />
 
     {/* Debug and clock headers */}
@@ -715,44 +716,12 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       }}
     />
 
-    {/* Scan switch, DNI in source design */}
-    <chip
-      name="S4"
-      displayName="ScanSW DNI"
-      manufacturerPartNumber="TPC1133GLFG"
-      doNotPlace
+    {/* Optional scan switch S4 is explicitly DNI in TI's source design. */}
+    <schematictext
+      text="S4 SCAN SWITCH — DNI\nTPC1133GLFG (NOT ASSEMBLED)"
       schX={-1.8}
       schY={-7}
-      schWidth="1.5mm"
-      schHeight="1.5mm"
-      pinLabels={{
-        pin1: "S1",
-        pin2: "S2",
-        pin3: "S3",
-        pin4: "S0",
-      }}
-      schPinArrangement={{
-        topSide: {
-          direction: "left-to-right",
-          pins: [2, 3],
-        },
-        bottomSide: {
-          direction: "left-to-right",
-          pins: [4, 1],
-        },
-      }}
-      schPinStyle={{
-        pin1: { marginRight: 0.2 },
-        pin2: { marginRight: 0.2 },
-        pin3: { marginRight: 0.2 },
-        pin4: { marginRight: 0.2 },
-      }}
-      connections={{
-        pin1: "net.DVIO_1V8_5229",
-        pin2: "U10.pin31",
-        pin3: "U10.pin32",
-        pin4: "U10.pin30",
-      }}
+      fontSize={0.3}
     />
 
     {/* Slow clock level divider */}

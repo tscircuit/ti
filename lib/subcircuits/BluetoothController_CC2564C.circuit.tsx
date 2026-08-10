@@ -417,14 +417,19 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       }}
       connections={{
         pin1: "net.GND",
-        pin2: "L1.pin1",
+        pin2: "R_RF1.pin1",
         pin3: "net.GND",
         pin4: "net.RF_FILTER_IN",
       }}
     />
-    <inductor
-      name="L1"
-      inductance="33nH"
+    {/* TI's CC2564C reference BOM uses a 0-ohm series element here. Replace
+        it only with a measured matching value after assembled-board VNA/RF
+        validation; an arbitrary 33 nH part is not the reference default. */}
+    <resistor
+      name="R_RF1"
+      displayName="RF matching link"
+      resistance="0ohm"
+      tolerance="5%"
       footprint="0402"
       schX={10.5}
       schY={9}
@@ -448,6 +453,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     <connector
       name="J_ANT"
       displayName="U.FL 50 Ohm Antenna Connector"
+      shouldBeOnEdgeOfBoard
       manufacturerPartNumber="U.FL-R-SMT-1(80)"
       supplierPartNumbers={{ jlcpcb: ["C88374"] }}
       footprint={
@@ -529,26 +535,13 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       }}
     />
 
-    {/* ANT1 is supplied with a mating U.FL cable and mounts off-board. */}
-    <chip
-      name="ANT1"
-      displayName="External 2.4 GHz U.FL Antenna"
-      manufacturerPartNumber="CBD01.07.0100C"
-      doNotPlace
-      schX={18.5}
+    {/* ANT1 is a loose IPEX/U.FL cable antenna, not a PCB-mounted part. */}
+    <schematictext
+      text="ANT1 EXTERNAL 2.4 GHZ IPEX ANTENNA\nTX2400-PCB-4811 · JLCPCB C454913"
+      schX={18.8}
       schY={9}
-      schWidth="4.2mm"
-      schHeight="1.8mm"
-      pinLabels={{
-        pin1: "RF",
-        pin2: "SHIELD",
-      }}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [1, 2] },
-      }}
+      fontSize={0.32}
     />
-    <trace from="J_ANT.pin1" to="ANT1.pin1" />
-    <trace from="J_ANT.pin2" to="ANT1.pin2" />
 
     {/* VDD_IO decoupling, 1.62 V to 1.92 V */}
     <capacitor

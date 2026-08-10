@@ -32,8 +32,11 @@ export default () => (
 
 The [`BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx`](examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx)
 example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
-audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
-connected Bluetooth speaker schematic.
+audio amplifier, BQ24074 battery charger, sequenced 1.8 V/2.8 V regulators and
+a switched system rail into a connected Bluetooth speaker hardware prototype.
+Its CC2564C + MSP430 firmware compatibility is a blocking pre-fabrication gate;
+read the [architecture gate](docs/bluetooth-speaker-architecture-gate.md) before
+using the design for a PCB order.
 
 ## Raw Chip Usage
 
@@ -158,6 +161,7 @@ chip is listed individually below, including whether it supports a
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
+| `LM3880MF1AA` | `-` | `LM3880MF-1AA/NOPB` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |

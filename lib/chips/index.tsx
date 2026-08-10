@@ -15,6 +15,7 @@ export { HDC2080 } from "./HDC2080.circuit.tsx";
 export { HDC3020 } from "./HDC3020.circuit.tsx";
 export { HDC3022 } from "./HDC3022.circuit.tsx";
 export { INA237 } from "./INA237.circuit.tsx";
+export { LM3880MF1AA } from "./LM3880MF1AA.circuit.tsx";
 export { MSP430G2230ID } from "./MSP430G2230ID.circuit.tsx";
 export { MSP430F5229 } from "./MSP430F5229.circuit.tsx";
 export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";

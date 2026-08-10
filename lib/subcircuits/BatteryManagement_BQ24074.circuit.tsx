@@ -2,7 +2,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import { BQ24074RGTR } from "../chips/BQ24074RGTR.circuit.tsx";
 
 export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props}>
+  <subcircuit {...props}>
     {/* Power-only USB-C sink. The connector exposes both cable orientations. */}
     <connector
       name="J1"
@@ -179,6 +179,9 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
     />
 
     {/* Independent Rd resistors advertise a USB-C sink in either orientation. */}
+    {/* USB500 mode is the hard 500 mA input ceiling. The following values
+        program a conservative 400 mA charge current and also keep the ILIM
+        fallback at 500 mA if a later design deliberately selects adapter mode. */}
     <resistor
       name="R6"
       resistance="5.1k"
@@ -260,7 +263,7 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
         // With passive CC resistors only, use the guaranteed USB500 limit.
         EN2: "net.GND",
         EN1: "net.OUT",
-        TMR: "net.GND",
+        TMR: "net.TMR",
         N_CE: "net.GND",
         ITERM: "net.ITERM",
         ILIM: "net.ILIM",
@@ -376,27 +379,63 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
       }}
     />
 
-    {/* These two parts are inside/off-board with the battery pack. */}
-    <battery
-      name="BT1"
-      displayName="External Protected 1S Li-ion Pack"
-      manufacturerPartNumber="PROTECTED-1S-LIION-PACK"
-      voltage="3.7V"
-      doNotPlace
+    {/* The protected 1S cell is an off-board pack connected through J_BAT. */}
+    <schematictext
+      text="EXTERNAL PROTECTED 1S LI-ION PACK"
       schX={-9.2}
       schY={-4.35}
-      connections={{
-        pin1: "net.BAT",
-        pin2: "net.GND",
-      }}
+      fontSize={0.35}
     />
+
+    {/* Pack-mounted Semitec NTC. The real footprint and sourcing metadata are
+        retained for harness/pack documentation, but it is not placed on PCB. */}
     <resistor
-      name="RT1"
+      name="R_NTC_PACK"
       displayName="Battery-pack 10 kOhm NTC"
       manufacturerPartNumber="103AT-2"
+      supplierPartNumbers={{ jlcpcb: ["C9900077565"] }}
       resistance="10k"
       tolerance="1%"
       doNotPlace
+      footprint={
+        <footprint>
+          {/* JLCPCB package L3.6W2P2.54D0.5*0.5. */}
+          <platedhole
+            portHints={["pin1"]}
+            pcbX="-1.27mm"
+            pcbY={0}
+            shape="circular_hole_with_rect_pad"
+            holeDiameter="0.8mm"
+            rectPadWidth="1.5mm"
+            rectPadHeight="1.5mm"
+          />
+          <platedhole
+            portHints={["pin2"]}
+            pcbX="1.27mm"
+            pcbY={0}
+            shape="circle"
+            holeDiameter="0.8mm"
+            outerDiameter="1.5mm"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="4.1mm"
+            height="2.5mm"
+            filled={false}
+            strokeWidth="0.15mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="4.6mm"
+            height="3mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       schX={-9.2}
       schY={-6.0}
       schOrientation="vertical"
@@ -421,7 +460,8 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
 
     <resistor
       name="R1"
-      resistance="4.12k"
+      displayName="40 mA charge termination"
+      resistance="2.94k"
       footprint="0603"
       schX={-1.1}
       schY={-3.75}
@@ -434,7 +474,8 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
 
     <resistor
       name="R2"
-      resistance="1.18k"
+      displayName="500 mA adapter-mode input limit"
+      resistance="3.09k"
       footprint="0603"
       schX={0}
       schY={-3.75}
@@ -447,13 +488,31 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
 
     <resistor
       name="R3"
-      resistance="1.13k"
+      displayName="400 mA fast-charge current"
+      resistance="2.21k"
       footprint="0603"
       schX={1.1}
       schY={-3.75}
       schRotation="270deg"
       connections={{
         pin1: "net.ISET",
+        pin2: "net.GND",
+      }}
+    />
+
+    {/* 46.4 kOhm programs TI's nominal 6.25-hour fast-charge safety timer.
+        Grounding TMR would disable both precharge and fast-charge timers. */}
+    <resistor
+      name="R8"
+      displayName="6.25 hour safety timer"
+      resistance="46.4k"
+      tolerance="1%"
+      footprint="0603"
+      schX={2.2}
+      schY={-3.75}
+      schRotation="270deg"
+      connections={{
+        pin1: "net.TMR",
         pin2: "net.GND",
       }}
     />

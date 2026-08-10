@@ -14,6 +14,13 @@ export const TPS22919 = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
       pinLabels={pinLabels}
+      pinAttributes={{
+        IN: { requiresPower: true },
+        GND: { requiresGround: true },
+        ON: { mustBeConnected: true },
+        QOD: { mustBeConnected: true },
+        OUT: { mustBeConnected: true },
+      }}
       supplierPartNumbers={{
         jlcpcb: ["C2149796"],
       }}

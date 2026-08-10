@@ -208,6 +208,41 @@ export const BQ24074RGTR = (props: ChipProps<typeof pinLabels>) => {
             ]}
             shape="polygon"
           />
+          {/* Four plated thermal vias tie the exposed pad to the inner and
+              bottom ground copper. Keep the bottom openings tented during
+              fabrication to limit solder wicking from the RGT thermal pad. */}
+          <platedhole
+            portHints={["pin17"]}
+            pcbX="-0.425mm"
+            pcbY="-0.425mm"
+            shape="circle"
+            holeDiameter="0.2mm"
+            outerDiameter="0.4mm"
+          />
+          <platedhole
+            portHints={["pin17"]}
+            pcbX="0.425mm"
+            pcbY="-0.425mm"
+            shape="circle"
+            holeDiameter="0.2mm"
+            outerDiameter="0.4mm"
+          />
+          <platedhole
+            portHints={["pin17"]}
+            pcbX="-0.425mm"
+            pcbY="0.425mm"
+            shape="circle"
+            holeDiameter="0.2mm"
+            outerDiameter="0.4mm"
+          />
+          <platedhole
+            portHints={["pin17"]}
+            pcbX="0.425mm"
+            pcbY="0.425mm"
+            shape="circle"
+            holeDiameter="0.2mm"
+            outerDiameter="0.4mm"
+          />
           <silkscreenpath
             route={[
               { x: 1.2751307999999995, y: -1.7247107999999969 },
