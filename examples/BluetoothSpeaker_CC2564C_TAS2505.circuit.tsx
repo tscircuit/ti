@@ -4,6 +4,7 @@ import {
   BluetoothAudioHost_MSP430F5229,
   BluetoothController_CC2564C,
   PowerManagement_TPS7A2018,
+  PowerManagement_TPS7A2028,
 } from "@tsci/tscircuit.ti";
 import "tscircuit";
 
@@ -11,7 +12,8 @@ import "tscircuit";
  * Complete Bluetooth speaker example built from the reusable TI subcircuits.
  *
  * The signal topology follows TI's BT-MSP-AUDSINK reference design. The
- * MSP430 runs from the shared 1.8 V rail in this battery-powered example.
+ * The MSP430 core supply uses 2.8 V through its source-select switch while
+ * its DVIO rail and the remaining logic supplies use 1.8 V.
  */
 export default () => (
   <board routingDisabled>
@@ -21,20 +23,21 @@ export default () => (
       sheetIndex={0}
     />
     <schematicsheet name="power_1v8" displayName="1.8 V Power" sheetIndex={1} />
+    <schematicsheet name="power_2v8" displayName="2.8 V Power" sheetIndex={2} />
     <schematicsheet
       name="bluetooth_controller"
       displayName="CC2564C Bluetooth Controller"
-      sheetIndex={2}
+      sheetIndex={3}
     />
     <schematicsheet
       name="bluetooth_host"
       displayName="MSP430 Bluetooth Audio Host"
-      sheetIndex={3}
+      sheetIndex={4}
     />
     <schematicsheet
       name="audio_amplifier"
       displayName="TAS2505 Audio Amplifier and Speaker"
-      sheetIndex={4}
+      sheetIndex={5}
     />
 
     <BatteryManagement_BQ24074
@@ -42,6 +45,7 @@ export default () => (
       schSheetName="battery_and_charger"
     />
     <PowerManagement_TPS7A2018 name="power_1v8" schSheetName="power_1v8" />
+    <PowerManagement_TPS7A2028 name="power_2v8" schSheetName="power_2v8" />
     <BluetoothController_CC2564C
       name="bluetooth_controller"
       schSheetName="bluetooth_controller"
@@ -55,9 +59,11 @@ export default () => (
       schSheetName="audio_amplifier"
     />
 
-    {/* Charger output and the always-on 1.8 V regulator. */}
+    {/* Charger output and the always-on logic regulators. */}
     <trace from=".charger > .U1 > .OUT" to=".power_1v8 > .U1 > .VIN" />
     <trace from=".charger > .U1 > .OUT" to=".power_1v8 > .U1 > .VEN" />
+    <trace from=".charger > .U1 > .OUT" to=".power_2v8 > .U1 > .VIN" />
+    <trace from=".charger > .U1 > .OUT" to=".power_2v8 > .U1 > .VEN" />
 
     {/* Battery/system rail for the Bluetooth radio and speaker power stage. */}
     <trace
@@ -66,7 +72,7 @@ export default () => (
     />
     <trace from=".charger > .U1 > .OUT" to=".audio_amplifier > .U1 > .SPKVDD" />
 
-    {/* 1.8 V logic, MCU, oscillator, codec and I2C pull-up supplies. */}
+    {/* 1.8 V logic, MCU DVIO, oscillator, codec and I2C pull-up supplies. */}
     <trace
       from=".power_1v8 > .U1 > .VOUT"
       to=".bluetooth_controller > .U1A > .VDD_IO"
@@ -78,10 +84,6 @@ export default () => (
     <trace
       from=".power_1v8 > .U1 > .VOUT"
       to=".bluetooth_host > .U10 > .DVIO"
-    />
-    <trace
-      from=".power_1v8 > .U1 > .VOUT"
-      to=".bluetooth_host > .U10 > .DVCC"
     />
     <trace
       from=".power_1v8 > .U1 > .VOUT"
@@ -100,8 +102,12 @@ export default () => (
       to=".audio_amplifier > .R1 > .pin1"
     />
 
-    {/* Common ground across all five reusable subcircuits. */}
+    {/* 2.8 V feeds the MSP430 VCC rail through its LDO/JTAG selector. */}
+    <trace from=".power_2v8 > .U1 > .VOUT" to=".bluetooth_host > .S3 > .pin1" />
+
+    {/* Common ground across all six reusable subcircuits. */}
     <trace from=".charger > .U1 > .VSS" to=".power_1v8 > .U1 > .GND" />
+    <trace from=".charger > .U1 > .VSS" to=".power_2v8 > .U1 > .GND" />
     <trace
       from=".charger > .U1 > .VSS"
       to=".bluetooth_controller > .U1A > .GND"
