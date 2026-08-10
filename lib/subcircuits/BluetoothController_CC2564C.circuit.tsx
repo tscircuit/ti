@@ -61,11 +61,11 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
         pin12: "net.DCO_LDO_OUT",
         pin17: "net.VDD_IO",
         pin24: "net.GND",
-        pin26: "net.CC_HCI_TX_1V8",
+        pin26: "net.CC_HCI_RX_1V8",
         pin28: "net.GND",
         pin29: "net.CC_HCI_CTS_1V8",
         pin32: "net.CC_HCI_RTS_1V8",
-        pin33: "net.CC_HCI_RX_1V8",
+        pin33: "net.CC_HCI_TX_1V8",
         pin34: "net.VDD_IO",
         pin35: "net.CC_AUD_FSYNC_1V8",
         pin38: "net.VDD_IO",
@@ -102,7 +102,66 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     {/* 32.768 kHz slow-clock oscillator */}
     <chip
       name="Y1"
-      footprint="kicad:Oscillator/Oscillator_SMD_Abracon_ASV-4Pin_7.0x5.1mm"
+      footprint={
+        <footprint>
+          {/* Abracon ASH7K recommended 3.2 mm x 1.5 mm land pattern. */}
+          <smtpad
+            portHints={["pin1"]}
+            pcbX="-1.5mm"
+            pcbY="-0.6mm"
+            width="0.6mm"
+            height="0.8mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin2"]}
+            pcbX="1.5mm"
+            pcbY="-0.6mm"
+            width="0.6mm"
+            height="0.8mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin3"]}
+            pcbX="1.5mm"
+            pcbY="0.6mm"
+            width="0.6mm"
+            height="0.8mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin4"]}
+            pcbX="-1.5mm"
+            pcbY="0.6mm"
+            width="0.6mm"
+            height="0.8mm"
+            shape="rect"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="3.4mm"
+            height="1.7mm"
+            filled={false}
+            strokeWidth="0.1mm"
+          />
+          <silkscreentext
+            text="1"
+            pcbX="-2.05mm"
+            pcbY="-0.85mm"
+            fontSize="0.55mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="4.2mm"
+            height="2.3mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       manufacturerPartNumber="ASH7K-32.768KHZ-T"
       schX={-10.8}
       schY={3.7}
@@ -154,7 +213,64 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     {/* 26 MHz fast-clock crystal */}
     <crystal
       name="Y2"
-      footprint="kicad:Crystal/Crystal_SMD_2016-4Pin_2.0x1.6mm"
+      footprint={
+        <footprint>
+          {/* NDK NX2016SA recommended four-terminal mounting pattern. */}
+          <smtpad
+            portHints={["pin1"]}
+            pcbX="-0.7mm"
+            pcbY="0.55mm"
+            width="0.9mm"
+            height="0.8mm"
+            shape="rect"
+            rectBorderRadius="0.2mm"
+          />
+          <smtpad
+            portHints={["pin2"]}
+            pcbX="0.7mm"
+            pcbY="0.55mm"
+            width="0.9mm"
+            height="0.8mm"
+            shape="rect"
+            rectBorderRadius="0.2mm"
+          />
+          <smtpad
+            portHints={["pin3"]}
+            pcbX="0.7mm"
+            pcbY="-0.55mm"
+            width="0.9mm"
+            height="0.8mm"
+            shape="rect"
+            rectBorderRadius="0.2mm"
+          />
+          <smtpad
+            portHints={["pin4"]}
+            pcbX="-0.7mm"
+            pcbY="-0.55mm"
+            width="0.9mm"
+            height="0.8mm"
+            shape="rect"
+            rectBorderRadius="0.2mm"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="2.2mm"
+            height="1.8mm"
+            filled={false}
+            strokeWidth="0.1mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="3mm"
+            height="2.4mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       manufacturerPartNumber="NX2016SA-26.000M-STD-CZS-246"
       frequency="26MHz"
       loadCapacitance="8pF"
@@ -195,7 +311,20 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <testpoint
       name="TP1"
-      footprint="kicad:TestPoint/TestPoint_Plated_Hole_D1.0mm"
+      footprint={
+        <footprint>
+          {/* Internal TX_DBG probe via from the TI reference layout. */}
+          <platedhole
+            portHints={["pin1"]}
+            pcbX={0}
+            pcbY={0}
+            shape="circle"
+            holeDiameter="0.5mm"
+            outerDiameter="0.8mm"
+          />
+          <courtyardcircle pcbX={0} pcbY={0} radius="0.65mm" />
+        </footprint>
+      }
       schX={-5.2}
       schY={-2.05}
       connections={{ pin1: "net.TX_DBG" }}
@@ -216,8 +345,63 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <chip
       name="FL1"
-      footprint="kicad:Package_LGA/LGA-4_2x1.25mm_P0.65mm"
+      footprint={
+        <footprint>
+          {/* Murata LFB212G45SG8C341 directional four-terminal pattern. */}
+          <smtpad
+            portHints={["pin1"]}
+            pcbX={0}
+            pcbY="0.675mm"
+            width="1.2mm"
+            height="0.45mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin2"]}
+            pcbX="0.85mm"
+            pcbY={0}
+            width="0.4mm"
+            height="0.5mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin3"]}
+            pcbX={0}
+            pcbY="-0.675mm"
+            width="1.2mm"
+            height="0.45mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin4"]}
+            pcbX="-0.85mm"
+            pcbY={0}
+            width="0.4mm"
+            height="0.5mm"
+            shape="rect"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="2.2mm"
+            height="1.45mm"
+            filled={false}
+            strokeWidth="0.1mm"
+          />
+          <silkscreentext text="IN" pcbX="-1.55mm" pcbY={0} fontSize="0.45mm" />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="2.8mm"
+            height="2.1mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       manufacturerPartNumber="LFB212G45SG8C341"
+      supplierPartNumbers={{ jlcpcb: ["C2650941"] }}
       schX={8}
       schY={8.6}
       schWidth="1.5mm"

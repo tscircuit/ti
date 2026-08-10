@@ -61,11 +61,11 @@
   " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.6267060330900001px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_7" x="385.75845356807" y="356.28237981167496" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="5.64035429781px" transform="">U1A_SLOW_CLK</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_8" d="
     M 388.578630716975,246.60882402092497
     L 386.886524427632,249.74235418637497
-    L 340.0381594340442,249.74235418637497
-    L 340.0381594340442,243.47529385547497
+    L 339.6203554119842,249.74235418637497
+    L 339.6203554119842,243.47529385547497
     L 386.886524427632,243.47529385547497
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.6267060330900001px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_8" x="385.75845356807" y="246.60882402092497" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="5.64035429781px" transform="">CC_HCI_TX_1V8</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_9" d="
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.6267060330900001px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_8" x="385.75845356807" y="246.60882402092497" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="5.64035429781px" transform="">CC_HCI_RX_1V8</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_9" d="
     M 388.578630716975,279.51089075814997
     L 386.886524427632,282.64442092359997
     L 336.1484039886656,282.64442092359997
@@ -82,11 +82,11 @@
   " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.6267060330900001px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_10" x="385.75845356807" y="268.543535179075" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="5.64035429781px" transform="">CC_HCI_RTS_1V8</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_11" d="
     M 388.578630716975,257.57617959999993
     L 386.886524427632,260.70970976544993
-    L 339.6203554119842,260.70970976544993
-    L 339.6203554119842,254.44264943454993
+    L 340.0381594340442,260.70970976544993
+    L 340.0381594340442,254.44264943454993
     L 386.886524427632,254.44264943454993
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.6267060330900001px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_11" x="385.75845356807" y="257.57617959999993" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="5.64035429781px" transform="">CC_HCI_RX_1V8</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_12" d="
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.6267060330900001px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_11" x="385.75845356807" y="257.57617959999993" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="5.64035429781px" transform="">CC_HCI_TX_1V8</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_12" d="
     M 388.578630716975,301.44560191629995
     L 386.886524427632,304.57913208174995
     L 326.6976770096684,304.57913208174995

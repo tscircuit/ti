@@ -2,6 +2,76 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { MSP430F5229IRGCR } from "../chips/MSP430F5229IRGCR.circuit.tsx";
 
+const PinHeader1x02Footprint = () => (
+  <footprint>
+    <platedhole
+      portHints={["pin1"]}
+      pcbX={0}
+      pcbY="-1.27mm"
+      shape="circular_hole_with_rect_pad"
+      holeDiameter="1mm"
+      rectPadWidth="1.7mm"
+      rectPadHeight="1.7mm"
+    />
+    <platedhole
+      portHints={["pin2"]}
+      pcbX={0}
+      pcbY="1.27mm"
+      shape="circle"
+      holeDiameter="1mm"
+      outerDiameter="1.7mm"
+    />
+    <silkscreenrect
+      pcbX={0}
+      pcbY={0}
+      width="2.54mm"
+      height="5.08mm"
+      filled={false}
+      strokeWidth="0.15mm"
+    />
+    <courtyardrect
+      pcbX={0}
+      pcbY={0}
+      width="3.04mm"
+      height="5.58mm"
+      isFilled={false}
+      hasStroke
+      strokeWidth="0.05mm"
+    />
+  </footprint>
+);
+
+const PinHeader1x01Footprint = () => (
+  <footprint>
+    <platedhole
+      portHints={["pin1"]}
+      pcbX={0}
+      pcbY={0}
+      shape="circular_hole_with_rect_pad"
+      holeDiameter="1mm"
+      rectPadWidth="1.7mm"
+      rectPadHeight="1.7mm"
+    />
+    <silkscreenrect
+      pcbX={0}
+      pcbY={0}
+      width="2.54mm"
+      height="2.54mm"
+      filled={false}
+      strokeWidth="0.15mm"
+    />
+    <courtyardrect
+      pcbX={0}
+      pcbY={0}
+      width="3.04mm"
+      height="3.04mm"
+      isFilled={false}
+      hasStroke
+      strokeWidth="0.05mm"
+    />
+  </footprint>
+);
+
 export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
   <subcircuit {...props} schTraceAutoLabelEnabled schMaxTraceDistance="3mm">
     {/* Reference-design page frame and title block */}
@@ -80,7 +150,46 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* 32.768 kHz clock */}
     <crystal
       name="Y2"
-      footprint="kicad:Crystal/Crystal_SMD_3215-2Pin_3.2x1.5mm"
+      manufacturerPartNumber="ABS07-32.768KHZ-T"
+      supplierPartNumbers={{ jlcpcb: ["C130253"] }}
+      footprint={
+        <footprint>
+          {/* Abracon ABS07 3.2 mm x 1.5 mm recommended land pattern. */}
+          <smtpad
+            portHints={["pin1"]}
+            pcbX="1.25mm"
+            pcbY={0}
+            width="1mm"
+            height="1.8mm"
+            shape="rect"
+          />
+          <smtpad
+            portHints={["pin2"]}
+            pcbX="-1.25mm"
+            pcbY={0}
+            width="1mm"
+            height="1.8mm"
+            shape="rect"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="3.4mm"
+            height="1.7mm"
+            filled={false}
+            strokeWidth="0.1mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="4mm"
+            height="2.4mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
       frequency="32.768kHz"
       loadCapacitance={0}
       schX={-14.0}
@@ -150,7 +259,37 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     <pushbutton
       name="S1"
       displayName="MSP430 RESET"
-      footprint="smdpushbutton"
+      manufacturerPartNumber="EVQ11A05R"
+      footprint={
+        <footprint>
+          {/* Panasonic EVQ11 PWB pattern: two 1 mm holes, 5 mm apart. */}
+          <platedhole
+            portHints={["pin1"]}
+            pcbX="-2.5mm"
+            pcbY={0}
+            shape="circular_hole_with_rect_pad"
+            holeDiameter="1mm"
+            rectPadWidth="1.7mm"
+            rectPadHeight="1.7mm"
+          />
+          <platedhole
+            portHints={["pin2"]}
+            pcbX="2.5mm"
+            pcbY={0}
+            shape="circle"
+            holeDiameter="1mm"
+            outerDiameter="1.7mm"
+          />
+          <silkscreencircle
+            pcbX={0}
+            pcbY={0}
+            radius="3.2mm"
+            isOutline
+            strokeWidth="0.15mm"
+          />
+          <courtyardcircle pcbX={0} pcbY={0} radius="3.5mm" />
+        </footprint>
+      }
       schX={0.2}
       schY={8.8}
       connections={{
@@ -394,8 +533,10 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <pinheader
       name="J6"
-      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x02_P2.54mm_Vertical"
+      footprint={<PinHeader1x02Footprint />}
       displayName="JTAG SENSE"
+      manufacturerPartNumber="3-644456-2"
+      supplierPartNumbers={{ jlcpcb: ["C90288"] }}
       pinCount={2}
       gender="male"
       pitch="2.54mm"
@@ -411,8 +552,10 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* 1.8 V and source selection */}
     <chip
       name="J5"
-      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x02_P2.54mm_Vertical"
-      manufacturerPartNumber="VDD_1V8"
+      footprint={<PinHeader1x02Footprint />}
+      displayName="1.8 V Rail Jumper"
+      manufacturerPartNumber="3-644456-2"
+      supplierPartNumbers={{ jlcpcb: ["C90288"] }}
       schX={3}
       schY={0}
       connections={{
@@ -429,8 +572,80 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <chip
       name="S3"
-      footprint="kicad:Button_Switch_THT/SW_CuK_JS202011AQN_DPDT_Angled"
-      manufacturerPartNumber="POS 2 SW"
+      footprint={
+        <footprint>
+          {/* C&K JS202011CQN straight DPDT through-hole pattern. */}
+          <platedhole
+            portHints={["pin1"]}
+            pcbX="-2.5mm"
+            pcbY="-1.65mm"
+            shape="circular_hole_with_rect_pad"
+            holeDiameter="0.9mm"
+            rectPadWidth="1.4mm"
+            rectPadHeight="1.4mm"
+          />
+          <platedhole
+            portHints={["pin2"]}
+            pcbX={0}
+            pcbY="-1.65mm"
+            shape="circle"
+            holeDiameter="0.9mm"
+            outerDiameter="1.4mm"
+          />
+          <platedhole
+            portHints={["pin3"]}
+            pcbX="2.5mm"
+            pcbY="-1.65mm"
+            shape="circle"
+            holeDiameter="0.9mm"
+            outerDiameter="1.4mm"
+          />
+          <platedhole
+            portHints={["pin4"]}
+            pcbX="2.5mm"
+            pcbY="1.65mm"
+            shape="circle"
+            holeDiameter="0.9mm"
+            outerDiameter="1.4mm"
+          />
+          <platedhole
+            portHints={["pin5"]}
+            pcbX={0}
+            pcbY="1.65mm"
+            shape="circle"
+            holeDiameter="0.9mm"
+            outerDiameter="1.4mm"
+          />
+          <platedhole
+            portHints={["pin6"]}
+            pcbX="-2.5mm"
+            pcbY="1.65mm"
+            shape="circle"
+            holeDiameter="0.9mm"
+            outerDiameter="1.4mm"
+          />
+          <silkscreenrect
+            pcbX={0}
+            pcbY={0}
+            width="9mm"
+            height="3.3mm"
+            filled={false}
+            strokeWidth="0.15mm"
+          />
+          <courtyardrect
+            pcbX={0}
+            pcbY={0}
+            width="9.5mm"
+            height="4mm"
+            isFilled={false}
+            hasStroke
+            strokeWidth="0.05mm"
+          />
+        </footprint>
+      }
+      displayName="FET / LDO Power Select"
+      manufacturerPartNumber="JS202011CQN"
+      supplierPartNumbers={{ jlcpcb: ["C221663"] }}
       schX={8.2}
       schY={3.5}
       schWidth="1.5mm"
@@ -464,8 +679,10 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* Debug and clock headers */}
     <chip
       name="J15"
-      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x02_P2.54mm_Vertical"
-      manufacturerPartNumber="DEBUG"
+      footprint={<PinHeader1x02Footprint />}
+      displayName="Debug UART"
+      manufacturerPartNumber="3-644456-2"
+      supplierPartNumbers={{ jlcpcb: ["C90288"] }}
       schX={2.0}
       schY={2.2}
       connections={{
@@ -482,8 +699,9 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <chip
       name="J17"
-      footprint="kicad:Connector_PinHeader_2.54mm/PinHeader_1x01_P2.54mm_Vertical"
+      footprint={<PinHeader1x01Footprint />}
       displayName="SMCLK"
+      manufacturerPartNumber="5-146868-1"
       schX={-3.25}
       schY={-8}
       connections={{
@@ -500,9 +718,8 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     {/* Scan switch, DNI in source design */}
     <chip
       name="S4"
-      footprint="kicad:Button_Switch_SMD/SW_SP3T_PCM13"
       displayName="ScanSW DNI"
-      manufacturerPartNumber="SCAN-SWITCH"
+      manufacturerPartNumber="TPC1133GLFG"
       doNotPlace
       schX={-1.8}
       schY={-7}
@@ -721,7 +938,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     <capacitor
       name="C37"
       capacitance="10uF"
-      footprint="0805"
+      footprint="0402"
       schX={-15.3}
       schY={-8.9}
       schOrientation="vertical"

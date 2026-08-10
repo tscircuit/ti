@@ -32,8 +32,9 @@ export const AudioAmplifier_TAS2505 = (props: SubcircuitProps) => (
         pin19: "net.SCL_SSZ",
         pin21: "net.GND",
         pin24: "net.GND",
+        pin25: "net.GND",
       }}
-      noConnect={["pin17", "pin25"]}
+      noConnect={["pin17"]}
     />
 
     {/* Thermal-pad via: overlapping copper ties the exposed pad into GND while

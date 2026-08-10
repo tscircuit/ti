@@ -130,10 +130,8 @@ export default () => (
       from=".bluetooth_controller > .U1A > .N_SHUTD"
       to=".bluetooth_host > .U10 > .P1_7"
     />
-    <trace
-      from=".bluetooth_controller > .U1A > .SLOW_CLK"
-      to=".bluetooth_host > .R10 > .pin2"
-    />
+    {/* SLOW_CLK is supplied by the controller's local 32.768 kHz oscillator.
+        Do not also drive it from the optional MSP430 clock divider. */}
 
     {/* MSP430 control interface to the TAS2505. */}
     <trace
@@ -153,10 +151,6 @@ export default () => (
     <trace
       from=".bluetooth_controller > .U1A > .AUD_CLK"
       to=".audio_amplifier > .U1 > .BCLK"
-    />
-    <trace
-      from=".bluetooth_controller > .U1A > .AUD_CLK"
-      to=".audio_amplifier > .U1 > .MCLK"
     />
     <trace
       from=".bluetooth_controller > .U1A > .AUD_FSYNC"
