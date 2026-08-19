@@ -76,7 +76,7 @@ export const CC3235SF12RGKR = (props: ChipProps<typeof pinLabels>) => {
         jlcpcb: ["C2871569"],
       }}
       manufacturerPartNumber="CC3235SF12RGKR"
-      footprint="qfn64_thermalpad6.3mmx6.3mm_pillpads_h9.67mm_pw0.28mm_pl0.66mm"
+      footprint="qfn64_thermalpad6.3mmx6.3mm_thermalvias4x4_thermalviapitch1mm_thermalviaid0.3048mm_thermalviaod0.6096mm_pillpads_h9.67mm_pw0.28mm_pl0.66mm"
       cadModel={{
         objUrl:
           "https://modelcdn.tscircuit.com/easyeda_models/assets/C2871569.obj?uuid=b7201d931fc94275b12dff14351927d7",
