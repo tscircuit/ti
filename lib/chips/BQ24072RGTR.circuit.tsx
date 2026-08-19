@@ -3,7 +3,7 @@ import "tscircuit";
 
 export const BQ24072RGTR_PIN_LABELS = {
   pin1: ["TS"],
-  pin2: ["BAT", "BAT1"],
+  pin2: ["BAT", "BAT1" ],
   pin3: ["BAT2"],
   pin4: ["N_CE", "CE"],
   pin5: ["EN2"],
