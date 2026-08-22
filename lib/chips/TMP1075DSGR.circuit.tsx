@@ -1,4 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
 
 const pinLabels = {
   pin1: ["I2C_SDA", "SDA"],
@@ -12,15 +13,22 @@ const pinLabels = {
   pin9: ["EP"],
 } as const;
 
+const pinRoles = {
+  pin4: "ground",
+  pin8: "power",
+  pin9: "ground",
+} as const;
+
 export const TMP1075DSGR = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
+      {...getTiSchematicLayout(pinLabels, { pinRoles })}
       pinLabels={pinLabels}
       supplierPartNumbers={{
         jlcpcb: ["C2870250"],
       }}
       manufacturerPartNumber="TMP1075DSGR"
-      footprint="dfn8_thermalpad0.9mmx1.6mm_p0.5mm_w2.42mm_pw0.25mm_pl0.52mm"
+      footprint="dfn8_thermalpad0.9mmx1.6mm_p0.5mm_w1.9mm_pw0.25mm_pl0.5mm"
       cadModel={{
         objUrl:
           "https://modelcdn.tscircuit.com/easyeda_models/assets/C2870250.obj?uuid=2be2baea8d8242eebd2ce617314d92a1",
@@ -33,3 +41,5 @@ export const TMP1075DSGR = (props: ChipProps<typeof pinLabels>) => {
     />
   );
 };
+
+export default TMP1075DSGR;

@@ -1,4 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
 
 const pinLabels = {
   pin1: "VDDR",
@@ -47,6 +48,7 @@ const pinLabels = {
 export const CC2340R5 = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
+      {...getTiSchematicLayout(pinLabels)}
       pinLabels={pinLabels}
       supplierPartNumbers={{
         jlcpcb: ["C5914214"],
@@ -66,63 +68,11 @@ export const CC2340R5 = (props: ChipProps<typeof pinLabels>) => {
         EGP: { requiresGround: true },
         RFGND: { requiresGround: true },
       }}
-      schPinArrangement={{
-        leftSide: {
-          direction: "top-to-bottom",
-          pins: [
-            "DIO16_SWDIO",
-            "DIO17_SWDCK",
-            "nRST",
-            "DCDC",
-            "pin1",
-            "pin34",
-            "DIO3_X32_P",
-            "DIO4_X32_N",
-            "NC",
-            "VDDD",
-            "EGP",
-          ],
-        },
-        rightSide: {
-          direction: "top-to-bottom",
-          pins: [
-            "pin8",
-            "pin17",
-            "pin31",
-            "pin38",
-            "ANT",
-            "RFGND",
-            "X48_P",
-            "X48_N",
-          ],
-        },
-      }}
-      schPinStyle={{
-        nRST: {
-          marginBottom: 0.2,
-        },
-        DCDC: {
-          marginBottom: 0.2,
-        },
-        DIO3_X32_P: {
-          marginTop: 0.2,
-        },
-        pin8: {
-          marginTop: 0,
-        },
-        ANT: {
-          marginTop: 0.5,
-        },
-        RFGND: {
-          marginTop: 0.2,
-        },
-        X48_P: {
-          marginTop: 0.5,
-        },
-      }}
       {...props}
     />
   );
 };
 
 export const CC2340R52E0RKPR = CC2340R5;
+
+export default CC2340R5;

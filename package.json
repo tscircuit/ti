@@ -18,6 +18,8 @@
     "snapshot:update": "tsci snapshot --update",
     "start": "tsci dev",
     "typecheck": "tsc --noEmit",
+    "generate:ti-sysblocks": "bun scripts/generate-ti-sysblocks-exports.ts",
+    "validate:ti-sysblocks": "bun scripts/validate-ti-sysblocks-catalog.ts",
     "format": "biome format --write",
     "format:check": "biome format ."
   },

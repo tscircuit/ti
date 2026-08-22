@@ -57,6 +57,49 @@ export default () => (
 chip footprint for that short-name export. New code should use readable package
 names such as `vqfn_16_ep_3x3` or `sot_23_5`.
 
+### TI sysblocks catalog
+
+Every TI product recommendation referenced by
+[`tscircuit/ti-sysblocks`](https://github.com/tscircuit/ti-sysblocks) is
+available as a raw chip export. The source diagrams contain generic TI product
+numbers rather than orderable package variants, so this package records one
+canonical exact manufacturer part number and package for each of the 800
+generated family entries, while reusing the repository's 10 existing family
+definitions. Import the family name for convenience or the exact MPN-named
+component when the package choice must be explicit.
+
+```tsx
+import {
+  AMC0300D,
+  AMC0300DDWVR,
+  TiSysblocksChipComponents,
+} from "@tsci/tscircuit.ti"
+
+const CanonicalFamilyPart = AMC0300D
+const ExactPackagePart = AMC0300DDWVR
+const SameFamilyFromMap = TiSysblocksChipComponents.AMC0300D
+```
+
+The complete mapping and TI links for all 810 families are in
+[`lib/chips/ti-sysblocks-chip-catalog.json`](lib/chips/ti-sysblocks-chip-catalog.json).
+It also records the canonical MPN, package code, pin count, package drawing,
+and supplier provenance for the 800 generated entries. The migration uses 689
+direct JLCPCB imports, 111 official TI datasheet package selections, and 10
+definitions that were already present in this repository.
+
+Some TI names are not valid JavaScript identifiers. Family exports replace
+punctuation with underscores (for example, `AMC0311D-Q1` becomes
+`AMC0311D_Q1`), and a leading digit gets the `TI_` prefix (for example,
+`74ACT16244` becomes `TI_74ACT16244`). The catalog is the authoritative mapping.
+
+Generated schematic boxes group power pins on top, ground and exposed-pad pins
+on the bottom, inputs and controls on the left, and outputs on the right. Pins
+inside a functional group retain tscircuit's standard 0.2 mm adjacent spacing;
+only a 0.2 mm margin is added between distinct groups. Footprints imported from
+JLCPCB retain their LCSC number and CAD model. Datasheet-sourced components use
+the exact TI package-drawing identifier, never package code and pin count alone,
+so mechanically different drawing revisions are not conflated.
+
 ## Connecting to Pins Inside a Subcircuit
 
 Imported TI parts are subcircuits. To connect an external component to a pin
@@ -138,9 +181,10 @@ The package currently exports these subcircuit components:
 
 ## Exported Chips
 
-The package also exports these low-level chip components from `lib/chips`. Each
-chip is listed individually below, including whether it supports a
-`footprintVariant` selector on the short-name export.
+In addition to the complete sysblocks catalog above, the package retains its
+hand-written short-name wrappers and legacy raw-chip exports. The table below
+highlights those wrappers, including whether they support a `footprintVariant`
+selector. It is not the complete 810-family catalog.
 
 | Chip Export | `footprintVariant` | Underlying Component Export |
 | --- | --- | --- |
@@ -161,7 +205,7 @@ chip is listed individually below, including whether it supports a
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
-| `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
+| `TLV755P` | `sot_23_5` | `TLV75533PDBVR` |
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
@@ -256,6 +300,14 @@ Run TypeScript checks:
 
 ```bash
 bun run typecheck
+```
+
+Regenerate and validate the sysblocks export surface after changing the
+machine-readable catalog:
+
+```bash
+bun run generate:ti-sysblocks
+bun run validate:ti-sysblocks
 ```
 
 Update visual snapshots when intentional schematic, PCB, or simulation output

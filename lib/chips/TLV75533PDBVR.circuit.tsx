@@ -1,5 +1,6 @@
 import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
 
 const pinLabels = {
   pin1: "IN",
@@ -12,27 +13,11 @@ const pinLabels = {
 /** TLV755P 3.3 V fixed-output regulator in the 5-pin SOT-23 package. */
 export const TLV75533PDBVR = (props: ChipProps<typeof pinLabels>) => (
   <chip
+    {...getTiSchematicLayout(pinLabels)}
     manufacturerPartNumber="TLV75533PDBVR"
     supplierPartNumbers={{ jlcpcb: ["C404027"] }}
     footprint="sot25_w2.6mm_pl1.1mm_pin1location(rightside,bottom)"
-    schWidth="3mm"
-    schHeight="3mm"
     pinLabels={pinLabels}
-    schPinArrangement={{
-      leftSide: {
-        direction: "top-to-bottom",
-        pins: [1, 3],
-      },
-      rightSide: {
-        direction: "top-to-bottom",
-        pins: [5, 2],
-      },
-    }}
-    schPinStyle={{
-      pin1: { marginBottom: 1.5 },
-      pin5: { marginBottom: 1.5 },
-    }}
-    noConnect={["pin4"]}
     {...props}
   />
 );

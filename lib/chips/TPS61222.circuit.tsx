@@ -1,34 +1,14 @@
-import type { ChipProps } from "@tscircuit/props";
-import "tscircuit";
+import type { ComponentProps } from "react";
+import { TPS61222DCKR } from "./TPS61222DCKR.circuit.tsx";
 
-export const TPS61222 = (props: ChipProps) => (
-  <chip
-    manufacturerPartNumber="TPS61222DCKT"
-    schWidth="1.5mm"
-    schHeight="1mm"
-    pinLabels={{
-      pin1: "VIN",
-      pin2: "FB",
-      pin3: "GND",
-      pin4: "VOUT",
-      pin5: "L",
-      pin6: "EN",
-    }}
-    schPinArrangement={{
-      leftSide: {
-        direction: "top-to-bottom",
-        pins: [4, 2],
-      },
-      rightSide: {
-        direction: "top-to-bottom",
-        pins: [5, 1, 6, 3],
-      },
-    }}
-    schPinStyle={{
-      pin4: { marginBottom: 0.45 },
-    }}
-    {...props}
-  />
-);
+export type TPS61222Props = ComponentProps<typeof TPS61222DCKR> & {
+  footprintVariant?: "sot_23_6";
+};
+
+/** TPS61222 low-input-voltage boost converter in the DCK package. */
+export const TPS61222 = ({
+  footprintVariant: _footprintVariant = "sot_23_6",
+  ...props
+}: TPS61222Props) => <TPS61222DCKR {...props} />;
 
 export default TPS61222;

@@ -18,3 +18,5 @@ export const HDC3020 = ({
 
   return <HDC3020DEFR {...props} />;
 };
+
+export default HDC3020;

@@ -1,4 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
 import tps22919SpiceModel from "./spice-models/TPS22919-spice-model.json";
 
 const pinLabels = {
@@ -10,9 +11,12 @@ const pinLabels = {
   pin6: ["OUT"],
 } as const;
 
+const pinRoles = { pin3: "control" } as const;
+
 export const TPS22919 = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
+      {...getTiSchematicLayout(pinLabels, { pinRoles })}
       pinLabels={pinLabels}
       supplierPartNumbers={{
         jlcpcb: ["C2149796"],
@@ -30,7 +34,7 @@ export const TPS22919 = (props: ChipProps<typeof pinLabels>) => {
           }}
         />
       }
-      footprint="dfn6_p0.65mm_w2.4999mm_pw0.42mm_pl0.6mm_pin1location(rightside,bottom)"
+      footprint="dfn6_p0.65mm_w2.2mm_pw0.4mm_pl0.9mm_pin1location(rightside,bottom)"
       cadModel={{
         objUrl:
           "https://modelcdn.tscircuit.com/easyeda_models/assets/C2149796.obj?uuid=a5d40c04f23243b2af27dc3bf34f18d3",
@@ -43,3 +47,5 @@ export const TPS22919 = (props: ChipProps<typeof pinLabels>) => {
     />
   );
 };
+
+export default TPS22919;

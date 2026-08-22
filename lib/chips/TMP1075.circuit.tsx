@@ -18,3 +18,5 @@ export const TMP1075 = ({
 
   return <TMP1075DSGR {...props} />;
 };
+
+export default TMP1075;

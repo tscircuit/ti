@@ -51,9 +51,10 @@ export { HDC3022DEJR } from "./HDC3022DEJR.circuit.tsx";
 export { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1.circuit.tsx";
 export { MSP430F5229IRGCR } from "./MSP430F5229IRGCR.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
+export { TLC59116IPWR } from "./TLC59116IPWR.circuit.tsx";
 export { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
+export { TPS61222DCKR } from "./TPS61222DCKR.circuit.tsx";
 export { W25Q128JVSIQ } from "./W25Q128JVSIQ.circuit.tsx";
-export { TPS61299DRLR } from "./TPS61299DRLR.circuit.tsx";
 export { TPS63802DLAR } from "./TPS63802DLAR.circuit.tsx";
 export { TPS7A0230PDBVR } from "./TPS7A0230PDBVR.circuit.tsx";
 export { TPS7A2018PDBVR } from "./TPS7A2018PDBVR.circuit.tsx";
@@ -62,3 +63,5 @@ export { TPS7A2033PDBVR } from "./TPS7A2033PDBVR.circuit.tsx";
 export { TLV75533PDBVR } from "./TLV75533PDBVR.circuit.tsx";
 export { TXB0104RGYR } from "./TXB0104RGYR.circuit.tsx";
 export { TXS0102DCUR } from "./TXS0102DCUR.circuit.tsx";
+
+export * from "./ti-sysblocks-components.tsx";

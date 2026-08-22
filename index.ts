@@ -34,6 +34,7 @@ import {
   TPS7A02,
   TPS7A20,
   TPSM82823,
+  TiSysblocksChipComponents,
   TRF7960RHB,
   TXB0104,
   TXS0102,
@@ -128,6 +129,7 @@ export {
 };
 
 export const TiChipComponents = {
+  ...TiSysblocksChipComponents,
   AM62L32,
   BQ24072,
   BQ24073,

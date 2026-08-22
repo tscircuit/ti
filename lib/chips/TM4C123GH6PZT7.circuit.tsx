@@ -1,0 +1,151 @@
+import type { ChipProps } from "@tscircuit/props";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
+
+const pinLabels = {
+  pin1: ["PD0"],
+  pin2: ["PD1"],
+  pin3: ["PD2"],
+  pin4: ["PD3"],
+  pin5: ["VDD8"],
+  pin6: ["GND8"],
+  pin7: ["VDDA"],
+  pin8: ["VREFA_POS"],
+  pin9: ["VREFA_NEG"],
+  pin10: ["GNDA"],
+  pin11: ["PJ2"],
+  pin12: ["PE3"],
+  pin13: ["PE2"],
+  pin14: ["PE1"],
+  pin15: ["PE0"],
+  pin16: ["PH0"],
+  pin17: ["PH1"],
+  pin18: ["PH2"],
+  pin19: ["PH3"],
+  pin20: ["VDD7"],
+  pin21: ["GND7"],
+  pin22: ["PC7"],
+  pin23: ["PC6"],
+  pin24: ["PC5"],
+  pin25: ["PC4"],
+  pin26: ["pin26"],
+  pin27: ["pin27"],
+  pin28: ["pin28"],
+  pin29: ["pin29"],
+  pin30: ["pin30"],
+  pin31: ["pin31"],
+  pin32: ["VDD6"],
+  pin33: ["GND6"],
+  pin34: ["PA6"],
+  pin35: ["PA7"],
+  pin36: ["PF6"],
+  pin37: ["PF5"],
+  pin38: ["VDDC2"],
+  pin39: ["PF4"],
+  pin40: ["PF0"],
+  pin41: ["PF1"],
+  pin42: ["PF2"],
+  pin43: ["PF3"],
+  pin44: ["VDD5"],
+  pin45: ["GND5"],
+  pin46: ["PK3"],
+  pin47: ["PK2"],
+  pin48: ["PK1"],
+  pin49: ["PK0"],
+  pin50: ["WAKE"],
+  pin51: ["HIB"],
+  pin52: ["XOSC0"],
+  pin53: ["GNDX"],
+  pin54: ["XOSC1"],
+  pin55: ["VBAT"],
+  pin56: ["VDD4"],
+  pin57: ["GND4"],
+  pin58: ["PF7"],
+  pin59: ["PG3"],
+  pin60: ["PG2"],
+  pin61: ["PG1"],
+  pin62: ["PG0"],
+  pin63: ["RST"],
+  pin64: ["GND3"],
+  pin65: ["OSC0"],
+  pin66: ["OSC1"],
+  pin67: ["VDD3"],
+  pin68: ["PJ0"],
+  pin69: ["PJ1"],
+  pin70: ["pin70"],
+  pin71: ["pin71"],
+  pin72: ["pin72"],
+  pin73: ["pin73"],
+  pin74: ["PG4"],
+  pin75: ["PG5"],
+  pin76: ["PH7"],
+  pin77: ["PH6"],
+  pin78: ["PH5"],
+  pin79: ["PH4"],
+  pin80: ["VDD2"],
+  pin81: ["GND2"],
+  pin82: ["pin82"],
+  pin83: ["pin83"],
+  pin84: ["pin84"],
+  pin85: ["pin85"],
+  pin86: ["VDDC1"],
+  pin87: ["PG6"],
+  pin88: ["PG7"],
+  pin89: ["PE6"],
+  pin90: ["PE7"],
+  pin91: ["PB5"],
+  pin92: ["PB4"],
+  pin93: ["VDD1"],
+  pin94: ["GND1"],
+  pin95: ["PE4"],
+  pin96: ["PE5"],
+  pin97: ["PD4"],
+  pin98: ["PD5"],
+  pin99: ["PD6"],
+  pin100: ["PD7"],
+} as const;
+
+const pinAttributes = {
+  pin5: { requiresPower: true },
+  pin6: { requiresGround: true },
+  pin7: { requiresPower: true },
+  pin20: { requiresPower: true },
+  pin21: { requiresGround: true },
+  pin32: { requiresPower: true },
+  pin33: { requiresGround: true },
+  pin44: { requiresPower: true },
+  pin45: { requiresGround: true },
+  pin56: { requiresPower: true },
+  pin57: { requiresGround: true },
+  pin64: { requiresGround: true },
+  pin67: { requiresPower: true },
+  pin80: { requiresPower: true },
+  pin81: { requiresGround: true },
+  pin93: { requiresPower: true },
+  pin94: { requiresGround: true },
+} as const;
+
+export const TM4C123GH6PZT7 = (props: ChipProps<typeof pinLabels>) => {
+  return (
+    <chip
+      {...getTiSchematicLayout(pinLabels)}
+      pinLabels={pinLabels}
+      pinAttributes={pinAttributes}
+      supplierPartNumbers={{
+        jlcpcb: ["C2863116"],
+      }}
+      manufacturerPartNumber="TM4C123GH6PZT7"
+      footprint="qfn100_pillpads_p0.4999mm_h17.2996mm_pw0.3mm_pl1.6mm"
+      cadModel={{
+        objUrl:
+          "https://modelcdn.tscircuit.com/easyeda_models/assets/C2863116.obj?uuid=b5ab355f3fc14a5dabbe2fb50a362a90",
+        stepUrl:
+          "https://modelcdn.tscircuit.com/easyeda_models/assets/C2863116.step?uuid=b5ab355f3fc14a5dabbe2fb50a362a90",
+        pcbRotationOffset: 270,
+        modelOriginPosition: { x: 0, y: 0, z: 0 },
+      }}
+      {...props}
+    />
+  );
+};
+
+export default TM4C123GH6PZT7;

@@ -18,3 +18,5 @@ export const BQ25895 = ({
 
   return <BQ25895RTWR {...props} />;
 };
+
+export default BQ25895;

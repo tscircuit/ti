@@ -1,4 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
 
 const pinLabels = {
   pin1: ["I2C_SDA", "SDA"],
@@ -15,12 +16,13 @@ const pinLabels = {
 export const HDC3020DEFR = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
+      {...getTiSchematicLayout(pinLabels)}
       pinLabels={pinLabels}
       supplierPartNumbers={{
         jlcpcb: ["C7472806"],
       }}
       manufacturerPartNumber="HDC3020DEFR"
-      footprint="dfn8_thermalpad1.1mmx1.8mm_p0.5mm_w3.1mm_pw0.25mm_pl0.7mm_pin1location(leftside,bottom)"
+      footprint="dfn8_thermalpad1.2mmx1.9mm_p0.5mm_w2.3mm_pw0.25mm_pl0.6mm_pin1location(leftside,top)"
       cadModel={{
         objUrl:
           "https://modelcdn.tscircuit.com/easyeda_models/assets/C7472806.obj?uuid=de01b87c3fde450bafb3798419858b29",
@@ -37,3 +39,5 @@ export const HDC3020DEFR = (props: ChipProps<typeof pinLabels>) => {
     />
   );
 };
+
+export default HDC3020DEFR;

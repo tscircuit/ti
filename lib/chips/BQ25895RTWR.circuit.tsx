@@ -1,4 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
 
 const pinLabels = {
   pin1: ["VBUS"],
@@ -31,6 +32,7 @@ const pinLabels = {
 export const BQ25895RTWR = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
+      {...getTiSchematicLayout(pinLabels)}
       pinLabels={pinLabels}
       supplierPartNumbers={{
         jlcpcb: ["C80200"],
@@ -49,3 +51,5 @@ export const BQ25895RTWR = (props: ChipProps<typeof pinLabels>) => {
     />
   );
 };
+
+export default BQ25895RTWR;
