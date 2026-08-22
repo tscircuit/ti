@@ -251,7 +251,7 @@ const createDefaultComponentSourceReader = (
       (candidate): candidate is string => Boolean(candidate),
     )) {
       for (const sourcePath of [
-        resolve(repoRoot, "lib/chips", `${filename}.circuit.tsx`),
+        resolve(repoRoot, "lib/chips", `${filename}.tsx`),
         resolve(repoRoot, "imports", `${filename}.tsx`),
       ]) {
         if (!existsSync(sourcePath)) continue;

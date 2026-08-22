@@ -101,7 +101,7 @@ const getStringAliases = (expression: ts.Expression) => {
 
 export const parsePinLabels = (
   sourceText: string,
-  sourcePath = "component.circuit.tsx",
+  sourcePath = "component.tsx",
 ): ParsedPinLabels => {
   const sourceFile = ts.createSourceFile(
     sourcePath,
@@ -262,7 +262,7 @@ const renderMetadata = (metadata: EnrichedArrayPinMetadata) =>
 export const enrichArrayComponentSource = (
   sourceText: string,
   officialPins: readonly TiDocumentPin[],
-  sourcePath = "component.circuit.tsx",
+  sourcePath = "component.tsx",
 ) => {
   const parsed = parsePinLabels(sourceText, sourcePath);
   const metadata = enrichArrayPinMetadata(parsed.labels, officialPins);

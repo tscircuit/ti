@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { DRV8876 } from "../chips/DRV8876.circuit.tsx";
+import { DRV8876 } from "../chips/DRV8876.tsx";
 
 export const DRV8876DriverPwmOperationWithCurrentFeedbackCircuit = (
   props: SubcircuitProps,

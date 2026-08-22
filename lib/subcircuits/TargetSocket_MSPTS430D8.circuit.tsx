@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { MSP430G2230ID } from "../chips/MSP430G2230ID.circuit.tsx";
+import { MSP430G2230ID } from "../chips/MSP430G2230ID.tsx";
 
 /**
  * TI MSP-TS430D8 8-pin target socket board reference circuit.

@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { TPS7A2018PDBVR } from "../chips/TPS7A2018PDBVR.circuit.tsx";
+import { TPS7A2018PDBVR } from "../chips/TPS7A2018PDBVR.tsx";
 
 /** TPS7A2018 1.8 V LDO typical application with 1 uF input/output capacitors. */
 export const PowerManagement_TPS7A2018 = (props: SubcircuitProps) => (

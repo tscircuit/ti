@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TXS0102 } from "../chips/TXS0102.circuit.tsx";
+import { TXS0102 } from "../chips/TXS0102.tsx";
 
 export const LevelShifter_TXS0102 = (props: SubcircuitProps) => (
   <subcircuit {...props}>

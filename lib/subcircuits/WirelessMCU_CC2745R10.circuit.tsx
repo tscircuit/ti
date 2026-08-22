@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { CC2745R10 } from "../chips/CC2745R10.circuit.tsx";
+import { CC2745R10 } from "../chips/CC2745R10.tsx";
 
 export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
   <subcircuit {...props}>

@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TPS61299X } from "../chips/TPS61299X.circuit.tsx";
+import { TPS61299X } from "../chips/TPS61299X.tsx";
 
 export const BoostConverter_TPS61299X = (props: SubcircuitProps) => (
   <subcircuit {...props}>

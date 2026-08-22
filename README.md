@@ -242,7 +242,9 @@ The package also exports:
 The `lib/chips` directory contains the low-level TI chip components. Most files
 represent an individual manufacturer part number and define details such as pin
 labels, aliases, supplier part numbers, and the physical footprint used by
-tscircuit.
+tscircuit. Chip definitions are ordinary `*.tsx` component modules; the
+`*.circuit.tsx` suffix is reserved for runnable circuit entrypoints such as
+reference examples, subcircuits, and simulations.
 
 Import chips from the package entrypoint by their short names, such as
 `BQ24074`, `INA237`, or `TPS7A02`. The underlying MPN-named definitions remain
@@ -264,6 +266,13 @@ For example, `PowerMonitor_INA237` comes from
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.
+
+### `examples`
+
+The `examples` directory contains runnable `*.circuit.tsx` TI reference
+schematics. Their checked-in snapshots are schematic-only so the reference
+component placement and wiring can be reviewed without running analog
+simulations or generating PCB output.
 
 ### `lib/simulations`
 
@@ -310,9 +319,28 @@ bun run generate:ti-sysblocks
 bun run validate:ti-sysblocks
 ```
 
+Reference examples are registered in `examples/ti-reference-examples.json`
+with the exact TI figure used for connectivity and schematic placement. The
+strict validator requires every catalog family to have one example and one
+schematic snapshot; use `--allow-partial` only while adding the remaining
+references:
+
+```bash
+bun run validate:ti-reference-examples
+bun scripts/validate-ti-reference-examples.ts --allow-partial --verify-evidence
+```
+
 Update visual snapshots when intentional schematic, PCB, or simulation output
 changes:
 
 ```bash
 bun run snapshot:update
+```
+
+Check or update only the schematic snapshots for TI reference examples. These
+commands skip simulation and PCB output:
+
+```bash
+bun run snapshot:schematics
+bun run snapshot:schematics:update
 ```

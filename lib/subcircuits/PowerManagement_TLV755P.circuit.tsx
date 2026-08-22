@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { TLV755P } from "../chips/TLV755P.circuit.tsx";
+import { TLV755P } from "../chips/TLV755P.tsx";
 
 /** TLV755P 3.3 V LDO typical application with 1 uF input/output capacitors. */
 export const PowerManagement_TLV755P = (props: SubcircuitProps) => (

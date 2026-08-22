@@ -1,4 +1,4 @@
-import { CC3235SF12RGKR } from "../chips/CC3235SF12RGKR.circuit.tsx";
+import { CC3235SF12RGKR } from "../chips/CC3235SF12RGKR.tsx";
 import type { SubcircuitProps } from "@tscircuit/props";
 
 export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (

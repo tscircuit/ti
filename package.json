@@ -16,10 +16,13 @@
     "build": "tsci build",
     "snapshot": "tsci snapshot",
     "snapshot:update": "tsci snapshot --update",
+    "snapshot:schematics": "tsci snapshot examples --schematic-only --disable-parts-engine --concurrency 8",
+    "snapshot:schematics:update": "tsci snapshot examples --schematic-only --disable-parts-engine --update --concurrency 8",
     "start": "tsci dev",
     "typecheck": "tsc --noEmit",
     "generate:ti-sysblocks": "bun scripts/generate-ti-sysblocks-exports.ts",
     "validate:ti-sysblocks": "bun scripts/validate-ti-sysblocks-catalog.ts",
+    "validate:ti-reference-examples": "bun scripts/validate-ti-reference-examples.ts",
     "format": "biome format --write",
     "format:check": "biome format ."
   },

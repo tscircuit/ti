@@ -20,7 +20,7 @@ const entries = [...catalog].sort((left, right) =>
 
 const imports = entries.map((entry) => {
   const componentName = entry.componentExportName ?? entry.exportName;
-  return `import { ${componentName} } from "./${componentName}.circuit.tsx";`;
+  return `import { ${componentName} } from "./${componentName}.tsx";`;
 });
 
 const exactExports = entries

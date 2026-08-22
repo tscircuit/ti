@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "examples": [
+    {
+      "id": "OPA371D_LowSideCurrentSense",
+      "family": "OPA371D",
+      "implementation": "generated",
+      "title": "OPA371D Low-Side Current-Sense Reference",
+      "description": "A faithful schematic rendering of the OPAx371D low-side current-sensing application, preserving TI's stated values, topology, and left-to-right placement.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/OPA371D",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/OPA371D/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/OPA371D/datasheet/GUID-03C60932-F0E0-4CDB-9FB0-C73F5C680C80",
+        "figureUrl": "https://www.ti.com/ods/images/SLVSM48A/GUID-B2DF1A69-DA22-4522-9874-1574F18368E7-low.gif",
+        "figure": "Figure 7-1",
+        "figureCaption": "Low-Side, Current-Sensing Application",
+        "pdfPage": 23,
+        "documentRevision": "SLVSM48A, revised August 2026",
+        "scope": "Complete Figure 7-1 signal path and feedback network; ZLOAD remains symbolic because TI does not specify its impedance."
+      },
+      "mainDevice": {
+        "componentExportName": "OPA371DDBVR",
+        "modulePath": "../lib/chips/OPA371DDBVR.tsx",
+        "name": "U1",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "schematicProjection": {
+          "name": "U1_OPAMP",
+          "symbolName": "opamp_with_power_right",
+          "portMap": {
+            "inp1": "pin3",
+            "inp2": "pin4",
+            "out": "pin1",
+            "V+": "pin5",
+            "V-": "pin2"
+          }
+        }
+      },
+      "components": [
+        {
+          "kind": "symbolic-load",
+          "name": "Z_LOAD",
+          "displayLabel": "ZLOAD",
+          "position": {
+            "x": -2,
+            "y": 1.35
+          },
+          "evidenceLabel": "ZLOAD",
+          "valueStatus": "unspecified-by-ti"
+        },
+        {
+          "kind": "resistor",
+          "name": "R_SHUNT",
+          "value": "0.1ohm",
+          "footprint": "2512",
+          "position": {
+            "x": -2,
+            "y": -0.35
+          },
+          "rotation": -90,
+          "evidenceLabel": "RSHUNT 0.1 ohm",
+          "valueStatus": "specified-by-ti"
+        },
+        {
+          "kind": "resistor",
+          "name": "R_F",
+          "value": "57.6k",
+          "footprint": "0402",
+          "position": {
+            "x": 1.5,
+            "y": -0.4
+          },
+          "rotation": -90,
+          "evidenceLabel": "RF 57.6 kohm",
+          "valueStatus": "specified-by-ti"
+        },
+        {
+          "kind": "resistor",
+          "name": "R_G",
+          "value": "1.2k",
+          "footprint": "0402",
+          "position": {
+            "x": 1.5,
+            "y": -1.5
+          },
+          "rotation": -90,
+          "evidenceLabel": "RG 1.2 kohm",
+          "valueStatus": "specified-by-ti"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "VBUS_RAIL",
+          "symbolName": "rail_up",
+          "port": "1",
+          "net": "net.VBUS",
+          "displayLabel": "VBUS",
+          "position": {
+            "x": -2,
+            "y": 2.2
+          },
+          "evidenceLabel": "VBUS rail"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "V5_RAIL",
+          "symbolName": "rail_up",
+          "port": "1",
+          "net": "net.V5",
+          "displayLabel": "5 V",
+          "position": {
+            "x": -0.1,
+            "y": 1
+          },
+          "evidenceLabel": "5 V device supply"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "GND_SHUNT",
+          "symbolName": "digital_ground_up",
+          "port": "1",
+          "net": "net.GND",
+          "displayLabel": "",
+          "position": {
+            "x": -2,
+            "y": -1.1
+          },
+          "evidenceLabel": "RSHUNT ground return"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "GND_DEVICE",
+          "symbolName": "digital_ground_up",
+          "port": "1",
+          "net": "net.GND",
+          "displayLabel": "",
+          "position": {
+            "x": -0.09,
+            "y": -1
+          },
+          "evidenceLabel": "device negative supply ground"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "GND_GAIN",
+          "symbolName": "digital_ground_up",
+          "port": "1",
+          "net": "net.GND",
+          "displayLabel": "",
+          "position": {
+            "x": 1.5,
+            "y": -2.3
+          },
+          "evidenceLabel": "RG ground return"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "VOUT_TERMINAL",
+          "symbolName": "testpoint_right",
+          "port": "1",
+          "net": "net.VOUT",
+          "displayLabel": "VOUT",
+          "position": {
+            "x": 2.8,
+            "y": -0.01
+          },
+          "evidenceLabel": "VOUT terminal"
+        }
+      ],
+      "traces": [
+        {
+          "from": ".VBUS_RAIL > .1",
+          "to": ".Z_LOAD > .1",
+          "evidenceLabel": "VBUS feeds ZLOAD"
+        },
+        {
+          "path": [".Z_LOAD > .2", ".R_SHUNT > .pin1", ".U1_OPAMP > .inp1"],
+          "evidenceLabel": "ZLOAD/RSHUNT junction drives the noninverting input"
+        },
+        {
+          "from": ".R_SHUNT > .pin2",
+          "to": ".GND_SHUNT > .1",
+          "evidenceLabel": "RSHUNT returns to ground"
+        },
+        {
+          "path": [".U1_OPAMP > .out", ".R_F > .pin1", ".VOUT_TERMINAL > .1"],
+          "evidenceLabel": "amplifier output is VOUT and feeds RF"
+        },
+        {
+          "path": [".R_F > .pin2", ".R_G > .pin1", ".U1_OPAMP > .inp2"],
+          "evidenceLabel": "RF/RG gain divider feeds the inverting input",
+          "schematicRouteHints": [
+            {
+              "x": -0.8,
+              "y": -0.14
+            },
+            {
+              "x": -0.8,
+              "y": -0.95
+            },
+            {
+              "x": 1.5,
+              "y": -0.95
+            }
+          ]
+        },
+        {
+          "from": ".R_G > .pin2",
+          "to": ".GND_GAIN > .1",
+          "evidenceLabel": "RG returns to ground"
+        },
+        {
+          "from": ".U1_OPAMP > .pin5",
+          "to": ".V5_RAIL > .1",
+          "evidenceLabel": "device positive supply is 5 V"
+        },
+        {
+          "from": ".U1_OPAMP > .V-",
+          "to": ".GND_DEVICE > .1",
+          "evidenceLabel": "device negative supply returns to ground"
+        }
+      ],
+      "annotations": [
+        {
+          "text": "ILOAD",
+          "x": -2.8,
+          "y": 1.35
+        },
+        {
+          "text": "VSHUNT",
+          "x": -2.8,
+          "y": 0.1
+        },
+        {
+          "text": "TI OPA371D Figure 7-1",
+          "x": 0,
+          "y": -3,
+          "fontSize": 0.14
+        }
+      ]
+    },
+    {
+      "id": "TPS7A20_TypicalApplication",
+      "family": "TPS7A20",
+      "implementation": "handwritten",
+      "title": "TPS7A20 Typical Application",
+      "description": "A hand-authored schematic rendering of TI's fixed 2.8 V TPS7A20 typical application with the specified 1 uF input and output capacitors.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/TPS7A20",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TPS7A20/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TPS7A20/datasheet/GUID-3D45E9EE-715E-4F03-9FE7-45704BDF2D59",
+        "figureUrl": "https://www.ti.com/ods/images/SBVS338H/GUID-A681E4F8-E96A-4BF3-93C9-A5E2D824AE3E-low.gif",
+        "figure": "Figure 7-4",
+        "figureCaption": "TPS7A20 Typical Application",
+        "pdfPage": 30,
+        "documentRevision": "SBVS338H",
+        "scope": "Complete Figure 7-4 topology and placement using the fixed 2.8 V device and Table 7-1 capacitor values."
+      },
+      "sourceFile": "TPS7A20_TypicalApplication.circuit.tsx",
+      "sourceSha256": "ac09f173026d924911caa707a7f4e36aa16c29c897ce361eea3115ef8833fe5e"
+    },
+    {
+      "id": "LM358B_InvertingAmplifier",
+      "family": "LM358B",
+      "implementation": "handwritten",
+      "title": "LM358B Inverting-Amplifier Application",
+      "description": "A hand-authored schematic rendering of TI's inverting-amplifier application using the worked-example RI and RF values.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/LM358B",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/LM358B/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/LM358B/datasheet/GUID-9C4C5A40-20A9-49A2-B940-96F8AF83307C",
+        "figureUrl": "https://www.ti.com/ods/images/SLOS068AB/GUID-222A75A4-1DA7-47D5-BEE4-7956753D9B15-low.gif",
+        "figure": "Figure 8-1",
+        "figureCaption": "Application Schematic",
+        "pdfPage": 27,
+        "documentRevision": "SLOS068AB",
+        "scope": "Figure 8-1 inverting-amplifier topology and placement with section 8.2.2 worked values RI=10 kohm and RF=36 kohm."
+      },
+      "sourceFile": "LM358B_InvertingAmplifier.circuit.tsx",
+      "sourceSha256": "7efdea6837019397b5737f09fbb05f321f91b94f435c3aaa34db26eaf8a5f30d"
+    }
+  ]
+}

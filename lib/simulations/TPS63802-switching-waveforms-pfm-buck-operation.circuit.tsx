@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TPS63802DLAR } from "../chips/TPS63802DLAR.circuit.tsx";
+import { TPS63802DLAR } from "../chips/TPS63802DLAR.tsx";
 
 export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = (
   props: SubcircuitProps,

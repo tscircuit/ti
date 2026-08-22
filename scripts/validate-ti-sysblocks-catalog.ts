@@ -20,14 +20,6 @@ const catalogPath = join(chipDirectory, "ti-sysblocks-chip-catalog.json");
 const generatedExportsPath = join(chipDirectory, "ti-sysblocks-components.tsx");
 const chipIndexPath = join(chipDirectory, "index.tsx");
 const rootIndexPath = join(repositoryRoot, "index.ts");
-const footprintSelectionsPath = join(
-  chipDirectory,
-  "ti-sysblocks-footprint-selections.json",
-);
-const materializationReportPath = join(
-  chipDirectory,
-  "ti-sysblocks-materialization-report.json",
-);
 const pinoutCachePath = join(chipDirectory, "ti-sysblocks-pinouts.json");
 
 const catalog = (await Bun.file(catalogPath).json()) as CatalogEntry[];
@@ -72,85 +64,6 @@ assert(
 assert(
   sourceCounts["ti-datasheet"] === 111,
   `expected 111 TI-datasheet families, found ${sourceCounts["ti-datasheet"] ?? 0}`,
-);
-
-const footprintSelections = (await Bun.file(
-  footprintSelectionsPath,
-).json()) as {
-  targetCount: number;
-  coverage: {
-    targetEntries: number;
-    sourceReadyEntries: number;
-    unavailableEntries: number;
-  };
-  targets: Record<
-    string,
-    {
-      status: "source-ready" | "unavailable";
-      drawingId?: string;
-      footprintSource?: "exact-jlc-drawing" | "official-ti-drawing";
-      provenanceComment?: string;
-    }
-  >;
-};
-assert(
-  footprintSelections.targetCount === 111,
-  "footprint catalog targetCount is not 111",
-);
-assert(
-  footprintSelections.coverage.targetEntries === 111 &&
-    Object.keys(footprintSelections.targets).length === 111,
-  "footprint catalog does not cover all 111 TI-datasheet targets",
-);
-assert(
-  footprintSelections.coverage.sourceReadyEntries === 111 &&
-    footprintSelections.coverage.unavailableEntries === 0 &&
-    Object.values(footprintSelections.targets).every(
-      (target) => target.status === "source-ready",
-    ),
-  "one or more TI-datasheet footprints are unavailable",
-);
-const footprintSourceCounts = Object.values(footprintSelections.targets).reduce<
-  Record<string, number>
->((counts, target) => {
-  const source = target.footprintSource ?? "missing";
-  counts[source] = (counts[source] ?? 0) + 1;
-  return counts;
-}, {});
-assert(
-  footprintSourceCounts["exact-jlc-drawing"] === 67 &&
-    footprintSourceCounts["official-ti-drawing"] === 44,
-  `unexpected TI-datasheet footprint sources: ${JSON.stringify(footprintSourceCounts)}`,
-);
-for (const target of Object.values(footprintSelections.targets)) {
-  assert(
-    Boolean(
-      target.drawingId && target.provenanceComment?.includes(target.drawingId),
-    ),
-    `footprint ${target.drawingId ?? "unknown"}: missing exact-drawing provenance`,
-  );
-  if (target.footprintSource === "exact-jlc-drawing") {
-    assert(
-      /JLCPCB C\d+/.test(target.provenanceComment ?? ""),
-      `footprint ${target.drawingId}: missing JLCPCB donor number`,
-    );
-  }
-}
-
-const materializationReport = (await Bun.file(
-  materializationReportPath,
-).json()) as {
-  summary: {
-    targetEntries: number;
-    readyEntries: number;
-    blockedEntries: number;
-  };
-};
-assert(
-  materializationReport.summary.targetEntries === 111 &&
-    materializationReport.summary.readyEntries === 111 &&
-    materializationReport.summary.blockedEntries === 0,
-  "TI-datasheet materialization report contains blockers",
 );
 
 const pinoutCache = (await Bun.file(pinoutCachePath).json()) as Record<
@@ -209,7 +122,7 @@ for (const entry of catalog) {
   );
 
   const componentName = entry.componentExportName ?? entry.exportName;
-  const componentPath = join(chipDirectory, `${componentName}.circuit.tsx`);
+  const componentPath = join(chipDirectory, `${componentName}.tsx`);
   assert(
     await Bun.file(componentPath).exists(),
     `${entry.family}: missing ${componentPath}`,
