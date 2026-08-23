@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { W25Q128JVSIQ } from "../chips/W25Q128JVSIQ.circuit.tsx";
+import { W25Q128JVSIQ } from "../chips/W25Q128JVSIQ.tsx";
 
 export const FlashMemory_W25Q128JVSIQ = (props: SubcircuitProps) => (
   <subcircuit {...props}>

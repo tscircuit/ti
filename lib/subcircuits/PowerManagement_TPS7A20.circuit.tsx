@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { TPS7A20 } from "../chips/TPS7A20.circuit.tsx";
+import { TPS7A20 } from "../chips/TPS7A20.tsx";
 
 /** TPS7A20 3.3 V LDO typical application with 1 uF input/output capacitors. */
 export const PowerManagement_TPS7A20 = (props: SubcircuitProps) => (

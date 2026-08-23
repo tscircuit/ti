@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TPS22919 } from "../chips/TPS22919.circuit.tsx";
+import { TPS22919 } from "../chips/TPS22919.tsx";
 
 const onFallingPulseSource = `
 .SUBCKT TPS22919_ON_FALL OUT GND

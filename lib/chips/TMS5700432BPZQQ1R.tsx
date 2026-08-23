@@ -1,0 +1,151 @@
+import type { ChipProps } from "@tscircuit/props";
+import { getTiSchematicLayout } from "./get-ti-schematic-layout.ts";
+
+const pinLabels = {
+  pin1: ["pin1"],
+  pin2: ["pin2"],
+  pin3: ["FLTP1"],
+  pin4: ["FLTP2"],
+  pin5: ["pin5"],
+  pin6: ["VCCIO1"],
+  pin7: ["VSS1"],
+  pin8: ["pin8"],
+  pin9: ["pin9"],
+  pin10: ["pin10"],
+  pin11: ["pin11"],
+  pin12: ["pin12"],
+  pin13: ["VCC1"],
+  pin14: ["OSCIN"],
+  pin15: ["KELVIN_GND"],
+  pin16: ["OSCOUT"],
+  pin17: ["VSS2"],
+  pin18: ["pin18"],
+  pin19: ["pin19"],
+  pin20: ["VSS3"],
+  pin21: ["VCC2"],
+  pin22: ["pin22"],
+  pin23: ["pin23"],
+  pin24: ["TEST"],
+  pin25: ["pin25"],
+  pin26: ["pin26"],
+  pin27: ["pin27"],
+  pin28: ["VCCIO2"],
+  pin29: ["VSS4"],
+  pin30: ["VCC3"],
+  pin31: ["nPORRST"],
+  pin32: ["VCC4"],
+  pin33: ["VSS5"],
+  pin34: ["SPI3SOMI"],
+  pin35: ["SPI3SIMO"],
+  pin36: ["SPI3CLK"],
+  pin37: ["SPI3nENA"],
+  pin38: ["pin38"],
+  pin39: ["pin39"],
+  pin40: ["pin40"],
+  pin41: ["pin41"],
+  pin42: ["pin42"],
+  pin43: ["pin43"],
+  pin44: ["pin44"],
+  pin45: ["pin45"],
+  pin46: ["pin46"],
+  pin47: ["pin47"],
+  pin48: ["pin48"],
+  pin49: ["pin49"],
+  pin50: ["pin50"],
+  pin51: ["pin51"],
+  pin52: ["pin52"],
+  pin53: ["pin53"],
+  pin54: ["pin54"],
+  pin55: ["pin55"],
+  pin56: ["pin56"],
+  pin57: ["pin57"],
+  pin58: ["ADEVT"],
+  pin59: ["VSS6"],
+  pin60: ["VCCIO3"],
+  pin61: ["VCC5"],
+  pin62: ["CAN1TX"],
+  pin63: ["CAN1RX"],
+  pin64: ["pin64"],
+  pin65: ["MIBSPI1SIMO"],
+  pin66: ["MIBSPI1SOMI"],
+  pin67: ["MIBSPI1CLK"],
+  pin68: ["MIBSPI1nENA"],
+  pin69: ["SPI2SOMI"],
+  pin70: ["SPI2SIMO"],
+  pin71: ["SPI2CLK"],
+  pin72: ["VSS7"],
+  pin73: ["pin73"],
+  pin74: ["pin74"],
+  pin75: ["TMS"],
+  pin76: ["nTRST"],
+  pin77: ["TDI"],
+  pin78: ["TDO"],
+  pin79: ["TCK"],
+  pin80: ["RTCK"],
+  pin81: ["nRST"],
+  pin82: ["nERROR"],
+  pin83: ["pin83"],
+  pin84: ["ECLK"],
+  pin85: ["VCCIO4"],
+  pin86: ["VSS8"],
+  pin87: ["VSS9"],
+  pin88: ["VCC6"],
+  pin89: ["pin89"],
+  pin90: ["pin90"],
+  pin91: ["CAN2TX"],
+  pin92: ["CAN2RX"],
+  pin93: ["pin93"],
+  pin94: ["LINRX"],
+  pin95: ["LINTX"],
+  pin96: ["VCCP"],
+  pin97: ["pin97"],
+  pin98: ["pin98"],
+  pin99: ["VCC7"],
+  pin100: ["VSS10"],
+} as const;
+
+const pinAttributes = {
+  pin7: { requiresGround: true },
+  pin13: { requiresPower: true },
+  pin17: { requiresGround: true },
+  pin20: { requiresGround: true },
+  pin21: { requiresPower: true },
+  pin29: { requiresGround: true },
+  pin30: { requiresPower: true },
+  pin32: { requiresPower: true },
+  pin33: { requiresGround: true },
+  pin59: { requiresGround: true },
+  pin61: { requiresPower: true },
+  pin72: { requiresGround: true },
+  pin86: { requiresGround: true },
+  pin87: { requiresGround: true },
+  pin88: { requiresPower: true },
+  pin99: { requiresPower: true },
+  pin100: { requiresGround: true },
+} as const;
+
+export const TMS5700432BPZQQ1R = (props: ChipProps<typeof pinLabels>) => {
+  return (
+    <chip
+      {...getTiSchematicLayout(pinLabels)}
+      pinLabels={pinLabels}
+      pinAttributes={pinAttributes}
+      supplierPartNumbers={{
+        jlcpcb: ["C2053708"],
+      }}
+      manufacturerPartNumber="TMS5700432BPZQQ1R"
+      footprint="lga100_grid25x25_p0.4999mm_w16.7197mm_h16.7197mm_pl1.56mm"
+      cadModel={{
+        objUrl:
+          "https://modelcdn.tscircuit.com/easyeda_models/assets/C2053708.obj?uuid=f62acb865a1a4c6cb01aeaca859546a3",
+        stepUrl:
+          "https://modelcdn.tscircuit.com/easyeda_models/assets/C2053708.step?uuid=f62acb865a1a4c6cb01aeaca859546a3",
+        pcbRotationOffset: 270,
+        modelOriginPosition: { x: 0, y: 0, z: -0.8635 },
+      }}
+      {...props}
+    />
+  );
+};
+
+export default TMS5700432BPZQQ1R;

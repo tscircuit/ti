@@ -1,0 +1,633 @@
+{
+  "schemaVersion": 1,
+  "examples": [
+    {
+      "id": "ADS7042_DirectSensorInterface",
+      "family": "ADS7042",
+      "implementation": "handwritten",
+      "title": "ADS7042 DirectSensorInterface",
+      "description": "Reusable TI-reference block. Sensor+ -> ROUT -> AINP; CFLT spans AINP to AINM; Sensor- drives AINM and ground; AVDD, DVDD, GND, SCLK, SDO, and CS are exposed as labeled reusable endpoints.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/ADS7042",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/ADS7042/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/ADS7042/datasheet/application_and_implementation#SBAS608129",
+        "figureUrl": "https://www.ti.com/ods/images/SBAS608C/apps_sys_sensor_bas608.gif",
+        "figure": "apps_sys_sensor_bas608",
+        "figureCaption": "Interfacing the Device Directly with Sensors",
+        "pdfPage": 31,
+        "documentRevision": "SBAS608C",
+        "scope": "Exact analog interface shown by TI: differential sensor endpoints, ROUT in series with AINP, CFLT across AINP/AINM, and source-relative placement. Device power and SPI endpoints are additionally exposed outside that figure-specific analog scope to make the block reusable."
+      },
+      "sourceFile": "ADS7042_DirectSensorInterface.circuit.tsx",
+      "sourceSha256": "69e0cf0a68000e2423607667375b3bb5eb244ffe3cf5af64f4728c23d41e9a50"
+    },
+    {
+      "id": "BQ25185_TypicalBatteryCharger",
+      "family": "BQ25185",
+      "implementation": "handwritten",
+      "title": "BQ25185 TypicalBatteryCharger",
+      "description": "Reusable TI-reference block. VBUS and CIN feed IN; STAT1/STAT2/CE connect to the host block; ILIM/VSET and ISET use their TI resistors; SYS feeds CSYS and the regulated load; BAT feeds CBAT and the cell; TS/MR feeds the NTC and pushbutton; all returns share GND.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/bq25185.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/BQ25185/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/BQ25185/datasheet/GUID-CAE77349-B33A-4C63-9308-992130231F72#GUID-08F7A30E-83A5-49DC-B0D2-6FEF78ECD8D8",
+        "figureUrl": "https://www.ti.com/ods/images/SLUSF65A/GUID-20230122-SS0I-PSKM-ZS85-WTN1HZFTWQXP-low.svg",
+        "figure": "Figure 8-1",
+        "figureCaption": "BQ25185 Typical Application",
+        "pdfPage": 20,
+        "documentRevision": "SLUSF65A",
+        "scope": "Recreates the external application connectivity and placement in Figure 8-1: VBUS/CIN, host status and CE lines, 5-kohm ILIM/VSET, 1-kohm ISET, SYS load/CSYS, BAT/CBAT/battery, TS/MR pushbutton, and NTC."
+      },
+      "sourceFile": "BQ25185_TypicalBatteryCharger.circuit.tsx",
+      "sourceSha256": "3070c8c345a3365274dfc36ed5c6bb82b944016fd2795557de5ca3435e55bc97"
+    },
+    {
+      "id": "CC2340R5MODA_TypicalApplication",
+      "family": "CC2340R5MODA",
+      "implementation": "handwritten",
+      "title": "CC2340R5MODA TypicalApplication",
+      "description": "Reusable TI-reference block. CA1/Z60-Z62 form the internal-antenna matching path to ANT_IN; optional CA2 selects the external coax path to RFIO; Y1 with R2/R3/C5/C6 forms the 32.768-kHz network; R4/C7 form the active-low reset branch; VDDS and all ground pads share their named rails.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/CC2340R5MODA",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/CC2340R5MODA/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/CC2340R5MODA/datasheet/GUID-5A3E26EA-5974-4B44-90E2-924F64CDA09C#TITLE-SWRS224T5681821-41",
+        "figureUrl": "https://www.ti.com/ods/images/SWRS349A/GUID-0543C849-0B38-4C84-8430-0F7AFF4B6A0A-low.png",
+        "figure": "Figure 9-1",
+        "figureCaption": "Figure 9-1 CC2340R5MODA Typical Application Schematic",
+        "pdfPage": 50,
+        "documentRevision": "SWRS349A, June 2026, revised July 2026",
+        "scope": "Figure 9-1 module-centered implementation of the internal/external antenna selection and Z60-Z62 matching area, optional RF connector path, 32.768-kHz crystal network, reset RC, VDDS rails, and common ground pads. General-purpose DIO destinations beyond the figure labels remain exposed."
+      },
+      "sourceFile": "CC2340R5MODA_TypicalApplication.circuit.tsx",
+      "sourceSha256": "f1e5c2c15fb19439105f44e95c0af789b406bd1af949bc160214f84756db01c2"
+    },
+    {
+      "id": "DRV8833_ParallelMotorDriver",
+      "family": "DRV8833",
+      "implementation": "handwritten",
+      "title": "DRV8833 ParallelMotorDriver",
+      "description": "Reusable TI-reference block. IN1 drives AIN1 and BIN1; IN2 drives AIN2 and BIN2; AOUT1/BOUT1 share one motor terminal and AOUT2/BOUT2 share the other; VM feeds C4 and C1 while C1 returns to VCP; VINT uses C2; AISEN/BISEN share R2; U1.GND and passive returns share GND.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/drv8833.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/DRV8833/datasheet",
+        "sectionUrl": "https://www.ti.com/lit/ds/symlink/drv8833.pdf#page=12",
+        "figureUrl": "https://www.ti.com/lit/ds/symlink/drv8833.pdf#page=12",
+        "figure": "Figure 7",
+        "figureCaption": "Parallel Mode",
+        "pdfPage": 12,
+        "documentRevision": "SLVSAR1E",
+        "scope": "Recreates Figure 7's parallel-mode controller inputs, paired A/B bridge outputs into one brushed motor, VM/C4/C1/VCP network, VINT/C2, combined AISEN/BISEN with 0.2-ohm R2, nSLEEP control, nFAULT stub, and ground."
+      },
+      "sourceFile": "DRV8833_ParallelMotorDriver.circuit.tsx",
+      "sourceSha256": "aea956f3c676ad4421027095bd35bcff8a6e36b56b93dd0a39ea1c6f26c46ee1"
+    },
+    {
+      "id": "INA138_BasicCurrentSense",
+      "family": "INA138",
+      "implementation": "handwritten",
+      "title": "INA138 BasicCurrentSense",
+      "description": "Reusable TI-reference block. VP -> RS -> load; U1 IN+ and IN- Kelvin-connect across RS; U1 is powered from V+; U1 OUT drives both VO and RL to ground.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/INA138",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/INA138/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/INA138/datasheet/application-and-implementation#SBOS1224503",
+        "figureUrl": "https://www.ti.com/ods/images/SBOS122E/basic_circuit_connections_sbos122.gif",
+        "figure": "Figure 9",
+        "figureCaption": "Basic Circuit Connections",
+        "pdfPage": 10,
+        "documentRevision": "SBOS122E",
+        "scope": "Full external Figure 9 high-side current-sense topology and relative placement, including RS, load, independent V+, RL, VO, and all ground returns."
+      },
+      "sourceFile": "INA138_BasicCurrentSense.circuit.tsx",
+      "sourceSha256": "dda0ee9d5ffa8a99da42dc623119baf3cc2ec7efbf7562698349f4f08ead5e76"
+    },
+    {
+      "id": "LM358B_InvertingAmplifier",
+      "family": "LM358B",
+      "implementation": "handwritten",
+      "title": "LM358B Inverting-Amplifier Application",
+      "description": "A hand-authored schematic rendering of TI's inverting-amplifier application using the worked-example RI and RF values.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/LM358B",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/LM358B/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/LM358B/datasheet/GUID-9C4C5A40-20A9-49A2-B940-96F8AF83307C",
+        "figureUrl": "https://www.ti.com/ods/images/SLOS068AB/GUID-222A75A4-1DA7-47D5-BEE4-7956753D9B15-low.gif",
+        "figure": "Figure 8-1",
+        "figureCaption": "Application Schematic",
+        "pdfPage": 27,
+        "documentRevision": "SLOS068AB",
+        "scope": "Figure 8-1 inverting-amplifier topology and placement with section 8.2.2 worked values RI=10 kohm and RF=36 kohm."
+      },
+      "sourceFile": "LM358B_InvertingAmplifier.circuit.tsx",
+      "sourceSha256": "1886c08ba8d951339128a8f060046e574a4986fac090e2edbc286ceaf460acd5"
+    },
+    {
+      "id": "LMC555_MonostableLedFlasher",
+      "family": "LMC555",
+      "implementation": "handwritten",
+      "title": "LMC555 Monostable LED Flasher",
+      "description": "A reusable rendering of TI's monostable LED-flasher circuit, preserving the reference switch, LED, timing network, control capacitor, and relative placement.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/LMC555",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/LMC555/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/LMC555/datasheet/GUID-70DF1B73-42F3-448D-B588-86B0175F1C4C#TITLE-SNAS558SNAS5589201",
+        "figureUrl": "https://www.ti.com/ods/images/SNAS558N/GUID-9517F735-81AC-4C81-8971-FC3F01B7204F-low.gif",
+        "figure": "Figure 8-1",
+        "figureCaption": "Schematic of Monostable Mode to Flash an LED",
+        "pdfPage": 12,
+        "documentRevision": "SNAS558N, revised March 2024",
+        "scope": "Complete Figure 8-1 topology and placement, including both 10-kohm resistors, the 470-ohm LED resistor, 470-uF timing capacitor, and 0.01-uF control capacitor shown in the figure."
+      },
+      "sourceFile": "LMC555_MonostableLedFlasher.circuit.tsx",
+      "sourceSha256": "9835b40ce04abdb94fde2a3b1a9c0d7cf206cc13c45e09da593ec7a5317b4055"
+    },
+    {
+      "id": "LMK1C1104_ClockFanout",
+      "family": "LMK1C1104",
+      "implementation": "handwritten",
+      "title": "LMK1C1104 ClockFanout",
+      "description": "Reusable TI-reference block. A labeled 100-MHz LVCMOS oscillator U5 drives CLKIN; a From CPU endpoint drives 1G with R4 pulling the line high; Y0/Y1 feed CPU and FPGA clocks through source resistors; Y3 feeds the PLL reference with TI's 100-ohm Thevenin termination.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/LMK1C1104",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/LMK1C1104/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/LMK1C1104/datasheet/GUID-DF196164-2159-47B2-946B-44FD1EF575AA#TITLE-SNAS791SNAS7914064",
+        "figureUrl": "https://www.ti.com/ods/images/SNAS791D/GUID-467CAA0F-CEDA-47AC-B524-6B7EFFBEAC74-low.gif",
+        "figure": "Figure 10-1",
+        "figureCaption": "Figure 10-1 System Configuration Example",
+        "pdfPage": 11,
+        "documentRevision": "SNAS791D, December 2019, revised February 2022",
+        "scope": "Figure 10-1 100-MHz LVCMOS source, active-high enable, two CMOS receiver branches, and one Thevenin-terminated PLL-reference branch. Generic Yn is mapped to Y3 on LMK1C1104; unused Y2 is outside scope."
+      },
+      "sourceFile": "LMK1C1104_ClockFanout.circuit.tsx",
+      "sourceSha256": "33123ff5f688180a46a73eb0c2bb5ccaf4c630d525e70e63f51477bf3915ac95"
+    },
+    {
+      "id": "LMT70_AnalogTemperatureToAdc",
+      "family": "LMT70",
+      "implementation": "handwritten",
+      "title": "LMT70 AnalogTemperatureToAdc",
+      "description": "Reusable TI-reference block. The supply drives LMT70 VDD and T_ON and the MCU VDD endpoint; LMT70 TAO drives the MCU ADC endpoint; a separate 1.5-V rail drives the MCU VREF endpoint; LMT70 GND is grounded.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/LMT70",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/LMT70/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/LMT70/datasheet/application_and_implementation#SNIS1884528",
+        "figureUrl": "https://www.ti.com/ods/images/SNIS187A/Schem_03_SNIS187.gif",
+        "figure": "Schem_03_SNIS187",
+        "figureCaption": "Typical Application Schematic",
+        "pdfPage": 16,
+        "documentRevision": "SNIS187A",
+        "scope": "Complete LMT70 side of TI's typical application: 2.2-V to 3.6-V supply shared by VDD and T_ON, TAO to the MSP430 ADC endpoint, ground, and the separate 1.5-V MSP430 reference endpoint with source-relative placement."
+      },
+      "sourceFile": "LMT70_AnalogTemperatureToAdc.circuit.tsx",
+      "sourceSha256": "4d82c2fc586a0cfd95389a18786e387a194a8fa552d88d0ad0aa97871eb91653"
+    },
+    {
+      "id": "OPA320_SecondOrderLowPassFilter",
+      "family": "OPA320",
+      "implementation": "handwritten",
+      "title": "OPA320 SecondOrderLowPassFilter",
+      "description": "Reusable TI-reference block. VIN -> R1 -> R2 -> U1 IN-; C1 shunts the R1/R2 node to ground; R3 returns OUT to the R1/R2 node; C2 returns OUT to U1 IN-; U1 IN+ is grounded; OUT is exposed as VOUT.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/OPA320",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/OPA320/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/OPA320/datasheet/application-and-implementation#SBOS5132327",
+        "figureUrl": "https://www.ti.com/ods/images/SBOS513F/ai_2order_lopass_filt_bos513.gif",
+        "figure": "Figure 45",
+        "figureCaption": "Second-Order, Butterworth, 500-kHz, Low-Pass Filter",
+        "pdfPage": 26,
+        "documentRevision": "SBOS513F",
+        "scope": "External Figure 45 signal path, all five passive values, op-amp polarity/orientation, feedback branches, rails, and relative placement. The physical OPA320S shutdown input is tied to V+ electrically but intentionally omitted from the visible signal-path drawing, as in TI's figure."
+      },
+      "sourceFile": "OPA320_SecondOrderLowPassFilter.circuit.tsx",
+      "sourceSha256": "55de0700e673be8408062571e9cf4930501d6c45cdec6286706088a3bc40592c"
+    },
+    {
+      "id": "OPA371D_LowSideCurrentSense",
+      "family": "OPA371D",
+      "implementation": "generated",
+      "title": "OPA371D Low-Side Current-Sense Reference",
+      "description": "A faithful schematic rendering of the OPAx371D low-side current-sensing application, preserving TI's stated values, topology, and left-to-right placement.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/OPA371D",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/OPA371D/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/OPA371D/datasheet/GUID-03C60932-F0E0-4CDB-9FB0-C73F5C680C80",
+        "figureUrl": "https://www.ti.com/ods/images/SLVSM48A/GUID-B2DF1A69-DA22-4522-9874-1574F18368E7-low.gif",
+        "figure": "Figure 7-1",
+        "figureCaption": "Low-Side, Current-Sensing Application",
+        "pdfPage": 23,
+        "documentRevision": "SLVSM48A, revised August 2026",
+        "scope": "Complete Figure 7-1 signal path and feedback network; ZLOAD remains symbolic because TI does not specify its impedance."
+      },
+      "mainDevice": {
+        "componentExportName": "OPA371DDBVR",
+        "modulePath": "../lib/chips/OPA371DDBVR.tsx",
+        "name": "U1",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "schematicProjection": {
+          "name": "U1_OPAMP",
+          "symbolName": "opamp_with_power_right",
+          "portMap": {
+            "inp1": "pin3",
+            "inp2": "pin4",
+            "out": "pin1",
+            "V+": "pin5",
+            "V-": "pin2"
+          }
+        }
+      },
+      "components": [
+        {
+          "kind": "symbolic-load",
+          "name": "Z_LOAD",
+          "displayLabel": "ZLOAD",
+          "position": {
+            "x": -2,
+            "y": 1.35
+          },
+          "evidenceLabel": "ZLOAD",
+          "valueStatus": "unspecified-by-ti"
+        },
+        {
+          "kind": "resistor",
+          "name": "R_SHUNT",
+          "value": "0.1ohm",
+          "footprint": "2512",
+          "position": {
+            "x": -2,
+            "y": -0.35
+          },
+          "rotation": -90,
+          "evidenceLabel": "RSHUNT 0.1 ohm",
+          "valueStatus": "specified-by-ti"
+        },
+        {
+          "kind": "resistor",
+          "name": "R_F",
+          "value": "57.6k",
+          "footprint": "0402",
+          "position": {
+            "x": 1.5,
+            "y": -0.4
+          },
+          "rotation": -90,
+          "evidenceLabel": "RF 57.6 kohm",
+          "valueStatus": "specified-by-ti"
+        },
+        {
+          "kind": "resistor",
+          "name": "R_G",
+          "value": "1.2k",
+          "footprint": "0402",
+          "position": {
+            "x": 1.5,
+            "y": -1.5
+          },
+          "rotation": -90,
+          "evidenceLabel": "RG 1.2 kohm",
+          "valueStatus": "specified-by-ti"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "VBUS_RAIL",
+          "symbolName": "rail_up",
+          "port": "1",
+          "net": "net.VBUS",
+          "displayLabel": "VBUS",
+          "position": {
+            "x": -2,
+            "y": 2.2
+          },
+          "evidenceLabel": "VBUS rail"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "V5_RAIL",
+          "symbolName": "rail_up",
+          "port": "1",
+          "net": "net.V5",
+          "displayLabel": "5 V",
+          "position": {
+            "x": -0.1,
+            "y": 1
+          },
+          "evidenceLabel": "5 V device supply"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "GND_SHUNT",
+          "symbolName": "digital_ground_up",
+          "port": "1",
+          "net": "net.GND",
+          "displayLabel": "",
+          "position": {
+            "x": -2,
+            "y": -1.1
+          },
+          "evidenceLabel": "RSHUNT ground return"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "GND_DEVICE",
+          "symbolName": "digital_ground_up",
+          "port": "1",
+          "net": "net.GND",
+          "displayLabel": "",
+          "position": {
+            "x": -0.09,
+            "y": -1
+          },
+          "evidenceLabel": "device negative supply ground"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "GND_GAIN",
+          "symbolName": "digital_ground_up",
+          "port": "1",
+          "net": "net.GND",
+          "displayLabel": "",
+          "position": {
+            "x": 1.5,
+            "y": -2.3
+          },
+          "evidenceLabel": "RG ground return"
+        },
+        {
+          "kind": "net-symbol",
+          "name": "VOUT_TERMINAL",
+          "symbolName": "testpoint_right",
+          "port": "1",
+          "net": "net.VOUT",
+          "displayLabel": "VOUT",
+          "position": {
+            "x": 2.8,
+            "y": -0.01
+          },
+          "evidenceLabel": "VOUT terminal"
+        }
+      ],
+      "traces": [
+        {
+          "from": ".VBUS_RAIL > .1",
+          "to": ".Z_LOAD > .1",
+          "evidenceLabel": "VBUS feeds ZLOAD"
+        },
+        {
+          "path": [".Z_LOAD > .2", ".R_SHUNT > .pin1", ".U1_OPAMP > .inp1"],
+          "evidenceLabel": "ZLOAD/RSHUNT junction drives the noninverting input"
+        },
+        {
+          "from": ".R_SHUNT > .pin2",
+          "to": ".GND_SHUNT > .1",
+          "evidenceLabel": "RSHUNT returns to ground"
+        },
+        {
+          "path": [".U1_OPAMP > .out", ".R_F > .pin1", ".VOUT_TERMINAL > .1"],
+          "evidenceLabel": "amplifier output is VOUT and feeds RF"
+        },
+        {
+          "path": [".R_F > .pin2", ".R_G > .pin1", ".U1_OPAMP > .inp2"],
+          "evidenceLabel": "RF/RG gain divider feeds the inverting input"
+        },
+        {
+          "from": ".R_G > .pin2",
+          "to": ".GND_GAIN > .1",
+          "evidenceLabel": "RG returns to ground"
+        },
+        {
+          "from": ".U1_OPAMP > .pin5",
+          "to": ".V5_RAIL > .1",
+          "evidenceLabel": "device positive supply is 5 V"
+        },
+        {
+          "from": ".U1_OPAMP > .V-",
+          "to": ".GND_DEVICE > .1",
+          "evidenceLabel": "device negative supply returns to ground"
+        }
+      ]
+    },
+    {
+      "id": "SN74AHC1G14_SwitchDebouncer",
+      "family": "SN74AHC1G14",
+      "implementation": "handwritten",
+      "title": "SN74AHC1G14 SwitchDebouncer",
+      "description": "Reusable TI-reference block. VCC pull-up R1 and grounded pushbutton SW1 share the U1.A debounce node; the inverting Schmitt output U1.Y drives MCU.GPIO_IN.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/SN74AHC1G14",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/SN74AHC1G14/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/SN74AHC1G14/datasheet/GUID-73F0AF56-7849-48C4-9A81-C7F828BB61AE#TITLE-SCLS321SCLS3214279",
+        "figureUrl": "https://www.ti.com/ods/images/SCLS321S/GUID-BFCCD851-C35C-49FD-86C3-862D2F369B7D-low.gif",
+        "figure": "Figure 8-1",
+        "figureCaption": "Figure 8-1 SN74AHC1G14 Switch Debouncer",
+        "pdfPage": 9,
+        "documentRevision": "SCLS321S, March 1996, revised February 2024",
+        "scope": "Complete Figure 8-1 external signal topology and relative placement: grounded physical pushbutton, VCC pull-up, inverting Schmitt trigger, and symbolic microprocessor input. Package supply pins are outside the figure's implemented scope."
+      },
+      "sourceFile": "SN74AHC1G14_SwitchDebouncer.circuit.tsx",
+      "sourceSha256": "cc48af0748529538a5eac4a60431b1f200141afcea139018eeb4cf8fd41fadfd"
+    },
+    {
+      "id": "SN74AUP1G17_TurnOnPulseGenerator",
+      "family": "SN74AUP1G17",
+      "implementation": "handwritten",
+      "title": "SN74AUP1G17 TurnOnPulseGenerator",
+      "description": "Reusable TI-reference block. R1 pulls the timing node to VCC, C1 returns it to GND, the timing node drives U1.A, and U1.Y is exposed as VO.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/SN74AUP1G17",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/SN74AUP1G17/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/SN74AUP1G17/datasheet/application-and-implementation#x5214",
+        "figureUrl": "https://www.ti.com/ods/images/SCES579J/sces579_app1.gif",
+        "figure": "Figure 8",
+        "figureCaption": "Figure 8. SN74AUP1G17 Turn-On Pulse Generator (Normally High Output)",
+        "pdfPage": 14,
+        "documentRevision": "SCES579J, June 2004, revised September 2017",
+        "scope": "Complete Figure 8 external RC timing topology and relative placement through the non-inverting Schmitt buffer to VO. TI does not label numerical R or C values in the figure, so 100 kohm and 100 nF are illustrative placeholders."
+      },
+      "sourceFile": "SN74AUP1G17_TurnOnPulseGenerator.circuit.tsx",
+      "sourceSha256": "ddfd1bc6ab9546735782487a1ba53fe0b8a30fc6fe6c69a066831c2a01c22d37"
+    },
+    {
+      "id": "TCAN1044A_5VCanInterface",
+      "family": "TCAN1044A-Q1",
+      "implementation": "handwritten",
+      "title": "TCAN1044A 5VCanInterface",
+      "description": "Reusable TI-reference block. Generic 5-V regulator U2 powers CAN-FD MCU U3 and transceiver U1; TXD/RXD/STB connect between U3 and U1; CANH/CANL feed optional split R1/R2/C4 termination and D1/D2 ESD branches.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/TCAN1044A-Q1",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TCAN1044A-Q1/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TCAN1044A-Q1/datasheet/GUID-1E00ADFE-29F6-4F59-8BC4-F7463D69B4D9#TITLE-SLLSF17X3660",
+        "figureUrl": "https://www.ti.com/ods/images/SLLSFJ3D/GUID-20210601-CA0I-KHQN-GM0J-TJ06VSGMRGQJ-low.gif",
+        "figure": "Figure 9-1",
+        "figureCaption": "Figure 9-1 TCAN1044A-Q1 Transceiver Application Using 5V IO Connections",
+        "pdfPage": 22,
+        "documentRevision": "SLLSFJ3D, August 2023, revised October 2024",
+        "scope": "Figure 9-1 regulator-to-MCU-to-transceiver signal and supply topology, including the optional split-termination and ESD branches. The regulator and MCU are symbolic functional blocks; unlabeled bypass, filter, and ESD values use explicit example placeholders."
+      },
+      "sourceFile": "TCAN1044A_5VCanInterface.circuit.tsx",
+      "sourceSha256": "c6024ed3ff38b7b1a8f8c81ae3c32916b85061185fee85b0e01ccb98a7ef61f8"
+    },
+    {
+      "id": "TLV755P_TypicalApplication",
+      "family": "TLV755P",
+      "implementation": "handwritten",
+      "title": "TLV755P TypicalApplication",
+      "description": "Reusable TI-reference block. DC/DC output feeds U1.IN and CIN; U1.OUT feeds COUT and the load; U1.GND, CIN, COUT, converter return, and load return share GND; U1.EN is shown with the TI ON/OFF switch geometry.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/tlv755p.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TLV755P/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TLV755P/datasheet/GUID-A60AABD1-BE43-4C40-A985-E24337DDEC89#TITLE-SBVS320X1395",
+        "figureUrl": "https://www.ti.com/ods/images/SBVS320D/GUID-0BCA8AAE-CBC2-4E39-90C5-FF3DE67E3CE3-low.gif",
+        "figure": "Figure 7-4",
+        "figureCaption": "TLV755P Typical Application",
+        "pdfPage": 19,
+        "documentRevision": "SBVS320D",
+        "scope": "Recreates Figure 7-4 from the DC/DC-converter source through the 1-uF input capacitor, TLV755P enable switch, 1-uF output capacitor, shared return, and load block; device operating curves and PCB layout are out of scope."
+      },
+      "sourceFile": "TLV755P_TypicalApplication.circuit.tsx",
+      "sourceSha256": "224a079fd37b51c7fc77a29dccbc25ad5d247eee86d544f138b9f27041124ff0"
+    },
+    {
+      "id": "TPS22919_LoadSwitchTypicalApplication",
+      "family": "TPS22919",
+      "implementation": "handwritten",
+      "title": "TPS22919 LoadSwitchTypicalApplication",
+      "description": "Reusable TI-reference block. VIN source and CIN feed U1.IN; U1.OUT feeds CL and RL; U1.QOD returns through RQOD; the source, capacitors, load, and U1.GND share GND; U1.ON uses the H/L switch shown by TI.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/tps22919.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TPS22919/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TPS22919/datasheet/typical-application-slvsdw88965#SLVSDW88965",
+        "figureUrl": "https://www.ti.com/ods/images/SLVSEN5B/Typical%20Application.jpg",
+        "figure": "Figure 30",
+        "figureCaption": "TPS22919 Typical Application Schematic",
+        "pdfPage": 15,
+        "documentRevision": "SLVSEN5B",
+        "scope": "Recreates Figure 30 with the 3.3-V source, CIN, H/L ON control, TPS22919, QOD resistor, CL, and RL; transient plots and layout guidance are out of scope."
+      },
+      "sourceFile": "TPS22919_LoadSwitchTypicalApplication.circuit.tsx",
+      "sourceSha256": "db960bdfba196883663f70430f94e3c574a6e62e65c66aa89dc8da03183ce904"
+    },
+    {
+      "id": "TPS61165_WhiteLedDriver",
+      "family": "TPS61165",
+      "implementation": "handwritten",
+      "title": "TPS61165 WhiteLedDriver",
+      "description": "Reusable TI-reference block. VIN feeds C1, U1.VIN, and L1; the L1/D1 boost path feeds C2 and the LED string; the LED-string return feeds U1.FB and Rset; U1.COMP uses 220 nF; U1.CTRL is the dimming input; GND and EP return to GND.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/tps61165.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TPS61165/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TPS61165/datasheet/device-images-dv#SLVS791179",
+        "figureUrl": "https://www.ti.com/ods/images/SLVS790E/typ_app_lvs790.gif",
+        "figure": "typ_app_lvs790",
+        "figureCaption": "TPS61165 Typical Application",
+        "pdfPage": 1,
+        "documentRevision": "SLVS790E",
+        "scope": "Recreates the front-page typical application with 5-V input, C1, 10-uH L1, D1, C2, three series white LEDs, 0.57-ohm Rset, 220-nF COMP capacitor, CTRL input, and both ground returns."
+      },
+      "sourceFile": "TPS61165_WhiteLedDriver.circuit.tsx",
+      "sourceSha256": "75b1f6ef9a611ebc36aa3cad487dfe6faa16fcad80bf10a5df3b7da8ee6fce2d"
+    },
+    {
+      "id": "TPS61299_5VBoostConverter",
+      "family": "TPS61299",
+      "implementation": "handwritten",
+      "title": "TPS61299 5VBoostConverter",
+      "description": "Reusable TI-reference block. VIN feeds CIN, U1.VIN, and L1; L1 feeds U1.SW; U1.VOUT and VSEL share the output node with COUT; U1.GND and both capacitors return to GND; EN is drawn with TI's ON/OFF switch.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/tps61299.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TPS61299/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TPS61299/datasheet/GUID-58D9AC58-BA8A-4213-8A50-02600AB29320#TITLE-SLVSFH6LIT81756302",
+        "figureUrl": "https://www.ti.com/ods/images/SLVSGS9G/GUID-20230315-SS0I-SNWQ-NK7H-W5SZXM5FNTJP-low.svg",
+        "figure": "Figure 8-1",
+        "figureCaption": "3.6-V Input Source to 5-V Boost Converter Under Fast Mode",
+        "pdfPage": 19,
+        "documentRevision": "SLVSGS9G",
+        "scope": "Recreates Figure 8-1's 1-uH boost path, 10-uF input/output capacitors, VSEL-to-output strap, enable switch, and 5-V output; performance plots are out of scope."
+      },
+      "sourceFile": "TPS61299_5VBoostConverter.circuit.tsx",
+      "sourceSha256": "b31555479e143eb463f163a826395f844041fc763186dfaa61208cddac6b1193"
+    },
+    {
+      "id": "TPS62A01_1V8BuckConverter",
+      "family": "TPS62A01",
+      "implementation": "handwritten",
+      "title": "TPS62A01 1V8BuckConverter",
+      "description": "Reusable TI-reference block. VIN feeds U1.VIN, U1.EN, CIN, and R4; U1.SW feeds L1 and the VOUT rail; R1/R2/C3 form the FB network; R4 pulls up PG to VIN and exposes VPG; CIN, C2, R2, and U1.GND return to GND.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/tps62a01.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TPS62A01/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TPS62A01/datasheet/GUID-06EEF0EC-A818-4AA6-882B-D38430C06600#GUID-08F7A30E-83A5-49DC-B0D2-6FEF78ECD8D8",
+        "figureUrl": "https://www.ti.com/ods/images/SLUSEG9E/GUID-20230310-SS0I-R5NB-L5XF-FBXFT6BWQ4KP-low.svg",
+        "figure": "Figure 8-1",
+        "figureCaption": "TPS62A01 Typical Application Circuit",
+        "pdfPage": 11,
+        "documentRevision": "SLUSEG9E",
+        "scope": "Recreates Figure 8-1 for the 1.8-V/1-A option, including CIN, L1, R1/R2 feedback divider, C3 feed-forward capacitor, C2, EN-to-VIN strap, and R4/VPG branch."
+      },
+      "sourceFile": "TPS62A01_1V8BuckConverter.circuit.tsx",
+      "sourceSha256": "e70123c87dee1c701c6c9fe735c7439e6c0d264e60016b9211725400a980f0a4"
+    },
+    {
+      "id": "TPS7A20_TypicalApplication",
+      "family": "TPS7A20",
+      "implementation": "handwritten",
+      "title": "TPS7A20 Typical Application",
+      "description": "A hand-authored schematic rendering of TI's fixed 2.8 V TPS7A20 typical application with the specified 1 uF input and output capacitors.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/gpn/TPS7A20",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TPS7A20/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TPS7A20/datasheet/GUID-3D45E9EE-715E-4F03-9FE7-45704BDF2D59",
+        "figureUrl": "https://www.ti.com/ods/images/SBVS338H/GUID-A681E4F8-E96A-4BF3-93C9-A5E2D824AE3E-low.gif",
+        "figure": "Figure 7-4",
+        "figureCaption": "TPS7A20 Typical Application",
+        "pdfPage": 30,
+        "documentRevision": "SBVS338H",
+        "scope": "Complete Figure 7-4 topology and placement using the fixed 2.8 V device and Table 7-1 capacitor values."
+      },
+      "sourceFile": "TPS7A20_TypicalApplication.circuit.tsx",
+      "sourceSha256": "1bcc1a02c31a445a0d3ae344dd49b90b1e0df8d5b5e67d7e063fc6f769db8020"
+    },
+    {
+      "id": "TPS92612_LinearLedDriver",
+      "family": "TPS92612",
+      "implementation": "handwritten",
+      "title": "TPS92612 LinearLedDriver",
+      "description": "Reusable TI-reference block. The supply rail feeds CSUPPLY, U1.SUPPLY, and RSNS; RSNS feeds U1.IN; U1.OUT drives the series LED string; COUT spans OUT to the LED-string ground; U1.GND and CSUPPLY return to GND; PWM is exposed at U1.PWM.",
+      "evidence": {
+        "kind": "ti-datasheet-typical-application",
+        "datasheetUrl": "https://www.ti.com/lit/ds/symlink/tps92612.pdf",
+        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TPS92612/datasheet",
+        "sectionUrl": "https://www.ti.com/document-viewer/TPS92612/datasheet/description-slds2335709#SLDS2332042",
+        "figureUrl": "https://www.ti.com/ods/images/SLVSFG3/tps92612-typical-application-diagram.gif",
+        "figure": "tps92612-typical-application-diagram",
+        "figureCaption": "TPS92612 Typical Application Diagram",
+        "pdfPage": 1,
+        "documentRevision": "SLVSFG3",
+        "scope": "Recreates the front-page typical application with the 4.5-V-to-40-V rail, supply capacitor, PWM input, high-side R(SNS), C(OUT), and three-LED string to ground."
+      },
+      "sourceFile": "TPS92612_LinearLedDriver.circuit.tsx",
+      "sourceSha256": "29313660eace6fab77f46d82391a179364d4da97772907f285af8d77fe534566"
+    }
+  ]
+}

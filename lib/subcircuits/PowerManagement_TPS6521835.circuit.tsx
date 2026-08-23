@@ -2,7 +2,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 
 import "tscircuit";
 
-import { TPS6521835 } from "../chips/TPS6521835.circuit.tsx";
+import { TPS6521835 } from "../chips/TPS6521835.tsx";
 
 export const PowerManagement_TPS6521835 = (props: SubcircuitProps) => (
   <subcircuit {...props}>

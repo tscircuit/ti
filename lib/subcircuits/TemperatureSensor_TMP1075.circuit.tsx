@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { TMP1075DSGR } from "../chips/TMP1075DSGR.circuit.tsx";
+import { TMP1075DSGR } from "../chips/TMP1075DSGR.tsx";
 
 export const TemperatureSensor_TMP1075 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>

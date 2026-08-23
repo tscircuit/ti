@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { BQ32002 } from "../chips/BQ32002.circuit.tsx";
+import { BQ32002 } from "../chips/BQ32002.tsx";
 
 export const RealTimeClock_BQ32002 = (props: SubcircuitProps) => (
   <subcircuit {...props}>

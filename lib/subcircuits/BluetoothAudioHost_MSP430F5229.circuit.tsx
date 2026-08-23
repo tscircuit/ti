@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { MSP430F5229IRGCR } from "../chips/MSP430F5229IRGCR.circuit.tsx";
+import { MSP430F5229IRGCR } from "../chips/MSP430F5229IRGCR.tsx";
 
 export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
   <subcircuit {...props} schTraceAutoLabelEnabled schMaxTraceDistance="3mm">

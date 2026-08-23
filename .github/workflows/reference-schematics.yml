@@ -1,0 +1,31 @@
+name: TI Reference Schematics
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  reference-schematics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Validate reference evidence
+        run: bun run validate:ti-reference-examples
+
+      - name: Check schematic snapshots
+        run: bun run snapshot:schematics

@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { CC2564C } from "../chips/CC2564C.circuit.tsx";
+import { CC2564C } from "../chips/CC2564C.tsx";
 
 const cc2564cNoConnectPins = [
   "pin1",
