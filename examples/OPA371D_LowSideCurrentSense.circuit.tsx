@@ -141,14 +141,7 @@ export const OPA371D_LowSideCurrentSense = () => (
     <trace path={[".U1_OPAMP > .out", ".R_F > .pin1", ".VOUT_TERMINAL > .1"]} />
 
     {/* RF/RG gain divider feeds the inverting input */}
-    <trace
-      path={[".R_F > .pin2", ".R_G > .pin1", ".U1_OPAMP > .inp2"]}
-      schematicRouteHints={[
-        { x: -0.8, y: -0.14 },
-        { x: -0.8, y: -0.95 },
-        { x: 1.5, y: -0.95 },
-      ]}
-    />
+    <trace path={[".R_F > .pin2", ".R_G > .pin1", ".U1_OPAMP > .inp2"]} />
 
     {/* RG returns to ground */}
     <trace from=".R_G > .pin2" to=".GND_GAIN > .1" />
@@ -158,30 +151,6 @@ export const OPA371D_LowSideCurrentSense = () => (
 
     {/* device negative supply returns to ground */}
     <trace from=".U1_OPAMP > .V-" to=".GND_DEVICE > .1" />
-
-    <schematictext
-      text="ILOAD"
-      schX={-2.8}
-      schY={1.35}
-      fontSize={0.2}
-      anchor="center"
-    />
-
-    <schematictext
-      text="VSHUNT"
-      schX={-2.8}
-      schY={0.1}
-      fontSize={0.2}
-      anchor="center"
-    />
-
-    <schematictext
-      text="TI OPA371D Figure 7-1"
-      schX={0}
-      schY={-3}
-      fontSize={0.14}
-      anchor="center"
-    />
   </board>
 );
 

@@ -14,7 +14,10 @@ import {
   type TiReferenceExampleManifest,
   validateTiReferenceExampleManifest,
 } from "./ti-reference-example-schema.ts";
-import { validateTiReferenceExamples } from "./validate-ti-reference-examples.ts";
+import {
+  assertNoManualSchematicMarkup,
+  validateTiReferenceExamples,
+} from "./validate-ti-reference-examples.ts";
 
 const catalog: TiReferenceCatalogEntry[] = [
   {
@@ -99,10 +102,6 @@ const makeManifest = (): TestManifest => ({
           from: ".U1_OPAMP > .inp2",
           to: ".R_F > .pin2",
           evidenceLabel: "RF feedback drives the inverting input",
-          schematicRouteHints: [
-            { x: -1, y: -0.09 },
-            { x: -1, y: -1 },
-          ],
         },
         {
           from: ".U1_OPAMP > .pin5",
@@ -195,7 +194,8 @@ describe("TI reference-example schema and rendering", () => {
     assert.match(source, /from="\.U1_OPAMP > \.V-"/);
     assert.match(source, /from="\.U1_OPAMP > \.inp2"/);
     assert.match(source, /to="\.R_F > \.pin2"/);
-    assert.match(source, /schematicRouteHints=/);
+    assert.doesNotMatch(source, /schematicRouteHints=/);
+    assert.doesNotMatch(source, /<schematictext\b/);
     assert.match(source, /resistance="57\.6k"/);
     assert.match(source, /Figure 7-1/);
   });
@@ -208,6 +208,47 @@ describe("TI reference-example schema and rendering", () => {
     );
     assert.match(source, /export const TiReferenceBlockComponents = \{/);
     assert.match(source, /OPA371D_LowSideCurrentSense,/);
+  });
+
+  test("rejects manual schematic drawing and route markup", () => {
+    assert.doesNotThrow(() =>
+      assertNoManualSchematicMarkup(
+        '<schematicsymbol symbolName="ground_down" />',
+        "allowed",
+      ),
+    );
+    assert.throws(
+      () =>
+        assertNoManualSchematicMarkup(
+          '<schematictext text="label" />',
+          "example",
+        ),
+      /manual schematic markup/,
+    );
+    assert.throws(
+      () =>
+        assertNoManualSchematicMarkup(
+          "<trace schematicRouteHints={[]} />",
+          "example",
+        ),
+      /manual schematic markup/,
+    );
+    assert.throws(
+      () =>
+        assertNoManualSchematicMarkup(
+          "<trace schRouteHints={[]} />",
+          "example",
+        ),
+      /manual schematic markup/,
+    );
+    assert.throws(
+      () =>
+        assertNoManualSchematicMarkup(
+          "<chip symbol={<symbol></symbol>} />",
+          "example",
+        ),
+      /manual schematic markup/,
+    );
   });
 
   test("rejects a non-first-party figure asset", () => {
@@ -362,6 +403,9 @@ describe("TI reference-example coverage validator", () => {
       catalog,
       readText: makeVirtualReader(),
       formatSource: async (source) => source,
+      listExampleSourceNames: async () => [
+        "OPA371D_LowSideCurrentSense.circuit.tsx",
+      ],
       listSnapshotNames: async () => [
         "OPA371D_LowSideCurrentSense.circuit-schematic.snap.svg",
       ],
@@ -379,6 +423,9 @@ describe("TI reference-example coverage validator", () => {
         requireComplete: true,
         readText: makeVirtualReader(),
         formatSource: async (source) => source,
+        listExampleSourceNames: async () => [
+          "OPA371D_LowSideCurrentSense.circuit.tsx",
+        ],
         listSnapshotNames: async () => [
           "OPA371D_LowSideCurrentSense.circuit-schematic.snap.svg",
         ],
@@ -395,9 +442,36 @@ describe("TI reference-example coverage validator", () => {
         catalog,
         readText: makeVirtualReader(),
         formatSource: async (source) => source,
+        listExampleSourceNames: async () => [
+          "OPA371D_LowSideCurrentSense.circuit.tsx",
+        ],
         listSnapshotNames: async () => [],
       }),
       /expected exactly one schematic snapshot/,
+    );
+  });
+
+  test("rejects manual schematic markup in examples outside the manifest", async () => {
+    const baseReader = makeVirtualReader();
+    await assert.rejects(
+      validateTiReferenceExamples({
+        repoRoot: "/repo",
+        manifest: makeManifest(),
+        catalog,
+        readText: async (path) =>
+          path === "/repo/examples/Unlisted.circuit.tsx"
+            ? '<schematictext text="manual" />'
+            : await baseReader(path),
+        formatSource: async (source) => source,
+        listExampleSourceNames: async () => [
+          "OPA371D_LowSideCurrentSense.circuit.tsx",
+          "Unlisted.circuit.tsx",
+        ],
+        listSnapshotNames: async () => [
+          "OPA371D_LowSideCurrentSense.circuit-schematic.snap.svg",
+        ],
+      }),
+      /Unlisted\.circuit\.tsx: manual schematic markup/,
     );
   });
 });

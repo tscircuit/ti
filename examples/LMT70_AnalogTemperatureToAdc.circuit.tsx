@@ -74,36 +74,12 @@ export const LMT70_AnalogTemperatureToAdc = () => (
 
     <net name="GND" isGroundNet connectsTo={["GND_DEVICE.1"]} />
 
-    <trace from=".SUPPLY > .1" to=".U1 > .pin3" />
-    <trace from=".SUPPLY > .1" to=".U1 > .pin1" />
+    <trace from=".SUPPLY > .1" to=".U1 > .VDD" />
+    <trace from=".SUPPLY > .1" to=".U1 > .T_ON" />
     <trace from=".SUPPLY > .1" to=".MCU_VDD > .1" />
-    <trace from=".U1 > .pin2" to=".MCU_ADC > .1" />
+    <trace from=".U1 > .TAO" to=".MCU_ADC > .1" />
     <trace from=".VREF15 > .1" to=".MCU_VREF > .1" />
-    <trace from=".U1 > .pin4" to=".GND_DEVICE > .1" />
-
-    <schematicrect
-      schX={2.4}
-      schY={0.2}
-      width={2.8}
-      height={3.2}
-      strokeWidth={0.025}
-      color="#8b0000"
-      isFilled={false}
-    />
-    <schematictext
-      text="MSP430 ADC / MUX"
-      schX={2.4}
-      schY={0.55}
-      fontSize={0.18}
-      anchor="center"
-    />
-    <schematictext
-      text="TI LMT70 typical application"
-      schX={0.25}
-      schY={-1.95}
-      fontSize={0.14}
-      anchor="center"
-    />
+    <trace from=".U1 > .GND" to=".GND_DEVICE > .1" />
   </board>
 );
 

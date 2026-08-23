@@ -61,8 +61,8 @@ export const ADS7042_DirectSensorInterface = () => (
       name="C_FILTER"
       displayName="CFLT"
       symbolName="capacitor_down"
-      schX={-0.65}
-      schY={-0.1}
+      schX={-1}
+      schY={0}
     />
 
     <schematicsymbol
@@ -116,16 +116,17 @@ export const ADS7042_DirectSensorInterface = () => (
     />
 
     <net name="GND" isGroundNet connectsTo={["GND_SENSOR.1", "GND_DEVICE.1"]} />
-    <net
-      name="SENSOR_RETURN"
-      connectsTo={["SENSOR_NEG.1", "C_FILTER.pin2", "U1.pin5"]}
-    />
-
     <trace from=".SENSOR_POS > .1" to=".R_OUT > .pin1" />
     <trace from=".R_OUT > .pin2" to=".U1 > .pin6" />
     <trace from=".C_FILTER > .pin1" to=".R_OUT > .pin2" />
-    <trace from=".C_FILTER > .pin2" to=".SENSOR_NEG > .1" />
-    <trace from=".SENSOR_NEG > .1" to=".GND_SENSOR > .1" />
+    <trace
+      path={[
+        ".C_FILTER > .pin2",
+        ".U1 > .pin5",
+        ".SENSOR_NEG > .1",
+        ".GND_SENSOR > .1",
+      ]}
+    />
 
     <trace from=".AVDD > .1" to=".U1 > .pin7" />
     <trace from=".DVDD > .1" to=".U1 > .pin1" />
@@ -133,25 +134,6 @@ export const ADS7042_DirectSensorInterface = () => (
     <trace from=".U1 > .pin2" to=".SCLK > .1" />
     <trace from=".U1 > .pin3" to=".SDO > .1" />
     <trace from=".U1 > .pin4" to=".CS > .1" />
-
-    <schematicpath
-      points={[
-        { x: -0.65, y: -0.55 },
-        { x: -0.2, y: -0.55 },
-        { x: -0.2, y: -0.3 },
-        { x: -0.125, y: -0.3 },
-      ]}
-      strokeWidth={0.02}
-      strokeColor="#008000"
-    />
-
-    <schematictext
-      text="TI ADS7042 direct-sensor interface"
-      schX={0}
-      schY={-2.45}
-      fontSize={0.14}
-      anchor="center"
-    />
   </board>
 );
 

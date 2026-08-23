@@ -29,8 +29,24 @@ export type ValidateTiReferenceExamplesOptions = {
   requireComplete?: boolean;
   verifyEvidence?: boolean;
   readText?: (path: string) => Promise<string>;
+  listExampleSourceNames?: (directory: string) => Promise<string[]>;
   listSnapshotNames?: (directory: string) => Promise<string[]>;
   formatSource?: (source: string, outputPath: string) => Promise<string>;
+};
+
+const manualSchematicMarkupPattern =
+  /<\/?schematic(?:line|path|circle|rect|text|arc|ellipse|polygon)\b|(?:schematicRouteHints|schRouteHints)\s*=|<\/?symbol\b|symbol\s*=\s*\{/i;
+
+export const assertNoManualSchematicMarkup = (
+  source: string,
+  location: string,
+): void => {
+  const match = source.match(manualSchematicMarkupPattern);
+  if (match) {
+    throw new Error(
+      `${location}: manual schematic markup ${JSON.stringify(match[0])} is not allowed; use components, predefined schematic symbols, and autorouted <trace> connectivity`,
+    );
+  }
 };
 
 export const validateTiReferenceExamples = async (
@@ -41,6 +57,7 @@ export const validateTiReferenceExamples = async (
   });
   const readText =
     options.readText ?? (async (path) => await Bun.file(path).text());
+  const listExampleSourceNames = options.listExampleSourceNames ?? readdir;
   const listSnapshotNames = options.listSnapshotNames ?? readdir;
 
   await generateTiReferenceExamples({
@@ -53,17 +70,29 @@ export const validateTiReferenceExamples = async (
     formatSource: options.formatSource,
   });
 
+  const examplesDirectory = join(options.repoRoot, "examples");
+  const exampleSourceNames = await listExampleSourceNames(examplesDirectory);
+  for (const sourceFile of exampleSourceNames.filter((name) =>
+    name.endsWith(".circuit.tsx"),
+  )) {
+    const sourcePath = join(examplesDirectory, sourceFile);
+    const source = await readText(sourcePath);
+    assertNoManualSchematicMarkup(source, sourceFile);
+  }
+
   for (const example of manifest.examples) {
-    if (isGeneratedTiReferenceExample(example)) continue;
-    const sourcePath = join(options.repoRoot, "examples", example.sourceFile);
+    const sourceFile = isGeneratedTiReferenceExample(example)
+      ? `${example.id}.circuit.tsx`
+      : example.sourceFile;
+    const sourcePath = join(options.repoRoot, "examples", sourceFile);
     let source: string;
     try {
       source = await readText(sourcePath);
     } catch {
-      throw new Error(
-        `${example.family}: handwritten source is unreadable: ${sourcePath}`,
-      );
+      throw new Error(`${example.family}: source is unreadable: ${sourcePath}`);
     }
+    assertNoManualSchematicMarkup(source, `${example.family}: ${sourceFile}`);
+    if (isGeneratedTiReferenceExample(example)) continue;
     const namedExport = new RegExp(`export\\s+const\\s+${example.id}\\b`);
     const defaultExport = new RegExp(`export\\s+default\\s+${example.id}\\s*;`);
     if (!namedExport.test(source) || !defaultExport.test(source)) {

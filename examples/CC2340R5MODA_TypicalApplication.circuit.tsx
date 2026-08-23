@@ -95,6 +95,7 @@ export const CC2340R5MODA_TypicalApplication = () => (
 
     <CoaxialTestPort
       name="J1"
+      footprint="pinrow3"
       schX={-5.2}
       schY={0.2}
       schWidth={1.4}
@@ -216,30 +217,6 @@ export const CC2340R5MODA_TypicalApplication = () => (
         "U1.pin23",
         "U1.pin24",
       ]}
-    />
-
-    <schematicline
-      x1={1.3}
-      y1={-2.1}
-      x2={2.7}
-      y2={-2.1}
-      strokeWidth={0.03}
-      color="#008000"
-    />
-
-    <schematictext
-      text="Z60-Z62 antenna matching"
-      schX={-2.8}
-      schY={3.75}
-      fontSize={0.19}
-      anchor="center"
-    />
-    <schematictext
-      text="Select CA1 for internal antenna or CA2 for external connector"
-      schX={-2.8}
-      schY={-1.05}
-      fontSize={0.16}
-      anchor="center"
     />
   </board>
 );

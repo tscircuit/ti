@@ -274,10 +274,10 @@ schematics. Their checked-in snapshots are schematic-only so the reference
 component placement and wiring can be reviewed without running analog
 simulations or generating PCB output.
 
-The curated set currently contains 27 evidence-backed blocks spanning power
+The curated set currently contains 21 evidence-backed blocks spanning power
 regulation, battery charging, load switching, LED and motor driving, op-amp
-filters and bridges, current and temperature sensing, ADC front ends, logic,
-CAN, RS-485, clocks, wireless, microcontrollers, and timing. Every file
+filters, current and temperature sensing, ADC front ends, logic, CAN, clocks,
+wireless, and timing. Every file
 named-exports its reusable block and default-exports the same component. They
 are also available from the package entrypoint and from the typed
 `TiReferenceBlockComponents` map:
@@ -294,6 +294,12 @@ const SameBlock = TiReferenceBlockComponents.OPA320_SecondOrderLowPassFilter
 Only circuits with a clear first-party TI schematic are included. A family is
 skipped when its public documentation does not provide enough connectivity and
 placement evidence to reproduce a useful block.
+
+Examples declare electrical connectivity with ordinary `<trace>` elements and
+let tscircuit autoroute their schematic paths. Validation rejects manual
+schematic geometry, `<schematictext>`, custom drawing symbols, and
+`schematicRouteHints`; when autorouting cannot reproduce a readable TI layout,
+the example is omitted from the curated set.
 
 ### `lib/simulations`
 

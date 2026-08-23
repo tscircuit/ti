@@ -13,6 +13,7 @@ export const LMK1C1104_ClockFanout = () => (
   <board routingDisabled>
     <chip
       name="U5"
+      footprint="pinrow2"
       manufacturerPartNumber="100-MHz LVCMOS OSCILLATOR"
       schX={-5.2}
       schY={1}
@@ -57,7 +58,7 @@ export const LMK1C1104_ClockFanout = () => (
       resistance="33"
       footprint="0402"
       schX={0.55}
-      schY={-1.2}
+      schY={-1.55}
     />
     <resistor
       name="R4"
@@ -72,7 +73,7 @@ export const LMK1C1104_ClockFanout = () => (
       resistance="100"
       footprint="0402"
       schX={2.6}
-      schY={-0.7}
+      schY={-1.05}
       schOrientation="vertical"
     />
     <resistor
@@ -80,15 +81,24 @@ export const LMK1C1104_ClockFanout = () => (
       resistance="100"
       footprint="0402"
       schX={2.6}
-      schY={-1.7}
+      schY={-2.05}
       schOrientation="vertical"
+    />
+
+    <schematicsymbol
+      name="CPU_ENABLE"
+      displayName="From CPU"
+      symbolName="testpoint_left"
+      schX={-4.85}
+      schY={-0.55}
     />
 
     <chip
       name="U2"
+      footprint="pinrow1"
       manufacturerPartNumber="CMOS CPU CLOCK"
       schX={4.6}
-      schY={1.15}
+      schY={1.9}
       schWidth={2}
       schHeight={1.1}
       pinLabels={{ pin1: "CLK" }}
@@ -98,9 +108,10 @@ export const LMK1C1104_ClockFanout = () => (
     />
     <chip
       name="U3"
+      footprint="pinrow1"
       manufacturerPartNumber="CMOS FPGA CLOCK"
       schX={4.6}
-      schY={0}
+      schY={0.2}
       schWidth={2}
       schHeight={1.1}
       pinLabels={{ pin1: "CLK" }}
@@ -110,9 +121,10 @@ export const LMK1C1104_ClockFanout = () => (
     />
     <chip
       name="U4"
+      footprint="pinrow1"
       manufacturerPartNumber="PLL REFERENCE"
       schX={4.6}
-      schY={-1.2}
+      schY={-1.65}
       schWidth={2}
       schHeight={1.1}
       pinLabels={{ pin1: "REF" }}
@@ -127,25 +139,18 @@ export const LMK1C1104_ClockFanout = () => (
     <trace from="U1.GND" to="net.GND" />
     <trace from="R4.pin1" to="net.VDD" />
     <trace from="R4.pin2" to="U1.1G" />
+    <trace from="CPU_ENABLE.1" to="U1.1G" />
 
     <trace from="U1.Y0" to="R1.pin1" />
     <trace from="R1.pin2" to="U2.CLK" />
     <trace from="U1.Y1" to="R2.pin1" />
     <trace from="R2.pin2" to="U3.CLK" />
     <trace from="U1.Y3" to="R3.pin1" />
-    <trace from="R3.pin2" to="U4.REF" />
     <trace from="R3.pin2" to="R5.pin2" />
     <trace from="R5.pin1" to="net.VDD" />
-    <trace from="R3.pin2" to="R6.pin1" />
+    <trace from="R5.pin2" to="R6.pin1" />
+    <trace from="R6.pin1" to="U4.REF" />
     <trace from="R6.pin2" to="net.GND" />
-
-    <schematictext
-      text="50-ohm traces"
-      schX={1.4}
-      schY={1.5}
-      fontSize={0.18}
-      anchor="center"
-    />
   </board>
 );
 

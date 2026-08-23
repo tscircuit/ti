@@ -104,21 +104,6 @@ export const INA138_BasicCurrentSense = () => (
     <trace from=".U1 > .pin2" to=".GND_DEVICE > .1" />
     <trace path={[".U1 > .pin1", ".R_LOAD > .1", ".VOUT > .1"]} />
     <trace from=".R_LOAD > .2" to=".GND_RL > .1" />
-
-    <schematictext
-      text="IS →"
-      schX={1.15}
-      schY={2.35}
-      fontSize={0.18}
-      anchor="center"
-    />
-    <schematictext
-      text="TI INA138 Figure 9"
-      schX={0.5}
-      schY={-2.25}
-      fontSize={0.14}
-      anchor="center"
-    />
   </board>
 );
 

@@ -1,8 +1,6 @@
 import "tscircuit";
 import { SN74AHC1G14DBVR } from "../lib/chips/SN74AHC1G14DBVR.tsx";
 
-const TI_RED = "#840000";
-
 /**
  * TI SCLS321S, Figure 8-1, "SN74AHC1G14 Switch Debouncer".
  * Section: https://www.ti.com/document-viewer/SN74AHC1G14/datasheet/GUID-73F0AF56-7849-48C4-9A81-C7F828BB61AE#TITLE-SCLS321SCLS3214279
@@ -17,57 +15,15 @@ export const SN74AHC1G14_SwitchDebouncer = () => (
       name="U1"
       schX={0}
       schY={0}
-      symbol={
-        <symbol>
-          <schematicpath
-            points={[
-              { x: -0.55, y: 0.72 },
-              { x: -0.55, y: -0.72 },
-              { x: 0.55, y: 0 },
-              { x: -0.55, y: 0.72 },
-            ]}
-            strokeWidth={0.03}
-            strokeColor={TI_RED}
-            isFilled={false}
-          />
-          <schematicpath
-            points={[
-              { x: -0.3, y: -0.18 },
-              { x: -0.12, y: -0.18 },
-              { x: -0.12, y: 0.18 },
-              { x: 0.08, y: 0.18 },
-            ]}
-            strokeWidth={0.04}
-            strokeColor={TI_RED}
-          />
-          <schematiccircle
-            center={{ x: 0.64, y: 0 }}
-            radius={0.09}
-            strokeWidth={0.03}
-            color={TI_RED}
-            isFilled={false}
-          />
-          <port
-            name="A"
-            pinNumber={2}
-            schX={-0.95}
-            schY={0}
-            direction="left"
-            schStemLength={0.4}
-          />
-          <port
-            name="Y"
-            pinNumber={4}
-            schX={1.05}
-            schY={0}
-            direction="right"
-            schStemLength={0.32}
-          />
-        </symbol>
-      }
+      schWidth={1.6}
+      schHeight={1.2}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: ["A"] },
+        rightSide: { direction: "top-to-bottom", pins: ["Y"] },
+      }}
     />
 
-    <pushbutton name="SW1" schX={-3.7} schY={-0.25} />
+    <pushbutton name="SW1" footprint="smdpushbutton" schX={-3.7} schY={-0.25} />
     <resistor
       name="R1"
       resistance="10k"
@@ -79,6 +35,7 @@ export const SN74AHC1G14_SwitchDebouncer = () => (
 
     <chip
       name="MCU"
+      footprint="pinrow1"
       manufacturerPartNumber="MICROPROCESSOR"
       schX={3.35}
       schY={0}
@@ -95,21 +52,6 @@ export const SN74AHC1G14_SwitchDebouncer = () => (
     <trace from="U1.Y" to="MCU.GPIO_IN" />
     <trace from="R1.pin1" to="net.VCC" />
     <trace from="SW1.pin1" to="net.GND" />
-
-    <schematictext
-      text="Physical Push Button"
-      schX={-3.7}
-      schY={0.55}
-      fontSize={0.2}
-      anchor="center"
-    />
-    <schematictext
-      text="SN74AHC1G14"
-      schX={0}
-      schY={-1.25}
-      fontSize={0.22}
-      anchor="center"
-    />
   </board>
 );
 

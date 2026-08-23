@@ -13,6 +13,7 @@ export const TCAN1044A_5VCanInterface = () => (
   <board routingDisabled>
     <chip
       name="U2"
+      footprint="pinrow3"
       manufacturerPartNumber="5-V VOLTAGE REGULATOR"
       schX={-5.5}
       schY={1.5}
@@ -27,6 +28,7 @@ export const TCAN1044A_5VCanInterface = () => (
     />
     <chip
       name="U3"
+      footprint="pinrow5"
       manufacturerPartNumber="CAN-FD MCU"
       schX={-3.6}
       schY={-1}
@@ -160,21 +162,6 @@ export const TCAN1044A_5VCanInterface = () => (
     <trace from="D2.pin2" to="net.GND" />
     <trace from="U1.CANH" to="net.CANH" />
     <trace from="U1.CANL" to="net.CANL" />
-
-    <schematictext
-      text="OPTIONAL SPLIT TERMINATION"
-      schX={4.2}
-      schY={2.15}
-      fontSize={0.17}
-      anchor="center"
-    />
-    <schematictext
-      text="OPTIONAL ESD"
-      schX={6.55}
-      schY={2.15}
-      fontSize={0.17}
-      anchor="center"
-    />
   </board>
 );
 
