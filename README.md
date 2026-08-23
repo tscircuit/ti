@@ -274,10 +274,10 @@ schematics. Their checked-in snapshots are schematic-only so the reference
 component placement and wiring can be reviewed without running analog
 simulations or generating PCB output.
 
-The curated set currently contains 28 evidence-backed blocks spanning power
+The curated set currently contains 27 evidence-backed blocks spanning power
 regulation, battery charging, load switching, LED and motor driving, op-amp
 filters and bridges, current and temperature sensing, ADC front ends, logic,
-CAN, RS-485, RS-232, clocks, wireless, microcontrollers, and timing. Every file
+CAN, RS-485, clocks, wireless, microcontrollers, and timing. Every file
 named-exports its reusable block and default-exports the same component. They
 are also available from the package entrypoint and from the typed
 `TiReferenceBlockComponents` map:

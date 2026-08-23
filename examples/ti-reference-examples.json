@@ -786,27 +786,6 @@
       },
       "sourceFile": "TPS92612_LinearLedDriver.circuit.tsx",
       "sourceSha256": "fcd07ad59f5dc5b8853d5fd75ac07018d6278e3caf418a875a8ca618d1d564c6"
-    },
-    {
-      "id": "TRS3232E_TypicalOperatingCircuit",
-      "family": "TRS3232E",
-      "implementation": "handwritten",
-      "title": "TRS3232E TypicalOperatingCircuit",
-      "description": "Reusable TI-reference block. C1 and C2 are the two charge-pump flying capacitors; C3 and C4 are the V+/V- reservoirs to ground; C5 bypasses VCC; both RS-232 channels remain exposed as in the TI operating figure.",
-      "evidence": {
-        "kind": "ti-datasheet-typical-application",
-        "datasheetUrl": "https://www.ti.com/lit/gpn/TRS3232E",
-        "documentViewerRootUrl": "https://www.ti.com/document-viewer/TRS3232E/datasheet",
-        "sectionUrl": "https://www.ti.com/document-viewer/TRS3232E/datasheet/GUID-053CAD17-BC69-4139-BDE3-BAE1B00ED46F#TITLE-SLLS790SLLS410300",
-        "figureUrl": "https://www.ti.com/ods/images/SLLS790E/GUID-6C8B4B54-E0F2-409E-B581-B13949C009DB-low.gif",
-        "figure": "Figure 8-1",
-        "figureCaption": "Figure 8-1 TRS3232E Typical Operating Circuit and Capacitor Values",
-        "pdfPage": 13,
-        "documentRevision": "SLLS790E, June 2007, revised December 2024",
-        "scope": "Complete Figure 8-1 external charge-pump and bypass-capacitor topology with both RS-232 channels exposed. Capacitors use the 0.1-uF values specified by Figure 8-1/Table 8-1 for a 3.3-V supply."
-      },
-      "sourceFile": "TRS3232E_TypicalOperatingCircuit.circuit.tsx",
-      "sourceSha256": "309999ed966cb57693436ec44ead24b1251738f39a820667497a92f2354c8447"
     }
   ]
 }

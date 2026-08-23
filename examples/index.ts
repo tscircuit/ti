@@ -27,7 +27,6 @@ import { TPS61299_5VBoostConverter } from "./TPS61299_5VBoostConverter.circuit.t
 import { TPS62A01_1V8BuckConverter } from "./TPS62A01_1V8BuckConverter.circuit.tsx";
 import { TPS7A20_TypicalApplication } from "./TPS7A20_TypicalApplication.circuit.tsx";
 import { TPS92612_LinearLedDriver } from "./TPS92612_LinearLedDriver.circuit.tsx";
-import { TRS3232E_TypicalOperatingCircuit } from "./TRS3232E_TypicalOperatingCircuit.circuit.tsx";
 
 export {
   ADS1015L_DualSupplyMonitor,
@@ -57,7 +56,6 @@ export {
   TPS62A01_1V8BuckConverter,
   TPS7A20_TypicalApplication,
   TPS92612_LinearLedDriver,
-  TRS3232E_TypicalOperatingCircuit,
 };
 
 export const TiReferenceBlockComponents = {
@@ -88,7 +86,6 @@ export const TiReferenceBlockComponents = {
   TPS62A01_1V8BuckConverter,
   TPS7A20_TypicalApplication,
   TPS92612_LinearLedDriver,
-  TRS3232E_TypicalOperatingCircuit,
 } as const;
 
 export type TiReferenceBlockName = keyof typeof TiReferenceBlockComponents;
