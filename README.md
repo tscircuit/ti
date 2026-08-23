@@ -274,6 +274,27 @@ schematics. Their checked-in snapshots are schematic-only so the reference
 component placement and wiring can be reviewed without running analog
 simulations or generating PCB output.
 
+The curated set currently contains 28 evidence-backed blocks spanning power
+regulation, battery charging, load switching, LED and motor driving, op-amp
+filters and bridges, current and temperature sensing, ADC front ends, logic,
+CAN, RS-485, RS-232, clocks, wireless, microcontrollers, and timing. Every file
+named-exports its reusable block and default-exports the same component. They
+are also available from the package entrypoint and from the typed
+`TiReferenceBlockComponents` map:
+
+```tsx
+import {
+  OPA320_SecondOrderLowPassFilter,
+  TiReferenceBlockComponents,
+} from "@tsci/tscircuit.ti"
+
+const SameBlock = TiReferenceBlockComponents.OPA320_SecondOrderLowPassFilter
+```
+
+Only circuits with a clear first-party TI schematic are included. A family is
+skipped when its public documentation does not provide enough connectivity and
+placement evidence to reproduce a useful block.
+
 ### `lib/simulations`
 
 The `lib/simulations` directory contains example circuits for simulation-focused
@@ -283,6 +304,10 @@ driver PWM behavior or switching regulator waveforms.
 Simulation examples may use model data from `lib/chips/spice-models`. The
 `lib/simulations/__snapshots__` directory stores generated schematic and
 simulation SVG snapshots.
+
+CI maps the configured SPICE engines to a no-op engine and checks only the
+curated reference manifest and schematic snapshots. Local simulation engines
+remain enabled.
 
 
 ## Development
@@ -321,13 +346,15 @@ bun run validate:ti-sysblocks
 
 Reference examples are registered in `examples/ti-reference-examples.json`
 with the exact TI figure used for connectivity and schematic placement. The
-strict validator requires every catalog family to have one example and one
-schematic snapshot; use `--allow-partial` only while adding the remaining
-references:
+validator checks that every registered block has fresh source, first-party TI
+evidence, and exactly one schematic snapshot. The library intentionally samples
+families with useful public reference circuits instead of inventing examples for
+parts without one. Full-catalog coverage remains available as an optional audit:
 
 ```bash
 bun run validate:ti-reference-examples
-bun scripts/validate-ti-reference-examples.ts --allow-partial --verify-evidence
+bun scripts/validate-ti-reference-examples.ts --verify-evidence
+bun scripts/validate-ti-reference-examples.ts --require-complete
 ```
 
 Update visual snapshots when intentional schematic, PCB, or simulation output

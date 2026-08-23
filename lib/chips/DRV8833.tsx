@@ -5,7 +5,7 @@ export const DRV8833_PIN_LABELS = {
   pin15: "AIN2",
   pin9: "BIN1",
   pin10: "BIN2",
-  pin1: "NSLEEEP",
+  pin1: ["NSLEEP", "NSLEEEP"],
   pin13: "GND",
   pin11: "VCP",
   pin2: "AOUT1",
@@ -27,7 +27,7 @@ export const DRV8833 = (props: ChipProps<any>) => (
       jlcpcb: ["C50506"],
     }}
     schPinArrangement={{
-      leftSide: ["AIN1", "AIN2", "BIN1", "BIN2", "NSLEEEP"],
+      leftSide: ["AIN1", "AIN2", "BIN1", "BIN2", "NSLEEP"],
       rightSide: [
         "VCP",
         "AOUT1",

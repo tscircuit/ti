@@ -7,6 +7,7 @@ import {
   extractTiReferenceFigures,
   getTiReferenceCoverage,
   isGeneratedTiReferenceExample,
+  renderTiReferenceBlockIndex,
   renderTiReferenceExample,
   type TiReferenceCatalogEntry,
   type TiGeneratedReferenceExample,
@@ -199,6 +200,16 @@ describe("TI reference-example schema and rendering", () => {
     assert.match(source, /Figure 7-1/);
   });
 
+  test("renders the reusable block index from the manifest", () => {
+    const source = renderTiReferenceBlockIndex(makeManifest());
+    assert.match(
+      source,
+      /import \{ OPA371D_LowSideCurrentSense \} from "\.\/OPA371D_LowSideCurrentSense\.circuit\.tsx";/,
+    );
+    assert.match(source, /export const TiReferenceBlockComponents = \{/);
+    assert.match(source, /OPA371D_LowSideCurrentSense,/);
+  });
+
   test("rejects a non-first-party figure asset", () => {
     const manifest = makeManifest();
     manifest.examples[0].evidence.figureUrl =
@@ -244,6 +255,8 @@ describe("TI reference-example schema and rendering", () => {
       catalogFamilies: 2,
       supportedFamilies: ["OPA371D"],
       supportedCount: 1,
+      catalogSupportedFamilies: ["OPA371D"],
+      catalogSupportedCount: 1,
       unresolvedFamilies: ["UNRESOLVED"],
       unresolvedCount: 1,
     });
@@ -313,7 +326,7 @@ describe("TI reference-example generator", () => {
         catalog,
         requireCompleteCatalog: true,
       }),
-      /1\/2 families are verified; 1 remain unresolved/,
+      /1\/2 catalog families are verified; 1 remain unresolved/,
     );
   });
 });
@@ -329,6 +342,9 @@ describe("TI reference-example coverage validator", () => {
       if (path === "/repo/examples/OPA371D_LowSideCurrentSense.circuit.tsx") {
         return generatedSource;
       }
+      if (path === "/repo/examples/index.ts") {
+        return renderTiReferenceBlockIndex(manifest);
+      }
       if (
         path ===
         "/repo/examples/__snapshots__/OPA371D_LowSideCurrentSense.circuit-schematic.snap.svg"
@@ -339,12 +355,11 @@ describe("TI reference-example coverage validator", () => {
     };
   };
 
-  test("validates committed artifacts while explicitly allowing partial rollout", async () => {
+  test("validates the committed reference-backed sample library", async () => {
     const coverage = await validateTiReferenceExamples({
       repoRoot: "/repo",
       manifest: makeManifest(),
       catalog,
-      allowPartial: true,
       readText: makeVirtualReader(),
       formatSource: async (source) => source,
       listSnapshotNames: async () => [
@@ -355,12 +370,13 @@ describe("TI reference-example coverage validator", () => {
     assert.deepEqual(coverage.unresolvedFamilies, ["UNRESOLVED"]);
   });
 
-  test("requires complete catalog coverage by default", async () => {
+  test("can require complete catalog coverage explicitly", async () => {
     await assert.rejects(
       validateTiReferenceExamples({
         repoRoot: "/repo",
         manifest: makeManifest(),
         catalog,
+        requireComplete: true,
         readText: makeVirtualReader(),
         formatSource: async (source) => source,
         listSnapshotNames: async () => [
@@ -377,7 +393,6 @@ describe("TI reference-example coverage validator", () => {
         repoRoot: "/repo",
         manifest: makeManifest(),
         catalog,
-        allowPartial: true,
         readText: makeVirtualReader(),
         formatSource: async (source) => source,
         listSnapshotNames: async () => [],

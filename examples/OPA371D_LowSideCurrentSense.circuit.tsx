@@ -12,7 +12,7 @@ import "tscircuit";
  * Figure asset: https://www.ti.com/ods/images/SLVSM48A/GUID-B2DF1A69-DA22-4522-9874-1574F18368E7-low.gif
  * Scope: Complete Figure 7-1 signal path and feedback network; ZLOAD remains symbolic because TI does not specify its impedance.
  */
-export default () => (
+export const OPA371D_LowSideCurrentSense = () => (
   <board routingDisabled schMaxTraceDistance={20}>
     <OPA371DDBVR name="U1" noSchematicRepresentation />
 
@@ -184,3 +184,5 @@ export default () => (
     />
   </board>
 );
+
+export default OPA371D_LowSideCurrentSense;

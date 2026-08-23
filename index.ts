@@ -84,6 +84,7 @@ import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
+export * from "./examples/index.ts";
 
 export {
   BatteryManagement_BQ24072,

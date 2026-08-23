@@ -26,7 +26,7 @@ export type ValidateTiReferenceExamplesOptions = {
   repoRoot: string;
   manifest: TiReferenceExampleManifest;
   catalog: readonly TiReferenceCatalogEntry[];
-  allowPartial?: boolean;
+  requireComplete?: boolean;
   verifyEvidence?: boolean;
   readText?: (path: string) => Promise<string>;
   listSnapshotNames?: (directory: string) => Promise<string[]>;
@@ -62,6 +62,13 @@ export const validateTiReferenceExamples = async (
     } catch {
       throw new Error(
         `${example.family}: handwritten source is unreadable: ${sourcePath}`,
+      );
+    }
+    const namedExport = new RegExp(`export\\s+const\\s+${example.id}\\b`);
+    const defaultExport = new RegExp(`export\\s+default\\s+${example.id}\\s*;`);
+    if (!namedExport.test(source) || !defaultExport.test(source)) {
+      throw new Error(
+        `${example.family}: ${example.sourceFile} must named-export ${example.id} and default-export the same reusable block`,
       );
     }
     const sourceSha256 = createHash("sha256").update(source).digest("hex");
@@ -105,16 +112,16 @@ export const validateTiReferenceExamples = async (
   }
 
   const coverage = getTiReferenceCoverage(manifest, options.catalog);
-  if (!options.allowPartial && coverage.unresolvedCount > 0) {
+  if (options.requireComplete && coverage.unresolvedCount > 0) {
     throw new Error(
-      `TI reference-example coverage is incomplete: ${coverage.supportedCount}/${coverage.catalogFamilies} catalog families have a committed evidence-backed example and snapshot; ${coverage.unresolvedCount} are missing. Re-run with --allow-partial only for staged development.`,
+      `TI reference-example coverage is incomplete: ${coverage.catalogSupportedCount}/${coverage.catalogFamilies} catalog families have a committed evidence-backed example and snapshot; ${coverage.unresolvedCount} are missing. Remove --require-complete when validating the curated reference-backed sample library.`,
     );
   }
   return coverage;
 };
 
 type CliOptions = {
-  allowPartial: boolean;
+  requireComplete: boolean;
   verifyEvidence: boolean;
   manifestPath: string;
   catalogPath: string;
@@ -122,14 +129,14 @@ type CliOptions = {
 
 const parseCliOptions = (arguments_: string[]): CliOptions => {
   const options: CliOptions = {
-    allowPartial: false,
+    requireComplete: false,
     verifyEvidence: false,
     manifestPath: defaultManifestPath,
     catalogPath: defaultCatalogPath,
   };
   for (let index = 0; index < arguments_.length; index += 1) {
     const argument = arguments_[index];
-    if (argument === "--allow-partial") options.allowPartial = true;
+    if (argument === "--require-complete") options.requireComplete = true;
     else if (argument === "--verify-evidence") options.verifyEvidence = true;
     else if (argument === "--manifest") {
       options.manifestPath = resolve(arguments_[index + 1]);
@@ -162,13 +169,13 @@ if (isMain) {
     repoRoot: repositoryRoot,
     manifest,
     catalog: catalog as TiReferenceCatalogEntry[],
-    allowPartial: cliOptions.allowPartial,
+    requireComplete: cliOptions.requireComplete,
     verifyEvidence: cliOptions.verifyEvidence,
   });
   console.log(
-    `Validated ${coverage.supportedCount}/${coverage.catalogFamilies} TI catalog families; ${coverage.unresolvedCount} missing.`,
+    `Validated ${coverage.supportedCount} evidence-backed TI reference block(s). Sysblocks catalog sampling: ${coverage.catalogSupportedCount}/${coverage.catalogFamilies}; unsupported or unselected families are skipped.`,
   );
-  if (coverage.unresolvedCount > 0) {
+  if (cliOptions.requireComplete && coverage.unresolvedCount > 0) {
     console.log(`Committed: ${coverage.supportedFamilies.join(", ")}`);
     console.log(`Missing: ${coverage.unresolvedFamilies.join(", ")}`);
   }

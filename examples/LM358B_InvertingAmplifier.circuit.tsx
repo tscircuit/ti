@@ -36,7 +36,7 @@ const TiGround = ({ x, y }: { x: number; y: number }) => (
  * RF = 36 kOhm for a gain of -3.6. Placement follows Figure 8-1, including
  * the feedback resistor above the op amp and the grounded lower input.
  */
-export default () => (
+export const LM358B_InvertingAmplifier = () => (
   <board routingDisabled>
     <net name="GND" isGroundNet connectsTo={["VIN.pin1", "U1.pin3"]} />
 
@@ -257,3 +257,5 @@ export default () => (
     />
   </board>
 );
+
+export default LM358B_InvertingAmplifier;

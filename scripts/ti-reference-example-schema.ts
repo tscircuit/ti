@@ -182,15 +182,20 @@ const assertPoint = (value: unknown, location: string): void => {
 const assertTiUrl = (
   value: unknown,
   location: string,
-  expectedPathPrefix: string,
+  expectedPathPrefix: string | readonly string[],
 ): void => {
   assertNonEmptyString(value, location);
   const url = new URL(value);
   if (url.protocol !== "https:" || url.hostname !== "www.ti.com") {
     throw new Error(`${location} must be an https://www.ti.com URL`);
   }
-  if (!url.pathname.startsWith(expectedPathPrefix)) {
-    throw new Error(`${location} must start with ${expectedPathPrefix}`);
+  const expectedPathPrefixes = Array.isArray(expectedPathPrefix)
+    ? expectedPathPrefix
+    : [expectedPathPrefix];
+  if (!expectedPathPrefixes.some((prefix) => url.pathname.startsWith(prefix))) {
+    throw new Error(
+      `${location} must start with ${expectedPathPrefixes.join(" or ")}`,
+    );
   }
 };
 
@@ -227,11 +232,22 @@ const validateEvidence = (
     `${location}.documentViewerRootUrl`,
     "/document-viewer/",
   );
-  assertTiUrl(value.sectionUrl, `${location}.sectionUrl`, "/document-viewer/");
-  assertTiUrl(value.figureUrl, `${location}.figureUrl`, "/ods/images/");
+  assertTiUrl(value.sectionUrl, `${location}.sectionUrl`, [
+    "/document-viewer/",
+    "/lit/",
+  ]);
+  assertTiUrl(value.figureUrl, `${location}.figureUrl`, [
+    "/ods/images/",
+    "/lit/",
+  ]);
   assertNonEmptyString(value.figure, `${location}.figure`);
-  if (!/^Figure\s+\d+(?:[-.]\d+)+$/i.test(value.figure)) {
-    throw new Error(`${location}.figure must be an exact TI figure locator`);
+  if (
+    !/^Figure\s+\d+(?:[-.]\d+)*$/i.test(value.figure) &&
+    !/^[A-Za-z0-9][A-Za-z0-9_-]+$/.test(value.figure)
+  ) {
+    throw new Error(
+      `${location}.figure must be an exact TI figure number or legacy asset locator`,
+    );
   }
   assertNonEmptyString(value.figureCaption, `${location}.figureCaption`);
   assertNonEmptyString(value.documentRevision, `${location}.documentRevision`);
@@ -502,7 +518,11 @@ export const validateTiReferenceExampleManifest = (
       throw new Error(`duplicate family ${rawExample.family}`);
     }
     families.add(rawExample.family);
-    if (catalogByFamily && !catalogByFamily.has(rawExample.family)) {
+    if (
+      catalogByFamily &&
+      !catalogByFamily.has(rawExample.family) &&
+      rawExample.implementation !== "handwritten"
+    ) {
       throw new Error(`${location}.family is not present in the TI catalog`);
     }
     assertNonEmptyString(rawExample.title, `${location}.title`);
@@ -1083,7 +1103,7 @@ import "tscircuit";
  *
 ${sourceLines.map((line) => ` * ${line}`).join("\n")}
  */
-export default () => (
+export const ${example.id} = () => (
   <board routingDisabled schMaxTraceDistance={20}>
 ${renderMainDevice(example.mainDevice)}
 ${sharedNets.length > 0 ? `\n\n${sharedNets.join("\n")}` : ""}
@@ -1108,6 +1128,37 @@ ${example.traces
 ${annotations.length > 0 ? `\n\n${annotations.join("\n\n")}` : ""}
   </board>
 );
+
+export default ${example.id};
+`;
+};
+
+export const renderTiReferenceBlockIndex = (
+  manifest: TiReferenceExampleManifest,
+): string => {
+  const examples = [...manifest.examples].sort((left, right) =>
+    left.id.localeCompare(right.id),
+  );
+  const identifiers = examples.map((example) => example.id);
+  return `// Generated from examples/ti-reference-examples.json.
+// Each export is a runnable, evidence-backed TI reference block.
+${examples
+  .map(
+    (example) => `import { ${example.id} } from "./${example.id}.circuit.tsx";`,
+  )
+  .join("\n")}
+
+export {
+${identifiers.map((identifier) => `  ${identifier},`).join("\n")}
+};
+
+export const TiReferenceBlockComponents = {
+${identifiers.map((identifier) => `  ${identifier},`).join("\n")}
+} as const;
+
+export type TiReferenceBlockName = keyof typeof TiReferenceBlockComponents;
+export type TiReferenceBlockComponent =
+  (typeof TiReferenceBlockComponents)[TiReferenceBlockName];
 `;
 };
 
@@ -1119,6 +1170,10 @@ export const getTiReferenceCoverage = (
     .map((example) => example.family)
     .sort((left, right) => left.localeCompare(right));
   const supported = new Set(supportedFamilies);
+  const catalogFamilySet = new Set(catalog.map((entry) => entry.family));
+  const catalogSupportedFamilies = supportedFamilies.filter((family) =>
+    catalogFamilySet.has(family),
+  );
   const unresolvedFamilies = catalog
     .map((entry) => entry.family)
     .filter((family) => !supported.has(family))
@@ -1127,6 +1182,8 @@ export const getTiReferenceCoverage = (
     catalogFamilies: catalog.length,
     supportedFamilies,
     supportedCount: supportedFamilies.length,
+    catalogSupportedFamilies,
+    catalogSupportedCount: catalogSupportedFamilies.length,
     unresolvedFamilies,
     unresolvedCount: unresolvedFamilies.length,
   };

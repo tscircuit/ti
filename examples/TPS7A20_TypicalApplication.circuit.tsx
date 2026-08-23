@@ -36,7 +36,7 @@ const TiGround = ({ x, y }: { x: number; y: number }) => (
  * output capacitors. Placement intentionally follows the TI figure: input and
  * enable on the left, output on the right, and the three ground returns below.
  */
-export default () => (
+export const TPS7A20_TypicalApplication = () => (
   <board routingDisabled>
     <net
       name="GND"
@@ -229,3 +229,5 @@ export default () => (
     <TiGround x={2.4} y={-0.15} />
   </board>
 );
+
+export default TPS7A20_TypicalApplication;

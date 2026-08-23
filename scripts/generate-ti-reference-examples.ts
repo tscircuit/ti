@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import {
   getTiReferenceCoverage,
   isGeneratedTiReferenceExample,
+  renderTiReferenceBlockIndex,
   renderTiReferenceExample,
   type TiReferenceCatalogEntry,
   type TiGeneratedReferenceExample,
@@ -122,9 +123,13 @@ const verifyFigureEvidence = async (
     );
   }
   const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.toLowerCase().startsWith("image/")) {
+  const normalizedContentType = contentType.toLowerCase();
+  if (
+    !normalizedContentType.startsWith("image/") &&
+    !normalizedContentType.startsWith("application/pdf")
+  ) {
     throw new Error(
-      `${example.family}: TI figure asset is not an image (${contentType || "missing content type"}): ${example.evidence.figureUrl}`,
+      `${example.family}: TI figure evidence is not an image or PDF (${contentType || "missing content type"}): ${example.evidence.figureUrl}`,
     );
   }
 };
@@ -138,7 +143,7 @@ export const generateTiReferenceExamples = async (
   const coverage = getTiReferenceCoverage(manifest, options.catalog);
   if (options.requireCompleteCatalog && coverage.unresolvedCount > 0) {
     throw new Error(
-      `Reference evidence is incomplete: ${coverage.supportedCount}/${coverage.catalogFamilies} families are verified; ${coverage.unresolvedCount} remain unresolved.`,
+      `Reference evidence is incomplete: ${coverage.catalogSupportedCount}/${coverage.catalogFamilies} catalog families are verified; ${coverage.unresolvedCount} remain unresolved.`,
     );
   }
   if (options.verifyEvidence) {
@@ -166,6 +171,25 @@ export const generateTiReferenceExamples = async (
   const readText = options.readText ?? defaultReadText;
   const writeText = options.writeText ?? defaultWriteText;
   const formatSource = options.formatSource ?? defaultFormatSource;
+  const indexPath = join(options.repoRoot, "examples/index.ts");
+  const indexSource = await formatSource(
+    renderTiReferenceBlockIndex(manifest),
+    indexPath,
+  );
+  let currentIndexSource: string | undefined;
+  try {
+    currentIndexSource = await readText(indexPath);
+  } catch {
+    currentIndexSource = undefined;
+  }
+  if (options.check && currentIndexSource !== indexSource) {
+    throw new Error(
+      `${indexPath} is missing or stale; run bun scripts/generate-ti-reference-examples.ts`,
+    );
+  }
+  if (!options.check && currentIndexSource !== indexSource) {
+    await writeText(indexPath, indexSource);
+  }
   const results: GeneratedTiReferenceExample[] = [];
   for (const example of examples) {
     await verifyComponentModule(example, options.repoRoot, readText);
@@ -269,6 +293,6 @@ if (isMain) {
     `${cliOptions.check ? "Checked" : "Generated"} ${results.length} verified TI reference example(s); ${changedCount} ${cliOptions.check ? "stale" : "changed"}.`,
   );
   console.log(
-    `Coverage: ${coverage.supportedCount}/${coverage.catalogFamilies} families verified; ${coverage.unresolvedCount} intentionally unresolved.`,
+    `Coverage: ${coverage.supportedCount} blocks, including ${coverage.catalogSupportedCount}/${coverage.catalogFamilies} sysblocks families; ${coverage.unresolvedCount} catalog families intentionally unresolved.`,
   );
 }
