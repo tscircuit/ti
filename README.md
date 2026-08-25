@@ -107,6 +107,7 @@ The package currently exports these subcircuit components:
 - `BluetoothController_CC2564C`
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
+- `MotorDriver_DRV8703`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
 - `EnvironmentalSensor_HDC2080`
@@ -153,6 +154,7 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `DRV8703` | `vqfn_32_rhb_5x5` | `DRV8703QRHBRQ1` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
