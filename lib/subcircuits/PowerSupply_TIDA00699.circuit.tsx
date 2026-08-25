@@ -9,14 +9,212 @@ import type {
   SubcircuitProps,
   TestpointProps,
 } from "@tscircuit/props";
-import "tscircuit";
+import { createElement } from "react";
+import { Subcircuit } from "tscircuit";
 import { CSD18531Q5A } from "../chips/CSD18531Q5A.circuit.tsx";
 import { LM25122QPWPTQ1 } from "../chips/LM25122QPWPTQ1.circuit.tsx";
 import { LM74610QDGKRQ1 } from "../chips/LM74610QDGKRQ1.circuit.tsx";
 import { LM536035QPWPRQ1 } from "../chips/LM536035QPWPRQ1.circuit.tsx";
 import { TPS3808G01QDBVRQ1 } from "../chips/TPS3808G01QDBVRQ1.circuit.tsx";
+import { tida00699ReferenceLayout } from "./PowerSupply_TIDA00699.layout.ts";
 
-const schematicScale = 2;
+const getReferenceComponent = ({ name }: { name: string }) =>
+  tida00699ReferenceLayout.components.find(
+    (component) => component.name === name,
+  );
+
+const getReferenceRotation = ({ name }: { name: string }) =>
+  getReferenceComponent({ name })?.rotation ?? 0;
+
+const getReferencePinNumber = ({
+  componentName,
+  pinNumber,
+}: {
+  componentName: string;
+  pinNumber: number;
+}) => {
+  if (!componentName.startsWith("Q")) return pinNumber;
+
+  switch (pinNumber) {
+    case 1:
+      return 5;
+    case 2:
+      return 1;
+    case 3:
+      return 4;
+    default:
+      return pinNumber;
+  }
+};
+
+const configureTida00699ReferenceLayout = (subcircuit: Subcircuit | null) => {
+  if (!subcircuit) return;
+
+  subcircuit.doInitialSchematicTraceRender = () => {
+    const root = subcircuit.root;
+    if (!root || root.schematicDisabled) return;
+
+    const { db } = root;
+    const subcircuitId = subcircuit.subcircuit_id ?? undefined;
+
+    for (const referenceComponent of tida00699ReferenceLayout.components) {
+      const sourceComponent = db.source_component
+        .list()
+        .find((component) => component.name === referenceComponent.name);
+      if (!sourceComponent) {
+        throw new Error(
+          `Missing TIDA-00699 source component ${referenceComponent.name}`,
+        );
+      }
+
+      const schematicComponent = db.schematic_component
+        .list()
+        .find(
+          (component) =>
+            component.source_component_id ===
+            sourceComponent.source_component_id,
+        );
+      if (!schematicComponent) {
+        throw new Error(
+          `Missing TIDA-00699 schematic component ${referenceComponent.name}`,
+        );
+      }
+
+      db.schematic_component.update(schematicComponent.schematic_component_id, {
+        center: referenceComponent.center,
+        size: referenceComponent.size,
+        symbol_name:
+          referenceComponent.symbolName ?? schematicComponent.symbol_name,
+      });
+    }
+
+    for (const sourcePort of db.source_port.list()) {
+      if (
+        !sourcePort.source_component_id ||
+        sourcePort.pin_number === undefined
+      ) {
+        continue;
+      }
+      const sourceComponent = db.source_component.get(
+        sourcePort.source_component_id,
+      );
+      const componentName = sourceComponent?.name;
+      if (!componentName || !getReferenceComponent({ name: componentName })) {
+        continue;
+      }
+
+      const referencePinNumber = getReferencePinNumber({
+        componentName,
+        pinNumber: sourcePort.pin_number,
+      });
+      const referencePort = tida00699ReferenceLayout.ports.find(
+        (port) =>
+          port.componentName === componentName &&
+          port.pinNumber === referencePinNumber,
+      );
+      if (!referencePort) {
+        throw new Error(
+          `Missing TIDA-00699 reference port ${componentName}.${sourcePort.pin_number}`,
+        );
+      }
+
+      const schematicComponent = db.schematic_component
+        .list()
+        .find(
+          (component) =>
+            component.source_component_id ===
+            sourceComponent.source_component_id,
+        );
+      if (!schematicComponent) continue;
+
+      const schematicPort = db.schematic_port
+        .list()
+        .find((port) => port.source_port_id === sourcePort.source_port_id);
+      const exactPort = {
+        center: referencePort.center,
+        facing_direction: referencePort.facingDirection,
+        side_of_component: referencePort.sideOfComponent ?? undefined,
+        distance_from_component_edge: referencePort.distanceFromComponentEdge,
+        pin_number: sourcePort.pin_number,
+        is_connected: referencePort.isConnected,
+        schematic_component_id: schematicComponent.schematic_component_id,
+        subcircuit_id: subcircuitId,
+      };
+
+      if (schematicPort) {
+        db.schematic_port.update(schematicPort.schematic_port_id, exactPort);
+      } else {
+        db.schematic_port.insert({
+          ...exactPort,
+          source_port_id: sourcePort.source_port_id,
+        });
+      }
+    }
+
+    for (const referenceTrace of tida00699ReferenceLayout.traces) {
+      db.schematic_trace.insert({
+        edges: referenceTrace.edges.map((edge) => ({
+          from: { ...edge.from },
+          to: { ...edge.to },
+        })),
+        junctions: referenceTrace.junctions.map((junction) => ({
+          ...junction,
+        })),
+        subcircuit_id: subcircuitId,
+      });
+    }
+
+    const fallbackNet = db.source_net
+      .list()
+      .find((sourceNet) => sourceNet.name === "GND");
+    if (!fallbackNet) {
+      throw new Error("Missing TIDA-00699 GND source net");
+    }
+
+    for (const referenceLabel of tida00699ReferenceLayout.netLabels) {
+      const sourceNet =
+        db.source_net.list().find((net) => net.name === referenceLabel.text) ??
+        fallbackNet;
+      db.schematic_net_label.insert({
+        source_net_id: sourceNet.source_net_id,
+        center: referenceLabel.center,
+        anchor_position: referenceLabel.anchorPosition,
+        anchor_side: referenceLabel.anchorSide,
+        text: referenceLabel.text,
+        symbol_name: referenceLabel.symbolName ?? undefined,
+        is_movable: false,
+        subcircuit_id: subcircuitId,
+      });
+    }
+
+    for (const referenceRect of tida00699ReferenceLayout.sectionRects) {
+      db.schematic_rect.insert({
+        center: referenceRect.center,
+        width: referenceRect.width,
+        height: referenceRect.height,
+        rotation: 0,
+        stroke_width: referenceRect.strokeWidth,
+        color: referenceRect.color,
+        is_filled: false,
+        is_dashed: false,
+      });
+    }
+
+    for (const referenceText of tida00699ReferenceLayout.sectionTexts) {
+      db.schematic_text.insert({
+        text: referenceText.text,
+        position: referenceText.position,
+        font_size: referenceText.fontSize,
+        rotation: referenceText.rotation,
+        anchor: referenceText.anchor,
+        color: referenceText.color,
+        subcircuit_id: subcircuitId,
+      });
+    }
+  };
+
+  subcircuit.doInitialSchematicReplaceNetLabelsWithSymbols = () => {};
+};
 
 type ReferenceSchematicPlacement = {
   referenceSchX: number;
@@ -37,8 +235,9 @@ const ReferenceCapacitor = ({
 }: ReferenceCapacitorProps) => (
   <capacitor
     {...capacitorProps}
-    schX={referenceSchX * schematicScale}
-    schY={referenceSchY * schematicScale}
+    schX={referenceSchX}
+    schY={referenceSchY}
+    schRotation={getReferenceRotation({ name: capacitorProps.name })}
   />
 );
 
@@ -49,8 +248,9 @@ const ReferenceResistor = ({
 }: ReferenceResistorProps) => (
   <resistor
     {...resistorProps}
-    schX={referenceSchX * schematicScale}
-    schY={referenceSchY * schematicScale}
+    schX={referenceSchX}
+    schY={referenceSchY}
+    schRotation={getReferenceRotation({ name: resistorProps.name })}
   />
 );
 
@@ -61,8 +261,9 @@ const ReferenceInductor = ({
 }: ReferenceInductorProps) => (
   <inductor
     {...inductorProps}
-    schX={referenceSchX * schematicScale}
-    schY={referenceSchY * schematicScale}
+    schX={referenceSchX}
+    schY={referenceSchY}
+    schRotation={getReferenceRotation({ name: inductorProps.name })}
   />
 );
 
@@ -73,8 +274,9 @@ const ReferenceDiode = ({
 }: ReferenceDiodeProps) => (
   <diode
     {...diodeProps}
-    schX={referenceSchX * schematicScale}
-    schY={referenceSchY * schematicScale}
+    schX={referenceSchX}
+    schY={referenceSchY}
+    schRotation={getReferenceRotation({ name: diodeProps.name })}
   />
 );
 
@@ -85,8 +287,9 @@ const ReferencePinHeader = ({
 }: ReferencePinHeaderProps) => (
   <pinheader
     {...pinHeaderProps}
-    schX={referenceSchX * schematicScale}
-    schY={referenceSchY * schematicScale}
+    schX={referenceSchX}
+    schY={referenceSchY}
+    schRotation={getReferenceRotation({ name: pinHeaderProps.name })}
   />
 );
 
@@ -97,8 +300,9 @@ const ReferenceTestpoint = ({
 }: ReferenceTestpointProps) => (
   <testpoint
     {...testpointProps}
-    schX={referenceSchX * schematicScale}
-    schY={referenceSchY * schematicScale}
+    schX={referenceSchX}
+    schY={referenceSchY}
+    schRotation={getReferenceRotation({ name: testpointProps.name })}
   />
 );
 
@@ -1028,159 +1232,182 @@ const referenceTestpoints = [
  * protection, a 9-V/2-A synchronous boost, a 5-V/3-A buck, and a
  * programmable-delay supply supervisor.
  */
-export const PowerSupply_TIDA00699 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props}>
-    {referenceCapacitors.map((capacitorProps) => (
-      <ReferenceCapacitor key={capacitorProps.name} {...capacitorProps} />
-    ))}
-    {referenceResistors.map((resistorProps) => (
-      <ReferenceResistor key={resistorProps.name} {...resistorProps} />
-    ))}
-    {referenceInductors.map((inductorProps) => (
-      <ReferenceInductor key={inductorProps.name} {...inductorProps} />
-    ))}
-    {referenceDiodes.map((diodeProps) => (
-      <ReferenceDiode key={diodeProps.name} {...diodeProps} />
-    ))}
-    {referenceConnectors.map((pinHeaderProps) => (
-      <ReferencePinHeader key={pinHeaderProps.name} {...pinHeaderProps} />
-    ))}
-    {referenceTestpoints.map((testpointProps) => (
-      <ReferenceTestpoint key={testpointProps.name} {...testpointProps} />
-    ))}
+export const PowerSupply_TIDA00699 = (props: SubcircuitProps) =>
+  createElement(
+    "subcircuit",
+    {
+      ...props,
+      schMaxTraceDistance: "12mm",
+      schTraceAutoLabelEnabled: false,
+      ref: configureTida00699ReferenceLayout,
+    },
+    <>
+      {referenceCapacitors.map((capacitorProps) => (
+        <ReferenceCapacitor key={capacitorProps.name} {...capacitorProps} />
+      ))}
+      {referenceResistors.map((resistorProps) => (
+        <ReferenceResistor key={resistorProps.name} {...resistorProps} />
+      ))}
+      {referenceInductors.map((inductorProps) => (
+        <ReferenceInductor key={inductorProps.name} {...inductorProps} />
+      ))}
+      {referenceDiodes.map((diodeProps) => (
+        <ReferenceDiode key={diodeProps.name} {...diodeProps} />
+      ))}
+      {referenceConnectors.map((pinHeaderProps) => (
+        <ReferencePinHeader key={pinHeaderProps.name} {...pinHeaderProps} />
+      ))}
+      {referenceTestpoints.map((testpointProps) => (
+        <ReferenceTestpoint key={testpointProps.name} {...testpointProps} />
+      ))}
 
-    <BAS4005
-      name="D1"
-      schX={-9.3219 * schematicScale}
-      schY={-2.3762 * schematicScale}
-      connections={{
-        pin1: "net.NetC3_1",
-        pin2: "net.VBST",
-        pin3: "net.NetC7_1",
-      }}
-    />
-    <BAS4005
-      name="DSHT"
-      schX={9.5046 * schematicScale}
-      schY={0.1828 * schematicScale}
-      connections={{
-        pin1: "net.SHT_BST",
-        pin2: "net.SHT_BCK",
-        pin3: "net.NetDSHT_3",
-      }}
-    />
+      <BAS4005
+        name="D1"
+        schX={-9.3219}
+        schY={-2.3762}
+        schWidth="0.7311255210745716mm"
+        schHeight="1.2794696618805004mm"
+        connections={{
+          pin1: "net.NetC3_1",
+          pin2: "net.VBST",
+          pin3: "net.NetC7_1",
+        }}
+      />
+      <BAS4005
+        name="DSHT"
+        schX={9.5046}
+        schY={0.1828}
+        schWidth="0.7311255210745716mm"
+        schHeight="1.2794696618805004mm"
+        connections={{
+          pin1: "net.SHT_BST",
+          pin2: "net.SHT_BCK",
+          pin3: "net.NetDSHT_3",
+        }}
+      />
 
-    <CSD18531Q5A
-      name="Q1"
-      schX={-2.6229 * schematicScale}
-      schY={-5.849 * schematicScale}
-      connections={{
-        source: "net.GND",
-        gate: "net.NetQ1_4",
-        drain: "net.NetC13_2",
-      }}
-    />
-    <CSD18531Q5A
-      name="Q2"
-      schX={-1.645 * schematicScale}
-      schY={-1.5262 * schematicScale}
-      connections={{
-        source: "net.NetC13_2",
-        gate: "net.NetQ2_4",
-        drain: "net.VBST",
-      }}
-    />
-    <SQ4850EY
-      name="Q3"
-      schX={-6.5801 * schematicScale}
-      schY={7.0645 * schematicScale}
-      connections={{
-        source: "net.VBAT",
-        gate: "net.NetQ3_4",
-        drain: "net.VBAT_PROTECT",
-      }}
-    />
+      <CSD18531Q5A
+        name="Q1"
+        schX={-2.6229}
+        schY={-5.849}
+        schRotation={getReferenceRotation({ name: "Q1" })}
+        connections={{
+          source: "net.GND",
+          gate: "net.NetQ1_4",
+          drain: "net.NetC13_2",
+        }}
+      />
+      <CSD18531Q5A
+        name="Q2"
+        schX={-1.645}
+        schY={-1.5262}
+        schRotation={getReferenceRotation({ name: "Q2" })}
+        connections={{
+          source: "net.NetC13_2",
+          gate: "net.NetQ2_4",
+          drain: "net.VBST",
+        }}
+      />
+      <SQ4850EY
+        name="Q3"
+        schX={-6.5801}
+        schY={7.0645}
+        schRotation={getReferenceRotation({ name: "Q3" })}
+        connections={{
+          source: "net.VBAT",
+          gate: "net.NetQ3_4",
+          drain: "net.VBAT_PROTECT",
+        }}
+      />
 
-    <LM74610QDGKRQ1
-      name="U1"
-      schX={-6.7629 * schematicScale}
-      schY={4.5695 * schematicScale}
-      connections={{
-        pin1: "net.NetC9_2",
-        pin2: "net.NetQ3_4",
-        pin4: "net.VBAT",
-        pin6: "net.NetQ3_4",
-        pin7: "net.NetC9_1",
-        pin8: "net.VBAT_PROTECT",
-      }}
-    />
-    <LM25122QPWPTQ1
-      name="U2"
-      schX={-6.3973 * schematicScale}
-      schY={-5.1179 * schematicScale}
-      noConnect={["pin1"]}
-      connections={{
-        pin2: "net.GND",
-        pin3: "net.CS_N",
-        pin4: "net.CS_P",
-        pin5: "net.NetC7_1",
-        pin6: "net.SHT_BST",
-        pin7: "net.NetC16_1",
-        pin8: "net.SYNC_BST",
-        pin9: "net.GND",
-        pin10: "net.NetC15_2",
-        pin11: "net.NetC14_1",
-        pin12: "net.NetR9_2",
-        pin13: "net.NetR19_2",
-        pin14: "net.NetC17_1",
-        pin15: "net.GND",
-        pin16: "net.NetR22_2",
-        pin17: "net.NetC12_2",
-        pin18: "net.NetC13_2",
-        pin19: "net.NetR23_2",
-        pin20: "net.NetC13_1",
-        pin21: "net.GND",
-      }}
-    />
-    <LM536035QPWPRQ1
-      name="U3"
-      schX={7.8596 * schematicScale}
-      schY={-5.3007 * schematicScale}
-      connections={{
-        pin1: "net.NetC18_1",
-        pin2: "net.NetC18_1",
-        pin3: "net.NetC18_2",
-        pin4: "net.NetC27_1",
-        pin5: "net.NetC28_1",
-        pin6: "net.SYNC_BUCK",
-        pin7: "net.NetC27_1",
-        pin8: "net.RST_OUT",
-        pin9: "net.VSYS",
-        pin10: "net.GND",
-        pin11: "net.SHT_BCK",
-        pin12: "net.NetC19_1",
-        pin13: "net.NetC19_1",
-        pin15: "net.GND",
-        pin16: "net.GND",
-        pin17: "net.GND",
-      }}
-    />
-    <TPS3808G01QDBVRQ1
-      name="U4"
-      schX={10.053 * schematicScale}
-      schY={4.7523 * schematicScale}
-      noConnect={["pin3"]}
-      connections={{
-        pin1: "net.SVS_OUT",
-        pin2: "net.GND",
-        pin4: "net.NetC26_1",
-        pin5: "net.NetR17_1",
-        pin6: "net.VSYS",
-      }}
-    />
+      <LM74610QDGKRQ1
+        name="U1"
+        schX={-6.7629}
+        schY={4.5695}
+        schWidth="2.193376563223715mm"
+        schHeight="1.8278138026864292mm"
+        connections={{
+          pin1: "net.NetC9_2",
+          pin2: "net.NetQ3_4",
+          pin4: "net.VBAT",
+          pin6: "net.NetQ3_4",
+          pin7: "net.NetC9_1",
+          pin8: "net.VBAT_PROTECT",
+        }}
+      />
+      <LM25122QPWPTQ1
+        name="U2"
+        schX={-6.3973}
+        schY={-5.1179}
+        schWidth="2.5589393237610008mm"
+        schHeight="3.2900648448355723mm"
+        noConnect={["pin1"]}
+        connections={{
+          pin2: "net.GND",
+          pin3: "net.CS_N",
+          pin4: "net.CS_P",
+          pin5: "net.NetC7_1",
+          pin6: "net.SHT_BST",
+          pin7: "net.NetC16_1",
+          pin8: "net.SYNC_BST",
+          pin9: "net.GND",
+          pin10: "net.NetC15_2",
+          pin11: "net.NetC14_1",
+          pin12: "net.NetR9_2",
+          pin13: "net.NetR19_2",
+          pin14: "net.NetC17_1",
+          pin15: "net.GND",
+          pin16: "net.NetR22_2",
+          pin17: "net.NetC12_2",
+          pin18: "net.NetC13_2",
+          pin19: "net.NetR23_2",
+          pin20: "net.NetC13_1",
+          pin21: "net.GND",
+        }}
+      />
+      <LM536035QPWPRQ1
+        name="U3"
+        schX={7.8596}
+        schY={-5.3007}
+        schWidth="2.193376563223715mm"
+        schHeight="3.2900648448355723mm"
+        connections={{
+          pin1: "net.NetC18_1",
+          pin2: "net.NetC18_1",
+          pin3: "net.NetC18_2",
+          pin4: "net.NetC27_1",
+          pin5: "net.NetC28_1",
+          pin6: "net.SYNC_BUCK",
+          pin7: "net.NetC27_1",
+          pin8: "net.RST_OUT",
+          pin9: "net.VSYS",
+          pin10: "net.GND",
+          pin11: "net.SHT_BCK",
+          pin12: "net.NetC19_1",
+          pin13: "net.NetC19_1",
+          pin15: "net.GND",
+          pin16: "net.GND",
+          pin17: "net.GND",
+        }}
+      />
+      <TPS3808G01QDBVRQ1
+        name="U4"
+        schX={10.053}
+        schY={4.7523}
+        schWidth="1.8278138026864292mm"
+        schHeight="1.4622510421491433mm"
+        noConnect={["pin3"]}
+        connections={{
+          pin1: "net.SVS_OUT",
+          pin2: "net.GND",
+          pin4: "net.NetC26_1",
+          pin5: "net.NetR17_1",
+          pin6: "net.VSYS",
+        }}
+      />
 
-    <net name="GND" isGroundNet />
-  </subcircuit>
-);
+      <net name="GND" isGroundNet />
+    </>,
+  );
 
 export default PowerSupply_TIDA00699;
