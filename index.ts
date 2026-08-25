@@ -10,6 +10,7 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CSD18531Q5A,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -17,6 +18,9 @@ import {
   HDC3022,
   INA237,
   ISOW7841,
+  LM25122Q1,
+  LM53603Q1,
+  LM74610Q1,
   MSP430G2230ID,
   MSP430F5229,
   MSPM33C3x,
@@ -35,6 +39,7 @@ import {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS3808,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -84,6 +89,7 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
+import { PowerSupply_TIDA00699 } from "./lib/subcircuits/PowerSupply_TIDA00699.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -129,6 +135,7 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  PowerSupply_TIDA00699,
 };
 
 export const TiChipComponents = {
@@ -143,6 +150,7 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CSD18531Q5A,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -150,6 +158,9 @@ export const TiChipComponents = {
   HDC3022,
   INA237,
   ISOW7841,
+  LM25122Q1,
+  LM53603Q1,
+  LM74610Q1,
   MSP430G2230ID,
   MSP430F5229,
   MSPM33C3x,
@@ -168,6 +179,7 @@ export const TiChipComponents = {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS3808,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -216,6 +228,7 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  PowerSupply_TIDA00699,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

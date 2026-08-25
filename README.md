@@ -136,6 +136,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `PowerSupply_TIDA00699`
 
 ## Exported Chips
 
@@ -153,6 +154,7 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `CSD18531Q5A` | `-` | `CSD18531Q5A` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
@@ -160,6 +162,9 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM25122Q1` | `htssop_20` | `LM25122QPWPTQ1` |
+| `LM53603Q1` | `htssop_16` | `LM536035QPWPRQ1` |
+| `LM74610Q1` | `vssop_8` | `LM74610QDGKRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
@@ -169,6 +174,7 @@ chip is listed individually below, including whether it supports a
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TPS22919` | `-` | `TPS22919` |
+| `TPS3808` | `sot_23_6` | `TPS3808G01QDBVRQ1` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
