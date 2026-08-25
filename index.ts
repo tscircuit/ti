@@ -4,6 +4,7 @@ import {
   BQ24073,
   BQ24074,
   BQ25895,
+  BQ25731RSN,
   BQ27441G1,
   BQ32002,
   CC2340R5,
@@ -22,6 +23,7 @@ import {
   LM53603Q1,
   LM74610Q1,
   MSP430G2230ID,
+  MSP430G2332IPW20,
   MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
@@ -29,17 +31,21 @@ import {
   TAS2505,
   TLC59116,
   TLV755P,
+  TLV9152IDR,
   TMP1827,
   TMP1075,
   TPS22919,
   TPS6293,
   TPS61222,
+  TPS61236RWLR,
+  TPS61288RQQR,
   TPS61299X,
   TPS6521835,
   TPS63802,
   TPS7A02,
   TPS7A20,
   TPS3808,
+  TPS78230DRVR,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -90,6 +96,10 @@ import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.cir
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
 import { PowerSupply_TIDA00699 } from "./lib/subcircuits/PowerSupply_TIDA00699.circuit.tsx";
+import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits/BatteryCharging_2to5CellNVDCBuckBoost_BQ25731.circuit.tsx";
+import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
+import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
+import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -136,6 +146,10 @@ export {
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
   PowerSupply_TIDA00699,
+  BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
+  BoostConverter_TPS61236,
+  Microcontroller_MSP430G2332,
+  USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
 };
 
 export const TiChipComponents = {
@@ -144,6 +158,7 @@ export const TiChipComponents = {
   BQ24073,
   BQ24074,
   BQ25895,
+  BQ25731RSN,
   BQ27441G1,
   BQ32002,
   CC2340R5,
@@ -162,6 +177,7 @@ export const TiChipComponents = {
   LM53603Q1,
   LM74610Q1,
   MSP430G2230ID,
+  MSP430G2332IPW20,
   MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
@@ -169,17 +185,21 @@ export const TiChipComponents = {
   TAS2505,
   TLC59116,
   TLV755P,
+  TLV9152IDR,
   TMP1827,
   TMP1075,
   TPS22919,
   TPS6293,
   TPS61222,
+  TPS61236RWLR,
+  TPS61288RQQR,
   TPS61299X,
   TPS6521835,
   TPS63802,
   TPS7A02,
   TPS7A20,
   TPS3808,
+  TPS78230DRVR,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -229,6 +249,10 @@ export const TiSubcircuitComponents = {
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
   PowerSupply_TIDA00699,
+  BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
+  BoostConverter_TPS61236,
+  Microcontroller_MSP430G2332,
+  USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
