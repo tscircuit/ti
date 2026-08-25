@@ -13,6 +13,7 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CSD18531Q5A,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -20,6 +21,9 @@ import {
   HDC3022,
   INA237,
   ISOW7841,
+  LM25122Q1,
+  LM53603Q1,
+  LM74610Q1,
   LMK1C1104,
   MSP430G2230ID,
   MSP430G2332IPW20,
@@ -43,6 +47,7 @@ import {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS3808,
   TPS78230DRVR,
   TPSM82823,
   TRF7960RHB,
@@ -95,6 +100,7 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
+import { PowerSupply_TIDA00699 } from "./lib/subcircuits/PowerSupply_TIDA00699.circuit.tsx";
 import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits/BatteryCharging_2to5CellNVDCBuckBoost_BQ25731.circuit.tsx";
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
@@ -146,6 +152,7 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  PowerSupply_TIDA00699,
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
@@ -167,6 +174,7 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CSD18531Q5A,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -174,6 +182,9 @@ export const TiChipComponents = {
   HDC3022,
   INA237,
   ISOW7841,
+  LM25122Q1,
+  LM53603Q1,
+  LM74610Q1,
   LMK1C1104,
   MSP430G2230ID,
   MSP430G2332IPW20,
@@ -197,6 +208,7 @@ export const TiChipComponents = {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS3808,
   TPS78230DRVR,
   TPSM82823,
   TRF7960RHB,
@@ -248,6 +260,7 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  PowerSupply_TIDA00699,
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
