@@ -30,6 +30,7 @@ import {
   TLV9152IDR,
   TMP1827,
   TMP1075,
+  TMP390Q1,
   TPS22919,
   TPS6293,
   TPS61222,
@@ -72,6 +73,10 @@ import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSP
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
 import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
+import {
+  MotorThermalProtection_TMP390,
+  TMP390_FIGURE_8_3_DEFAULTS,
+} from "./lib/subcircuits/MotorThermalProtection_TMP390.circuit.tsx";
 import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit.tsx";
 import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit.tsx";
 import {
@@ -123,6 +128,8 @@ export {
   LEDDriver_TLC59116,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
+  MotorThermalProtection_TMP390,
+  TMP390_FIGURE_8_3_DEFAULTS,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
@@ -177,6 +184,7 @@ export const TiChipComponents = {
   TLV9152IDR,
   TMP1827,
   TMP1075,
+  TMP390Q1,
   TPS22919,
   TPS6293,
   TPS61222,
@@ -221,6 +229,7 @@ export const TiSubcircuitComponents = {
   LEDDriver_TLC59116,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
+  MotorThermalProtection_TMP390,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,

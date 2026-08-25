@@ -122,6 +122,7 @@ The package currently exports these subcircuit components:
 - `LEDDriver_TLC59116`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
+- `MotorThermalProtection_TMP390` (datasheet-derived; not an exact Window Module reference design)
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
@@ -168,6 +169,7 @@ chip is listed individually below, including whether it supports a
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
+| `TMP390Q1` | `-` | `TMP390AQDRLRQ1` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
@@ -193,6 +195,18 @@ The package also exports:
 - `TiSubcircuitName`: a TypeScript union of keys in `TiSubcircuitComponents`.
 - `TiSubcircuitComponent`: a TypeScript type for any exported subcircuit
   component.
+
+### TMP390-Q1 Motor Thermal Protection Source Scope
+
+`MotorThermalProtection_TMP390` is derived from TMP390-Q1 datasheet Figure 8-1
+for topology and relative schematic placement, and Figure 8-3 plus Tables 7-1
+and 7-2 for component values and thresholds. It is **not** an exact TI Window
+Module reference design because TI does not attach schematic or CAD source to
+that subsystem.
+
+The fixed datasheet example exposes `VDD`, `VDDIO`, `GND`, `OUTA`, and `OUTB`.
+It selects a +90 C hot trip and -25 C cold trip with 10 C hysteresis. The
+active-low, open-drain outputs reset at +80 C and -15 C, respectively.
 
 ## Key Directories
 

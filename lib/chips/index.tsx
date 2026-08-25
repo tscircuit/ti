@@ -26,6 +26,7 @@ export { TLC59116 } from "./TLC59116.circuit.tsx";
 export { TLV755P } from "./TLV755P.circuit.tsx";
 export { TMP1827 } from "./TMP1827.circuit.tsx";
 export { TMP1075 } from "./TMP1075.circuit.tsx";
+export { TMP390Q1 } from "./TMP390Q1.circuit.tsx";
 export { TPS22919 } from "./TPS22919.circuit.tsx";
 export { TPS6293 } from "./TPS6293.circuit.tsx";
 export { TPS61299X } from "./TPS61299X.circuit.tsx";
@@ -58,6 +59,10 @@ export { MSP430G2332IPW20 } from "./MSP430G2332IPW20.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
 export { SN65HVD1473DGSR } from "./SN65HVD1473DGSR.circuit.tsx";
 export { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
+export {
+  TMP390AQDRLRQ1,
+  TMP390AQDRLRQ1_PIN_LABELS,
+} from "./TMP390AQDRLRQ1.circuit.tsx";
 export { W25Q128JVSIQ } from "./W25Q128JVSIQ.circuit.tsx";
 export { TPS61299DRLR } from "./TPS61299DRLR.circuit.tsx";
 export { TPS63802DLAR } from "./TPS63802DLAR.circuit.tsx";
