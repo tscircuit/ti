@@ -10,14 +10,12 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
-  CSD18532KCS,
   DRV8833,
   DRV8876,
   HDC2080,
   HDC3020,
   HDC3022,
   INA237,
-  INA213AIDCK,
   ISOW7841,
   MSP430G2230ID,
   MSP430F5229,
@@ -26,7 +24,6 @@ import {
   SN65HVD1473,
   TAS2505,
   TLC59116,
-  TL431BIDBZR,
   TLV755P,
   TMP1827,
   TMP1075,
@@ -42,9 +39,6 @@ import {
   TRF7960RHB,
   TXB0104,
   TXS0102,
-  UCC24610D,
-  UCC25600D,
-  UCC27714D,
   W25Q128JVSIQ,
 } from "./lib/chips/index.tsx";
 import { BatteryManagement_BQ24072 } from "./lib/subcircuits/BatteryManagement_BQ24072.circuit.tsx";
@@ -90,7 +84,7 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
-import { PMP11282_IsolatedDCDC } from "./lib/subcircuits/PMP11282_IsolatedDCDC.circuit.tsx";
+import { TIDM_PSFB_DCDC } from "./lib/subcircuits/TIDM_PSFB_DCDC.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -136,7 +130,7 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  PMP11282_IsolatedDCDC,
+  TIDM_PSFB_DCDC,
 };
 
 export const TiChipComponents = {
@@ -151,14 +145,12 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
-  CSD18532KCS,
   DRV8833,
   DRV8876,
   HDC2080,
   HDC3020,
   HDC3022,
   INA237,
-  INA213AIDCK,
   ISOW7841,
   MSP430G2230ID,
   MSP430F5229,
@@ -167,7 +159,6 @@ export const TiChipComponents = {
   SN65HVD1473,
   TAS2505,
   TLC59116,
-  TL431BIDBZR,
   TLV755P,
   TMP1827,
   TMP1075,
@@ -183,9 +174,6 @@ export const TiChipComponents = {
   TRF7960RHB,
   TXB0104,
   TXS0102,
-  UCC24610D,
-  UCC25600D,
-  UCC27714D,
   W25Q128JVSIQ,
 } as const;
 
@@ -230,7 +218,7 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  PMP11282_IsolatedDCDC,
+  TIDM_PSFB_DCDC,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

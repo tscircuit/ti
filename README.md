@@ -136,7 +136,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
-- `PMP11282_IsolatedDCDC` — PMP11282 half-bridge LLC isolated 24 V DC/DC
+- `TIDM_PSFB_DCDC` — TIDM-PSFB-DCDC 600 W phase-shifted full-bridge isolated DC/DC
 
 ## Exported Chips
 
@@ -154,21 +154,18 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
-| `CSD18532KCS` | `-` | `CSD18532KCS` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
-| `INA213AIDCK` | `-` | `INA213AIDCK` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
-| `TL431BIDBZR` | `-` | `TL431BIDBZR` |
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
@@ -182,9 +179,6 @@ chip is listed individually below, including whether it supports a
 | `TPSM82823` | `-` | `TPSM82823` |
 | `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
 | `TXS0102` | `vssop_8` | `TXS0102DCUR` |
-| `UCC24610D` | `-` | `UCC24610D` |
-| `UCC25600D` | `-` | `UCC25600D` |
-| `UCC27714D` | `-` | `UCC27714D` |
 
 Rows with `-` are direct chip exports and do not currently expose a
 `footprintVariant` prop. For the wrapper exports, the underlying component
