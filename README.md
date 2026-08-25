@@ -113,6 +113,9 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
+- `PinchDetectionPower_TIDA01421`
+- `PinchDetectionSignalChain_TIDA01421`
+- `PinchDetection_TIDA01421`
 - `IsolatedRS485_ISOW7841`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`

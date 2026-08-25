@@ -24,6 +24,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
     "@types/react": "^19.2.17",
+    "bun-types": "^1.4.0",
     "tscircuit": "^0.0.2413",
     "typescript": "^5.0.0"
   },
