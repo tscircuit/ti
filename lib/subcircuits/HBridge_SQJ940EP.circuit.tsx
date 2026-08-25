@@ -254,41 +254,37 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
     />
 
     {/* Gate paths: direct horizontal wires in the Altium source. */}
-    <netlabel
-      net="GH1"
-      connectsTo="R2.pin1"
-      schX={-3.472847}
-      schY={1.645032}
-      anchorSide="right"
+    <trace
+      from="R2.pin1"
+      to="net.GH1"
+      schDisplayLabel="GH1"
+      schematicRouteHints={[{ x: -3.472847, y: 1.645032 }]}
     />
     <trace from="R2.pin2" to="Q1B.gate" />
-    <netlabel
-      net="GL1"
-      connectsTo="R3.pin1"
-      schX={-3.472847}
-      schY={-0.731126}
-      anchorSide="right"
+    <trace
+      from="R3.pin1"
+      to="net.GL1"
+      schDisplayLabel="GL1"
+      schematicRouteHints={[{ x: -3.472847, y: -0.731126 }]}
     />
     <trace from="R3.pin2" to="Q1A.gate" />
     <trace from="Q2A.gate" to="R5.pin1" />
-    <netlabel
-      net="GH2"
-      connectsTo="R5.pin2"
-      schX={3.472847}
-      schY={1.645032}
-      anchorSide="left"
+    <trace
+      from="R5.pin2"
+      to="net.GH2"
+      schDisplayLabel="GH2"
+      schematicRouteHints={[{ x: 3.472847, y: 1.645032 }]}
     />
     <trace
       from="Q2B.gate"
       to="R4.pin1"
       schematicRouteHints={[{ x: 2.193376, y: -0.731126 }]}
     />
-    <netlabel
-      net="GL2"
-      connectsTo="R4.pin2"
-      schX={3.472847}
-      schY={-0.731126}
-      anchorSide="left"
+    <trace
+      from="R4.pin2"
+      to="net.GL2"
+      schDisplayLabel="GL2"
+      schematicRouteHints={[{ x: 3.472847, y: -0.731126 }]}
     />
 
     {/* PVDD rail and the C1 decoupling branch. */}
@@ -327,12 +323,11 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
         { x: -1.27947, y: 1.096688 },
       ]}
     />
-    <netlabel
-      net="SH1"
-      connectsTo="NT2.pin1"
-      schX={-3.472847}
-      schY={0.182781}
-      anchorSide="right"
+    <trace
+      from="NT2.pin1"
+      to="net.SH1"
+      schDisplayLabel="SH1"
+      schematicRouteHints={[{ x: -3.472847, y: 0.182781 }]}
     />
     <trace
       from="C17.pin1"
@@ -362,12 +357,11 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
         { x: 2.010595, y: 0.182781 },
       ]}
     />
-    <netlabel
-      net="SH2"
-      connectsTo="NT3.pin2"
-      schX={3.472847}
-      schY={0.182781}
-      anchorSide="left"
+    <trace
+      from="NT3.pin2"
+      to="net.SH2"
+      schDisplayLabel="SH2"
+      schematicRouteHints={[{ x: 3.472847, y: 0.182781 }]}
     />
     <trace
       from="C17.pin2"
@@ -397,12 +391,11 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       ]}
     />
     <trace from="Q2B.source" to="NT4.pin1" />
-    <netlabel
-      net="SL2"
-      connectsTo="NT4.pin2"
-      schX={3.472847}
-      schY={-1.462251}
-      anchorSide="left"
+    <trace
+      from="NT4.pin2"
+      to="net.SL2"
+      schDisplayLabel="SL2"
+      schematicRouteHints={[{ x: 3.472847, y: -1.462251 }]}
     />
     <trace
       from="Q1A.source"

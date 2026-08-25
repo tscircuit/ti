@@ -290,26 +290,23 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
     <trace from="C6.pin1" to="U1.CPH" />
 
     {/* Driver inputs and control signals at their Altium label anchors. */}
-    <netlabel
-      net="IN1_PH"
-      connectsTo="U1.IN1_PH"
-      schX={-5.392051}
-      schY={-0.365563}
-      anchorSide="right"
+    <trace
+      from="U1.IN1_PH"
+      to="net.IN1_PH"
+      schDisplayLabel="IN1_PH"
+      schematicRouteHints={[{ x: -5.392051, y: -0.365563 }]}
     />
-    <netlabel
-      net="IN2_EN"
-      connectsTo="U1.IN2_EN"
-      schX={-5.392051}
-      schY={-0.731126}
-      anchorSide="right"
+    <trace
+      from="U1.IN2_EN"
+      to="net.IN2_EN"
+      schDisplayLabel="IN2_EN"
+      schematicRouteHints={[{ x: -5.392051, y: -0.731126 }]}
     />
-    <netlabel
-      net="SLEEP"
-      connectsTo="U1.nSLEEP"
-      schX={-5.392051}
-      schY={-1.096688}
-      anchorSide="right"
+    <trace
+      from="U1.nSLEEP"
+      to="net.SLEEP"
+      schDisplayLabel="SLEEP"
+      schematicRouteHints={[{ x: -5.392051, y: -1.096688 }]}
     />
     <netlabel
       net="GND"
@@ -318,106 +315,92 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       schY={-1.462251}
       anchorSide="right"
     />
-    <netlabel
-      net="SCLK"
-      connectsTo="U1.SCLK"
-      schX={-5.392051}
-      schY={-2.193377}
-      anchorSide="right"
+    <trace
+      from="U1.SCLK"
+      to="net.SCLK"
+      schDisplayLabel="SCLK"
+      schematicRouteHints={[{ x: -5.392051, y: -2.193377 }]}
     />
-    <netlabel
-      net="SDI"
-      connectsTo="U1.SDI"
-      schX={-5.392051}
-      schY={-2.376158}
-      anchorSide="right"
+    <trace
+      from="U1.SDI"
+      to="net.SDI"
+      schDisplayLabel="SDI"
+      schematicRouteHints={[{ x: -5.392051, y: -2.376158 }]}
     />
-    <netlabel
-      net="SDO"
-      connectsTo="U1.SDO"
-      schX={-5.392051}
-      schY={-2.558939}
-      anchorSide="right"
+    <trace
+      from="U1.SDO"
+      to="net.SDO"
+      schDisplayLabel="SDO"
+      schematicRouteHints={[{ x: -5.392051, y: -2.558939 }]}
     />
-    <netlabel
-      net="SCS"
-      connectsTo="U1.nSCS"
-      schX={-5.392051}
-      schY={-2.741721}
-      anchorSide="right"
+    <trace
+      from="U1.nSCS"
+      to="net.SCS"
+      schDisplayLabel="SCS"
+      schematicRouteHints={[{ x: -5.392051, y: -2.741721 }]}
     />
 
     {/* Gate-driver outputs. Repeated labels join the adjacent H-bridge exactly
         as they do on the source sheet; no cross-border wire was invented. */}
-    <netlabel
-      net="GH1"
-      connectsTo="U1.GH1"
-      schX={-1.005298}
-      schY={2.376158}
-      anchorSide="left"
+    <trace
+      from="U1.GH1"
+      to="net.GH1"
+      schDisplayLabel="GH1"
+      schematicRouteHints={[{ x: -1.005298, y: 2.376158 }]}
     />
-    <netlabel
-      net="SH1"
-      connectsTo="U1.SH1"
-      schX={-1.005298}
-      schY={2.010595}
-      anchorSide="left"
+    <trace
+      from="U1.SH1"
+      to="net.SH1"
+      schDisplayLabel="SH1"
+      schematicRouteHints={[{ x: -1.005298, y: 2.010595 }]}
     />
-    <netlabel
-      net="GL1"
-      connectsTo="U1.GL1"
-      schX={-1.005298}
-      schY={1.645032}
-      anchorSide="left"
+    <trace
+      from="U1.GL1"
+      to="net.GL1"
+      schDisplayLabel="GL1"
+      schematicRouteHints={[{ x: -1.005298, y: 1.645032 }]}
     />
-    <netlabel
-      net="GH2"
-      connectsTo="U1.GH2"
-      schX={-1.005298}
-      schY={1.27947}
-      anchorSide="left"
+    <trace
+      from="U1.GH2"
+      to="net.GH2"
+      schDisplayLabel="GH2"
+      schematicRouteHints={[{ x: -1.005298, y: 1.27947 }]}
     />
-    <netlabel
-      net="SH2"
-      connectsTo="U1.SH2"
-      schX={-1.005298}
-      schY={0.913907}
-      anchorSide="left"
+    <trace
+      from="U1.SH2"
+      to="net.SH2"
+      schDisplayLabel="SH2"
+      schematicRouteHints={[{ x: -1.005298, y: 0.913907 }]}
     />
-    <netlabel
-      net="GL2"
-      connectsTo="U1.GL2"
-      schX={-1.005298}
-      schY={0.548344}
-      anchorSide="left"
+    <trace
+      from="U1.GL2"
+      to="net.GL2"
+      schDisplayLabel="GL2"
+      schematicRouteHints={[{ x: -1.005298, y: 0.548344 }]}
     />
-    <netlabel
-      net="SL2"
-      connectsTo="U1.SL2"
-      schX={-1.005298}
-      schY={0.182781}
-      anchorSide="left"
+    <trace
+      from="U1.SL2"
+      to="net.SL2"
+      schDisplayLabel="SL2"
+      schematicRouteHints={[{ x: -1.005298, y: 0.182781 }]}
     />
-    <netlabel
-      net="SP"
-      connectsTo="U1.SP"
-      schX={-1.005298}
-      schY={-0.182781}
-      anchorSide="left"
+    <trace
+      from="U1.SP"
+      to="net.SP"
+      schDisplayLabel="SP"
+      schematicRouteHints={[{ x: -1.005298, y: -0.182781 }]}
     />
-    <netlabel
-      net="SN"
-      connectsTo="U1.SN"
-      schX={-1.005298}
-      schY={-0.548344}
-      anchorSide="left"
+    <trace
+      from="U1.SN"
+      to="net.SN"
+      schDisplayLabel="SN"
+      schematicRouteHints={[{ x: -1.005298, y: -0.548344 }]}
     />
-    <netlabel
-      net="SO"
-      connectsTo="U1.SO"
-      schX={-1.005298}
-      schY={-0.913907}
-      anchorSide="left"
+    <trace
+      from="U1.SO"
+      to="net.SO"
+      schDisplayLabel="SO"
+      schematicRouteHints={[{ x: -1.005298, y: -0.913907 }]}
     />
     <netlabel
       net="VCC"
@@ -431,12 +414,11 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       to="R8.pin2"
       schematicRouteHints={[{ x: -0.274172, y: -1.645032 }]}
     />
-    <netlabel
-      net="nFAULT"
-      connectsTo="R8.pin2"
-      schX={0.091391}
-      schY={-1.645032}
-      anchorSide="left"
+    <trace
+      from="R8.pin2"
+      to="net.nFAULT"
+      schDisplayLabel="nFAULT"
+      schematicRouteHints={[{ x: 0.091391, y: -1.645032 }]}
     />
     <netlabel
       net="VCC"
