@@ -897,12 +897,7 @@ const optocouplerPins = {
  * Reference design: https://www.ti.com/tool/PMP11282
  */
 export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
-  <subcircuit
-    schMaxTraceDistance="100mm"
-    schTraceAutoLabelEnabled={false}
-    routingDisabled
-    {...props}
-  >
+  <subcircuit schMaxTraceDistance="6mm" routingDisabled {...props}>
     <schematictext
       text="Notes: L500 and C100 are modified parts."
       schX={sheetCoord(-12.2)}
