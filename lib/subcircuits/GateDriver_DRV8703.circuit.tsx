@@ -4,14 +4,17 @@ import { DRV8703QRHBRQ1 } from "../chips/DRV8703QRHBRQ1.circuit.tsx";
 
 type NetTieProps = { name: string; schX: number; schY: number };
 
-/** C6 keeps the exact Altium component center and uses the native symbol. */
+/**
+ * C6 is shifted 0.365563 left from its Altium center so the native schematic
+ * autorouter can connect both charge-pump pins without net-label fallback.
+ */
 const ChargePumpCapacitor = () => (
   <capacitor
     name="C6"
     capacitance="0.1uF"
     footprint="0402"
     manufacturerPartNumber="GCM155R71H104KE02D"
-    schX={-5.392051}
+    schX={-5.757614}
     schY={0.274172}
     schOrientation="vertical"
   />
@@ -283,16 +286,8 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
     <trace from="NT1.pin2" to="U1.VDRAIN" />
 
     {/* Charge-pump capacitor. */}
-    <trace
-      from="C6.pin2"
-      to="U1.CPL"
-      schematicRouteHints={[{ x: -5.392051, y: 0 }]}
-    />
-    <trace
-      from="C6.pin1"
-      to="U1.CPH"
-      schematicRouteHints={[{ x: -5.392051, y: 0.548344 }]}
-    />
+    <trace from="C6.pin2" to="U1.CPL" />
+    <trace from="C6.pin1" to="U1.CPH" />
 
     {/* Driver inputs and control signals at their Altium label anchors. */}
     <netlabel
