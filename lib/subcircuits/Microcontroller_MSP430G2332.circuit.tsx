@@ -1,4 +1,6 @@
 import "tscircuit";
+import { MSP430G2332IPW20 } from "../chips/MSP430G2332IPW20.circuit.tsx";
+import { TPS78230DRVR } from "../chips/TPS78230DRVR.circuit.tsx";
 
 type Placement = { schX: number; schY: number; schRotation?: number };
 type Passive = Placement & { name: string; partNumber: string; value: string };
@@ -234,44 +236,6 @@ const genericChips = [
     schHeight: 0.6,
   },
   {
-    name: "U2",
-    partNumber: "U2",
-    schX: -9.7,
-    schY: 0.5,
-    pinLabels: {
-      pin1: "OUT",
-      pin2: "NC",
-      pin3: "GND",
-      pin4: "EN",
-      pin5: "GND",
-      pin6: "IN",
-      pin7: "EP",
-    },
-    schPinArrangement: {
-      leftSide: {
-        pins: [6, 4, 2],
-        direction: "top-to-bottom",
-      },
-      rightSide: {
-        pins: [1, 7, 3, 5],
-        direction: "top-to-bottom",
-      },
-    },
-    schPinStyle: {
-      pin4: {
-        marginTop: 0.2,
-      },
-      pin2: {
-        marginTop: 0.2,
-      },
-      pin7: {
-        marginTop: 0.2,
-      },
-    },
-    schWidth: 1.2,
-    schHeight: 1.2,
-  },
-  {
     name: "RT1",
     partNumber: "RT1",
     schX: -7.7,
@@ -293,57 +257,6 @@ const genericChips = [
     schPinStyle: {},
     schWidth: 0.5,
     schHeight: 0.5,
-  },
-  {
-    name: "U4",
-    partNumber: "U4",
-    schX: -1.9,
-    schY: -3.5,
-    pinLabels: {
-      pin1: "DVCC",
-      pin2: "P1_0_TA0CLK_ACLK_CA0",
-      pin3: "P1_1_TA0_0_A1",
-      pin4: "P1_2_TA0_1_A2",
-      pin5: "P1_3_ADC10CLK_A3_VREF_VEREF",
-      pin6: "P1_4_TA0_2_SMCLK_A4_VREF_VEREF_TCK",
-      pin7: "P1_5_TA0_0_A5_SCLK_TMS",
-      pin8: "P2_0",
-      pin9: "P2_1",
-      pin10: "P2_2",
-      pin11: "P2_3",
-      pin12: "P2_4",
-      pin13: "P2_5",
-      pin14: "P1_6_TA0_1_A6_SDO_SCL_TDI_TCLK",
-      pin15: "P1_7_A7_SDI_SDA_TDO_TDI",
-      pin16: "RST_NMI_SBWTDIO",
-      pin17: "TEST_SBWTCK",
-      pin18: "P2_7_XOUT",
-      pin19: "P2_6_XIN_TA0_1",
-      pin20: "DVSS",
-    },
-    schPinArrangement: {
-      leftSide: {
-        pins: [2, 3, 4, 5, 6, 7, 14, 15, 16, 17, 1],
-        direction: "top-to-bottom",
-      },
-      rightSide: {
-        pins: [8, 9, 10, 11, 12, 13, 19, 18, 20],
-        direction: "top-to-bottom",
-      },
-    },
-    schPinStyle: {
-      pin16: {
-        marginTop: 0.2,
-      },
-      pin1: {
-        marginTop: 0.2,
-      },
-      pin20: {
-        marginTop: 0.8,
-      },
-    },
-    schWidth: 4.4,
-    schHeight: 2.8,
   },
 ] as const;
 const schematicNets = [
@@ -487,14 +400,13 @@ for (const net of schematicNets) {
   }
 }
 
-export const McuCircuit = ({
+export const Microcontroller_MSP430G2332 = ({
   manualEdits,
   useManualPlacement = false,
 }: McuCircuitProps = {}) => (
-  <board
+  <subcircuit
     manualEdits={manualEdits}
     routingDisabled
-    placementDrcChecksDisabled
     schAutoLayoutEnabled={false}
     schTraceAutoLabelEnabled={false}
     schMaxTraceDistance={100}
@@ -562,6 +474,44 @@ export const McuCircuit = ({
         schRotation={component.schRotation}
       />
     ))}
+    <TPS78230DRVR
+      name="U2"
+      schX={useManualPlacement ? undefined : -9.7}
+      schY={useManualPlacement ? undefined : 0.5}
+      schWidth={1.2}
+      schHeight={1.2}
+      schPinArrangement={{
+        leftSide: { pins: [6, 4, 2], direction: "top-to-bottom" },
+        rightSide: { pins: [1, 7, 3, 5], direction: "top-to-bottom" },
+      }}
+      schPinStyle={{
+        pin4: { marginTop: 0.2 },
+        pin2: { marginTop: 0.2 },
+        pin7: { marginTop: 0.2 },
+      }}
+    />
+    <MSP430G2332IPW20
+      name="U4"
+      schX={useManualPlacement ? undefined : -1.9}
+      schY={useManualPlacement ? undefined : -3.5}
+      schWidth={4.4}
+      schHeight={2.8}
+      schPinArrangement={{
+        leftSide: {
+          pins: [2, 3, 4, 5, 6, 7, 14, 15, 16, 17, 1],
+          direction: "top-to-bottom",
+        },
+        rightSide: {
+          pins: [8, 9, 10, 11, 12, 13, 19, 18, 20],
+          direction: "top-to-bottom",
+        },
+      }}
+      schPinStyle={{
+        pin16: { marginTop: 0.2 },
+        pin1: { marginTop: 0.2 },
+        pin20: { marginTop: 0.8 },
+      }}
+    />
     {genericChips.map((component) => (
       <chip
         key={component.name}
@@ -601,7 +551,7 @@ export const McuCircuit = ({
       schY={-6.9}
       anchorSide="left"
     />
-  </board>
+  </subcircuit>
 );
 
-export default McuCircuit;
+export default Microcontroller_MSP430G2332;

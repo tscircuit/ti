@@ -1,4 +1,6 @@
 import "tscircuit";
+import type { SubcircuitProps } from "@tscircuit/props";
+import { BQ25731RSN } from "../chips/BQ25731RSN.circuit.tsx";
 
 type SchematicPin = {
   number: number;
@@ -780,10 +782,6 @@ const traceConnections = schematicNets.flatMap((net) =>
   })),
 );
 
-const bq25731PinLabels = Object.fromEntries(
-  charger.pins!.map(({ number, name }) => [`pin${number}`, name]),
-);
-
 // Pin order follows the original Altium symbol from top to bottom.
 const bq25731LeftPins = [
   30, 32, 29, 31, 1, 2, 3, 7, 6, 16, 11, 13, 12, 4, 5, 15, 14,
@@ -829,12 +827,8 @@ const bq25731SchPinStyle = {
   pin27: { marginTop: 0.2 },
 } as const;
 
-export default () => (
-  <board
-    routingDisabled
-    placementDrcChecksDisabled
-    schAutoLayoutEnabled={false}
-  >
+export const BatteryCharging_BQ25731 = (props: SubcircuitProps) => (
+  <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
     {powerNets.map((net) => (
       <net name={net.name} isPowerNet isGroundNet={net.name === "GND"} />
     ))}
@@ -909,10 +903,8 @@ export default () => (
       />
     ))}
 
-    <chip
+    <BQ25731RSN
       name={charger.ref}
-      manufacturerPartNumber={charger.partNumber}
-      pinLabels={bq25731PinLabels}
       schPinArrangement={{
         leftSide: { pins: bq25731LeftPins, direction: "top-to-bottom" },
         rightSide: { pins: bq25731RightPins, direction: "top-to-bottom" },
@@ -942,5 +934,7 @@ export default () => (
         to={`net.${net.name}`}
       />
     ))}
-  </board>
+  </subcircuit>
 );
+
+export default BatteryCharging_BQ25731;

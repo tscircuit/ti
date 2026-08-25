@@ -1,4 +1,7 @@
 import "tscircuit";
+import type { SubcircuitProps } from "@tscircuit/props";
+import { TLV9152IDR } from "../chips/TLV9152IDR.circuit.tsx";
+import { TPS61288RQQR } from "../chips/TPS61288RQQR.circuit.tsx";
 
 type Placement = { schX: number; schY: number; schRotation?: number };
 type Passive = Placement & { name: string; partNumber: string; value: string };
@@ -468,114 +471,6 @@ const testPoints: Array<{ name: string; schX: number; schY: number }> = [
 const mosfets: any[] = [];
 const genericChips = [
   {
-    name: "U1",
-    partNumber: "TPS61288RQQR",
-    schX: -2.4,
-    schY: 7,
-    pinLabels: {
-      pin11: "VCC",
-      pin7: "VIN",
-      pin4: "SW",
-      pin9: "SW",
-      pin8: "BST",
-      pin2: "COMP",
-      pin6: "EN",
-      pin1: "FB",
-      pin5: "VOUT",
-      pin10: "AGND",
-      pin3: "PGND",
-    },
-    schPinArrangement: {
-      leftSide: {
-        pins: [7, 4, 9, 8, 6, 11],
-        direction: "top-to-bottom",
-      },
-      rightSide: {
-        pins: [5, 1, 2, 10, 3],
-        direction: "top-to-bottom",
-      },
-    },
-    schPinStyle: {
-      pin4: {
-        marginTop: 0.2,
-      },
-      pin8: {
-        marginTop: 0.2,
-      },
-      pin6: {
-        marginTop: 0.2,
-      },
-      pin11: {
-        marginTop: 0.2,
-      },
-      pin1: {
-        marginTop: 0.2,
-      },
-      pin2: {
-        marginTop: 0.2,
-      },
-      pin10: {
-        marginTop: 0.6,
-      },
-    },
-    schWidth: 2,
-    schHeight: 2.4,
-  },
-  {
-    name: "U2",
-    partNumber: "TPS61288RQQR",
-    schX: -2.4,
-    schY: -0.2,
-    pinLabels: {
-      pin11: "VCC",
-      pin7: "VIN",
-      pin4: "SW",
-      pin9: "SW",
-      pin8: "BST",
-      pin2: "COMP",
-      pin6: "EN",
-      pin1: "FB",
-      pin5: "VOUT",
-      pin10: "AGND",
-      pin3: "PGND",
-    },
-    schPinArrangement: {
-      leftSide: {
-        pins: [7, 4, 9, 8, 6, 11],
-        direction: "top-to-bottom",
-      },
-      rightSide: {
-        pins: [5, 1, 2, 10, 3],
-        direction: "top-to-bottom",
-      },
-    },
-    schPinStyle: {
-      pin4: {
-        marginTop: 0.2,
-      },
-      pin8: {
-        marginTop: 0.2,
-      },
-      pin6: {
-        marginTop: 0.2,
-      },
-      pin11: {
-        marginTop: 0.2,
-      },
-      pin1: {
-        marginTop: 0.2,
-      },
-      pin2: {
-        marginTop: 0.2,
-      },
-      pin10: {
-        marginTop: 0.6,
-      },
-    },
-    schWidth: 2,
-    schHeight: 2.4,
-  },
-  {
     name: "JOUT_P1",
     partNumber: "691214110002",
     schX: 10.8,
@@ -665,15 +560,6 @@ const genericChips = [
     schPinStyle: {},
     schWidth: 0.3,
     schHeight: 0.3,
-  },
-] as const;
-const u3Parts = [
-  {
-    name: "U3A",
-    partNumber: "TLV9152IDR",
-    schX: 0.2,
-    schY: -6.6,
-    symbolName: "opamp_with_power",
   },
 ] as const;
 const schematicNets = [
@@ -903,12 +789,8 @@ const traceConnections = schematicNets.flatMap((net) =>
 );
 const groundNet = schematicNets.find((net) => net.name === "GND")!;
 
-export default () => (
-  <board
-    routingDisabled
-    placementDrcChecksDisabled
-    schAutoLayoutEnabled={false}
-  >
+export const USBTypeC_TPS61288 = (props: SubcircuitProps) => (
+  <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
     <net name="GND" isGroundNet />
 
     {capacitors.map((component) => (
@@ -973,6 +855,32 @@ export default () => (
         schY={component.schY}
       />
     ))}
+    {[
+      { name: "U1", schY: 7 },
+      { name: "U2", schY: -0.2 },
+    ].map((component) => (
+      <TPS61288RQQR
+        key={component.name}
+        name={component.name}
+        schX={-2.4}
+        schY={component.schY}
+        schWidth={2}
+        schHeight={2.4}
+        schPinArrangement={{
+          leftSide: { pins: [7, 4, 9, 8, 6, 11], direction: "top-to-bottom" },
+          rightSide: { pins: [5, 1, 2, 10, 3], direction: "top-to-bottom" },
+        }}
+        schPinStyle={{
+          pin4: { marginTop: 0.2 },
+          pin8: { marginTop: 0.2 },
+          pin6: { marginTop: 0.2 },
+          pin11: { marginTop: 0.2 },
+          pin1: { marginTop: 0.2 },
+          pin2: { marginTop: 0.2 },
+          pin10: { marginTop: 0.6 },
+        }}
+      />
+    ))}
     {genericChips.map((component) => (
       <chip
         key={component.name}
@@ -987,20 +895,13 @@ export default () => (
         schY={component.schY}
       />
     ))}
-    {u3Parts.map((component) => (
-      <opamp
-        key={component.name}
-        name={component.name}
-        manufacturerPartNumber={component.partNumber}
-        symbolName={component.symbolName}
-        schX={component.schX}
-        schY={component.schY}
-      />
-    ))}
+    <TLV9152IDR name="U3A" schX={0.2} schY={-6.6} />
 
     {traceConnections.map(({ from, to }, index) => (
       <trace key={`${from}-${to}-${index}`} from={from} to={to} />
     ))}
     <trace from={groundNet.ports[0]} to="net.GND" />
-  </board>
+  </subcircuit>
 );
+
+export default USBTypeC_TPS61288;

@@ -1,4 +1,6 @@
 import "tscircuit";
+import type { SubcircuitProps } from "@tscircuit/props";
+import { TPS61236RWLR } from "../chips/TPS61236RWLR.circuit.tsx";
 
 type Placement = { schX: number; schY: number; schRotation?: number };
 type Passive = Placement & { name: string; partNumber: string; value: string };
@@ -156,55 +158,6 @@ const mosfets = [
 ] as const;
 const genericChips = [
   {
-    name: "U1",
-    partNumber: "U1",
-    schX: -6.4,
-    schY: 4.3,
-    pinLabels: {
-      pin1: "PGND",
-      pin2: "SW",
-      pin3: "VIN",
-      pin4: "CC",
-      pin5: "AGND",
-      pin6: "FB",
-      pin7: "EN",
-      pin8: "INACT",
-      pin9: "VOUT",
-    },
-    schPinArrangement: {
-      leftSide: {
-        pins: [3, 7, 4, 8],
-        direction: "top-to-bottom",
-      },
-      rightSide: {
-        pins: [9, 2, 6, 5, 1],
-        direction: "top-to-bottom",
-      },
-    },
-    schPinStyle: {
-      pin7: {
-        marginTop: 0.4,
-      },
-      pin4: {
-        marginTop: 0.4,
-      },
-      pin8: {
-        marginTop: 0.4,
-      },
-      pin2: {
-        marginTop: 0.4,
-      },
-      pin6: {
-        marginTop: 0.4,
-      },
-      pin5: {
-        marginTop: 0.4,
-      },
-    },
-    schWidth: 2.2,
-    schHeight: 2.8,
-  },
-  {
     name: "J1",
     partNumber: "",
     schX: -11.38,
@@ -337,12 +290,8 @@ const groundNet = schematicNets.find((net) => net.name === "GND")!;
 // keeps the rendered power-net text as "3V" while satisfying the selector.
 const threeVoltNetName = "\u200B3V";
 
-export default () => (
-  <board
-    routingDisabled
-    placementDrcChecksDisabled
-    schAutoLayoutEnabled={false}
-  >
+export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
+  <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
     <net name="GND" isGroundNet />
     <net name={threeVoltNetName} isPowerNet />
     <net name="VCUR" />
@@ -410,6 +359,25 @@ export default () => (
         schY={component.schY}
       />
     ))}
+    <TPS61236RWLR
+      name="U1"
+      schX={-6.4}
+      schY={4.3}
+      schWidth={2.2}
+      schHeight={2.8}
+      schPinArrangement={{
+        leftSide: { pins: [3, 7, 4, 8], direction: "top-to-bottom" },
+        rightSide: { pins: [9, 2, 6, 5, 1], direction: "top-to-bottom" },
+      }}
+      schPinStyle={{
+        pin7: { marginTop: 0.4 },
+        pin4: { marginTop: 0.4 },
+        pin8: { marginTop: 0.4 },
+        pin2: { marginTop: 0.4 },
+        pin6: { marginTop: 0.4 },
+        pin5: { marginTop: 0.4 },
+      }}
+    />
     {genericChips.map((component) => (
       <chip
         key={component.name}
@@ -436,5 +404,7 @@ export default () => (
       connectsTo=".R5 > .pin1"
       anchorSide="bottom"
     />
-  </board>
+  </subcircuit>
 );
+
+export default BoostConverter_TPS61236;
