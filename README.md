@@ -136,7 +136,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
-- `TIDM_PSFB_DCDC` — TIDM-PSFB-DCDC 600 W phase-shifted full-bridge isolated DC/DC
+- `TIDA_01159` — TIDA-01159 compact reinforced-isolated half-bridge gate drive
 
 ## Exported Chips
 

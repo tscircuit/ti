@@ -84,7 +84,7 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
-import { TIDM_PSFB_DCDC } from "./lib/subcircuits/TIDM_PSFB_DCDC.circuit.tsx";
+import { TIDA_01159 } from "./lib/subcircuits/TIDA_01159.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -130,7 +130,7 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  TIDM_PSFB_DCDC,
+  TIDA_01159,
 };
 
 export const TiChipComponents = {
@@ -218,7 +218,7 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  TIDM_PSFB_DCDC,
+  TIDA_01159,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
