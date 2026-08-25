@@ -16,219 +16,123 @@ const SQJ940EP = (props: ChipProps<typeof dualMosfetPinLabels>) => (
     datasheetUrl="https://www.vishay.com/docs/62767/sqj940ep.pdf"
     footprint="kicad:Package_SO/PowerPAK_SO-8_Dual"
     pinLabels={dualMosfetPinLabels}
-    schWidth="0.9mm"
-    schHeight="2.376158mm"
     {...props}
   />
 );
 
-type PositionedSymbolProps = { name: string; schX: number; schY: number };
+type NetTieProps = {
+  name: string;
+  schX: number;
+  schY: number;
+};
 
-const NetTie = ({ name, schX, schY }: PositionedSymbolProps) => (
+/**
+ * tscircuit does not currently have a dedicated net-tie schematic primitive.
+ * The TI source uses a two-pin box, so retain that topology with the repository's
+ * standard generic chip symbol instead of drawing a replacement symbol.
+ */
+const NetTie = ({ name, schX, schY }: NetTieProps) => (
   <chip
     name={name}
+    displayName={name}
     schX={schX}
     schY={schY}
+    schWidth="0.4mm"
+    schHeight="0.4mm"
     footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
-    pinLabels={{ pin1: "A", pin2: "B" }}
+    pinLabels={{ pin1: "1", pin2: "2" }}
+    schPinArrangement={{
+      leftSide: { pins: [1], direction: "top-to-bottom" },
+      rightSide: { pins: [2], direction: "top-to-bottom" },
+    }}
     internallyConnectedPins={[[1, 2]]}
-    symbol={
-      <symbol>
-        <schematictext
-          text="{NAME}"
-          schX={-0.28}
-          schY={0.27}
-          fontSize={0.12}
-          anchor="left"
-        />
-        <schematictext
-          text="Net-Tie"
-          schX={0}
-          schY={-0.28}
-          fontSize={0.1}
-          anchor="center"
-        />
-        <schematicrect
-          schX={0}
-          schY={0}
-          width={0.48}
-          height={0.3}
-          strokeWidth={0.025}
-          color="#c77700"
-        />
-        <port
-          name="pin1"
-          schX={-0.4}
-          schY={0}
-          direction="left"
-          schStemLength={0.16}
-          pinNumber={1}
-        />
-        <port
-          name="pin2"
-          schX={0.4}
-          schY={0}
-          direction="right"
-          schStemLength={0.16}
-          pinNumber={2}
-        />
-      </symbol>
-    }
   />
 );
 
-type MosfetSymbolProps = { label: string; mirrored?: boolean };
-
-const MosfetSymbol = ({ label, mirrored = false }: MosfetSymbolProps) => (
-  <symbol>
-    <schematictext
-      text={label}
-      schX={mirrored ? 0.3 : -0.3}
-      schY={0.43}
-      fontSize={0.14}
-      anchor="center"
-    />
-    <schematiccircle
-      center={{ x: 0, y: 0 }}
-      radius={0.26}
-      strokeWidth={0.025}
-      color="#840000"
-    />
-    <schematicline
-      x1={mirrored ? 0.1 : -0.1}
-      y1={-0.17}
-      x2={mirrored ? 0.1 : -0.1}
-      y2={0.17}
-      strokeWidth={0.025}
-      color="#840000"
-    />
-    <schematicline
-      x1={mirrored ? -0.08 : 0.08}
-      y1={-0.16}
-      x2={mirrored ? -0.08 : 0.08}
-      y2={0.16}
-      strokeWidth={0.025}
-      color="#840000"
-    />
-    <schematicline
-      x1={mirrored ? 0.1 : -0.1}
-      y1={0.1}
-      x2={mirrored ? -0.08 : 0.08}
-      y2={0.1}
-      strokeWidth={0.025}
-      color="#840000"
-    />
-    <schematicline
-      x1={mirrored ? 0.1 : -0.1}
-      y1={-0.1}
-      x2={mirrored ? -0.08 : 0.08}
-      y2={-0.1}
-      strokeWidth={0.025}
-      color="#840000"
-    />
-    <port
-      name="pin3"
-      schX={mirrored ? 0.48 : -0.48}
-      schY={0}
-      direction={mirrored ? "right" : "left"}
-      schStemLength={0.38}
-      pinNumber={3}
-    />
-    <port
-      name="pin1"
-      schX={mirrored ? -0.08 : 0.08}
-      schY={0.48}
-      direction="up"
-      schStemLength={0.32}
-      pinNumber={1}
-    />
-    <port
-      name="pin2"
-      schX={mirrored ? -0.08 : 0.08}
-      schY={-0.48}
-      direction="down"
-      schStemLength={0.32}
-      pinNumber={2}
-    />
-  </symbol>
-);
-
 /**
- * Dual-SQJ940EP H-bridge power stage extracted from TI reference design
- * TIDA-01389. The DRV8703-Q1 gate driver is a separate subcircuit.
+ * TIDA-01389 H-bridge power stage, extracted from TIDA-01389_Sch.SchDoc.
+ *
+ * Component centers and route bends below are translated directly from the
+ * Altium sheet around the H-bridge center (26.503300, 7.859599). Q1 and Q2 are
+ * dual SQJ940EP packages, each represented by its two schematic units.
  *
  * Reference: https://www.ti.com/tool/TIDA-01389
  */
 export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schMaxTraceDistance="50mm" {...props}>
+  <subcircuit
+    schMaxTraceDistance="20mm"
+    schTraceAutoLabelEnabled={false}
+    routingDisabled
+    {...props}
+  >
     <net name="GND" isGroundNet />
 
     <schematicbox
       name="HBRIDGE_SECTION"
-      schX={5.392051}
+      schX={0}
       schY={0}
       width={8.042381}
-      height={7.676818}
+      height={8.2}
     />
-    <schematictext
-      schX={5.392051}
-      schY={-4.35}
-      text="H-BRIDGE"
-      fontSize={0.3}
-    />
+    <schematictext schX={0} schY={-4.55} text="H-BRIDGE" fontSize={0.3} />
 
+    {/* The physical dual-MOSFET packages carry BOM/footprint metadata. Their
+        four Altium schematic units are rendered below with native tscircuit
+        MOSFET symbols. PCB routing is outside this schematic-only extraction. */}
     <SQJ940EP
       name="Q1"
       noSchematicRepresentation
-      connections={{
-        S1: "net.HSRC",
-        G1: "net.Q1G1",
-        S2: "net.HB1",
-        G2: "net.Q1G2",
-        D2: "net.PVDD",
-        D1: "net.HB1",
-      }}
+      noConnect={["S1", "G1", "S2", "G2", "D2", "D1"]}
     />
     <SQJ940EP
       name="Q2"
       noSchematicRepresentation
-      connections={{
-        S1: "net.HB2",
-        G1: "net.Q2G1",
-        S2: "net.HSRC",
-        G2: "net.Q2G2",
-        D2: "net.HB2",
-        D1: "net.PVDD",
-      }}
+      noConnect={["S1", "G1", "S2", "G2", "D2", "D1"]}
     />
 
-    <chip
+    <mosfet
       name="Q1B"
       displayName="Q1"
-      schX={4.28}
-      schY={0.86}
-      symbol={<MosfetSymbol label="Q1" />}
+      channelType="n"
+      mosfetMode="enhancement"
+      schX={-1.343443}
+      schY={1.645032}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="left"
     />
-    <chip
+    <mosfet
       name="Q1A"
       displayName="Q1"
-      schX={4.28}
-      schY={-1.14}
-      symbol={<MosfetSymbol label="Q1" />}
+      channelType="n"
+      mosfetMode="enhancement"
+      schX={-1.343443}
+      schY={-0.731126}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="left"
     />
-    <chip
+    <mosfet
       name="Q2A"
       displayName="Q2"
-      schX={7.36}
-      schY={0.86}
-      symbol={<MosfetSymbol label="Q2" mirrored />}
+      channelType="n"
+      mosfetMode="enhancement"
+      schX={1.343443}
+      schY={1.645032}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="right"
     />
-    <chip
+    <mosfet
       name="Q2B"
       displayName="Q2"
-      schX={7.36}
-      schY={-1.14}
-      symbol={<MosfetSymbol label="Q2" mirrored />}
+      channelType="n"
+      mosfetMode="enhancement"
+      schX={1.343443}
+      schY={-0.731126}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="right"
     />
 
     <resistor
@@ -236,32 +140,32 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       resistance="0ohm"
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
-      schX={2.86}
-      schY={0.9}
+      schX={-2.741721}
+      schY={1.645032}
     />
     <resistor
       name="R3"
       resistance="0ohm"
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
-      schX={2.86}
-      schY={-1.08}
+      schX={-2.741721}
+      schY={-0.731126}
     />
     <resistor
       name="R5"
       resistance="0ohm"
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
-      schX={8.23}
-      schY={0.9}
+      schX={2.558939}
+      schY={1.645032}
     />
     <resistor
       name="R4"
       resistance="0ohm"
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
-      schX={8.23}
-      schY={-1.08}
+      schX={2.558939}
+      schY={-0.831126}
     />
 
     <capacitor
@@ -269,8 +173,8 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       capacitance="1uF"
       footprint="0805"
       manufacturerPartNumber="GRM21BR71H105KA12L"
-      schX={4.68}
-      schY={2.57}
+      schX={-0.913907}
+      schY={3.198674}
       schOrientation="vertical"
     />
     <capacitor
@@ -279,8 +183,8 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="GCM155R71C104KA55D"
       doNotPlace
-      schX={5.47}
-      schY={0.1}
+      schX={-0.091391}
+      schY={0.913907}
     />
     <capacitor
       name="C18"
@@ -288,22 +192,23 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="GRM155R71C102KA01D"
       doNotPlace
-      schX={5.47}
-      schY={-0.6}
+      schX={-0.091391}
+      schY={0}
     />
 
-    <NetTie name="NT2" schX={4.35} schY={-0.15} />
-    <NetTie name="NT3" schX={7.71} schY={-0.15} />
-    <NetTie name="NT4" schX={7.71} schY={-1.62} />
-    <NetTie name="NT5" schX={6.26} schY={-2.03} />
-    <NetTie name="NT6" schX={6.26} schY={-3.38} />
+    <NetTie name="NT2" schX={-2.376158} schY={0.182781} />
+    <NetTie name="NT3" schX={2.376158} schY={0.182781} />
+    <NetTie name="NT4" schX={2.376158} schY={-1.462251} />
+    <NetTie name="NT5" schX={0.731126} schY={-1.827814} />
+    <NetTie name="NT6" schX={0.731126} schY={-3.25} />
+
     <resistor
       name="R1"
       resistance="0.04ohm"
       footprint="2010"
       manufacturerPartNumber="CSRN2010FK40L0"
-      schX={5.37}
-      schY={-2.59}
+      schX={0}
+      schY={-2.376158}
       schOrientation="vertical"
     />
     <capacitor
@@ -311,122 +216,216 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       capacitance="1000pF"
       footprint="0402"
       manufacturerPartNumber="GRM155R71C102KA01D"
-      schX={6.66}
-      schY={-2.61}
+      schX={1.27947}
+      schY={-2.284767}
       schOrientation="vertical"
     />
 
+    {/* Gate paths: direct horizontal wires in the Altium source. */}
     <netlabel
       net="GH1"
       connectsTo="R2.pin1"
-      schX={2.2}
-      schY={0.9}
+      schX={-3.472847}
+      schY={1.645032}
       anchorSide="right"
     />
-    <trace from="R2.pin2" to="Q1B.pin3" />
+    <trace from="R2.pin2" to="Q1B.gate" />
     <netlabel
       net="GL1"
       connectsTo="R3.pin1"
-      schX={2.2}
-      schY={-1.08}
+      schX={-3.472847}
+      schY={-0.731126}
       anchorSide="right"
     />
-    <trace from="R3.pin2" to="Q1A.pin3" />
-    <trace from="Q2A.pin3" to="R5.pin1" />
+    <trace from="R3.pin2" to="Q1A.gate" />
+    <trace from="Q2A.gate" to="R5.pin1" />
     <netlabel
       net="GH2"
       connectsTo="R5.pin2"
-      schX={8.9}
-      schY={0.9}
+      schX={3.472847}
+      schY={1.645032}
       anchorSide="left"
     />
-    <trace from="Q2B.pin3" to="R4.pin1" />
+    <trace from="Q2B.gate" to="R4.pin1" />
     <netlabel
       net="GL2"
       connectsTo="R4.pin2"
-      schX={8.9}
-      schY={-1.08}
+      schX={3.472847}
+      schY={-0.831126}
       anchorSide="left"
     />
 
-    <trace from="Q1B.pin1" to="Q2A.pin1" />
-    <trace from="C1.pin1" to="Q1B.pin1" />
+    {/* PVDD rail and the C1 decoupling branch. */}
+    <trace from="Q1B.drain" to="Q2A.drain" />
+    <trace
+      from="C1.pin1"
+      to="Q1B.drain"
+      schematicRouteHints={[
+        { x: -0.913907, y: 3.472846 },
+        { x: 0, y: 3.472846 },
+        { x: 0, y: 2.193377 },
+      ]}
+    />
     <netlabel
       net="PVDD"
-      connectsTo="C1.pin1"
-      schX={4.95}
-      schY={3.05}
+      connectsTo="Q1B.drain"
+      schX={0.365563}
+      schY={3.472846}
       anchorSide="left"
     />
     <netlabel
       net="GND"
       connectsTo="C1.pin2"
-      schX={4.95}
-      schY={2.0}
-      anchorSide="left"
+      schX={-0.913907}
+      schY={2.924502}
+      anchorSide="top"
     />
 
-    <trace from="Q1B.pin2" to="Q1A.pin1" />
-    <trace from="NT2.pin2" to="Q1B.pin2" />
+    {/* Left bridge midpoint, exactly following the source junctions. */}
+    <trace from="Q1B.source" to="Q1A.drain" />
+    <trace
+      from="NT2.pin2"
+      to="Q1B.source"
+      schematicRouteHints={[
+        { x: -1.27947, y: 0.182781 },
+        { x: -1.27947, y: 1.096688 },
+      ]}
+    />
     <netlabel
       net="SH1"
       connectsTo="NT2.pin1"
-      schX={3.55}
-      schY={-0.15}
+      schX={-3.472847}
+      schY={0.182781}
       anchorSide="right"
     />
-    <trace from="C17.pin1" to="Q1B.pin2" />
-    <trace from="C18.pin1" to="Q1B.pin2" />
+    <trace
+      from="C17.pin1"
+      to="Q1B.source"
+      schematicRouteHints={[
+        { x: -0.731126, y: 0.913907 },
+        { x: -0.731126, y: 0.182781 },
+        { x: -1.27947, y: 0.182781 },
+      ]}
+    />
+    <trace
+      from="C18.pin1"
+      to="C17.pin1"
+      schematicRouteHints={[
+        { x: -0.731126, y: 0 },
+        { x: -0.731126, y: 0.913907 },
+      ]}
+    />
 
-    <trace from="Q2A.pin2" to="Q2B.pin1" />
-    <trace from="NT3.pin1" to="Q2A.pin2" />
+    {/* Right bridge midpoint, mirrored from the Altium source. */}
+    <trace from="Q2A.source" to="Q2B.drain" />
+    <trace
+      from="Q2A.source"
+      to="NT3.pin1"
+      schematicRouteHints={[
+        { x: 1.27947, y: 0.182781 },
+        { x: 2.010595, y: 0.182781 },
+      ]}
+    />
     <netlabel
       net="SH2"
       connectsTo="NT3.pin2"
-      schX={8.5}
-      schY={-0.15}
+      schX={3.472847}
+      schY={0.182781}
       anchorSide="left"
     />
-    <trace from="C17.pin2" to="Q2A.pin2" />
-    <trace from="C18.pin2" to="Q2A.pin2" />
+    <trace
+      from="C17.pin2"
+      to="Q2A.source"
+      schematicRouteHints={[
+        { x: 0.731126, y: 0.913907 },
+        { x: 0.731126, y: 0.182781 },
+        { x: 1.27947, y: 0.182781 },
+      ]}
+    />
+    <trace
+      from="C18.pin2"
+      to="C17.pin2"
+      schematicRouteHints={[
+        { x: 0.731126, y: 0 },
+        { x: 0.731126, y: 0.913907 },
+      ]}
+    />
 
-    <trace from="Q1A.pin2" to="Q2B.pin2" />
-    <trace from="NT4.pin1" to="Q2B.pin2" />
+    {/* Low-side source rail, current shunt, and SP/SN filter. */}
+    <trace
+      from="Q1A.source"
+      to="Q2B.source"
+      schematicRouteHints={[
+        { x: -1.27947, y: -1.462251 },
+        { x: 1.27947, y: -1.462251 },
+      ]}
+    />
+    <trace from="Q2B.source" to="NT4.pin1" />
     <netlabel
       net="SL2"
       connectsTo="NT4.pin2"
-      schX={8.5}
-      schY={-1.62}
+      schX={3.472847}
+      schY={-1.462251}
       anchorSide="left"
     />
-    <trace from="NT5.pin1" to="Q1A.pin2" />
+    <trace
+      from="Q1A.source"
+      to="R1.pin1"
+      schematicRouteHints={[
+        { x: -1.27947, y: -1.462251 },
+        { x: 0, y: -1.462251 },
+        { x: 0, y: -2.010595 },
+      ]}
+    />
+    <trace
+      from="NT5.pin1"
+      to="R1.pin1"
+      schematicRouteHints={[
+        { x: 0, y: -1.827814 },
+        { x: 0, y: -2.010595 },
+      ]}
+    />
     <netlabel
       net="SP"
       connectsTo="NT5.pin2"
-      schX={6.95}
-      schY={-2.03}
+      schX={1.645032}
+      schY={-1.827814}
       anchorSide="left"
     />
-    <trace from="R1.pin1" to="NT5.pin2" />
-    <trace from="R1.pin2" to="NT6.pin1" />
+    <trace from="C16.pin1" to="NT5.pin2" />
+
     <netlabel
       net="GND"
       connectsTo="R1.pin2"
-      schX={5.37}
-      schY={-3.35}
+      schX={0}
+      schY={-3.48}
       anchorSide="top"
+    />
+    <trace
+      from="R1.pin2"
+      to="NT6.pin1"
+      schematicRouteHints={[
+        { x: 0, y: -3.25 },
+        { x: 0.365563, y: -3.25 },
+      ]}
     />
     <netlabel
       net="SN"
       connectsTo="NT6.pin2"
-      schX={6.95}
-      schY={-3.38}
+      schX={1.645032}
+      schY={-3.25}
       anchorSide="left"
     />
-    <trace from="C16.pin1" to="NT5.pin2" />
-    <trace from="C16.pin2" to="NT6.pin2" />
+    <trace
+      from="C16.pin2"
+      to="NT6.pin2"
+      schematicRouteHints={[
+        { x: 1.27947, y: -3.25 },
+        { x: 1.096688, y: -3.25 },
+      ]}
+    />
 
-    <port name="PVDD" direction="left" connectsTo="net.PVDD" />
+    <port name="PVDD" direction="left" connectsTo="C1.pin1" />
     <port name="GH1" direction="left" connectsTo="net.GH1" />
     <port name="SH1" direction="left" connectsTo="net.SH1" />
     <port name="GL1" direction="left" connectsTo="net.GL1" />
