@@ -3,7 +3,6 @@ import "tscircuit";
 import { BQ294700DSG } from "../chips/BQ294700DSG.circuit.tsx";
 import { BQ40Z60RHB } from "../chips/BQ40Z60RHB.circuit.tsx";
 
-// TIDA-00553 component values and normalized Altium schematic placement.
 export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
   <subcircuit
     routingDisabled
@@ -467,11 +466,9 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       name="J3"
       manufacturerPartNumber="J3"
       pinLabels={{ pin5: "5", pin4: "4", pin1: "1", pin2: "2", pin3: "3" }}
-      schPinArrangement={
-        {
-          rightSide: { pins: [1, 2, 3, 4, 5], direction: "top-to-bottom" },
-        } as any
-      }
+      schPinArrangement={{
+        rightSide: { pins: [1, 2, 3, 4, 5], direction: "top-to-bottom" },
+      }}
       schPinStyle={{}}
       schWidth={0.8}
       schHeight={1.2}
@@ -482,9 +479,9 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       name="J6"
       manufacturerPartNumber="J6"
       pinLabels={{ pin4: "4", pin1: "1", pin2: "2", pin3: "3" }}
-      schPinArrangement={
-        { leftSide: { pins: [4, 3, 2, 1], direction: "top-to-bottom" } } as any
-      }
+      schPinArrangement={{
+        leftSide: { pins: [4, 3, 2, 1], direction: "top-to-bottom" },
+      }}
       schPinStyle={{}}
       schWidth={0.8}
       schHeight={1}
@@ -502,12 +499,10 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
         pin5: "5",
         pin6: "6",
       }}
-      schPinArrangement={
-        {
-          leftSide: { pins: [1, 3, 5], direction: "top-to-bottom" },
-          rightSide: { pins: [2, 4, 6], direction: "top-to-bottom" },
-        } as any
-      }
+      schPinArrangement={{
+        leftSide: { pins: [1, 3, 5], direction: "top-to-bottom" },
+        rightSide: { pins: [2, 4, 6], direction: "top-to-bottom" },
+      }}
       schPinStyle={{}}
       schWidth={0.8}
       schHeight={0.8}
@@ -516,13 +511,11 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     />
     <BQ294700DSG
       name="U1"
-      schPinArrangement={
-        {
-          leftSide: { pins: [1, 2, 3, 4], direction: "top-to-bottom" },
-          rightSide: { pins: [8, 7, 6, 5], direction: "top-to-bottom" },
-          bottomSide: { pins: [9], direction: "left-to-right" },
-        } as any
-      }
+      schPinArrangement={{
+        leftSide: { pins: [1, 2, 3, 4], direction: "top-to-bottom" },
+        rightSide: { pins: [8, 7, 6, 5], direction: "top-to-bottom" },
+        bottomSide: { pins: [9], direction: "left-to-right" },
+      }}
       schPinStyle={{
         pin2: { marginTop: 0.2 },
         pin3: { marginTop: 0.2 },
@@ -540,14 +533,12 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       name="F1"
       manufacturerPartNumber="SFH-1412B"
       pinLabels={{ pin1: "Fuse", pin4: "Heater", pin3: "Fuse", pin2: "2" }}
-      schPinArrangement={
-        {
-          leftSide: { pins: [1], direction: "top-to-bottom" },
-          rightSide: { pins: [3], direction: "top-to-bottom" },
-          topSide: { pins: [2], direction: "left-to-right" },
-          bottomSide: { pins: [4], direction: "left-to-right" },
-        } as any
-      }
+      schPinArrangement={{
+        leftSide: { pins: [1], direction: "top-to-bottom" },
+        rightSide: { pins: [3], direction: "top-to-bottom" },
+        topSide: { pins: [2], direction: "left-to-right" },
+        bottomSide: { pins: [4], direction: "left-to-right" },
+      }}
       schPinStyle={{}}
       schWidth={1.2}
       schHeight={0.8}
@@ -556,20 +547,18 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     />
     <BQ40Z60RHB
       name="U2"
-      schPinArrangement={
-        {
-          leftSide: {
-            pins: [3, 4, 5, 6, 21, 14, 15, 8, 7, 10, 11, 12, 13, 24, 9, 33],
-            direction: "top-to-bottom",
-          },
-          rightSide: {
-            pins: [
-              31, 1, 2, 32, 30, 29, 22, 20, 19, 18, 27, 28, 26, 25, 23, 16, 17,
-            ],
-            direction: "top-to-bottom",
-          },
-        } as any
-      }
+      schPinArrangement={{
+        leftSide: {
+          pins: [3, 4, 5, 6, 21, 14, 15, 8, 7, 10, 11, 12, 13, 24, 9, 33],
+          direction: "top-to-bottom",
+        },
+        rightSide: {
+          pins: [
+            31, 1, 2, 32, 30, 29, 22, 20, 19, 18, 27, 28, 26, 25, 23, 16, 17,
+          ],
+          direction: "top-to-bottom",
+        },
+      }}
       schPinStyle={{
         pin21: { marginTop: 0.2 },
         pin14: { marginTop: 0.2 },
@@ -592,9 +581,9 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       name="J7"
       manufacturerPartNumber="J7"
       pinLabels={{ pin1: "1", pin2: "2" }}
-      schPinArrangement={
-        { leftSide: { pins: [1, 2], direction: "top-to-bottom" } } as any
-      }
+      schPinArrangement={{
+        leftSide: { pins: [1, 2], direction: "top-to-bottom" },
+      }}
       schPinStyle={{}}
       schWidth={0.8}
       schHeight={0.8}
