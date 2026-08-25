@@ -52,6 +52,8 @@ import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.cir
 import { BluetoothController_CC2564C } from "./lib/subcircuits/BluetoothController_CC2564C.circuit.tsx";
 import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit.tsx";
 import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit.tsx";
+import { GateDriver_DRV8703 } from "./lib/subcircuits/GateDriver_DRV8703.circuit.tsx";
+import { HBridge_SQJ940EP } from "./lib/subcircuits/HBridge_SQJ940EP.circuit.tsx";
 import { MotorDriver_DRV8703 } from "./lib/subcircuits/MotorDriver_DRV8703.circuit.tsx";
 import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit.tsx";
 import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit.tsx";
@@ -100,6 +102,8 @@ export {
   BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
+  GateDriver_DRV8703,
+  HBridge_SQJ940EP,
   MotorDriver_DRV8703,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
@@ -190,6 +194,8 @@ export const TiSubcircuitComponents = {
   BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
+  GateDriver_DRV8703,
+  HBridge_SQJ940EP,
   MotorDriver_DRV8703,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,

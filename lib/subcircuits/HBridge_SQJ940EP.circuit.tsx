@@ -32,21 +32,57 @@ type NetTieProps = {
  * standard generic chip symbol instead of drawing a replacement symbol.
  */
 const NetTie = ({ name, schX, schY }: NetTieProps) => (
-  <chip
-    name={name}
-    displayName={name}
-    schX={schX}
-    schY={schY}
-    schWidth="0.4mm"
-    schHeight="0.4mm"
-    footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
-    pinLabels={{ pin1: "1", pin2: "2" }}
-    schPinArrangement={{
-      leftSide: { pins: [1], direction: "top-to-bottom" },
-      rightSide: { pins: [2], direction: "top-to-bottom" },
-    }}
-    internallyConnectedPins={[[1, 2]]}
-  />
+  <>
+    <chip
+      name={name}
+      schX={schX}
+      schY={schY}
+      footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
+      pinLabels={{ pin1: "1", pin2: "2" }}
+      internallyConnectedPins={[[1, 2]]}
+      symbol={
+        <symbol>
+          <schematicrect
+            schX={0}
+            schY={0}
+            width={0.4}
+            height={0.4}
+            strokeWidth={0.025}
+            color="#c77700"
+          />
+          <port
+            name="pin1"
+            schX={-0.365563}
+            schY={0}
+            direction="left"
+            schStemLength={0.165563}
+            pinNumber={1}
+          />
+          <port
+            name="pin2"
+            schX={0.365563}
+            schY={0}
+            direction="right"
+            schStemLength={0.165563}
+            pinNumber={2}
+          />
+        </symbol>
+      }
+    />
+    <schematictext
+      schX={schX}
+      schY={schY + 0.34}
+      text={name}
+      fontSize={0.12}
+      color="#006464"
+    />
+    <schematictext
+      schX={schX}
+      schY={schY - 0.34}
+      text="Net-Tie"
+      fontSize={0.1}
+    />
+  </>
 );
 
 /**
@@ -72,9 +108,9 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       schX={0}
       schY={0}
       width={8.042381}
-      height={8.2}
+      height={7.676818}
     />
-    <schematictext schX={0} schY={-4.55} text="H-BRIDGE" fontSize={0.3} />
+    <schematictext schX={0} schY={-4.18} text="H-BRIDGE" fontSize={0.3} />
 
     {/* The physical dual-MOSFET packages carry BOM/footprint metadata. Their
         four Altium schematic units are rendered below with native tscircuit
@@ -165,7 +201,7 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
       schX={2.558939}
-      schY={-0.831126}
+      schY={-0.731126}
     />
 
     <capacitor
@@ -200,7 +236,7 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
     <NetTie name="NT3" schX={2.376158} schY={0.182781} />
     <NetTie name="NT4" schX={2.376158} schY={-1.462251} />
     <NetTie name="NT5" schX={0.731126} schY={-1.827814} />
-    <NetTie name="NT6" schX={0.731126} schY={-3.25} />
+    <NetTie name="NT6" schX={0.731126} schY={-2.924502} />
 
     <resistor
       name="R1"
@@ -246,12 +282,16 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       schY={1.645032}
       anchorSide="left"
     />
-    <trace from="Q2B.gate" to="R4.pin1" />
+    <trace
+      from="Q2B.gate"
+      to="R4.pin1"
+      schematicRouteHints={[{ x: 2.193376, y: -0.731126 }]}
+    />
     <netlabel
       net="GL2"
       connectsTo="R4.pin2"
       schX={3.472847}
-      schY={-0.831126}
+      schY={-0.731126}
       anchorSide="left"
     />
 
@@ -398,30 +438,30 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       net="GND"
       connectsTo="R1.pin2"
       schX={0}
-      schY={-3.48}
+      schY={-3.107283}
       anchorSide="top"
     />
     <trace
       from="R1.pin2"
       to="NT6.pin1"
       schematicRouteHints={[
-        { x: 0, y: -3.25 },
-        { x: 0.365563, y: -3.25 },
+        { x: 0, y: -2.924502 },
+        { x: 0.365563, y: -2.924502 },
       ]}
     />
     <netlabel
       net="SN"
       connectsTo="NT6.pin2"
       schX={1.645032}
-      schY={-3.25}
+      schY={-2.924502}
       anchorSide="left"
     />
     <trace
       from="C16.pin2"
       to="NT6.pin2"
       schematicRouteHints={[
-        { x: 1.27947, y: -3.25 },
-        { x: 1.096688, y: -3.25 },
+        { x: 1.27947, y: -2.924502 },
+        { x: 1.096688, y: -2.924502 },
       ]}
     />
 
