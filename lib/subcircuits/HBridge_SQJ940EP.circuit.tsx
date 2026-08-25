@@ -1,5 +1,4 @@
 import type { ChipProps, SubcircuitProps } from "@tscircuit/props";
-import { Fragment } from "react";
 import "tscircuit";
 
 const dualMosfetPinLabels = {
@@ -27,767 +26,65 @@ type NetTieProps = {
   schY: number;
 };
 
-type MosfetUnitProps = {
-  displayName: "Q1" | "Q2";
-  schX: number;
-  schY: number;
-  gateSide: "left" | "right";
-  drainPin: number;
-  gatePin: number;
-  sourcePin: number;
-};
-
-const symbolBlue = "#0000ff";
-const sourceLineWidth = 0.018278;
-const sourceWireBlue = "#000080";
-const sourceDark = "#1f2937";
-const sourceRed = "#800000";
-
-type ReferenceNetLabelProps = {
-  net: string;
-  schX: number;
-  schY: number;
-};
-
-const ReferenceNetLabel = ({ net, schX, schY }: ReferenceNetLabelProps) => (
-  <schematictext
-    text={net}
-    schX={schX}
-    schY={schY + 0.091391}
-    fontSize={0.18}
-    anchor="left"
-    color={sourceRed}
-  />
-);
-
-/** Every visible net segment in the Altium H-bridge reference box. */
-const referenceWirePaths = [
-  [
-    { x: 3.290065, y: 1.645032 },
-    { x: 2.924502, y: 1.645032 },
-  ],
-  [
-    { x: -3.472846, y: 1.645032 },
-    { x: -3.107283, y: 1.645032 },
-  ],
-  [
-    { x: -3.472846, y: -0.731126 },
-    { x: -3.107283, y: -0.731126 },
-  ],
-  [
-    { x: 3.290065, y: -0.731126 },
-    { x: 2.924502, y: -0.731126 },
-  ],
-  [
-    { x: 0, y: -2.010595 },
-    { x: 0, y: -1.827814 },
-    { x: 0, y: -1.462251 },
-  ],
-  [
-    { x: 0.365563, y: -1.827814 },
-    { x: 0, y: -1.827814 },
-  ],
-  [
-    { x: 0, y: -3.107283 },
-    { x: 0, y: -2.924502 },
-    { x: 0, y: -2.741721 },
-  ],
-  [
-    { x: 0, y: -2.924502 },
-    { x: 0.365563, y: -2.924502 },
-  ],
-  [
-    { x: 1.27947, y: -1.462251 },
-    { x: 2.010595, y: -1.462251 },
-  ],
-  [
-    { x: 3.290065, y: 0.182781 },
-    { x: 2.741721, y: 0.182781 },
-  ],
-  [
-    { x: -3.472846, y: 0.182781 },
-    { x: -2.741721, y: 0.182781 },
-  ],
-  [
-    { x: 1.645032, y: -1.827814 },
-    { x: 1.27947, y: -1.827814 },
-    { x: 1.096688, y: -1.827814 },
-  ],
-  [
-    { x: 1.645032, y: -2.924502 },
-    { x: 1.27947, y: -2.924502 },
-    { x: 1.096688, y: -2.924502 },
-  ],
-  [
-    { x: 2.741721, y: -1.462251 },
-    { x: 3.290065, y: -1.462251 },
-  ],
-  [
-    { x: 2.010595, y: 0.182781 },
-    { x: 1.27947, y: 0.182781 },
-  ],
-  [
-    { x: 1.27947, y: -1.462251 },
-    { x: 0, y: -1.462251 },
-  ],
-  [
-    { x: -2.376158, y: 1.645032 },
-    { x: -2.010595, y: 1.645032 },
-  ],
-  [
-    { x: -2.010595, y: 0.182781 },
-    { x: -1.27947, y: 0.182781 },
-    { x: -1.27947, y: 0.913907 },
-    { x: -1.27947, y: 1.096688 },
-  ],
-  [
-    { x: -1.27947, y: 0.182781 },
-    { x: -1.27947, y: -0.182781 },
-  ],
-  [
-    { x: -2.376158, y: -0.731126 },
-    { x: -2.010595, y: -0.731126 },
-  ],
-  [
-    { x: -1.27947, y: -1.27947 },
-    { x: -1.27947, y: -1.462251 },
-    { x: 0, y: -1.462251 },
-  ],
-  [
-    { x: 1.27947, y: -1.27947 },
-    { x: 1.27947, y: -1.462251 },
-  ],
-  [
-    { x: 1.27947, y: -0.182781 },
-    { x: 1.27947, y: 0.182781 },
-  ],
-  [
-    { x: 1.27947, y: 0.182781 },
-    { x: 1.27947, y: 0.913907 },
-    { x: 1.27947, y: 1.096688 },
-  ],
-  [
-    { x: 1.27947, y: 2.193377 },
-    { x: 0, y: 2.193377 },
-    { x: -1.27947, y: 2.193377 },
-  ],
-  [
-    { x: 0, y: 3.472846 },
-    { x: 0, y: 2.193377 },
-  ],
-  [
-    { x: 2.010595, y: -0.731126 },
-    { x: 2.193377, y: -0.731126 },
-  ],
-  [
-    { x: 2.010595, y: 1.645032 },
-    { x: 2.193377, y: 1.645032 },
-  ],
-  [
-    { x: 0, y: 3.472846 },
-    { x: 0.365563, y: 3.472846 },
-  ],
-  [
-    { x: -0.913907, y: 3.472846 },
-    { x: 0, y: 3.472846 },
-  ],
-  [
-    { x: 1.27947, y: -2.010595 },
-    { x: 1.27947, y: -1.827814 },
-  ],
-  [
-    { x: 1.27947, y: -2.558939 },
-    { x: 1.27947, y: -2.924502 },
-  ],
-  [
-    { x: -1.27947, y: 0.913907 },
-    { x: -0.731126, y: 0.913907 },
-    { x: -0.365563, y: 0.913907 },
-  ],
-  [
-    { x: -0.365563, y: 0 },
-    { x: -0.731126, y: 0 },
-    { x: -0.731126, y: 0.913907 },
-  ],
-  [
-    { x: 0.182781, y: 0 },
-    { x: 0.731126, y: 0 },
-    { x: 0.731126, y: 0.913907 },
-    { x: 0.182781, y: 0.913907 },
-  ],
-  [
-    { x: 1.27947, y: 0.913907 },
-    { x: 0.731126, y: 0.913907 },
-  ],
-] as const;
-
-const ReferenceWiring = () => (
-  <>
-    {referenceWirePaths.map((points, index) => (
-      <Fragment key={`wire-${index}`}>
-        <schematicpath
-          points={points.map(({ x, y }) => ({ x, y }))}
-          strokeColor={sourceWireBlue}
-          strokeWidth={sourceLineWidth}
-        />
-      </Fragment>
-    ))}
-  </>
-);
-
 /**
- * One Altium unit from the dual SQJ940EP symbol. These points are a direct
- * 0.018278138 mm-per-source-pixel translation of TIDA-01389_Sch.source.svg.
- * The real package and its electrical connections are hidden below. Keeping
- * this as source-vector artwork prevents the schematic router and its default
- * symbol styling from altering the Altium geometry.
+ * tscircuit does not currently have a dedicated net-tie schematic primitive.
+ * The TI source uses a two-pin box, so retain that topology with the repository's
+ * standard generic chip symbol instead of drawing a replacement symbol.
  */
-const MosfetUnit = ({
-  displayName,
-  schX,
-  schY,
-  gateSide,
-  drainPin,
-  gatePin,
-  sourcePin,
-}: MosfetUnitProps) => {
-  const mirror = gateSide === "left" ? 1 : -1;
-  const mx = (x: number) => x * mirror;
-  const lines = [
-    [0.063973, 0.127947, -0.118808, 0.127947],
-    [0.063973, 0, -0.118808, 0],
-    [0.063973, -0.127947, -0.118808, -0.127947],
-    [0.063973, 0, 0.063973, -0.182781],
-    [-0.155503, 0.164503, -0.155503, -0.164503],
-    [-0.118808, 0.164503, -0.118808, 0.091391],
-    [-0.118808, 0.036556, -0.118808, -0.036556],
-    [-0.118808, -0.091391, -0.118808, -0.164503],
-    [-0.301589, 0, -0.155503, 0],
-    [0.063973, 0.127947, 0.063973, 0.182781],
-    [0.19192, 0.036556, 0.301589, 0.036556],
-    [0.246755, -0.182781, 0.246755, -0.054834],
-    [0.246755, 0.182781, 0.246755, 0.036556],
-    [0.063973, 0.182781, 0.246755, 0.182781],
-    [0.063973, -0.182781, 0.246755, -0.182781],
-    // Exact Altium pin stems.
-    [0.063973, 0.182781, 0.063973, 0.548344],
-    [0.063973, -0.182781, 0.063973, -0.548344],
-    [-0.667152, 0, -0.301589, 0],
-  ] as const;
-
-  return (
-    <>
-      {lines.map(([x1, y1, x2, y2], index) => (
-        <Fragment key={`mosfet-line-${index}`}>
-          <schematicline
-            x1={schX + mx(x1)}
-            y1={schY + y1}
-            x2={schX + mx(x2)}
-            y2={schY + y2}
-            strokeWidth={sourceLineWidth}
-            color={symbolBlue}
-          />
-        </Fragment>
-      ))}
-      <schematicpath
-        points={[
-          { x: schX + mx(-0.118808), y: schY },
-          { x: schX + mx(-0.009139), y: schY - 0.036556 },
-          { x: schX + mx(-0.009139), y: schY + 0.036556 },
-        ]}
-        isFilled
-        fillColor={symbolBlue}
-        strokeColor={symbolBlue}
-        strokeWidth={sourceLineWidth}
-      />
-      <schematicpath
-        points={[
-          { x: schX + mx(0.246755), y: schY + 0.036556 },
-          { x: schX + mx(0.19192), y: schY - 0.054834 },
-          { x: schX + mx(0.301589), y: schY - 0.054834 },
-        ]}
-        isFilled
-        fillColor={symbolBlue}
-        strokeColor={symbolBlue}
-        strokeWidth={sourceLineWidth}
-      />
-      <schematictext
-        schX={schX + mx(0.063973)}
-        schY={schY + 0.219338}
-        schRotation={90}
-        text={String(drainPin)}
-        fontSize={0.14}
-        anchor="left"
-        color={sourceDark}
-      />
-      <schematictext
-        schX={schX + mx(-0.338145)}
-        schY={schY + 0.091391}
-        text={String(gatePin)}
-        fontSize={0.14}
-        anchor={gateSide === "left" ? "right" : "left"}
-        color={sourceDark}
-      />
-      <schematictext
-        schX={schX + mx(0.063973)}
-        schY={schY - 0.219338}
-        schRotation={90}
-        text={String(sourcePin)}
-        fontSize={0.14}
-        anchor="right"
-        color={sourceDark}
-      />
-      <schematictext
-        schX={schX + (gateSide === "left" ? 0.319867 : 0.703708)}
-        schY={schY + (gateSide === "left" ? 0.109669 : 0.292451)}
-        text={displayName}
-        fontSize={0.18}
-        anchor="left"
-        color={sourceDark}
-      />
-    </>
-  );
-};
-
 const NetTie = ({ name, schX, schY }: NetTieProps) => (
   <>
     <chip
       name={name}
-      noSchematicRepresentation
+      schX={schX}
+      schY={schY}
       footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
       pinLabels={{ pin1: "1", pin2: "2" }}
       internallyConnectedPins={[[1, 2]]}
-    />
-    <schematicline
-      x1={schX - 0.365563}
-      y1={schY}
-      x2={schX - 0.182781}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematicline
-      x1={schX + 0.182781}
-      y1={schY}
-      x2={schX + 0.365563}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematicrect
-      schX={schX}
-      schY={schY}
-      width={0.365563}
-      height={0.182781}
-      strokeWidth={sourceLineWidth}
-      isFilled
-      color="#ffffb0"
-    />
-    <schematicrect
-      schX={schX}
-      schY={schY}
-      width={0.365563}
-      height={0.182781}
-      strokeWidth={sourceLineWidth}
-      color={sourceRed}
-    />
-    <schematictext
-      schX={schX - 0.182781}
-      schY={schY + 0.182782}
-      text={name}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX - 0.182781}
-      schY={schY - 0.182781}
-      text="Net-Tie"
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-  </>
-);
-
-type ReferencePartProps = {
-  name: string;
-  value: string;
-  schX: number;
-  schY: number;
-};
-
-const ReferenceHorizontalResistor = ({
-  name,
-  value,
-  schX,
-  schY,
-}: ReferencePartProps) => (
-  <>
-    <schematicline
-      x1={schX - 0.365563}
-      y1={schY}
-      x2={schX - 0.182781}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematicpath
-      points={[
-        { x: schX - 0.182781, y: schY },
-        { x: schX - 0.109669, y: schY },
-        { x: schX - 0.091391, y: schY + 0.036556 },
-        { x: schX - 0.054834, y: schY - 0.036556 },
-        { x: schX - 0.018278, y: schY + 0.036556 },
-        { x: schX + 0.018278, y: schY - 0.036556 },
-        { x: schX + 0.054834, y: schY + 0.036556 },
-        { x: schX + 0.091391, y: schY - 0.036556 },
-        { x: schX + 0.109669, y: schY },
-        { x: schX + 0.182781, y: schY },
-      ]}
-      strokeColor={symbolBlue}
-      strokeWidth={sourceLineWidth}
-    />
-    <schematicline
-      x1={schX + 0.182781}
-      y1={schY}
-      x2={schX + 0.365563}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX - 0.182781}
-      schY={schY + 0.091391}
-      text={value}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX}
-      schY={schY + 0.091391}
-      text={name}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-  </>
-);
-
-const ReferenceVerticalResistor = ({
-  name,
-  value,
-  schX,
-  schY,
-}: ReferencePartProps) => (
-  <>
-    <schematicline
-      x1={schX}
-      y1={schY + 0.365563}
-      x2={schX}
-      y2={schY + 0.182781}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematicpath
-      points={[
-        { x: schX, y: schY + 0.182781 },
-        { x: schX, y: schY + 0.109669 },
-        { x: schX + 0.036556, y: schY + 0.091391 },
-        { x: schX - 0.036556, y: schY + 0.054834 },
-        { x: schX + 0.036556, y: schY + 0.018278 },
-        { x: schX - 0.036556, y: schY - 0.018278 },
-        { x: schX + 0.036556, y: schY - 0.054834 },
-        { x: schX - 0.036556, y: schY - 0.091391 },
-        { x: schX, y: schY - 0.109669 },
-        { x: schX, y: schY - 0.182781 },
-      ]}
-      strokeColor={symbolBlue}
-      strokeWidth={sourceLineWidth}
-    />
-    <schematicline
-      x1={schX}
-      y1={schY - 0.182781}
-      x2={schX}
-      y2={schY - 0.365563}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX + 0.054834}
-      schY={schY + 0.109669}
-      text={name}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX + 0.054834}
-      schY={schY - 0.073112}
-      text={value}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-  </>
-);
-
-const ReferenceVerticalCapacitor = ({
-  name,
-  value,
-  schX,
-  schY,
-}: ReferencePartProps) => (
-  <>
-    <schematicline
-      x1={schX}
-      y1={schY + 0.274172}
-      x2={schX}
-      y2={schY + 0.091391}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematicline
-      x1={schX}
-      y1={schY + 0.091391}
-      x2={schX}
-      y2={schY + 0.036556}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX - 0.146225}
-      y1={schY + 0.036556}
-      x2={schX + 0.146225}
-      y2={schY + 0.036556}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX - 0.146225}
-      y1={schY - 0.036556}
-      x2={schX + 0.146225}
-      y2={schY - 0.036556}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX}
-      y1={schY - 0.036556}
-      x2={schX}
-      y2={schY - 0.091391}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX}
-      y1={schY - 0.091391}
-      x2={schX}
-      y2={schY - 0.274172}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX + 0.164503}
-      schY={schY + 0.018278}
-      text={name}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX + 0.164503}
-      schY={schY - 0.164503}
-      text={value}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-  </>
-);
-
-const ReferenceHorizontalCapacitor = ({
-  name,
-  value,
-  schX,
-  schY,
-}: ReferencePartProps) => (
-  <>
-    <schematicline
-      x1={schX - 0.274172}
-      y1={schY}
-      x2={schX - 0.091391}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematicline
-      x1={schX - 0.091391}
-      y1={schY}
-      x2={schX - 0.036556}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX - 0.036556}
-      y1={schY - 0.146225}
-      x2={schX - 0.036556}
-      y2={schY + 0.146225}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX + 0.036556}
-      y1={schY - 0.146225}
-      x2={schX + 0.036556}
-      y2={schY + 0.146225}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX + 0.036556}
-      y1={schY}
-      x2={schX + 0.091391}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={symbolBlue}
-    />
-    <schematicline
-      x1={schX + 0.091391}
-      y1={schY}
-      x2={schX + 0.274172}
-      y2={schY}
-      strokeWidth={sourceLineWidth}
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX - 0.109669}
-      schY={schY + 0.255894}
-      text={name}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-    <schematictext
-      schX={schX - 0.109669}
-      schY={schY - 0.255893}
-      text={value}
-      fontSize={0.18}
-      anchor="left"
-      color={sourceDark}
-    />
-  </>
-);
-
-const ReferenceGround = ({ schX, schY }: { schX: number; schY: number }) => (
-  <>
-    <schematicline
-      x1={schX}
-      y1={schY}
-      x2={schX}
-      y2={schY - 0.073113}
-      strokeWidth={sourceLineWidth}
-      color={sourceRed}
-    />
-    <schematicline
-      x1={schX - 0.127947}
-      y1={schY - 0.073113}
-      x2={schX + 0.127947}
-      y2={schY - 0.073113}
-      strokeWidth={sourceLineWidth}
-      color={sourceRed}
-    />
-    <schematicline
-      x1={schX - 0.082252}
-      y1={schY - 0.146225}
-      x2={schX + 0.082252}
-      y2={schY - 0.146225}
-      strokeWidth={sourceLineWidth}
-      color={sourceRed}
-    />
-    <schematicline
-      x1={schX - 0.036556}
-      y1={schY - 0.219338}
-      x2={schX + 0.036556}
-      y2={schY - 0.219338}
-      strokeWidth={sourceLineWidth}
-      color={sourceRed}
-    />
-    <schematictext
-      schX={schX}
-      schY={schY - 0.29245}
-      text="GND"
-      fontSize={0.18}
-      anchor="top"
-      color={sourceRed}
-    />
-  </>
-);
-
-const ReferenceJunctions = () => {
-  const centers = [
-    { x: -1.27947, y: 0.182781 },
-    { x: -1.27947, y: 0.913907 },
-    { x: -0.731126, y: 0.913907 },
-    { x: 0, y: -2.924502 },
-    { x: 0, y: -1.827814 },
-    { x: 0, y: -1.462251 },
-    { x: 0, y: 2.193377 },
-    { x: 0, y: 3.472846 },
-    { x: 0.731126, y: 0.913907 },
-    { x: 1.27947, y: -2.924502 },
-    { x: 1.27947, y: -1.827814 },
-    { x: 1.27947, y: -1.462251 },
-    { x: 1.27947, y: 0.182781 },
-    { x: 1.27947, y: 0.913907 },
-  ];
-
-  return (
-    <>
-      {centers.map((center, index) => (
-        <Fragment key={`junction-${index}`}>
-          <schematiccircle
-            center={center}
-            radius={0.032901}
-            isFilled
-            color={sourceRed}
-            strokeWidth={sourceLineWidth}
+      symbol={
+        <symbol>
+          <schematicrect
+            schX={0}
+            schY={0}
+            width={0.4}
+            height={0.4}
+            strokeWidth={0.025}
           />
-        </Fragment>
-      ))}
-    </>
-  );
-};
-
-const HiddenTwoPinPart = ({
-  name,
-  footprint,
-  manufacturerPartNumber,
-  doNotPlace,
-}: {
-  name: string;
-  footprint: string;
-  manufacturerPartNumber: string;
-  doNotPlace?: boolean;
-}) => (
-  <chip
-    name={name}
-    footprint={footprint}
-    manufacturerPartNumber={manufacturerPartNumber}
-    pinLabels={{ pin1: "pin1", pin2: "pin2" }}
-    noSchematicRepresentation
-    doNotPlace={doNotPlace}
-  />
+          <port
+            name="pin1"
+            schX={-0.365563}
+            schY={0}
+            direction="left"
+            schStemLength={0.165563}
+            pinNumber={1}
+          />
+          <port
+            name="pin2"
+            schX={0.365563}
+            schY={0}
+            direction="right"
+            schStemLength={0.165563}
+            pinNumber={2}
+          />
+        </symbol>
+      }
+    />
+    <schematictext schX={schX} schY={schY + 0.34} text={name} fontSize={0.12} />
+    <schematictext
+      schX={schX}
+      schY={schY - 0.34}
+      text="Net-Tie"
+      fontSize={0.1}
+    />
+  </>
 );
 
 /**
  * TIDA-01389 H-bridge power stage, extracted from TIDA-01389_Sch.SchDoc.
  *
- * Component centers and route bends below are translated directly from the
- * Altium sheet around the H-bridge center (26.503300, 7.859599). Q1 and Q2 are
- * dual SQJ940EP packages, each represented by its two schematic units.
+ * Component centers below are translated directly from the Altium sheet
+ * around the H-bridge center (26.503300, 7.859599). The electrical topology is
+ * preserved while native tscircuit schematic traces are autorouted. Q1 and Q2
+ * are dual SQJ940EP packages, each represented by its two schematic units.
  *
  * Reference: https://www.ti.com/tool/TIDA-01389
  */
@@ -795,109 +92,140 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
   <subcircuit
     schMaxTraceDistance="20mm"
     schTraceAutoLabelEnabled={false}
+    // This block is schematic-only. routingDisabled skips PCB autorouting but
+    // does not disable the native schematic autorouter.
     routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />
 
-    <schematicpath
-      points={[
-        { x: -4.02119, y: 3.838409 },
-        { x: 4.02119, y: 3.838409 },
-        { x: 4.02119, y: -3.838409 },
-        { x: -4.02119, y: -3.838409 },
-        { x: -4.02119, y: 3.838409 },
-      ]}
-      strokeColor={sourceDark}
-      strokeWidth={0.036556}
-    />
-    <schematictext
+    <schematicbox
+      name="HBRIDGE_SECTION"
       schX={0}
-      schY={-4.203972}
-      text="H-BRIDGE"
-      fontSize={0.365563}
-      color={sourceDark}
+      schY={0}
+      width={8.042381}
+      height={7.676818}
+    />
+    <schematictext schX={0} schY={-4.18} text="H-BRIDGE" fontSize={0.3} />
+
+    {/* The physical dual-MOSFET packages carry BOM/footprint metadata. Their
+        four Altium schematic units are rendered below with native tscircuit
+        MOSFET symbols. PCB routing is outside this schematic-only extraction. */}
+    <SQJ940EP
+      name="Q1"
+      noSchematicRepresentation
+      noConnect={["S1", "G1", "S2", "G2", "D2", "D1"]}
+    />
+    <SQJ940EP
+      name="Q2"
+      noSchematicRepresentation
+      noConnect={["S1", "G1", "S2", "G2", "D2", "D1"]}
     />
 
-    {/* The physical packages carry BOM/footprint metadata. The four schematic
-        units below use the vector geometry from the Altium source. */}
-    <SQJ940EP name="Q1" noSchematicRepresentation />
-    <SQJ940EP name="Q2" noSchematicRepresentation />
-
-    <MosfetUnit
+    <mosfet
+      name="Q1B"
       displayName="Q1"
+      channelType="n"
+      mosfetMode="enhancement"
       schX={-1.343443}
       schY={1.645032}
-      gateSide="left"
-      drainPin={5}
-      gatePin={4}
-      sourcePin={3}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="left"
     />
-    <MosfetUnit
+    <mosfet
+      name="Q1A"
       displayName="Q1"
+      channelType="n"
+      mosfetMode="enhancement"
       schX={-1.343443}
       schY={-0.731126}
-      gateSide="left"
-      drainPin={6}
-      gatePin={2}
-      sourcePin={1}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="left"
     />
-    <MosfetUnit
+    <mosfet
+      name="Q2A"
       displayName="Q2"
+      channelType="n"
+      mosfetMode="enhancement"
       schX={1.343443}
       schY={1.645032}
-      gateSide="right"
-      drainPin={6}
-      gatePin={2}
-      sourcePin={1}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="right"
     />
-    <MosfetUnit
+    <mosfet
+      name="Q2B"
       displayName="Q2"
+      channelType="n"
+      mosfetMode="enhancement"
       schX={1.343443}
       schY={-0.731126}
-      gateSide="right"
-      drainPin={5}
-      gatePin={4}
-      sourcePin={3}
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="right"
     />
 
-    <HiddenTwoPinPart
+    <resistor
       name="R2"
-      footprint="res0603"
+      resistance="0ohm"
+      footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
+      schX={-2.741721}
+      schY={1.645032}
     />
-    <HiddenTwoPinPart
+    <resistor
       name="R3"
-      footprint="res0603"
+      resistance="0ohm"
+      footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
+      schX={-2.741721}
+      schY={-0.731126}
     />
-    <HiddenTwoPinPart
+    <resistor
       name="R5"
-      footprint="res0603"
+      resistance="0ohm"
+      footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
+      schX={2.558939}
+      schY={1.645032}
     />
-    <HiddenTwoPinPart
+    <resistor
       name="R4"
-      footprint="res0603"
+      resistance="0ohm"
+      footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
+      schX={2.558939}
+      schY={-0.731126}
     />
 
-    <HiddenTwoPinPart
+    <capacitor
       name="C1"
-      footprint="cap0805"
+      capacitance="1uF"
+      footprint="0805"
       manufacturerPartNumber="GRM21BR71H105KA12L"
+      schX={-0.913907}
+      schY={3.198674}
+      schOrientation="vertical"
     />
-    <HiddenTwoPinPart
+    <capacitor
       name="C17"
-      footprint="cap0402"
+      capacitance="0.1uF"
+      footprint="0402"
       manufacturerPartNumber="GCM155R71C104KA55D"
       doNotPlace
+      schX={-0.091391}
+      schY={0.913907}
     />
-    <HiddenTwoPinPart
+    <capacitor
       name="C18"
-      footprint="cap0402"
+      capacitance="1000pF"
+      footprint="0402"
       manufacturerPartNumber="GRM155R71C102KA01D"
       doNotPlace
+      schX={-0.091391}
+      schY={0}
     />
 
     <NetTie name="NT2" schX={-2.376158} schY={0.182781} />
@@ -906,128 +234,232 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
     <NetTie name="NT5" schX={0.731126} schY={-1.827814} />
     <NetTie name="NT6" schX={0.731126} schY={-2.924502} />
 
-    <HiddenTwoPinPart
+    <resistor
       name="R1"
-      footprint="res2010"
+      resistance="0.04ohm"
+      footprint="2010"
       manufacturerPartNumber="CSRN2010FK40L0"
-    />
-    <HiddenTwoPinPart
-      name="C16"
-      footprint="cap0402"
-      manufacturerPartNumber="GRM155R71C102KA01D"
-    />
-
-    <ReferenceHorizontalResistor
-      name="R2"
-      value="0"
-      schX={-2.741721}
-      schY={1.645032}
-    />
-    <ReferenceHorizontalResistor
-      name="R3"
-      value="0"
-      schX={-2.741721}
-      schY={-0.731126}
-    />
-    <ReferenceHorizontalResistor
-      name="R5"
-      value="0"
-      schX={2.558939}
-      schY={1.645032}
-    />
-    <ReferenceHorizontalResistor
-      name="R4"
-      value="0"
-      schX={2.558939}
-      schY={-0.731126}
-    />
-    <ReferenceVerticalCapacitor
-      name="C1"
-      value="1µF"
-      schX={-0.913907}
-      schY={3.198674}
-    />
-    <ReferenceHorizontalCapacitor
-      name="C17"
-      value="0.1µF"
-      schX={-0.091391}
-      schY={0.913907}
-    />
-    <ReferenceHorizontalCapacitor
-      name="C18"
-      value="1000pF"
-      schX={-0.091391}
-      schY={0}
-    />
-    <ReferenceVerticalResistor
-      name="R1"
-      value="0.04"
       schX={0}
       schY={-2.376158}
+      schOrientation="vertical"
     />
-    <ReferenceVerticalCapacitor
+    <capacitor
       name="C16"
-      value="1000pF"
+      capacitance="1000pF"
+      footprint="0402"
+      manufacturerPartNumber="GRM155R71C102KA01D"
       schX={1.27947}
       schY={-2.284767}
+      schOrientation="vertical"
     />
-    <ReferenceGround schX={-0.913907} schY={2.924502} />
-    <ReferenceGround schX={0} schY={-3.107283} />
 
-    <ReferenceWiring />
-    <ReferenceJunctions />
+    {/* Gate paths: direct horizontal wires in the Altium source. */}
+    <netlabel
+      net="GH1"
+      connectsTo="R2.pin1"
+      schX={-3.472847}
+      schY={1.645032}
+      anchorSide="right"
+    />
+    <trace from="R2.pin2" to="Q1B.gate" />
+    <netlabel
+      net="GL1"
+      connectsTo="R3.pin1"
+      schX={-3.472847}
+      schY={-0.731126}
+      anchorSide="right"
+    />
+    <trace from="R3.pin2" to="Q1A.gate" />
+    <trace from="Q2A.gate" to="R5.pin1" />
+    <netlabel
+      net="GH2"
+      connectsTo="R5.pin2"
+      schX={3.472847}
+      schY={1.645032}
+      anchorSide="left"
+    />
+    <trace
+      from="Q2B.gate"
+      to="R4.pin1"
+      schematicRouteHints={[{ x: 2.193376, y: -0.731126 }]}
+    />
+    <netlabel
+      net="GL2"
+      connectsTo="R4.pin2"
+      schX={3.472847}
+      schY={-0.731126}
+      anchorSide="left"
+    />
 
-    {/* Electrical traces join only hidden component representations. The
-        source-vector geometry above is consequently the sole visible layer. */}
-    <trace from="R2.pin1" to="net.GH1" />
-    <trace from="R2.pin2" to="Q1.G2" />
-    <trace from="R3.pin1" to="net.GL1" />
-    <trace from="R3.pin2" to="Q1.G1" />
-    <trace from="Q2.G1" to="R5.pin1" />
-    <trace from="R5.pin2" to="net.GH2" />
-    <trace from="Q2.G2" to="R4.pin1" />
-    <trace from="R4.pin2" to="net.GL2" />
+    {/* PVDD rail and the C1 decoupling branch. */}
+    <trace from="Q1B.drain" to="Q2A.drain" />
+    <trace
+      from="C1.pin1"
+      to="Q1B.drain"
+      schematicRouteHints={[
+        { x: -0.913907, y: 3.472846 },
+        { x: 0, y: 3.472846 },
+        { x: 0, y: 2.193377 },
+      ]}
+    />
+    <netlabel
+      net="PVDD"
+      connectsTo="Q1B.drain"
+      schX={0.365563}
+      schY={3.472846}
+      anchorSide="left"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="C1.pin2"
+      schX={-0.913907}
+      schY={2.924502}
+      anchorSide="top"
+    />
 
-    <trace from="Q1.D2" to="Q2.D1" />
-    <trace from="C1.pin1" to="Q1.D2" />
-    <trace from="Q1.D2" to="net.PVDD" />
-    <trace from="C1.pin2" to="net.GND" />
+    {/* Left bridge midpoint, exactly following the source junctions. */}
+    <trace from="Q1B.source" to="Q1A.drain" />
+    <trace
+      from="NT2.pin2"
+      to="Q1B.source"
+      schematicRouteHints={[
+        { x: -1.27947, y: 0.182781 },
+        { x: -1.27947, y: 1.096688 },
+      ]}
+    />
+    <netlabel
+      net="SH1"
+      connectsTo="NT2.pin1"
+      schX={-3.472847}
+      schY={0.182781}
+      anchorSide="right"
+    />
+    <trace
+      from="C17.pin1"
+      to="Q1B.source"
+      schematicRouteHints={[
+        { x: -0.731126, y: 0.913907 },
+        { x: -0.731126, y: 0.182781 },
+        { x: -1.27947, y: 0.182781 },
+      ]}
+    />
+    <trace
+      from="C18.pin1"
+      to="C17.pin1"
+      schematicRouteHints={[
+        { x: -0.731126, y: 0 },
+        { x: -0.731126, y: 0.913907 },
+      ]}
+    />
 
-    <trace from="Q1.S2" to="Q1.D1" />
-    <trace from="NT2.pin2" to="Q1.S2" />
-    <trace from="NT2.pin1" to="net.SH1" />
-    <trace from="C17.pin1" to="Q1.S2" />
-    <trace from="C18.pin1" to="C17.pin1" />
+    {/* Right bridge midpoint, mirrored from the Altium source. */}
+    <trace from="Q2A.source" to="Q2B.drain" />
+    <trace
+      from="Q2A.source"
+      to="NT3.pin1"
+      schematicRouteHints={[
+        { x: 1.27947, y: 0.182781 },
+        { x: 2.010595, y: 0.182781 },
+      ]}
+    />
+    <netlabel
+      net="SH2"
+      connectsTo="NT3.pin2"
+      schX={3.472847}
+      schY={0.182781}
+      anchorSide="left"
+    />
+    <trace
+      from="C17.pin2"
+      to="Q2A.source"
+      schematicRouteHints={[
+        { x: 0.731126, y: 0.913907 },
+        { x: 0.731126, y: 0.182781 },
+        { x: 1.27947, y: 0.182781 },
+      ]}
+    />
+    <trace
+      from="C18.pin2"
+      to="C17.pin2"
+      schematicRouteHints={[
+        { x: 0.731126, y: 0 },
+        { x: 0.731126, y: 0.913907 },
+      ]}
+    />
 
-    <trace from="Q2.S1" to="Q2.D2" />
-    <trace from="Q2.S1" to="NT3.pin1" />
-    <trace from="NT3.pin2" to="net.SH2" />
-    <trace from="C17.pin2" to="Q2.S1" />
-    <trace from="C18.pin2" to="C17.pin2" />
-
-    <trace from="Q1.S1" to="Q2.S2" />
-    <trace from="Q2.S2" to="NT4.pin1" />
-    <trace from="NT4.pin2" to="net.SL2" />
-    <trace from="Q1.S1" to="R1.pin1" />
-    <trace from="NT5.pin1" to="R1.pin1" />
-    <trace from="NT5.pin2" to="net.SP" />
+    {/* Low-side source rail, current shunt, and SP/SN filter. */}
+    <trace
+      from="Q1A.source"
+      to="Q2B.source"
+      schematicRouteHints={[
+        { x: -1.27947, y: -1.462251 },
+        { x: 1.27947, y: -1.462251 },
+      ]}
+    />
+    <trace from="Q2B.source" to="NT4.pin1" />
+    <netlabel
+      net="SL2"
+      connectsTo="NT4.pin2"
+      schX={3.472847}
+      schY={-1.462251}
+      anchorSide="left"
+    />
+    <trace
+      from="Q1A.source"
+      to="R1.pin1"
+      schematicRouteHints={[
+        { x: -1.27947, y: -1.462251 },
+        { x: 0, y: -1.462251 },
+        { x: 0, y: -2.010595 },
+      ]}
+    />
+    <trace
+      from="NT5.pin1"
+      to="R1.pin1"
+      schematicRouteHints={[
+        { x: 0, y: -1.827814 },
+        { x: 0, y: -2.010595 },
+      ]}
+    />
+    <netlabel
+      net="SP"
+      connectsTo="NT5.pin2"
+      schX={1.645032}
+      schY={-1.827814}
+      anchorSide="left"
+    />
     <trace from="C16.pin1" to="NT5.pin2" />
 
-    <trace from="R1.pin2" to="net.GND" />
-    <trace from="R1.pin2" to="NT6.pin1" />
-    <trace from="NT6.pin2" to="net.SN" />
-    <trace from="C16.pin2" to="NT6.pin2" />
-
-    <ReferenceNetLabel net="GH1" schX={-3.472846} schY={1.645032} />
-    <ReferenceNetLabel net="GL1" schX={-3.472846} schY={-0.731126} />
-    <ReferenceNetLabel net="GH2" schX={3.290065} schY={1.645032} />
-    <ReferenceNetLabel net="GL2" schX={3.290065} schY={-0.731126} />
-    <ReferenceNetLabel net="PVDD" schX={0.365563} schY={3.472846} />
-    <ReferenceNetLabel net="SH1" schX={-3.472846} schY={0.182781} />
-    <ReferenceNetLabel net="SH2" schX={3.290065} schY={0.182781} />
-    <ReferenceNetLabel net="SL2" schX={3.290065} schY={-1.462251} />
-    <ReferenceNetLabel net="SP" schX={1.645032} schY={-1.827814} />
-    <ReferenceNetLabel net="SN" schX={1.645032} schY={-2.924502} />
+    <netlabel
+      net="GND"
+      connectsTo="R1.pin2"
+      schX={0}
+      schY={-3.107283}
+      anchorSide="top"
+    />
+    <trace
+      from="R1.pin2"
+      to="NT6.pin1"
+      schematicRouteHints={[
+        { x: 0, y: -2.924502 },
+        { x: 0.365563, y: -2.924502 },
+      ]}
+    />
+    <netlabel
+      net="SN"
+      connectsTo="NT6.pin2"
+      schX={1.645032}
+      schY={-2.924502}
+      anchorSide="left"
+    />
+    <trace
+      from="C16.pin2"
+      to="NT6.pin2"
+      schematicRouteHints={[
+        { x: 1.27947, y: -2.924502 },
+        { x: 1.096688, y: -2.924502 },
+      ]}
+    />
 
     <port name="PVDD" direction="left" connectsTo="C1.pin1" />
     <port name="GH1" direction="left" connectsTo="net.GH1" />

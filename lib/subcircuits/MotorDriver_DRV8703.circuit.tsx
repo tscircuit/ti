@@ -5,11 +5,16 @@ import { HBridge_SQJ940EP } from "./HBridge_SQJ940EP.circuit.tsx";
 
 /**
  * Complete TIDA-01389 motor-driver stage. The two Altium reference boxes stay
- * isolated as child subcircuits so their internal schematic traces cannot be
- * routed across one another. This layer only joins their named interfaces.
+ * isolated as child subcircuits, and this layer joins their named interfaces.
  */
 export const MotorDriver_DRV8703 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schTraceAutoLabelEnabled={false} {...props}>
+  <subcircuit
+    schTraceAutoLabelEnabled={false}
+    // Schematic traces still use the native autorouter. This only suppresses
+    // PCB autorouting for the schematic-only extracted reference design.
+    routingDisabled
+    {...props}
+  >
     <GateDriver_DRV8703
       name="gateDriver"
       connections={{
