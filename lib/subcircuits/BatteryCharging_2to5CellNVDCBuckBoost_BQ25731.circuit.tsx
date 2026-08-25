@@ -19,393 +19,393 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C1"
       capacitance="0.01uF"
       schRotation={180}
-      schX={-12.69}
-      schY={2.95}
+      schX={-10.99}
+      schY={2.62}
     />
     <capacitor
       name="C2"
       capacitance="0.01uF"
       schRotation={270}
-      schX={-10.14}
-      schY={7.71}
+      schX={-8.77}
+      schY={6.76}
     />
     <capacitor
       name="C3"
       capacitance="0.01uF"
       schRotation={270}
-      schX={11.45}
-      schY={8.39}
+      schX={10.01}
+      schY={7.35}
     />
     <capacitor
       name="C4"
       capacitance="68uF"
       schRotation={270}
-      schX={24.2}
-      schY={8.34}
+      schX={21.11}
+      schY={7.31}
     />
     <capacitor
       name="C5"
       capacitance="0.018uF"
       schRotation={180}
-      schX={12.3}
-      schY={3.12}
+      schX={10.75}
+      schY={2.77}
     />
     <capacitor
       name="C6"
       capacitance="0.018uF"
       schRotation={180}
-      schX={12.3}
-      schY={1.76}
+      schX={10.75}
+      schY={1.58}
     />
     <capacitor
       name="C20"
       capacitance="10uF"
       schRotation={270}
-      schX={22.33}
-      schY={8.39}
+      schX={19.48}
+      schY={7.35}
     />
     <capacitor
       name="C21"
       capacitance="1000pF"
       schRotation={270}
-      schX={-9.46}
-      schY={7.71}
+      schX={-7.82}
+      schY={6.76}
     />
     <capacitor
       name="C22"
       capacitance="0.047uF"
       schRotation={90}
-      schX={-3.51}
-      schY={7.71}
+      schX={-3}
+      schY={6.76}
     />
     <capacitor
       name="C23"
       capacitance="0.047uF"
       schRotation={90}
-      schX={4.31}
-      schY={7.71}
+      schX={3.8}
+      schY={6.76}
     />
     <capacitor
       name="C24"
       capacitance="1uF"
       schRotation={270}
-      schX={-22.72}
-      schY={7.03}
+      schX={-19.71}
+      schY={6.17}
     />
     <capacitor
       name="C25"
       capacitance="150pF"
       schRotation={180}
-      schX={-6.74}
-      schY={6.18}
+      schX={-5.81}
+      schY={5.43}
     />
     <capacitor
       name="C26"
       capacitance="150pF"
       schRotation={0}
-      schX={7.88}
-      schY={6.18}
+      schX={6.91}
+      schY={5.43}
     />
     <capacitor
       name="C27"
       capacitance="0.47uF"
       schRotation={270}
-      schX={-9.63}
-      schY={4.65}
+      schX={-8.33}
+      schY={4.1}
     />
     <capacitor
       name="C28"
       capacitance="0.033uF"
       schRotation={180}
-      schX={-11.5}
-      schY={3.8}
+      schX={-9.95}
+      schY={3.36}
     />
     <capacitor
       name="C29"
       capacitance="0.033uF"
       schRotation={270}
-      schX={-14.73}
-      schY={3.29}
+      schX={-12.76}
+      schY={2.91}
     />
     <capacitor
       name="C30"
       capacitance="0.068uF"
       schRotation={270}
-      schX={4.82}
-      schY={1.93}
+      schX={4.25}
+      schY={1.73}
     />
     <capacitor
       name="C31"
       capacitance="0.1uF"
       schRotation={180}
-      schX={19.61}
-      schY={6.86}
+      schX={17.11}
+      schY={6.02}
     />
     <capacitor
       name="C32"
       capacitance="1uF"
       schRotation={270}
-      schX={-9.63}
-      schY={0.57}
+      schX={-8.33}
+      schY={0.55}
     />
     <capacitor
       name="C33"
       capacitance="33pF"
       schRotation={0}
-      schX={-6.4}
-      schY={0.06}
+      schX={-5.52}
+      schY={0.1}
     />
     <capacitor
       name="C34"
       capacitance="2.2uF"
       schRotation={0}
-      schX={7.2}
-      schY={0.06}
+      schX={6.32}
+      schY={0.1}
     />
     <capacitor
       name="C35"
       capacitance="4700pF"
       schRotation={180}
-      schX={-7.42}
-      schY={-0.96}
+      schX={-6.4}
+      schY={-0.78}
     />
     <capacitor
       name="C36"
       capacitance="680pF"
       schRotation={0}
-      schX={7.2}
-      schY={-1.3}
+      schX={6.32}
+      schY={-1.08}
     />
     <capacitor
       name="C37"
       capacitance="15pF"
       schRotation={0}
-      schX={5.84}
-      schY={-2.15}
+      schX={5.13}
+      schY={-1.82}
     />
     <capacitor
       name="C38"
       capacitance="100pF"
       schRotation={90}
-      schX={-15.41}
-      schY={-2.15}
+      schX={-13.35}
+      schY={-1.82}
     />
     <capacitor
       name="C39"
       capacitance="100pF"
       schRotation={90}
-      schX={8.56}
-      schY={-4.87}
+      schX={7.5}
+      schY={-4.18}
     />
     <capacitor
       name="C40"
       capacitance="100pF"
       schRotation={90}
-      schX={6.86}
-      schY={-4.87}
+      schX={6.02}
+      schY={-4.18}
     />
     <capacitor
       name="C50"
       capacitance="22uF"
       schRotation={270}
-      schX={-21.19}
-      schY={8.39}
+      schX={-18.38}
+      schY={7.35}
     />
     <capacitor
       name="C51"
       capacitance="22uF"
       schRotation={270}
-      schX={-19.49}
-      schY={8.39}
+      schX={-16.9}
+      schY={7.35}
     />
     <capacitor
       name="C52"
       capacitance="22uF"
       schRotation={270}
-      schX={-17.79}
-      schY={8.39}
+      schX={-15.43}
+      schY={7.35}
     />
     <capacitor
       name="C53"
       capacitance="22uF"
       schRotation={270}
-      schX={-16.09}
-      schY={8.39}
+      schX={-13.95}
+      schY={7.35}
     />
     <capacitor
       name="C55"
       capacitance="22uF"
       schRotation={270}
-      schX={12.81}
-      schY={8.39}
+      schX={11.2}
+      schY={7.35}
     />
     <capacitor
       name="C56"
       capacitance="22uF"
       schRotation={270}
-      schX={14.34}
-      schY={8.39}
+      schX={12.53}
+      schY={7.35}
     />
     <capacitor
       name="C57"
       capacitance="22uF"
       schRotation={270}
-      schX={15.87}
-      schY={8.39}
+      schX={13.86}
+      schY={7.35}
     />
     <capacitor
       name="C58"
       capacitance="22uF"
       schRotation={270}
-      schX={17.4}
-      schY={8.39}
+      schX={15.19}
+      schY={7.35}
     />
     <capacitor
       name="C100"
       capacitance="15uF"
       schRotation={270}
-      schX={-24.25}
-      schY={7.66}
+      schX={-21.05}
+      schY={6.72}
     />
     <resistor
       name="R1"
       resistance="0.005"
       schRotation={0}
-      schX={-12.69}
-      schY={8.9}
+      schX={-10.99}
+      schY={7.79}
     />
     <resistor
       name="R2"
       resistance="0.005"
       schRotation={0}
-      schX={19.61}
-      schY={8.9}
+      schX={17.11}
+      schY={7.79}
     />
     <resistor
       name="R3"
       resistance="1.80"
       schRotation={90}
-      schX={-22.72}
-      schY={8.22}
+      schX={-19.71}
+      schY={7.2}
     />
     <resistor
       name="R4"
       resistance="1.00"
       schRotation={0}
-      schX={-10.65}
-      schY={5.5}
+      schX={-9.21}
+      schY={4.84}
     />
     <resistor
       name="R5"
       resistance="4.99"
       schRotation={90}
-      schX={-12.01}
-      schY={5.5}
+      schX={-10.4}
+      schY={4.84}
     />
     <resistor
       name="R6"
       resistance="4.99"
       schRotation={90}
-      schX={-13.37}
-      schY={4.48}
+      schX={-11.58}
+      schY={3.95}
     />
     <resistor
       name="R7"
       resistance="10"
       schRotation={180}
-      schX={16.38}
-      schY={2.44}
+      schX={14.3}
+      schY={2.17}
     />
     <resistor
       name="R8"
       resistance="10.0"
       schRotation={0}
-      schX={-14.05}
-      schY={1.08}
+      schX={-12.17}
+      schY={0.99}
     />
     <resistor
       name="R9"
       resistance="10"
       schRotation={180}
-      schX={16.72}
-      schY={1.08}
+      schX={14.6}
+      schY={0.99}
     />
     <resistor
       name="R11"
       resistance="360k"
       schRotation={90}
-      schX={11.11}
-      schY={-1.3}
+      schX={9.72}
+      schY={-1.08}
     />
     <resistor
       name="R12"
       resistance="40.2k"
       schRotation={0}
-      schX={-5.21}
-      schY={-0.96}
+      schX={-4.48}
+      schY={-0.78}
     />
     <resistor
       name="R13"
       resistance="15.0k"
       schRotation={0}
-      schX={5.33}
-      schY={-0.79}
+      schX={4.69}
+      schY={-0.64}
     />
     <resistor
       name="R14"
       resistance="220k"
       schRotation={90}
-      schX={-13.71}
-      schY={-2.66}
+      schX={-11.88}
+      schY={-2.26}
     />
     <resistor
       name="R15"
       resistance="100k"
       schRotation={90}
-      schX={-5.21}
-      schY={-5.38}
+      schX={-4.48}
+      schY={-4.63}
     />
     <resistor
       name="R16"
       resistance="191k"
       schRotation={90}
-      schX={10.09}
-      schY={-5.04}
+      schX={8.83}
+      schY={-4.33}
     />
     <resistor
       name="R17"
       resistance="30.1k"
       schRotation={270}
-      schX={5.67}
-      schY={-5.72}
+      schX={4.98}
+      schY={-4.92}
     />
     <resistor
       name="R18"
       resistance="360k"
       schRotation={90}
-      schX={12.64}
-      schY={-2.66}
+      schX={11.05}
+      schY={-2.26}
     />
     <resistor
       name="R20"
       resistance="100k"
       schRotation={0}
-      schX={11.79}
-      schY={-4.19}
+      schX={10.31}
+      schY={-3.59}
     />
     <resistor
       name="R110"
       resistance="383k"
       schRotation={0}
-      schX={-12.35}
-      schY={-0.62}
+      schX={-10.69}
+      schY={-0.49}
     />
     <inductor
       name="L1"
       inductance="4.7uH"
       schRotation={0}
       schX={0.4}
-      schY={8.9}
+      schY={7.79}
     />
     <mosfet
       name="Q1"
@@ -416,8 +416,8 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       symbolSourceSide="right"
       symbolGateSide="bottom"
       schRotation={270}
-      schX={-7.93}
-      schY={8.64}
+      schX={-6.85}
+      schY={7.57}
     />
     <mosfet
       name="Q2"
@@ -425,8 +425,8 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       channelType="n"
       mosfetMode="enhancement"
       schRotation={90}
-      schX={9.75}
-      schY={9.16}
+      schX={8.53}
+      schY={8.02}
     />
     <mosfet
       name="Q3"
@@ -434,8 +434,8 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       channelType="n"
       mosfetMode="enhancement"
       schRotation={0}
-      schX={-6.01}
-      schY={7.88}
+      schX={-5.18}
+      schY={6.91}
     />
     <mosfet
       name="Q4"
@@ -446,22 +446,22 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       symbolSourceSide="bottom"
       symbolGateSide="right"
       schRotation={0}
-      schX={7.15}
-      schY={7.88}
+      schX={6.27}
+      schY={6.91}
     />
     <solderjumper
       name="P1"
       pinCount={2}
       schRotation={90}
-      schX={12.64}
-      schY={-0.79}
+      schX={11.05}
+      schY={-0.64}
     />
     <solderjumper
       name="P3"
       pinCount={2}
       schRotation={0}
-      schX={14.68}
-      schY={-4.19}
+      schX={12.82}
+      schY={-3.59}
     />
     <BQ25731RSN
       name="U1"
@@ -516,8 +516,8 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
     <netlabel
       net="GND"
       connectsTo=".U1 > .pin27"
-      schX={4.65}
-      schY={-6.06}
+      schX={4.1}
+      schY={-5.22}
       anchorSide="left"
     />
     <trace from=".C2 > .pin2" to=".C24 > .pin2" />
