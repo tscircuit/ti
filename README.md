@@ -190,6 +190,7 @@ The package currently exports these subcircuit components:
 - `MotorDriver_DRV8210`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
+- `PositionFeedback_DRV5013`
 - `EnvironmentalSensor_HDC2080`
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
@@ -244,6 +245,7 @@ chip is listed individually below, including whether it supports a
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
 | `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
 | `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
+| `DRV5013` | `sot_23_3_dbz` | `DRV5013ADQDBZRQ1` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
@@ -320,6 +322,15 @@ These are the components exported from the package entrypoint in `index.ts`.
 For example, `PowerMonitor_INA237` comes from
 `lib/subcircuits/PowerMonitor_INA237.circuit.tsx` and can be imported from
 `@tsci/tscircuit.ti`.
+
+`PositionFeedback_DRV5013` extracts the Window Module "Position Feedback -
+Hall Effect Sensors" function from TI's TIDA-01389. The Window Module
+subsystem's own Reference Design tab currently lists no design, so TIDA-01389
+was selected from the closely related Motor Driver references: TI explicitly
+identifies it for sunroof and window-lift applications and implements motor
+position encoding with two DRV5013-Q1 latching Hall sensors. This extraction is
+independent of the DRV8703/H-bridge work in PR #116 and does not duplicate that
+motor-driver circuitry.
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.

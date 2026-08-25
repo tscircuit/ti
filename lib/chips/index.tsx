@@ -14,6 +14,7 @@ export {
   DAC101C081QISD_NOPB,
 } from "./DAC101C081QISD_NOPB.circuit.tsx";
 export { DRV8210 } from "./DRV8210.circuit.tsx";
+export { DRV5013 } from "./DRV5013.circuit.tsx";
 export { DRV8833 } from "./DRV8833.circuit.tsx";
 export { DRV8876 } from "./DRV8876.circuit.tsx";
 export { HDC2080 } from "./HDC2080.circuit.tsx";
@@ -76,6 +77,7 @@ export { BQ27441DRZR_G1B } from "./BQ27441DRZR_G1B.circuit.tsx";
 export { CC2745R10E0WRHARQ1 } from "./CC2745R10E0WRHARQ1.circuit.tsx";
 export { CC3235SF12RGKR } from "./CC3235SF12RGKR.circuit.tsx";
 export { DRV8210DSGR } from "./DRV8210DSGR.circuit.tsx";
+export { DRV5013ADQDBZRQ1 } from "./DRV5013ADQDBZRQ1.circuit.tsx";
 export { HDC2080DMBR } from "./HDC2080DMBR.circuit.tsx";
 export { HDC3020DEFR } from "./HDC3020DEFR.circuit.tsx";
 export { HDC3022DEJR } from "./HDC3022DEJR.circuit.tsx";
