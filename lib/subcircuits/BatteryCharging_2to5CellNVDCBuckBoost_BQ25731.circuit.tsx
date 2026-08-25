@@ -11,10 +11,10 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
     <net name="PPHV" isPowerNet isGroundNet={false} />
     <net name="REGN" isPowerNet isGroundNet={false} />
     <net name="VDDA" isPowerNet isGroundNet={false} />
-    <net name="NET_01" isPowerNet isGroundNet={false} />
-    <net name="NET_03" isPowerNet isGroundNet={false} />
-    <net name="NET_05" isPowerNet isGroundNet={false} />
-    <net name="NET_08" isPowerNet isGroundNet={false} />
+    <net name="VBUS" isPowerNet isGroundNet={false} />
+    <net name="SW1" isPowerNet isGroundNet={false} />
+    <net name="SW2" isPowerNet isGroundNet={false} />
+    <net name="VSYS" isPowerNet isGroundNet={false} />
     <capacitor
       name="C1"
       capacitance="0.01uF"
@@ -75,14 +75,14 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C22"
       capacitance="0.047uF"
       schRotation={90}
-      schX={-3}
+      schX={-3.5}
       schY={6.76}
     />
     <capacitor
       name="C23"
       capacitance="0.047uF"
       schRotation={90}
-      schX={3.8}
+      schX={4.3}
       schY={6.76}
     />
     <capacitor
@@ -159,8 +159,8 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C34"
       capacitance="2.2uF"
       schRotation={0}
-      schX={6.32}
-      schY={0.1}
+      schX={6.82}
+      schY={0.6}
     />
     <capacitor
       name="C35"
@@ -173,15 +173,15 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C36"
       capacitance="680pF"
       schRotation={0}
-      schX={6.32}
-      schY={-1.08}
+      schX={6.82}
+      schY={-0.34}
     />
     <capacitor
       name="C37"
       capacitance="15pF"
       schRotation={0}
-      schX={5.13}
-      schY={-1.82}
+      schX={5.63}
+      schY={-1.32}
     />
     <capacitor
       name="C38"
@@ -300,7 +300,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       resistance="4.99"
       schRotation={90}
       schX={-10.4}
-      schY={4.84}
+      schY={5.34}
     />
     <resistor
       name="R6"
@@ -348,8 +348,8 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="R13"
       resistance="15.0k"
       schRotation={0}
-      schX={4.69}
-      schY={-0.64}
+      schX={5.19}
+      schY={-0.34}
     />
     <resistor
       name="R14"
@@ -370,13 +370,13 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       resistance="191k"
       schRotation={90}
       schX={8.83}
-      schY={-4.33}
+      schY={-4.18}
     />
     <resistor
       name="R17"
       resistance="30.1k"
       schRotation={270}
-      schX={4.98}
+      schX={5.18}
       schY={-4.92}
     />
     <resistor
@@ -513,13 +513,6 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schX={0.4}
       schY={0.4}
     />
-    <netlabel
-      net="GND"
-      connectsTo=".U1 > .pin27"
-      schX={4.1}
-      schY={-5.22}
-      anchorSide="left"
-    />
     <trace from=".C2 > .pin2" to=".C24 > .pin2" />
     <trace from=".C2 > .pin2" to=".C34 > .pin2" />
     <trace from=".C2 > .pin2" to=".C32 > .pin2" />
@@ -533,7 +526,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
     <trace from=".C2 > .pin2" to=".C28 > .pin1" />
     <trace from=".C2 > .pin2" to=".C29 > .pin2" />
     <trace from=".C2 > .pin2" to=".U1 > .pin33" />
-    <trace from=".C2 > .pin2" to=".U1 > .pin27" />
+    <trace from=".U1 > .pin27" to="net.GND" />
     <trace from=".C2 > .pin2" to=".U1 > .pin14" />
     <trace from=".C2 > .pin2" to=".C27 > .pin2" />
     <trace from=".C2 > .pin2" to=".C4 > .pin2" />
@@ -647,10 +640,10 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
     <trace from=".R1 > .pin1" to="net.PPHV" />
     <trace from=".C34 > .pin1" to="net.REGN" />
     <trace from=".C32 > .pin1" to="net.VDDA" />
-    <trace from=".C2 > .pin1" to="net.NET_01" />
-    <trace from=".C22 > .pin2" to="net.NET_03" />
-    <trace from=".C23 > .pin2" to="net.NET_05" />
-    <trace from=".C31 > .pin2" to="net.NET_08" />
+    <trace from=".C2 > .pin1" to="net.VBUS" />
+    <trace from=".C22 > .pin2" to="net.SW1" />
+    <trace from=".C23 > .pin2" to="net.SW2" />
+    <trace from=".C31 > .pin2" to="net.VSYS" />
   </subcircuit>
 );
 
