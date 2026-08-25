@@ -17,8 +17,8 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       name="U1"
       schX={-4.2}
       schY={0}
-      schWidth={4.5}
-      schHeight={9.6}
+      schWidth={3.8}
+      schHeight={8}
       showPinAliases={false}
       schPinArrangement={{
         leftSide: {
@@ -46,17 +46,26 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
         },
       }}
       schPinStyle={{
-        VBRGP: { marginTop: 0.25 },
-        VINPP: { marginTop: 0.85 },
-        VINPN: { marginTop: 0.4 },
-        VINTP: { marginTop: 1.05 },
-        PAD: { marginTop: 0.65 },
-        VDD: { marginTop: 0.15 },
-        DVDD_MEM: { marginTop: 0.2 },
-        AVDD: { marginTop: 0.2 },
-        DVDD: { marginTop: 0.4 },
-        VOUT: { marginTop: 0.95 },
-        DACCAP: { marginTop: 0.85 },
+        VBRGN: { marginTop: 0.69 },
+        VBRGP: { marginTop: 0.3 },
+        VINPP: { marginTop: 0.45 },
+        VINPN: { marginTop: 0.31 },
+        VINTP: { marginTop: 1.21 },
+        VINTN: { marginTop: 0.27 },
+        PAD: { marginTop: 0.75 },
+        VDD: { marginTop: 0.25 },
+        DVDD_MEM: { marginTop: 0.27 },
+        AVSS: { marginTop: 0.04 },
+        DVSS: { marginTop: 0.04 },
+        GND: { marginTop: 0.03 },
+        AVDD: { marginTop: 0.04 },
+        DVDD: { marginTop: 0.27 },
+        REFCAP: { marginTop: 0.26 },
+        VOUT: { marginTop: 1.69 },
+        COMP: { marginTop: 0.26 },
+        FBN: { marginTop: 0.26 },
+        DACCAP: { marginTop: 0.53 },
+        FBP: { marginTop: 0.51 },
       }}
       noConnect={[
         "NU1",
@@ -80,30 +89,26 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
         "VINTN",
         "FBN",
       ]}
-      connections={{
-        PAD: "net.GND",
-        COMP: "net.GND",
-      }}
     />
 
     <netlabel
       net="VBRGP"
       connectsTo="U1.VBRGP"
-      schX={-13.5}
+      schX={-12.1}
       schY={1.4}
       anchorSide="right"
     />
     <netlabel
       net="VINPP"
       connectsTo="R2.pin1"
-      schX={-13.5}
+      schX={-12.1}
       schY={0.95}
       anchorSide="right"
     />
     <netlabel
       net="VINPN"
       connectsTo="R3.pin1"
-      schX={-13.5}
+      schX={-12.1}
       schY={0.15}
       anchorSide="right"
     />
@@ -111,36 +116,78 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       net="Vdd"
       connectsTo="R4.pin2"
       schX={13.7}
-      schY={2.7}
+      schY={1.7}
       anchorSide="left"
     />
     <netlabel
       net="Ireturn"
-      connectsTo="R_L2.pin2"
+      connectsTo="D3.pin2"
       schX={13.7}
-      schY={-3.15}
+      schY={-0.42}
       anchorSide="left"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="U1.GND"
+      schX={-0.7}
+      schY={1.895}
+      anchorSide="left"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="U1.PAD"
+      schX={-7.4}
+      schY={-3.2}
+      anchorSide="top"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="C1.pin2"
+      schX={1.45}
+      schY={-0.85}
+      anchorSide="top"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="C2.pin2"
+      schX={0.35}
+      schY={-0.85}
+      anchorSide="top"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="C3.pin2"
+      schX={-0.75}
+      schY={-0.85}
+      anchorSide="top"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="R1.pin2"
+      schX={5.2}
+      schY={-2.25}
+      anchorSide="top"
     />
 
     <resistor
       name="R2"
       resistance="75k"
       footprint="0402"
-      schX={-9.4}
+      schX={-10.1}
       schY={0.95}
     />
     <resistor
       name="R3"
       resistance="75k"
       footprint="0402"
-      schX={-9.4}
+      schX={-10.1}
       schY={0.15}
     />
     <capacitor
       name="C6"
       capacitance="10nF"
       footprint="0402"
-      schX={-8.1}
+      schX={-8.45}
       schY={0.55}
       schOrientation="vertical"
     />
@@ -150,33 +197,24 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       capacitance="100nF"
       footprint="0402"
       schX={1.45}
-      schY={0.1}
+      schY={0.55}
       schOrientation="vertical"
-      connections={{
-        pin2: "net.GND",
-      }}
     />
     <capacitor
       name="C2"
       capacitance="100nF"
       footprint="0402"
       schX={0.35}
-      schY={-0.25}
+      schY={0.2}
       schOrientation="vertical"
-      connections={{
-        pin2: "net.GND",
-      }}
     />
     <capacitor
       name="C3"
       capacitance="100nF"
       footprint="0402"
       schX={-0.75}
-      schY={-0.6}
+      schY={-0.15}
       schOrientation="vertical"
-      connections={{
-        pin2: "net.GND",
-      }}
     />
 
     <transistor
@@ -227,7 +265,7 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
           />
         </footprint>
       }
-      schX={3.2}
+      schX={5.2}
       schY={0.5}
       schRotation={-90}
     />
@@ -235,12 +273,9 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       name="R1"
       resistance="150"
       footprint="0603"
-      schX={3.2}
-      schY={-1.15}
+      schX={5.2}
+      schY={-1.1}
       schOrientation="vertical"
-      connections={{
-        pin2: "net.GND",
-      }}
     />
 
     <capacitor
@@ -248,14 +283,14 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       capacitance="100nF"
       footprint="0402"
       schX={-0.7}
-      schY={-3.15}
+      schY={-2.815}
     />
     <capacitor
       name="C4"
       capacitance="100nF"
       footprint="0402"
-      schX={5.0}
-      schY={-0.2}
+      schX={6.4}
+      schY={-0.25}
       schOrientation="vertical"
     />
 
@@ -264,16 +299,16 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       displayName="L1"
       resistance="600"
       footprint="0603"
-      schX={6.0}
-      schY={2.7}
+      schX={7.3}
+      schY={3.05}
     />
     <resistor
       name="R_L2"
       displayName="L2"
       resistance="600"
       footprint="0603"
-      schX={6.0}
-      schY={-3.15}
+      schX={7.3}
+      schY={-3.5}
     />
     <diode
       name="D1"
@@ -281,8 +316,8 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       manufacturerPartNumber="SM6T30CA"
       supplierPartNumbers={{ jlcpcb: ["C133691"] }}
       footprint="smb"
-      schX={7.8}
-      schY={-0.15}
+      schX={8.25}
+      schY={0.3}
       schOrientation="vertical"
     />
     <diode
@@ -290,16 +325,16 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       manufacturerPartNumber="RF071M2S"
       supplierPartNumbers={{ jlcpcb: ["C84978"] }}
       footprint="sod123f"
-      schX={9.45}
-      schY={2.7}
+      schX={9.2}
+      schY={1.7}
       schOrientation="pos_right"
     />
     <resistor
       name="R4"
       resistance="200"
       footprint="0603"
-      schX={11.25}
-      schY={2.7}
+      schX={10.3}
+      schY={1.7}
     />
     <diode
       name="D3"
@@ -307,8 +342,8 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       manufacturerPartNumber="SM6T36CA"
       supplierPartNumbers={{ jlcpcb: ["C133688"] }}
       footprint="smb"
-      schX={11.95}
-      schY={-0.15}
+      schX={10.9}
+      schY={0.3}
       schOrientation="vertical"
     />
 
@@ -322,7 +357,6 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
     />
     <trace from="U1.AVSS" to="U1.DVSS" />
     <trace from="U1.DVSS" to="U1.GND" />
-    <trace from="U1.GND" to="net.GND" />
 
     <trace
       from="U1.DVDD_MEM"
@@ -352,115 +386,139 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       from="U1.VDD"
       to="Q1.pin1"
       schematicRouteHints={[
-        { x: 1.05, y: 2.325 },
-        { x: 3.5, y: 2.325 },
+        { x: 2.7, y: 3.05 },
+        { x: 5.2, y: 3.05 },
       ]}
     />
     <trace
       from="U1.VDD"
       to="R_L1.pin1"
       schematicRouteHints={[
-        { x: 1.1, y: 2.7 },
-        { x: 5.7, y: 2.7 },
+        { x: 2.7, y: 3.05 },
+        { x: 7, y: 3.05 },
       ]}
     />
     <trace
       from="Q1.pin1"
       to="C4.pin1"
       schematicRouteHints={[
-        { x: 5, y: 2 },
-        { x: 5, y: 0.1 },
+        { x: 6.4, y: 3.05 },
+        { x: 6.4, y: 0.25 },
       ]}
     />
     <trace
       from="U1.VOUT"
       to="Q1.pin2"
       schematicRouteHints={[
-        { x: 2.2, y: -1.025 },
-        { x: 2.2, y: 0.5 },
+        { x: 3.6, y: -0.85 },
+        { x: 3.6, y: 0.5 },
       ]}
     />
     <trace from="Q1.pin3" to="R1.pin1" />
+    <trace from="U1.COMP" to="R1.pin2" />
 
     <trace from="U1.DACCAP" to="C5.pin1" />
-    <trace from="U1.FBP" to="C5.pin2" />
     <trace
-      from="C5.pin2"
+      from="U1.FBP"
+      to="C5.pin2"
+      schematicRouteHints={[
+        { x: 0.4, y: -3.525 },
+        { x: 0.4, y: -2.815 },
+      ]}
+    />
+    <trace
+      from="U1.FBP"
       to="R_L2.pin1"
       schematicRouteHints={[
-        { x: 1.1, y: -3.15 },
-        { x: 5.7, y: -3.15 },
+        { x: -1.5, y: -3.525 },
+        { x: 7, y: -3.525 },
       ]}
     />
     <trace
       from="C4.pin2"
       to="C5.pin2"
       schematicRouteHints={[
-        { x: 5, y: -3.15 },
-        { x: -0.4, y: -3.15 },
+        { x: 6.4, y: -3.525 },
+        { x: 0.4, y: -3.525 },
+        { x: 0.4, y: -2.815 },
       ]}
     />
 
-    <trace from="R_L1.pin2" to="D2.pin2" />
+    <trace
+      from="R_L1.pin2"
+      to="D2.pin2"
+      schematicRouteHints={[
+        { x: 8.25, y: 3.05 },
+        { x: 8.25, y: 1.7 },
+      ]}
+    />
     <trace from="D1.pin1" to="D2.pin2" />
     <trace from="D2.pin1" to="R4.pin1" />
     <trace
       from="R_L2.pin2"
       to="D1.pin2"
       schematicRouteHints={[
-        { x: 7.8, y: -3.15 },
-        { x: 7.8, y: -0.67 },
+        { x: 8.25, y: -3.525 },
+        { x: 8.25, y: -0.22 },
       ]}
     />
-    <trace from="R_L2.pin2" to="D3.pin2" />
+    <trace
+      from="D1.pin2"
+      to="D3.pin2"
+      schematicRouteHints={[
+        { x: 8.25, y: -1.2 },
+        { x: 10.9, y: -1.2 },
+        { x: 10.9, y: -0.22 },
+      ]}
+    />
     <trace
       from="R4.pin2"
       to="D3.pin1"
       schematicRouteHints={[
-        { x: 11.95, y: 2.7 },
-        { x: 11.95, y: 0.37 },
+        { x: 10.9, y: 1.7 },
+        { x: 10.9, y: 0.82 },
       ]}
     />
 
     <schematictext
       text="BCP56-16"
-      schX={4.0}
+      schX={6.0}
       schY={1.0}
       fontSize={0.2}
       anchor="left"
     />
     <schematictext
       text="RF071M2S"
-      schX={9.45}
-      schY={2.25}
+      schX={9.2}
+      schY={1.25}
       fontSize={0.2}
       anchor="center"
     />
     <schematictext
       text="SM6T30CA"
-      schX={8.45}
-      schY={0.2}
+      schX={8.9}
+      schY={0.65}
       fontSize={0.2}
       anchor="left"
     />
     <schematictext
       text="25.6V"
-      schX={8.45}
-      schY={-0.1}
+      schX={8.9}
+      schY={0.35}
       fontSize={0.2}
       anchor="left"
     />
     <schematictext
       text="SM6T36CA"
-      schX={12.55}
-      schY={0.2}
+      schX={11.5}
+      schY={0.65}
       fontSize={0.2}
       anchor="left"
     />
     <schematictext
       text="36V"
-      schX={12.55}
-      schY={-0.1}
+      schX={11.5}
+      schY={0.35}
       fontSize={0.2}
       anchor="left"
     />
