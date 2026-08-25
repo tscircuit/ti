@@ -17,6 +17,7 @@
     "snapshot": "tsci snapshot",
     "snapshot:update": "tsci snapshot --update",
     "start": "tsci dev",
+    "test": "bun tests/Microcontroller_MSP430FR6007.test.tsx",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write",
     "format:check": "biome format ."

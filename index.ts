@@ -21,6 +21,7 @@ import {
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
+  MSP430FR6007,
   MSPM33C3x,
   MSPM0G3507,
   SN65HVD1473,
@@ -68,6 +69,7 @@ import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505
 import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
 import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit.tsx";
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
+import { Microcontroller_MSP430FR6007 } from "./lib/subcircuits/Microcontroller_MSP430FR6007.circuit.tsx";
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
@@ -119,6 +121,7 @@ export {
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
   Microcontroller_MSPM0G3507,
+  Microcontroller_MSP430FR6007,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
   TemperatureSensor_TMP1075,
@@ -168,6 +171,7 @@ export const TiChipComponents = {
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
+  MSP430FR6007,
   MSPM33C3x,
   MSPM0G3507,
   SN65HVD1473,
@@ -217,6 +221,7 @@ export const TiSubcircuitComponents = {
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
   Microcontroller_MSPM0G3507,
+  Microcontroller_MSP430FR6007,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
   TemperatureSensor_TMP1075,

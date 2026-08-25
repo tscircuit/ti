@@ -118,6 +118,7 @@ The package currently exports these subcircuit components:
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSP430FR6007`
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
 - `TemperatureSensor_TMP1075`
@@ -162,6 +163,7 @@ chip is listed individually below, including whether it supports a
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
+| `MSP430FR6007` | `lqfp_100` | `MSP430FR6007IPZ` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
