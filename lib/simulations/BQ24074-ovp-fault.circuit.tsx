@@ -28,7 +28,7 @@ V_IN OUT VSS PWL(0 6 64u 6 70u 15 78u 15.8 90u 15 240u 15)
 );
 
 export const BQ24074OvpFaultCircuit = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <BQ24074RGTR
       name="U1"
       schX={0}

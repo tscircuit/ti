@@ -4,7 +4,7 @@ import { DRV8876 } from "../chips/DRV8876.circuit.tsx";
 export const DRV8876DriverPwmOperationPhEnCircuit = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <DRV8876
       name="U1"
       schX={0}

@@ -4,7 +4,7 @@ import { TPS63802DLAR } from "../chips/TPS63802DLAR.circuit.tsx";
 export const TPS63802SwitchingWaveformsPfmBuckOperationCircuit = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <TPS63802DLAR
       name="U1"
       schX={0}

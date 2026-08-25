@@ -68,7 +68,7 @@ V_SYSOFF OUT VSS PULSE(0 5 3.6m 20u 20u 12.3m 24m)
 export const BQ24075SystemOnOffInputDisconnectedCircuit = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <BQ24075SystemDisconnectModel
       name="U1"
       schX={0}

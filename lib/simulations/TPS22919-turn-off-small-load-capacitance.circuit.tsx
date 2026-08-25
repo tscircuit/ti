@@ -35,7 +35,7 @@ const OnFallingPulse = (props: {
 export const TPS22919TurnOffSmallLoadCapacitanceCircuit = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <TPS22919
       name="U1"
       schX={0}
