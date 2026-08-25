@@ -26,6 +26,7 @@ import {
   SN65HVD1473,
   TAS2505,
   TLC59116,
+  TLIN1028,
   TLV755P,
   TLV9152IDR,
   TMP1827,
@@ -94,6 +95,7 @@ import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
 import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
+import { CommunicationInterface_TLIN1028 } from "./lib/subcircuits/CommunicationInterface_TLIN1028.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -143,6 +145,7 @@ export {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_TLIN1028,
 };
 
 export const TiChipComponents = {
@@ -173,6 +176,7 @@ export const TiChipComponents = {
   SN65HVD1473,
   TAS2505,
   TLC59116,
+  TLIN1028,
   TLV755P,
   TLV9152IDR,
   TMP1827,
@@ -240,6 +244,7 @@ export const TiSubcircuitComponents = {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_TLIN1028,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

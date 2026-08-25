@@ -136,6 +136,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `CommunicationInterface_TLIN1028`
 
 ## Exported Chips
 
@@ -164,6 +165,7 @@ chip is listed individually below, including whether it supports a
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
+| `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
