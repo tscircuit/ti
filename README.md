@@ -114,6 +114,10 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
 - `IsolatedRS485_ISOW7841`
+- `PowerSupply_WindowModule`
+- `ReverseBatteryProtection_TLV1805_SQJ461EP`
+- `VoltageRegulator_LM73605`
+- `SupervisorWatchdog_TPS3850`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
@@ -160,15 +164,18 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM73605` | `wqfn_30_rnp_4x6` | `LM73605QRNPRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
+| `TLV1805` | `sot_23_6` | `TLV1805QDBVRQ1` |
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TPS22919` | `-` | `TPS22919` |
+| `TPS3850` | `vson_10_drc_3x3` | `TPS3850H33QDRCRQ1` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
@@ -193,6 +200,36 @@ The package also exports:
 - `TiSubcircuitName`: a TypeScript union of keys in `TiSubcircuitComponents`.
 - `TiSubcircuitComponent`: a TypeScript type for any exported subcircuit
   component.
+
+## Automotive Window Module Power Supply
+
+`PowerSupply_WindowModule` composes three independently renderable sections
+from TI reference design TIDA-050008:
+
+- `ReverseBatteryProtection_TLV1805_SQJ461EP` reproduces the TLV1805-Q1,
+  P-channel MOSFET, transient-protection, and system EMI-input section.
+- `VoltageRegulator_LM73605` reproduces the off-battery 3.3-V system supply.
+- `SupervisorWatchdog_TPS3850` reproduces the combined 3.3-V voltage
+  supervisor and programmable window-watchdog section.
+
+The native Altium source is TI archive `TIDRXT8`; the matching schematic and
+BOM are `TIDRXU1` and `TIDRXT7`. TIDA-01389 was also reviewed because it is a
+window/sunroof motor reference, but it contains only reverse-battery protection
+and a TPS7B6933-Q1 LDO, so it is not used to invent a cross-reference composite.
+
+All four functions on TI's high-level Power Supply block are covered: reverse
+battery protection, voltage regulation, supply supervision, and watchdog. The
+source net names `+3.3V`, `SS/TRK`, and `3.3RESET` are recorded on the matching
+native electrical traces with `schDisplayLabel`; selector-safe TSX
+net/interface names are `V3P3`, `SS_TRK`, and `RESET_3V3` because tscircuit net
+selectors cannot contain those source punctuation characters.
+
+The TI window-module page's uncited product recommendations (LM74500-Q1,
+TPS7B4255-Q1, TPS7B63-Q1, TPS7B68-Q1, TPS7E81-Q1, and TPS7E82-Q1) are not
+implemented because that subsystem has no attached reference design or CAD.
+TIDA-050008's separate 5-V CAN supply, 1.2-V core supply, TPS3890/TPS3703
+supervisors, and 2.5-V reference are also intentionally outside this focused
+window-module power composite.
 
 ## Key Directories
 
