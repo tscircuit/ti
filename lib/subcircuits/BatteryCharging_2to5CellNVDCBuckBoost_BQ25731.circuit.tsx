@@ -131,7 +131,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C30"
       capacitance="0.068uF"
       schRotation={270}
-      schX={4.25}
+      schX={5.25}
       schY={1.73}
     />
     <capacitor
