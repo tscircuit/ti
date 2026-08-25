@@ -18,9 +18,40 @@ type TwoPinPart = {
   dnp?: boolean;
 };
 
-// Expand the native Altium sheet coordinates so tscircuit's larger symbols and
-// net labels retain the same relative layout without crowding each other.
-const sheetCoord = (value: number) => value * 1.6;
+// Preserve the native Altium sheet coordinate system. The component centers
+// below are taken directly from PMP11064 sheet 2.
+const sheetCoord = (value: number) => value;
+
+const horizontalCapacitors = new Set([
+  "C500",
+  "C504",
+  "C505",
+  "C506",
+  "C507",
+  "C519",
+  "C525",
+  "C526",
+  "C529",
+  "C530",
+]);
+
+const verticalResistors = new Set([
+  "R511",
+  "R515",
+  "R521",
+  "R524",
+  "R525",
+  "R527",
+  "R528",
+  "R530",
+  "R539",
+  "R541",
+  "R542",
+  "R543",
+  "R545",
+  "R546",
+  "R547",
+]);
 
 // PMP11064.Dat is the final fitted BOM from the supplied TI package. It is
 // authoritative where older TIDRK28 drawing callouts differ (R526 and C530).
@@ -866,7 +897,12 @@ const optocouplerPins = {
  * Reference design: https://www.ti.com/tool/PMP11282
  */
 export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="6mm" routingDisabled {...props}>
+  <subcircuit
+    schMaxTraceDistance="100mm"
+    schTraceAutoLabelEnabled={false}
+    routingDisabled
+    {...props}
+  >
     <schematictext
       text="Notes: L500 and C100 are modified parts."
       schX={sheetCoord(-12.2)}
@@ -891,7 +927,9 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
         footprint={c.footprint}
         schX={sheetCoord(c.x)}
         schY={sheetCoord(c.y)}
-        schOrientation="vertical"
+        schOrientation={
+          horizontalCapacitors.has(c.name) ? "horizontal" : "vertical"
+        }
         doNotPlace={c.dnp}
         connections={{ pin1: c.pin1, pin2: c.pin2 }}
       />
@@ -904,6 +942,9 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
         footprint={r.footprint}
         schX={sheetCoord(r.x)}
         schY={sheetCoord(r.y)}
+        schOrientation={
+          verticalResistors.has(r.name) ? "vertical" : "horizontal"
+        }
         doNotPlace={r.dnp}
         connections={{ pin1: r.pin1, pin2: r.pin2 }}
       />
@@ -917,6 +958,11 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
         variant={d.variant}
         schX={sheetCoord(d.x)}
         schY={sheetCoord(d.y)}
+        schOrientation={
+          d.name === "D500" || d.name === "D501" || d.name === "D507"
+            ? "vertical"
+            : "horizontal"
+        }
         connections={{ anode: d.a, cathode: d.k }}
       />
     ))}
@@ -1033,6 +1079,12 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
       pinLabels={{ pin1: "IN_1", pin2: "IN_2", pin3: "OUT_11", pin4: "OUT_12" }}
       schX={sheetCoord(-4.02)}
       schY={sheetCoord(4.8)}
+      schWidth="1.1mm"
+      schHeight="0.46mm"
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [1, 2] },
+        rightSide: { direction: "top-to-bottom", pins: [3, 4] },
+      }}
       connections={{
         pin1: "net.HB_SW",
         pin2: "net.HB_SW",
@@ -1064,8 +1116,15 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
       }}
       schX={sheetCoord(-2.39)}
       schY={sheetCoord(3.11)}
-      schWidth="3mm"
-      schHeight="4.5mm"
+      schWidth="0.4mm"
+      schHeight="2.56mm"
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [1, 2] },
+        rightSide: {
+          direction: "top-to-bottom",
+          pins: [3, 4, 5, 6, 7, 8, 9, 10],
+        },
+      }}
       connections={{
         pin1: "net.RESONANT_RETURN",
         pin2: "net.RESONANT_INPUT",
@@ -1090,6 +1149,15 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
       name="U500"
       schX={sheetCoord(8.23)}
       schY={sheetCoord(6.03)}
+      schWidth="1.1mm"
+      schHeight="2.56mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [8, 5, 7, 3, 2, 6],
+        },
+        rightSide: { direction: "top-to-bottom", pins: [1, 4] },
+      }}
       connections={{
         VD: "net.U500_VD",
         VS: "net.U500_VS",
@@ -1104,6 +1172,15 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
       name="U501"
       schX={sheetCoord(13.89)}
       schY={sheetCoord(6.03)}
+      schWidth="1.1mm"
+      schHeight="2.56mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [8, 5, 7, 3, 2, 6],
+        },
+        rightSide: { direction: "top-to-bottom", pins: [1, 4] },
+      }}
       connections={{
         VD: "net.U501_VD",
         VS: "net.U501_VS",
@@ -1118,6 +1195,18 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
       name="U502"
       schX={sheetCoord(-11.33)}
       schY={sheetCoord(3.47)}
+      schWidth="2.19mm"
+      schHeight="3.29mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [7, 4, 1, 2, 8, 9, 10, 14],
+        },
+        rightSide: {
+          direction: "top-to-bottom",
+          pins: [13, 12, 11, 6, 5, 3],
+        },
+      }}
       connections={{
         HI: "net.GD2_DRIVER",
         LI: "net.GD1_DRIVER",
@@ -1148,6 +1237,12 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
       name="U504"
       schX={sheetCoord(-9.87)}
       schY={sheetCoord(-3.11)}
+      schWidth="1.1mm"
+      schHeight="1.83mm"
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [8, 5, 6] },
+        rightSide: { direction: "top-to-bottom", pins: [4, 2, 1, 3, 7] },
+      }}
       connections={{
         DT: "net.CTRL_DT",
         RT: "net.CTRL_RT",
@@ -1246,6 +1341,12 @@ export const PMP11282_IsolatedDCDC = (props: SubcircuitProps) => (
         connections={{ pin1: t.net }}
       />
     ))}
+
+    {/* These four long controller runs are continuous wires on the TI sheet. */}
+    <trace from="U504.GD2" to="R524.pin1" />
+    <trace from="R524.pin2" to="U502.HI" />
+    <trace from="U504.GD1" to="R527.pin1" />
+    <trace from="R527.pin2" to="U502.LI" />
 
     <port
       name="VBULK"
