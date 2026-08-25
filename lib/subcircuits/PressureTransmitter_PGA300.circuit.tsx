@@ -228,7 +228,8 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
         </footprint>
       }
       schX={3.2}
-      schY={1}
+      schY={0.5}
+      schRotation={-90}
     />
     <resistor
       name="R1"
@@ -349,7 +350,7 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
 
     <trace
       from="U1.VDD"
-      to="Q1.collector"
+      to="Q1.pin1"
       schematicRouteHints={[
         { x: 1.05, y: 2.325 },
         { x: 3.5, y: 2.325 },
@@ -364,15 +365,22 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       ]}
     />
     <trace
-      from="Q1.collector"
+      from="Q1.pin1"
       to="C4.pin1"
       schematicRouteHints={[
         { x: 5, y: 2 },
         { x: 5, y: 0.1 },
       ]}
     />
-    <trace from="U1.VOUT" to="Q1.base" />
-    <trace from="Q1.emitter" to="R1.pin1" />
+    <trace
+      from="U1.VOUT"
+      to="Q1.pin2"
+      schematicRouteHints={[
+        { x: 2.2, y: -1.025 },
+        { x: 2.2, y: 0.5 },
+      ]}
+    />
+    <trace from="Q1.pin3" to="R1.pin1" />
 
     <trace from="U1.DACCAP" to="C5.pin1" />
     <trace from="U1.FBP" to="C5.pin2" />
