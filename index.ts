@@ -13,6 +13,7 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CSD18532KCS,
   DRV8210,
   DRV8833,
   DRV8876,
@@ -20,6 +21,7 @@ import {
   HDC3020,
   HDC3022,
   INA237,
+  INA213AIDCK,
   ISOW7841,
   LMK1C1104,
   MSP430G2230ID,
@@ -30,6 +32,7 @@ import {
   SN65HVD1473,
   TAS2505,
   TLC59116,
+  TL431BIDBZR,
   TLV755P,
   TLV9152IDR,
   TMP1827,
@@ -49,6 +52,9 @@ import {
   TRF7960RHB,
   TXB0104,
   TXS0102,
+  UCC24610D,
+  UCC25600D,
+  UCC27714D,
   W25Q128JVSIQ,
 } from "./lib/chips/index.tsx";
 import { BatteryManagement_BQ24072 } from "./lib/subcircuits/BatteryManagement_BQ24072.circuit.tsx";
@@ -97,6 +103,7 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
+import { PMP11282_IsolatedDCDC } from "./lib/subcircuits/PMP11282_IsolatedDCDC.circuit.tsx";
 import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits/BatteryCharging_2to5CellNVDCBuckBoost_BQ25731.circuit.tsx";
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
@@ -149,6 +156,7 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  PMP11282_IsolatedDCDC,
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
@@ -170,6 +178,7 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CSD18532KCS,
   DRV8210,
   DRV8833,
   DRV8876,
@@ -177,6 +186,7 @@ export const TiChipComponents = {
   HDC3020,
   HDC3022,
   INA237,
+  INA213AIDCK,
   ISOW7841,
   LMK1C1104,
   MSP430G2230ID,
@@ -187,6 +197,7 @@ export const TiChipComponents = {
   SN65HVD1473,
   TAS2505,
   TLC59116,
+  TL431BIDBZR,
   TLV755P,
   TLV9152IDR,
   TMP1827,
@@ -206,6 +217,9 @@ export const TiChipComponents = {
   TRF7960RHB,
   TXB0104,
   TXS0102,
+  UCC24610D,
+  UCC25600D,
+  UCC27714D,
   W25Q128JVSIQ,
 } as const;
 
@@ -253,6 +267,7 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  PMP11282_IsolatedDCDC,
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
