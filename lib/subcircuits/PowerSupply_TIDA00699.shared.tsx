@@ -1302,16 +1302,6 @@ const ReferenceSpecialComponents = ({
         schY={4.5695 * schematicScale}
         schWidth="2.5mm"
         schHeight="2.2mm"
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: [7, 1, 4, 8],
-          },
-          rightSide: {
-            direction: "top-to-bottom",
-            pins: [6, 2, 3, 5],
-          },
-        }}
       />
     )}
     {componentNames.has("U2") && (
@@ -1323,16 +1313,6 @@ const ReferenceSpecialComponents = ({
         schY={-5.1179 * schematicScale}
         schWidth="3.2mm"
         schHeight="5.2mm"
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: [5, 6, 12, 11, 10, 7, 14, 8, 1, 2, 9],
-          },
-          rightSide: {
-            direction: "top-to-bottom",
-            pins: [4, 3, 13, 17, 20, 18, 16, 19, 15, 21],
-          },
-        }}
         schPinStyle={{
           pin13: { marginTop: 0.2 },
           pin17: { marginTop: 0.2 },
@@ -1355,20 +1335,6 @@ const ReferenceSpecialComponents = ({
         schY={-5.3007 * schematicScale}
         schWidth="3.0707mm"
         schHeight="4.6061mm"
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: [12, 13, 11, 8, 4, 7, 6, 14],
-          },
-          rightSide: {
-            direction: "top-to-bottom",
-            pins: [3, 1, 2, 9, 5],
-          },
-          bottomSide: {
-            direction: "left-to-right",
-            pins: [10, 15, 16, 17],
-          },
-        }}
       />
     )}
     {componentNames.has("U4") && (
@@ -1380,16 +1346,6 @@ const ReferenceSpecialComponents = ({
         schY={4.7523 * schematicScale}
         schWidth="2.4mm"
         schHeight="1.9mm"
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: [6, 4, 3],
-          },
-          rightSide: {
-            direction: "top-to-bottom",
-            pins: [1, 5, 2],
-          },
-        }}
         noConnect={["pin3"]}
       />
     )}

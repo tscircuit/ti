@@ -73,11 +73,11 @@ export const TPS3808G01QDBVRQ1 = (props: ChipProps<typeof pinLabels>) => (
     schPinArrangement={{
       leftSide: {
         direction: "top-to-bottom",
-        pins: [6, 5, 4],
+        pins: [6, 4, 3],
       },
       rightSide: {
-        direction: "bottom-to-top",
-        pins: [1, 3, 2],
+        direction: "top-to-bottom",
+        pins: [1, 5, 2],
       },
     }}
     {...props}

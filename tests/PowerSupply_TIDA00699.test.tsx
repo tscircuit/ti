@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
 import type { SubcircuitProps } from "@tscircuit/props";
+import ObstacleDetectionSensor from "../examples/ObstacleDetectionSensor.circuit.tsx";
 import {
   CSD18531Q5A,
   PowerSupply_Boost_LM25122_TIDA00699,
@@ -20,6 +21,7 @@ import {
 
 type TestCircuit = InstanceType<typeof Circuit>;
 type ReferenceSubcircuit = (props: SubcircuitProps) => React.ReactNode;
+type SchematicComponentSide = "top" | "bottom" | "left" | "right";
 
 const sectionComponents = {
   "Transient & Reverse Polarity Protection": [
@@ -136,6 +138,23 @@ test("TIDA-00699 delegates trace topology and routing to native tscircuit behavi
   }
 });
 
+test("Obstacle-detection example assigns TIDA-00699 to a named schematic sheet", async () => {
+  const circuit = new Circuit({ platform: { pcbDisabled: true } });
+  circuit.add(<ObstacleDetectionSensor />);
+  await circuit.renderUntilSettled();
+  assertNoErrors(circuit);
+
+  const schematicSheet = circuit.db.schematic_sheet.getWhere({
+    name: "power_supply",
+  });
+  assert.ok(schematicSheet);
+  assert.equal(
+    getSchematicPort(circuit, { componentName: "U3", pin: "pin12" })
+      .schematic_sheet_id,
+    schematicSheet.schematic_sheet_id,
+  );
+});
+
 function getPort(circuit: TestCircuit, componentName: string, pin: string) {
   const component = circuit.db.source_component.getWhere({
     name: componentName,
@@ -146,6 +165,55 @@ function getPort(circuit: TestCircuit, componentName: string, pin: string) {
     .find((candidate) => candidate.port_hints?.includes(pin));
   assert.ok(port, `${componentName}.${pin}`);
   return port;
+}
+
+function getSchematicPort(
+  circuit: TestCircuit,
+  portSelector: { componentName: string; pin: string },
+) {
+  const { componentName, pin } = portSelector;
+  const schematicPort = circuit.db.schematic_port.getWhere({
+    source_port_id: getPort(circuit, componentName, pin).source_port_id,
+  });
+  assert.ok(schematicPort, `${componentName}.${pin} schematic port`);
+  return schematicPort;
+}
+
+function assertSchematicPinSideOrder(
+  circuit: TestCircuit,
+  expectedArrangement: {
+    componentName: string;
+    side: SchematicComponentSide;
+    pins: readonly string[];
+  },
+) {
+  const { componentName, side, pins } = expectedArrangement;
+  const schematicPorts = pins.map((pin) => ({
+    pin,
+    schematicPort: getSchematicPort(circuit, { componentName, pin }),
+  }));
+
+  for (const { pin, schematicPort } of schematicPorts) {
+    assert.equal(
+      schematicPort.side_of_component,
+      side,
+      `${componentName}.${pin} must be on the ${side} side`,
+    );
+  }
+
+  const orderedPins = [...schematicPorts]
+    .sort((firstPort, secondPort) =>
+      side === "left" || side === "right"
+        ? secondPort.schematicPort.center.y - firstPort.schematicPort.center.y
+        : firstPort.schematicPort.center.x - secondPort.schematicPort.center.x,
+    )
+    .map(({ pin }) => pin);
+
+  assert.deepEqual(
+    orderedPins,
+    pins,
+    `${componentName} ${side}-side pin order`,
+  );
 }
 
 function assertPinNet(
@@ -364,6 +432,114 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
   assert.ok(circuit.db.schematic_line.list().length > 0);
   for (const title of Object.keys(sectionComponents)) {
     assert.ok(circuit.db.schematic_text.getWhere({ text: title }));
+  }
+
+  for (const expectedArrangement of [
+    {
+      componentName: "U1",
+      side: "left",
+      pins: ["pin7", "pin1", "pin4", "pin8"],
+    },
+    {
+      componentName: "U1",
+      side: "right",
+      pins: ["pin6", "pin2", "pin3", "pin5"],
+    },
+    {
+      componentName: "U2",
+      side: "left",
+      pins: [
+        "pin5",
+        "pin6",
+        "pin12",
+        "pin11",
+        "pin10",
+        "pin7",
+        "pin14",
+        "pin8",
+        "pin1",
+        "pin2",
+        "pin9",
+      ],
+    },
+    {
+      componentName: "U2",
+      side: "right",
+      pins: [
+        "pin4",
+        "pin3",
+        "pin13",
+        "pin17",
+        "pin20",
+        "pin18",
+        "pin16",
+        "pin19",
+        "pin15",
+        "pin21",
+      ],
+    },
+    {
+      componentName: "U3",
+      side: "left",
+      pins: [
+        "pin12",
+        "pin13",
+        "pin11",
+        "pin8",
+        "pin4",
+        "pin7",
+        "pin6",
+        "pin14",
+      ],
+    },
+    {
+      componentName: "U3",
+      side: "right",
+      pins: [
+        "pin3",
+        "pin1",
+        "pin2",
+        "pin9",
+        "pin5",
+        "pin10",
+        "pin15",
+        "pin16",
+        "pin17",
+      ],
+    },
+    {
+      componentName: "U4",
+      side: "left",
+      pins: ["pin6", "pin4", "pin3"],
+    },
+    {
+      componentName: "U4",
+      side: "right",
+      pins: ["pin1", "pin5", "pin2"],
+    },
+    {
+      componentName: "D1",
+      side: "left",
+      pins: ["pin1", "pin2"],
+    },
+    { componentName: "D1", side: "right", pins: ["pin3"] },
+    {
+      componentName: "DSHT",
+      side: "left",
+      pins: ["pin1", "pin2"],
+    },
+    { componentName: "DSHT", side: "right", pins: ["pin3"] },
+    { componentName: "Q1", side: "top", pins: ["pin5"] },
+    { componentName: "Q1", side: "bottom", pins: ["pin1"] },
+    { componentName: "Q1", side: "left", pins: ["pin4"] },
+    { componentName: "Q2", side: "left", pins: ["pin1"] },
+    { componentName: "Q2", side: "right", pins: ["pin5"] },
+    { componentName: "Q2", side: "bottom", pins: ["pin4"] },
+    { componentName: "Q3", side: "left", pins: ["pin1"] },
+    { componentName: "Q3", side: "right", pins: ["pin5"] },
+    { componentName: "Q3", side: "bottom", pins: ["pin4"] },
+  ] as const) {
+    assertSchematicPinSideOrder(circuit, expectedArrangement);
   }
 
   // Altium source centers are transformed with schX/Y = sourceX/Y * 1.4.

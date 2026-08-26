@@ -37,15 +37,11 @@ export const LM25122QPWPTQ1 = (props: ChipProps<typeof pinLabels>) => (
     schPinArrangement={{
       leftSide: {
         direction: "top-to-bottom",
-        pins: [5, 6, 8, 7, 3, 4, 2, 1],
+        pins: [5, 6, 12, 11, 10, 7, 14, 8, 1, 2, 9],
       },
       rightSide: {
-        direction: "bottom-to-top",
-        pins: [20, 19, 18, 17, 16, 10, 11, 12, 13, 14],
-      },
-      bottomSide: {
-        direction: "left-to-right",
-        pins: [9, 15, 21],
+        direction: "top-to-bottom",
+        pins: [4, 3, 13, 17, 20, 18, 16, 19, 15, 21],
       },
     }}
     {...props}

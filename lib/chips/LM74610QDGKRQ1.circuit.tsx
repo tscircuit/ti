@@ -24,11 +24,11 @@ export const LM74610QDGKRQ1 = (props: ChipProps<typeof pinLabels>) => (
     schPinArrangement={{
       leftSide: {
         direction: "top-to-bottom",
-        pins: [4, 1, 7],
+        pins: [7, 1, 4, 8],
       },
       rightSide: {
-        direction: "bottom-to-top",
-        pins: [8, 6, 2],
+        direction: "top-to-bottom",
+        pins: [6, 2, 3, 5],
       },
     }}
     noConnect={["pin3", "pin5"]}

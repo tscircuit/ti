@@ -37,11 +37,7 @@ export const LM536035QPWPRQ1 = (props: ChipProps<typeof pinLabels>) => (
       },
       rightSide: {
         direction: "top-to-bottom",
-        pins: [3, 1, 2, 9, 5],
-      },
-      bottomSide: {
-        direction: "left-to-right",
-        pins: [10, 15, 16, 17],
+        pins: [3, 1, 2, 9, 5, 10, 15, 16, 17],
       },
     }}
     noConnect={["pin14"]}
