@@ -39,6 +39,7 @@ export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";
 export { MSPM0G3507 } from "./MSPM0G3507.circuit.tsx";
 export { OPT3001, OPT3001IDNPRQ1 } from "./OPT3001IDNPRQ1.circuit.tsx";
 export { SN65HVD1473 } from "./SN65HVD1473.circuit.tsx";
+export { SQ4850EY } from "./SQ4850EY.circuit.tsx";
 export { TAS2505 } from "./TAS2505.circuit.tsx";
 export {
   TCAN1042HGV,

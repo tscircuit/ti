@@ -271,6 +271,7 @@ chip is listed individually below, including whether it supports a
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
+| `SQ4850EY` | `-` | `SQ4850EY` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |

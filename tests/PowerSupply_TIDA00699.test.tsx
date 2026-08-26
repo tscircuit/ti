@@ -5,12 +5,15 @@ import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
 import type { SubcircuitProps } from "@tscircuit/props";
 import {
+  CSD18531Q5A,
   PowerSupply_Boost_LM25122_TIDA00699,
   PowerSupply_Buck_LM53603_TIDA00699,
   PowerSupply_EmiFilter_TIDA00699,
   PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
   PowerSupply_Supervisor_TPS3808_TIDA00699,
   PowerSupply_TIDA00699,
+  SQ4850EY,
+  TiChipComponents,
   TiSubcircuitComponents,
 } from "../index.ts";
 
@@ -136,6 +139,18 @@ function assertPinNet(
   );
 }
 
+function assertPinsConnected(
+  circuit: TestCircuit,
+  first: readonly [componentName: string, pin: string],
+  second: readonly [componentName: string, pin: string],
+) {
+  assert.equal(
+    getPort(circuit, first[0], first[1]).subcircuit_connectivity_map_key,
+    getPort(circuit, second[0], second[1]).subcircuit_connectivity_map_key,
+    `${first.join(".")} must connect to ${second.join(".")}`,
+  );
+}
+
 function assertNoErrors(circuit: TestCircuit) {
   assert.deepEqual(
     circuit
@@ -168,6 +183,28 @@ function assertReferenceCenter(
   assert.ok(Math.abs(component.center.y - sourceY * 1.4) < 1e-6);
 }
 
+function assertPcbPad(
+  circuit: TestCircuit,
+  componentName: string,
+  pin: string,
+  expectedX: number,
+  expectedY: number,
+) {
+  const sourcePort = getPort(circuit, componentName, pin);
+  const pcbPort = circuit.db.pcb_port.getWhere({
+    source_port_id: sourcePort.source_port_id,
+  });
+  assert.ok(pcbPort, `${componentName}.${pin} PCB port`);
+  const pad = circuit.db.pcb_smtpad.getWhere({
+    pcb_port_id: pcbPort.pcb_port_id,
+  });
+  assert.ok(pad, `${componentName}.${pin} pad`);
+  assert.notEqual(pad.shape, "polygon", `${componentName}.${pin} pad shape`);
+  if (pad.shape === "polygon") assert.fail("unexpected polygon pad");
+  assert.ok(Math.abs(pad.x - expectedX) < 1e-6, `${componentName}.${pin} x`);
+  assert.ok(Math.abs(pad.y - expectedY) < 1e-6, `${componentName}.${pin} y`);
+}
+
 for (const [Section, title] of sectionModules) {
   test(`${title} is independently renderable and contains only its official source box`, async () => {
     const circuit = new Circuit({ platform: { pcbDisabled: true } });
@@ -186,6 +223,55 @@ for (const [Section, title] of sectionModules) {
     assert.equal(circuit.db.schematic_box.list().length, 1);
   });
 }
+
+test("TIDA-00699 MOSFET definitions preserve every official physical pin and Altium land center", async () => {
+  assert.equal(TiChipComponents.CSD18531Q5A, CSD18531Q5A);
+  assert.equal(TiChipComponents.SQ4850EY, SQ4850EY);
+
+  const csdCircuit = new Circuit();
+  csdCircuit.add(
+    <board width={15} height={15} routingDisabled>
+      <CSD18531Q5A name="Q1" />
+    </board>,
+  );
+  await csdCircuit.renderUntilSettled();
+  assertNoErrors(csdCircuit);
+  assert.equal(
+    csdCircuit.db.source_port.list({
+      source_component_id: csdCircuit.db.source_component.getWhere({
+        name: "Q1",
+      })?.source_component_id,
+    }).length,
+    9,
+  );
+  assert.equal(csdCircuit.db.pcb_smtpad.list().length, 9);
+  assertPcbPad(csdCircuit, "Q1", "pin1", -2.77629874, 1.91749426);
+  assertPcbPad(csdCircuit, "Q1", "pin4", -2.77629874, -1.91749934);
+  assertPcbPad(csdCircuit, "Q1", "pin5", 2.77630128, -1.91749426);
+  assertPcbPad(csdCircuit, "Q1", "pin9", 0.30130242, 0);
+
+  const sqCircuit = new Circuit();
+  sqCircuit.add(
+    <board width={15} height={15} routingDisabled>
+      <SQ4850EY name="Q3" />
+    </board>,
+  );
+  await sqCircuit.renderUntilSettled();
+  assertNoErrors(sqCircuit);
+  assert.equal(
+    sqCircuit.db.source_port.list({
+      source_component_id: sqCircuit.db.source_component.getWhere({
+        name: "Q3",
+      })?.source_component_id,
+    }).length,
+    8,
+  );
+  assert.equal(sqCircuit.db.pcb_smtpad.list().length, 8);
+  assertPcbPad(sqCircuit, "Q3", "pin1", -2.4, 1.905);
+  assertPcbPad(sqCircuit, "Q3", "pin4", -2.4, -1.905);
+  assertPcbPad(sqCircuit, "Q3", "pin5", 2.4, -1.905);
+  assertPcbPad(sqCircuit, "Q3", "pin8", 2.4, 1.905);
+});
 
 test("TIDA-00699 composite preserves all five source sections, coordinates, and boundary nets", async () => {
   assert.equal(
@@ -251,6 +337,27 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
   assertPinNet(circuit, "D2", "pin1", "VBAT");
   assertPinNet(circuit, "D3", "pin1", "GND");
   assertPinNet(circuit, "D5", "pin1", "SHT_BST");
+  assertPinNet(circuit, "Q1", "pin1", "GND");
+  assertPinsConnected(circuit, ["Q2", "pin1"], ["C13", "pin2"]);
+  assertPinNet(circuit, "Q3", "pin1", "VBAT");
+  for (const pin of ["pin2", "pin3"]) {
+    getPort(circuit, "Q1", pin);
+    getPort(circuit, "Q2", pin);
+    getPort(circuit, "Q3", pin);
+  }
+  assertPinsConnected(circuit, ["Q1", "pin4"], ["R22", "pin1"]);
+  assertPinsConnected(circuit, ["Q2", "pin4"], ["R23", "pin1"]);
+  assertPinsConnected(circuit, ["Q3", "pin4"], ["U1", "pin2"]);
+  assertPinsConnected(circuit, ["Q1", "pin5"], ["C13", "pin2"]);
+  assertPinNet(circuit, "Q2", "pin5", "VBST");
+  assertPinNet(circuit, "Q3", "pin5", "VBAT_PROTECT");
+  for (const pin of ["pin6", "pin7", "pin8"]) {
+    getPort(circuit, "Q1", pin);
+    getPort(circuit, "Q2", pin);
+    getPort(circuit, "Q3", pin);
+  }
+  getPort(circuit, "Q1", "pin9");
+  getPort(circuit, "Q2", "pin9");
   assertPinNet(circuit, "U1", "pin4", "VBAT");
   assertPinNet(circuit, "U1", "pin8", "VBAT_PROTECT");
   assertPinNet(circuit, "L3", "pin1", "VBAT_PROTECT");

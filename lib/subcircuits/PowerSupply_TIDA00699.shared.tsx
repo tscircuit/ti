@@ -3,7 +3,6 @@ import type {
   ChipProps,
   DiodeProps,
   InductorProps,
-  MosfetProps,
   PinHeaderProps,
   ResistorProps,
   TestpointProps,
@@ -14,6 +13,7 @@ import { LM25122QPWPTQ1 } from "../chips/LM25122QPWPTQ1.circuit.tsx";
 import { LM74610QDGKRQ1 } from "../chips/LM74610QDGKRQ1.circuit.tsx";
 import { LM536035QPWPRQ1 } from "../chips/LM536035QPWPRQ1.circuit.tsx";
 import { TPS3808G01QDBVRQ1 } from "../chips/TPS3808G01QDBVRQ1.circuit.tsx";
+import { SQ4850EY } from "../chips/SQ4850EY.circuit.tsx";
 
 const schematicScale = 1.4;
 
@@ -298,16 +298,6 @@ const createPmeg6010Footprint = () => (
       shape="rect"
     />
   </footprint>
-);
-
-const SQ4850EY = (props: Omit<MosfetProps, "channelType" | "mosfetMode">) => (
-  <mosfet
-    channelType="n"
-    mosfetMode="enhancement"
-    manufacturerPartNumber="SQ4850EY"
-    datasheetUrl="https://www.vishay.com/docs/62970/sq4850ey.pdf"
-    {...props}
-  />
 );
 
 const bas40PinLabels = {
@@ -1093,21 +1083,21 @@ const dshtConnections = {
 };
 
 const q1Connections = {
-  source: "net.GND",
-  drain: "net.NetC13_2",
-  gate: "net.NetR22_1",
+  pin1: "net.GND",
+  pin4: "net.NetR22_1",
+  pin5: "net.NetC13_2",
 };
 
 const q2Connections = {
-  source: "net.NetC13_2",
-  drain: "net.VBST",
-  gate: "net.NetR23_1",
+  pin1: "net.NetC13_2",
+  pin4: "net.NetR23_1",
+  pin5: "net.VBST",
 };
 
 const q3Connections = {
-  source: "net.VBAT",
-  gate: "net.NetQ3_4",
-  drain: "net.VBAT_PROTECT",
+  pin1: "net.VBAT",
+  pin4: "net.NetQ3_4",
+  pin5: "net.VBAT_PROTECT",
 };
 
 const u1Connections = {
@@ -1536,6 +1526,7 @@ const ReferenceSpecialComponents = ({
         name="Q1"
         schX={-2.6229 * schematicScale}
         schY={-5.849 * schematicScale}
+        symbolOrientation="vertical"
       />
     )}
     {componentNames.has("Q2") && (
@@ -1543,7 +1534,6 @@ const ReferenceSpecialComponents = ({
         name="Q2"
         schX={-1.645 * schematicScale}
         schY={-1.5262 * schematicScale}
-        schRotation={270}
       />
     )}
     {componentNames.has("Q3") && (
@@ -1551,7 +1541,6 @@ const ReferenceSpecialComponents = ({
         name="Q3"
         schX={-6.5801 * schematicScale}
         schY={7.0645 * schematicScale}
-        schRotation={270}
       />
     )}
     {componentNames.has("U1") && (
