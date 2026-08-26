@@ -207,13 +207,7 @@ export const CommunicationInterface_LIN_TLIN1028 = (props: SubcircuitProps) => (
 
     {/* The DDA exposed pad and pin 3 are both grounded in the TI source. */}
     <trace from="U4.GND" to="U4.PAD" />
-    <netlabel
-      net="GND"
-      connectsTo="U4.PAD"
-      schX={2.794}
-      schY={-1.016}
-      anchorSide="top"
-    />
+    <trace from="U4.PAD" to="net.GND" />
   </subcircuit>
 );
 
