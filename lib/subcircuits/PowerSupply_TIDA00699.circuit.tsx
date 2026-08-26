@@ -16,7 +16,7 @@ import { LM74610QDGKRQ1 } from "../chips/LM74610QDGKRQ1.circuit.tsx";
 import { LM536035QPWPRQ1 } from "../chips/LM536035QPWPRQ1.circuit.tsx";
 import { TPS3808G01QDBVRQ1 } from "../chips/TPS3808G01QDBVRQ1.circuit.tsx";
 
-const schematicScale = 2;
+const schematicScale = 1.4;
 
 const referenceSchematicRotations: Record<string, number> = {
   C1: 180,
@@ -47,7 +47,7 @@ const referenceSchematicRotations: Record<string, number> = {
   C28: 270,
   D2: 270,
   D3: 90,
-  D4: 180,
+  D4: 90,
   D5: 270,
   R3: 180,
   R4: 180,
@@ -62,7 +62,7 @@ const referenceSchematicRotations: Record<string, number> = {
   R16: 90,
   R17: 90,
   R18: 90,
-  R19: 180,
+  R19: 90,
   R20: 180,
   R21: 90,
   R22: 180,
@@ -98,6 +98,7 @@ const ReferenceCapacitor = ({
 }: ReferenceCapacitorProps) => (
   <capacitor
     {...capacitorProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(capacitorProps.name)}
@@ -111,6 +112,7 @@ const ReferenceResistor = ({
 }: ReferenceResistorProps) => (
   <resistor
     {...resistorProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(resistorProps.name)}
@@ -124,6 +126,7 @@ const ReferenceInductor = ({
 }: ReferenceInductorProps) => (
   <inductor
     {...inductorProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(inductorProps.name)}
@@ -137,6 +140,7 @@ const ReferenceDiode = ({
 }: ReferenceDiodeProps) => (
   <diode
     {...diodeProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(diodeProps.name)}
@@ -150,6 +154,7 @@ const ReferencePinHeader = ({
 }: ReferencePinHeaderProps) => (
   <pinheader
     {...pinHeaderProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(pinHeaderProps.name)}
@@ -163,6 +168,7 @@ const ReferenceTestpoint = ({
 }: ReferenceTestpointProps) => (
   <testpoint
     {...testpointProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(testpointProps.name)}
@@ -306,9 +312,9 @@ const SQ4850EY = (props: Omit<MosfetProps, "channelType" | "mosfetMode">) => (
 );
 
 const bas40PinLabels = {
-  pin1: "ANODE_1",
-  pin2: "ANODE_2",
-  pin3: "COMMON_CATHODE",
+  pin1: "1",
+  pin2: "2",
+  pin3: "3",
 } as const;
 
 const BAS4005 = (props: ChipProps<typeof bas40PinLabels>) => (
@@ -316,8 +322,8 @@ const BAS4005 = (props: ChipProps<typeof bas40PinLabels>) => (
     manufacturerPartNumber="BAS40-05-7-F"
     datasheetUrl="https://www.diodes.com/assets/Datasheets/BAS40-BAS40-04-BAS40-05-BAS40-06.pdf"
     footprint="sot23"
-    schWidth="2.8mm"
-    schHeight="2.2mm"
+    schWidth="1.2mm"
+    schHeight="1.2mm"
     pinLabels={bas40PinLabels}
     schPinArrangement={{
       leftSide: {
@@ -339,7 +345,6 @@ const referenceCapacitors = [
     capacitance: "470pF",
     maxVoltageRating: "50V",
     footprint: "0402",
-    manufacturerPartNumber: "C1005X7R1H471K",
     referenceSchX: -1.1881,
     referenceSchY: -0.9139,
     connections: { pin1: "net.VBST", pin2: "net.NetC1_2" },
@@ -350,7 +355,6 @@ const referenceCapacitors = [
     maxVoltageRating: "50V",
     polarized: true,
     footprint: createPanasonicFk47uFootprint(),
-    manufacturerPartNumber: "EEE-FK1H470XP",
     referenceSchX: 2.5589,
     referenceSchY: 4.9077,
     connections: { pin1: "net.VBAT_FILT", pin2: "net.GND" },
@@ -360,7 +364,6 @@ const referenceCapacitors = [
     capacitance: "10uF",
     maxVoltageRating: "50V",
     footprint: createCga9nFootprint(),
-    manufacturerPartNumber: "CGA9N3X7R1H106K230KB",
     referenceSchX: -11.698,
     referenceSchY: -2.2848,
     connections: { pin1: "net.NetC3_1", pin2: "net.GND" },
@@ -371,7 +374,6 @@ const referenceCapacitors = [
     maxVoltageRating: "50V",
     polarized: true,
     footprint: createPanasonicFk47uFootprint(),
-    manufacturerPartNumber: "EEE-FK1H470XP",
     referenceSchX: -0.3656,
     referenceSchY: -2.7691,
     connections: { pin1: "net.VBST", pin2: "net.GND" },
@@ -381,7 +383,6 @@ const referenceCapacitors = [
     capacitance: "10uF",
     maxVoltageRating: "50V",
     footprint: createCga9nFootprint(),
-    manufacturerPartNumber: "CGA9N3X7R1H106K230KB",
     referenceSchX: 0.1828,
     referenceSchY: -2.8331,
     connections: { pin1: "net.VBST", pin2: "net.GND" },
@@ -391,7 +392,6 @@ const referenceCapacitors = [
     capacitance: "0.1uF",
     maxVoltageRating: "16V",
     footprint: "0603",
-    manufacturerPartNumber: "GCM188R71C104KA37J",
     referenceSchX: 6.9457,
     referenceSchY: 4.2954,
     connections: { pin1: "net.VSYS", pin2: "net.GND" },
@@ -401,7 +401,6 @@ const referenceCapacitors = [
     capacitance: "1uF",
     maxVoltageRating: "100V",
     footprint: "1206",
-    manufacturerPartNumber: "GCM31CR72A105KA03",
     referenceSchX: -8.2252,
     referenceSchY: -2.8331,
     connections: { pin1: "net.NetC7_1", pin2: "net.GND" },
@@ -411,7 +410,6 @@ const referenceCapacitors = [
     capacitance: "0.1uF",
     maxVoltageRating: "50V",
     footprint: "0402",
-    manufacturerPartNumber: "CGA2B3X7R1H104M050BB",
     referenceSchX: -11.5152,
     referenceSchY: 5.2093,
     connections: { pin1: "net.VBAT", pin2: "net.NetC8_2" },
@@ -421,7 +419,6 @@ const referenceCapacitors = [
     capacitance: "2.2uF",
     maxVoltageRating: "10V",
     footprint: "0603",
-    manufacturerPartNumber: "GRM188R71A225KE15D",
     referenceSchX: -8.9563,
     referenceSchY: 4.8437,
     connections: { pin1: "net.NetC9_1", pin2: "net.NetC9_2" },
@@ -431,7 +428,6 @@ const referenceCapacitors = [
     capacitance: "100pF",
     maxVoltageRating: "25V",
     footprint: "0402",
-    manufacturerPartNumber: "C0402C101J3GACTU",
     referenceSchX: -4.5695,
     referenceSchY: -3.3815,
     connections: { pin1: "net.CS_P", pin2: "net.CS_N" },
@@ -441,7 +437,6 @@ const referenceCapacitors = [
     capacitance: "0.1uF",
     maxVoltageRating: "50V",
     footprint: "0402",
-    manufacturerPartNumber: "CGA2B3X7R1H104M050BB",
     referenceSchX: -11.0583,
     referenceSchY: 4.7523,
     connections: { pin1: "net.NetC8_2", pin2: "net.GND" },
@@ -451,9 +446,8 @@ const referenceCapacitors = [
     capacitance: "4.7uF",
     maxVoltageRating: "10V",
     footprint: "0805",
-    manufacturerPartNumber: "GRM21BR71A475KA73L",
-    referenceSchX: -3.9298,
-    referenceSchY: -4.5695,
+    referenceSchX: -4.5,
+    referenceSchY: -4.6179,
     connections: { pin1: "net.GND", pin2: "net.NetC12_2" },
   },
   {
@@ -461,9 +455,8 @@ const referenceCapacitors = [
     capacitance: "0.47uF",
     maxVoltageRating: "50V",
     footprint: createUmk212Footprint(),
-    manufacturerPartNumber: "UMK212B7474KG-T",
     referenceSchX: -3.3815,
-    referenceSchY: -5.3007,
+    referenceSchY: -4.9036,
     connections: { pin1: "net.NetC13_1", pin2: "net.NetC13_2" },
   },
   {
@@ -471,7 +464,6 @@ const referenceCapacitors = [
     capacitance: "2200pF",
     maxVoltageRating: "16V",
     footprint: "0402",
-    manufacturerPartNumber: "885012205027",
     referenceSchX: -10.9669,
     referenceSchY: -5.0265,
     connections: { pin1: "net.NetC14_1", pin2: "net.NetC14_2" },
@@ -481,7 +473,6 @@ const referenceCapacitors = [
     capacitance: "330pF",
     maxVoltageRating: "50V",
     footprint: "0402",
-    manufacturerPartNumber: "C1005C0G1H331J",
     referenceSchX: -11.698,
     referenceSchY: -5.5748,
     connections: { pin1: "net.NetC14_1", pin2: "net.NetC15_2" },
@@ -491,7 +482,6 @@ const referenceCapacitors = [
     capacitance: "0.047uF",
     maxVoltageRating: "25V",
     footprint: "0603",
-    manufacturerPartNumber: "06033C473JAT2A",
     referenceSchX: -10.2358,
     referenceSchY: -6.6715,
     connections: { pin1: "net.NetC16_1", pin2: "net.GND" },
@@ -501,7 +491,6 @@ const referenceCapacitors = [
     capacitance: "0.68uF",
     maxVoltageRating: "10V",
     footprint: "0805",
-    manufacturerPartNumber: "0805ZC684KAT2A",
     referenceSchX: -9.6874,
     referenceSchY: -6.6715,
     connections: { pin1: "net.NetC17_1", pin2: "net.GND" },
@@ -511,7 +500,6 @@ const referenceCapacitors = [
     capacitance: "0.47uF",
     maxVoltageRating: "25V",
     footprint: "0603",
-    manufacturerPartNumber: "CGA3E3X7R1E474K080AB",
     referenceSchX: 9.9616,
     referenceSchY: -4.0212,
     connections: { pin1: "net.NetC18_1", pin2: "net.NetC18_2" },
@@ -521,7 +509,6 @@ const referenceCapacitors = [
     capacitance: "10uF",
     maxVoltageRating: "50V",
     footprint: createCga9nFootprint(),
-    manufacturerPartNumber: "CGA9N3X7R1H106K230KB",
     referenceSchX: 3.2901,
     referenceSchY: -4.6609,
     connections: { pin1: "net.NetC19_1", pin2: "net.GND" },
@@ -531,7 +518,6 @@ const referenceCapacitors = [
     capacitance: "10uF",
     maxVoltageRating: "50V",
     footprint: createCga9nFootprint(),
-    manufacturerPartNumber: "CGA9N3X7R1H106K230KB",
     referenceSchX: 4.0212,
     referenceSchY: -4.6609,
     connections: { pin1: "net.NetC19_1", pin2: "net.GND" },
@@ -541,7 +527,6 @@ const referenceCapacitors = [
     capacitance: "0.1uF",
     maxVoltageRating: "50V",
     footprint: "0402",
-    manufacturerPartNumber: "CGA2B3X7R1H104M050BB",
     referenceSchX: 4.7523,
     referenceSchY: -4.6609,
     connections: { pin1: "net.NetC19_1", pin2: "net.GND" },
@@ -551,7 +536,6 @@ const referenceCapacitors = [
     capacitance: "22uF",
     maxVoltageRating: "16V",
     footprint: "1210",
-    manufacturerPartNumber: "CGA6P1X7R1C226M250AC",
     referenceSchX: 12.2464,
     referenceSchY: -5.3921,
     connections: { pin1: "net.VSYS", pin2: "net.GND" },
@@ -561,7 +545,6 @@ const referenceCapacitors = [
     capacitance: "22uF",
     maxVoltageRating: "16V",
     footprint: "1210",
-    manufacturerPartNumber: "CGA6P1X7R1C226M250AC",
     referenceSchX: 12.7947,
     referenceSchY: -5.3921,
     connections: { pin1: "net.VSYS", pin2: "net.GND" },
@@ -571,7 +554,6 @@ const referenceCapacitors = [
     capacitance: "22uF",
     maxVoltageRating: "16V",
     footprint: "1210",
-    manufacturerPartNumber: "CGA6P1X7R1C226M250AC",
     referenceSchX: 13.343,
     referenceSchY: -5.3921,
     connections: { pin1: "net.VSYS", pin2: "net.GND" },
@@ -581,7 +563,6 @@ const referenceCapacitors = [
     capacitance: "10uF",
     maxVoltageRating: "50V",
     footprint: createCga9nFootprint(),
-    manufacturerPartNumber: "CGA9N3X7R1H106K230KB",
     referenceSchX: 0.1828,
     referenceSchY: 4.8437,
     connections: { pin1: "net.VBAT_PROTECT", pin2: "net.GND" },
@@ -591,7 +572,6 @@ const referenceCapacitors = [
     capacitance: "0.1uF",
     maxVoltageRating: "16V",
     footprint: "0603",
-    manufacturerPartNumber: "GCM188R71C104KA37J",
     referenceSchX: 7.8596,
     referenceSchY: 4.2954,
     connections: { pin1: "net.NetC26_1", pin2: "net.GND" },
@@ -601,7 +581,6 @@ const referenceCapacitors = [
     capacitance: "2.2uF",
     maxVoltageRating: "6.3V",
     footprint: "0603",
-    manufacturerPartNumber: "GCM188R70J225KE22D",
     referenceSchX: 4.7523,
     referenceSchY: -6.1232,
     connections: { pin1: "net.NetC27_1", pin2: "net.GND" },
@@ -611,7 +590,6 @@ const referenceCapacitors = [
     capacitance: "0.1uF",
     maxVoltageRating: "16V",
     footprint: "0603",
-    manufacturerPartNumber: "GCM188R71C104KA37J",
     referenceSchX: 10.2358,
     referenceSchY: -5.9404,
     connections: { pin1: "net.NetC28_1", pin2: "net.GND" },
@@ -624,7 +602,6 @@ const referenceResistors = [
     resistance: "8.2ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW04028R20JNED",
     referenceSchX: -2.0106,
     referenceSchY: -0.9139,
     connections: { pin1: "net.NetC13_2", pin2: "net.NetC1_2" },
@@ -634,7 +611,6 @@ const referenceResistors = [
     resistance: "0.008ohm",
     tolerance: "1%",
     footprint: "2010",
-    manufacturerPartNumber: "WSL20108L000FEA18",
     referenceSchX: -5.4834,
     referenceSchY: -1.4623,
     connections: { pin1: "net.NetC3_1", pin2: "net.NetL1_1" },
@@ -644,7 +620,6 @@ const referenceResistors = [
     resistance: "100ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW0402100RJNED",
     referenceSchX: -4.5695,
     referenceSchY: -2.0106,
     connections: { pin1: "net.CS_N", pin2: "net.NetL1_1" },
@@ -654,7 +629,6 @@ const referenceResistors = [
     resistance: "100ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW0402100RJNED",
     referenceSchX: -5.4834,
     referenceSchY: -2.3762,
     connections: { pin1: "net.CS_P", pin2: "net.NetC3_1" },
@@ -664,7 +638,6 @@ const referenceResistors = [
     resistance: "49.9kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040249K9FKED",
     referenceSchX: -13.5258,
     referenceSchY: -3.2901,
     connections: { pin1: "net.SHT_BST", pin2: "net.NetC3_1" },
@@ -674,7 +647,6 @@ const referenceResistors = [
     resistance: "49.9kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040249K9FKED",
     referenceSchX: -13.5258,
     referenceSchY: -4.3868,
     connections: { pin1: "net.GND", pin2: "net.SHT_BST" },
@@ -684,7 +656,6 @@ const referenceResistors = [
     resistance: "64.9kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040264K9FKED",
     referenceSchX: -12.4291,
     referenceSchY: -5.849,
     connections: { pin1: "net.NetC15_2", pin2: "net.VBST" },
@@ -694,7 +665,6 @@ const referenceResistors = [
     resistance: "24.3kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040224K3FKED",
     referenceSchX: -10.9669,
     referenceSchY: -5.849,
     connections: { pin1: "net.NetC15_2", pin2: "net.NetC14_2" },
@@ -704,7 +674,6 @@ const referenceResistors = [
     resistance: "28kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040228K0FKED",
     referenceSchX: -12.9775,
     referenceSchY: -6.7629,
     connections: { pin1: "net.GND", pin2: "net.NetR9_2" },
@@ -714,7 +683,6 @@ const referenceResistors = [
     resistance: "19.1kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040219K1FKED",
     referenceSchX: -9.1391,
     referenceSchY: -6.7629,
     connections: { pin1: "net.GND", pin2: "net.SYNC_BST" },
@@ -724,7 +692,6 @@ const referenceResistors = [
     resistance: "10kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040210K0FKED",
     referenceSchX: -12.4291,
     referenceSchY: -6.9457,
     connections: { pin1: "net.GND", pin2: "net.NetC15_2" },
@@ -734,7 +701,6 @@ const referenceResistors = [
     resistance: "10kohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040210K0JNED",
     referenceSchX: 5.6662,
     referenceSchY: -4.3868,
     connections: { pin1: "net.NetC19_1", pin2: "net.SHT_BCK" },
@@ -744,7 +710,6 @@ const referenceResistors = [
     resistance: "5.1ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW04025R10JNED",
     referenceSchX: 10.9669,
     referenceSchY: -5.4834,
     connections: { pin1: "net.NetC28_1", pin2: "net.VSYS" },
@@ -753,7 +718,6 @@ const referenceResistors = [
     name: "R14",
     resistance: "0ohm",
     footprint: "2512",
-    manufacturerPartNumber: "CRCW25120000Z0EG",
     referenceSchX: -13.7086,
     referenceSchY: -1.4623,
     connections: { pin1: "net.VBAT_FILT", pin2: "net.NetC3_1" },
@@ -762,7 +726,6 @@ const referenceResistors = [
     name: "R15",
     resistance: "0ohm",
     footprint: "1206",
-    manufacturerPartNumber: "CRCW12060000Z0EA",
     referenceSchX: 2.3762,
     referenceSchY: -4.0212,
     connections: { pin1: "net.VBST", pin2: "net.NetC19_1" },
@@ -772,7 +735,6 @@ const referenceResistors = [
     resistance: "10kohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040210K0JNED",
     referenceSchX: 11.5152,
     referenceSchY: 5.849,
     connections: { pin1: "net.SVS_OUT", pin2: "net.VSYS" },
@@ -782,7 +744,6 @@ const referenceResistors = [
     resistance: "10kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW040210K0FKED",
     referenceSchX: 13.5258,
     referenceSchY: 5.4834,
     connections: { pin1: "net.NetR17_1", pin2: "net.VSYS" },
@@ -792,7 +753,6 @@ const referenceResistors = [
     resistance: "102kohm",
     tolerance: "1%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW0402102KFKED",
     referenceSchX: 13.5258,
     referenceSchY: 4.0212,
     connections: { pin1: "net.GND", pin2: "net.NetR17_1" },
@@ -802,9 +762,8 @@ const referenceResistors = [
     resistance: "0ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW04020000Z0ED",
-    referenceSchX: -4.5695,
-    referenceSchY: -4.204,
+    referenceSchX: -3.9,
+    referenceSchY: -4.4036,
     connections: { pin1: "net.NetC12_2", pin2: "net.NetR19_2" },
   },
   {
@@ -812,9 +771,8 @@ const referenceResistors = [
     resistance: "0ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW04020000Z0ED",
-    referenceSchX: -4.0212,
-    referenceSchY: -4.0212,
+    referenceSchX: -3.3,
+    referenceSchY: -4.3322,
     connections: { pin1: "net.GND", pin2: "net.NetR19_2" },
   },
   {
@@ -822,7 +780,6 @@ const referenceResistors = [
     resistance: "0ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW04020000Z0ED",
     referenceSchX: 6.0318,
     referenceSchY: -6.5801,
     connections: { pin1: "net.GND", pin2: "net.SYNC_BUCK" },
@@ -832,22 +789,20 @@ const referenceResistors = [
     resistance: "0ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW04020000Z0ED",
     doNotPlace: true,
     referenceSchX: -4.0212,
     referenceSchY: -6.0318,
-    connections: { pin2: "net.NetR22_2" },
+    connections: { pin1: "net.NetR22_1", pin2: "net.NetR22_2" },
   },
   {
     name: "R23",
     resistance: "0ohm",
     tolerance: "5%",
     footprint: "0402",
-    manufacturerPartNumber: "CRCW04020000Z0ED",
     doNotPlace: true,
     referenceSchX: -2.7417,
     referenceSchY: -7.494,
-    connections: { pin2: "net.NetR23_2" },
+    connections: { pin1: "net.NetR23_1", pin2: "net.NetR23_2" },
   },
 ] satisfies ReferenceResistorProps[];
 
@@ -857,7 +812,6 @@ const referenceInductors = [
     inductance: "2.2uH",
     maxCurrentRating: "10.1A",
     footprint: createXal5030Footprint(),
-    manufacturerPartNumber: "XAL5030-222MEB",
     referenceSchX: -3.4728,
     referenceSchY: -1.2338,
     connections: { pin1: "net.NetL1_1", pin2: "net.NetC13_2" },
@@ -867,7 +821,6 @@ const referenceInductors = [
     inductance: "2.2uH",
     maxCurrentRating: "8.6A",
     footprint: createXal4020Footprint(),
-    manufacturerPartNumber: "XAL4020-222MEB",
     referenceSchX: 11.1497,
     referenceSchY: -4.3411,
     connections: { pin1: "net.NetC18_1", pin2: "net.VSYS" },
@@ -877,7 +830,6 @@ const referenceInductors = [
     inductance: "2.2uH",
     maxCurrentRating: "10.1A",
     footprint: createXal5030Footprint(),
-    manufacturerPartNumber: "XAL5030-222MEB",
     referenceSchX: 1.645,
     referenceSchY: 6.0775,
     connections: { pin1: "net.VBAT_PROTECT", pin2: "net.VBAT_FILT" },
@@ -908,8 +860,8 @@ const referenceDiodes = [
     variant: "schottky",
     footprint: createPmeg6010Footprint(),
     manufacturerPartNumber: "PMEG6010CEH,115",
-    referenceSchX: -4.2771,
-    referenceSchY: -4.9351,
+    referenceSchX: -3.9,
+    referenceSchY: -4.7607,
     connections: { pin1: "net.NetC13_1", pin2: "net.NetC12_2" },
   },
   {
@@ -926,12 +878,11 @@ const referenceDiodes = [
 const referenceConnectors = [
   {
     name: "J1",
-    displayName: "VBAT INPUT",
     pinCount: 1,
     manufacturerPartNumber: "575-8",
     holeDiameter: "5.450mm",
     platedDiameter: "10mm",
-    pinLabels: ["VBAT"],
+    pinLabels: ["1"],
     schFacingDirection: "right",
     referenceSchX: -13.8914,
     referenceSchY: 5.6662,
@@ -939,12 +890,11 @@ const referenceConnectors = [
   },
   {
     name: "J2",
-    displayName: "VSYS OUTPUT",
     pinCount: 1,
     manufacturerPartNumber: "575-8",
     holeDiameter: "5.450mm",
     platedDiameter: "10mm",
-    pinLabels: ["VSYS"],
+    pinLabels: ["1"],
     schFacingDirection: "left",
     referenceSchX: 14.6225,
     referenceSchY: -4.3868,
@@ -952,12 +902,11 @@ const referenceConnectors = [
   },
   {
     name: "J3",
-    displayName: "INPUT GROUND",
     pinCount: 1,
     manufacturerPartNumber: "575-8",
     holeDiameter: "5.450mm",
     platedDiameter: "10mm",
-    pinLabels: ["GND"],
+    pinLabels: ["1"],
     schFacingDirection: "right",
     referenceSchX: -13.8914,
     referenceSchY: 4.9351,
@@ -965,12 +914,11 @@ const referenceConnectors = [
   },
   {
     name: "J4",
-    displayName: "OUTPUT GROUND",
     pinCount: 1,
     manufacturerPartNumber: "575-8",
     holeDiameter: "5.450mm",
     platedDiameter: "10mm",
-    pinLabels: ["GND"],
+    pinLabels: ["1"],
     schFacingDirection: "left",
     referenceSchX: 14.4397,
     referenceSchY: -5.849,
@@ -978,21 +926,13 @@ const referenceConnectors = [
   },
   {
     name: "J5",
-    displayName: "CONTROL",
     pinCount: 6,
     pitch: "1.27mm",
     rightAngle: true,
     manufacturerPartNumber: "GRPB061VWCN-RC",
     holeDiameter: "0.6604mm",
     platedDiameter: "1.0668mm",
-    pinLabels: [
-      "SVS_OUT",
-      "SYNC_BUCK",
-      "RST_OUT",
-      "SYNC_BST",
-      "DSHT_COMMON",
-      "GND",
-    ],
+    pinLabels: ["1", "2", "3", "4", "5", "6"],
     schFacingDirection: "left",
     referenceSchX: 11.6066,
     referenceSchY: 2.0106,
@@ -1010,7 +950,6 @@ const referenceConnectors = [
 const referenceTestpoints = [
   {
     name: "TP1",
-    displayName: "BOOST INPUT",
     manufacturerPartNumber: "5010",
     footprintVariant: "through_hole",
     holeDiameter: "1.6002mm",
@@ -1021,7 +960,6 @@ const referenceTestpoints = [
   },
   {
     name: "TP2",
-    displayName: "GROUND",
     manufacturerPartNumber: "5011",
     footprintVariant: "through_hole",
     holeDiameter: "1.6002mm",
@@ -1032,7 +970,6 @@ const referenceTestpoints = [
   },
   {
     name: "TP3",
-    displayName: "BOOST OUTPUT",
     manufacturerPartNumber: "5010",
     footprintVariant: "through_hole",
     holeDiameter: "1.6002mm",
@@ -1043,7 +980,6 @@ const referenceTestpoints = [
   },
   {
     name: "TP4",
-    displayName: "BUCK INPUT",
     manufacturerPartNumber: "5010",
     footprintVariant: "through_hole",
     holeDiameter: "1.6002mm",
@@ -1054,7 +990,6 @@ const referenceTestpoints = [
   },
   {
     name: "TP5",
-    displayName: "PROTECTED BATTERY",
     manufacturerPartNumber: "5010",
     footprintVariant: "through_hole",
     holeDiameter: "1.6002mm",
@@ -1065,7 +1000,6 @@ const referenceTestpoints = [
   },
   {
     name: "TP6",
-    displayName: "GROUND",
     manufacturerPartNumber: "5011",
     footprintVariant: "through_hole",
     holeDiameter: "1.6002mm",
@@ -1076,7 +1010,6 @@ const referenceTestpoints = [
   },
   {
     name: "TP7",
-    displayName: "GROUND",
     manufacturerPartNumber: "5011",
     footprintVariant: "through_hole",
     holeDiameter: "1.6002mm",
@@ -1087,6 +1020,338 @@ const referenceTestpoints = [
   },
 ] satisfies ReferenceTestpointProps[];
 
+type ReferenceConnectedComponent = {
+  name: string;
+  connections: Record<string, string | undefined>;
+  referenceSchX: number;
+  referenceSchY: number;
+};
+
+type ReferenceTraceProps = {
+  from: string;
+  to: string;
+};
+
+type ReferenceTraceEndpoint = {
+  componentPortSelector: string;
+  referenceSchX: number;
+  referenceSchY: number;
+};
+
+const ReferenceTrace = ({ from, to }: ReferenceTraceProps) => (
+  <trace from={from} to={to} />
+);
+
+const referenceLabeledNetNames = new Set([
+  "GND",
+  "VBAT",
+  "VBAT_PROTECT",
+  "VBAT_FILT",
+  "VBST",
+  "VSYS",
+  "CS_P",
+  "CS_N",
+  "SHT_BST",
+  "SHT_BCK",
+  "SYNC_BST",
+  "SYNC_BUCK",
+  "RST_OUT",
+  "SVS_OUT",
+]);
+
+const referenceTraceOverridesByNetName: Partial<
+  Record<string, ReferenceTraceProps[]>
+> = {
+  NetC13_1: [
+    { from: ".U2 > .pin20", to: ".C13 > .pin1" },
+    { from: ".U2 > .pin20", to: ".D4 > .pin1" },
+  ],
+  NetC12_2: [
+    { from: ".U2 > .pin17", to: ".C12 > .pin2" },
+    { from: ".U2 > .pin17", to: ".D4 > .pin2" },
+    { from: ".R19 > .pin1", to: ".D4 > .pin2" },
+  ],
+  NetR19_2: [
+    { from: ".U2 > .pin13", to: ".R20 > .pin2" },
+    { from: ".U2 > .pin13", to: ".R19 > .pin2" },
+  ],
+};
+
+const d1Connections = {
+  pin1: "net.NetC3_1",
+  pin2: "net.VBST",
+  pin3: "net.NetC7_1",
+};
+
+const dshtConnections = {
+  pin1: "net.SHT_BST",
+  pin2: "net.SHT_BCK",
+  pin3: "net.NetDSHT_3",
+};
+
+const q1Connections = {
+  source: "net.GND",
+  drain: "net.NetC13_2",
+  gate: "net.NetR22_1",
+};
+
+const q2Connections = {
+  source: "net.NetC13_2",
+  drain: "net.VBST",
+  gate: "net.NetR23_1",
+};
+
+const q3Connections = {
+  source: "net.VBAT",
+  gate: "net.NetQ3_4",
+  drain: "net.VBAT_PROTECT",
+};
+
+const u1Connections = {
+  pin1: "net.NetC9_2",
+  pin2: "net.NetQ3_4",
+  pin4: "net.VBAT",
+  pin6: "net.NetQ3_4",
+  pin7: "net.NetC9_1",
+  pin8: "net.VBAT_PROTECT",
+};
+
+const u2Connections = {
+  pin2: "net.GND",
+  pin3: "net.CS_N",
+  pin4: "net.CS_P",
+  pin5: "net.NetC7_1",
+  pin6: "net.SHT_BST",
+  pin7: "net.NetC16_1",
+  pin8: "net.SYNC_BST",
+  pin9: "net.GND",
+  pin10: "net.NetC15_2",
+  pin11: "net.NetC14_1",
+  pin12: "net.NetR9_2",
+  pin13: "net.NetR19_2",
+  pin14: "net.NetC17_1",
+  pin15: "net.GND",
+  pin16: "net.NetR22_2",
+  pin17: "net.NetC12_2",
+  pin18: "net.NetC13_2",
+  pin19: "net.NetR23_2",
+  pin20: "net.NetC13_1",
+  pin21: "net.GND",
+};
+
+const u3Connections = {
+  pin1: "net.NetC18_1",
+  pin2: "net.NetC18_1",
+  pin3: "net.NetC18_2",
+  pin4: "net.NetC27_1",
+  pin5: "net.NetC28_1",
+  pin6: "net.SYNC_BUCK",
+  pin7: "net.NetC27_1",
+  pin8: "net.RST_OUT",
+  pin9: "net.VSYS",
+  pin10: "net.GND",
+  pin11: "net.SHT_BCK",
+  pin12: "net.NetC19_1",
+  pin13: "net.NetC19_1",
+  pin15: "net.GND",
+  pin16: "net.GND",
+  pin17: "net.GND",
+};
+
+const u4Connections = {
+  pin1: "net.SVS_OUT",
+  pin2: "net.GND",
+  pin4: "net.NetC26_1",
+  pin5: "net.NetR17_1",
+  pin6: "net.VSYS",
+};
+
+const referenceSpecialComponentConnections = [
+  {
+    name: "D1",
+    connections: d1Connections,
+    referenceSchX: -10.4,
+    referenceSchY: -2.1,
+  },
+  {
+    name: "DSHT",
+    connections: dshtConnections,
+    referenceSchX: 9.5046,
+    referenceSchY: 0.1828,
+  },
+  {
+    name: "Q1",
+    connections: q1Connections,
+    referenceSchX: -2.6229,
+    referenceSchY: -5.849,
+  },
+  {
+    name: "Q2",
+    connections: q2Connections,
+    referenceSchX: -1.645,
+    referenceSchY: -1.5262,
+  },
+  {
+    name: "Q3",
+    connections: q3Connections,
+    referenceSchX: -6.5801,
+    referenceSchY: 7.0645,
+  },
+  {
+    name: "U1",
+    connections: u1Connections,
+    referenceSchX: -6.7629,
+    referenceSchY: 4.5695,
+  },
+  {
+    name: "U2",
+    connections: u2Connections,
+    referenceSchX: -6.3973,
+    referenceSchY: -5.1179,
+  },
+  {
+    name: "U3",
+    connections: u3Connections,
+    referenceSchX: 7.8596,
+    referenceSchY: -5.3007,
+  },
+  {
+    name: "U4",
+    connections: u4Connections,
+    referenceSchX: 10.053,
+    referenceSchY: 4.7523,
+  },
+] satisfies ReferenceConnectedComponent[];
+
+const createReferenceTraceProps = ({
+  connectedComponents,
+}: {
+  connectedComponents: ReferenceConnectedComponent[];
+}): ReferenceTraceProps[] => {
+  const directTraceEndpointsByNetName: Record<
+    string,
+    ReferenceTraceEndpoint[]
+  > = {};
+  const referenceTraceProps: ReferenceTraceProps[] = [];
+
+  for (const connectedComponent of connectedComponents) {
+    for (const [portName, netSelector] of Object.entries(
+      connectedComponent.connections,
+    )) {
+      if (!netSelector) continue;
+
+      const componentPortSelector = `.${connectedComponent.name} > .${portName}`;
+      const netName = netSelector.slice("net.".length);
+
+      if (referenceLabeledNetNames.has(netName)) {
+        referenceTraceProps.push({
+          from: componentPortSelector,
+          to: netSelector,
+        });
+        continue;
+      }
+
+      directTraceEndpointsByNetName[netName] ??= [];
+      directTraceEndpointsByNetName[netName].push({
+        componentPortSelector,
+        referenceSchX: connectedComponent.referenceSchX,
+        referenceSchY: connectedComponent.referenceSchY,
+      });
+    }
+  }
+
+  for (const [netName, traceEndpoints] of Object.entries(
+    directTraceEndpointsByNetName,
+  )) {
+    const referenceTraceOverrides = referenceTraceOverridesByNetName[netName];
+    if (referenceTraceOverrides) {
+      referenceTraceProps.push(...referenceTraceOverrides);
+      continue;
+    }
+
+    const [firstTraceEndpoint, ...unconnectedTraceEndpoints] = traceEndpoints;
+
+    if (!firstTraceEndpoint || unconnectedTraceEndpoints.length === 0) {
+      throw new Error(
+        `Internal reference net ${netName} has fewer than two endpoints`,
+      );
+    }
+
+    const connectedTraceEndpoints = [firstTraceEndpoint];
+
+    while (unconnectedTraceEndpoints.length > 0) {
+      let nearestConnectedEndpointIndex = 0;
+      let nearestUnconnectedEndpointIndex = 0;
+      let nearestSquaredDistance = Number.POSITIVE_INFINITY;
+
+      for (
+        let connectedEndpointIndex = 0;
+        connectedEndpointIndex < connectedTraceEndpoints.length;
+        connectedEndpointIndex += 1
+      ) {
+        const connectedTraceEndpoint =
+          connectedTraceEndpoints[connectedEndpointIndex];
+        if (!connectedTraceEndpoint) continue;
+
+        for (
+          let unconnectedEndpointIndex = 0;
+          unconnectedEndpointIndex < unconnectedTraceEndpoints.length;
+          unconnectedEndpointIndex += 1
+        ) {
+          const unconnectedTraceEndpoint =
+            unconnectedTraceEndpoints[unconnectedEndpointIndex];
+          if (!unconnectedTraceEndpoint) continue;
+
+          const deltaX =
+            connectedTraceEndpoint.referenceSchX -
+            unconnectedTraceEndpoint.referenceSchX;
+          const deltaY =
+            connectedTraceEndpoint.referenceSchY -
+            unconnectedTraceEndpoint.referenceSchY;
+          const squaredDistance = deltaX * deltaX + deltaY * deltaY;
+
+          if (squaredDistance < nearestSquaredDistance) {
+            nearestConnectedEndpointIndex = connectedEndpointIndex;
+            nearestUnconnectedEndpointIndex = unconnectedEndpointIndex;
+            nearestSquaredDistance = squaredDistance;
+          }
+        }
+      }
+
+      const nearestConnectedTraceEndpoint =
+        connectedTraceEndpoints[nearestConnectedEndpointIndex];
+      const nearestUnconnectedTraceEndpoint = unconnectedTraceEndpoints.splice(
+        nearestUnconnectedEndpointIndex,
+        1,
+      )[0];
+
+      if (!nearestConnectedTraceEndpoint || !nearestUnconnectedTraceEndpoint) {
+        throw new Error(`Could not connect internal reference net ${netName}`);
+      }
+
+      referenceTraceProps.push({
+        from: nearestConnectedTraceEndpoint.componentPortSelector,
+        to: nearestUnconnectedTraceEndpoint.componentPortSelector,
+      });
+      connectedTraceEndpoints.push(nearestUnconnectedTraceEndpoint);
+    }
+  }
+
+  return referenceTraceProps;
+};
+
+const referenceTraceProps = createReferenceTraceProps({
+  connectedComponents: [
+    ...referenceCapacitors,
+    ...referenceResistors,
+    ...referenceInductors,
+    ...referenceDiodes,
+    ...referenceConnectors,
+    ...referenceTestpoints,
+    ...referenceSpecialComponentConnections,
+  ],
+});
+
 /**
  * Complete automotive off-battery power supply from TI reference design
  * TIDA-00699: https://www.ti.com/tool/TIDA-00699
@@ -1096,7 +1361,12 @@ const referenceTestpoints = [
  * programmable-delay supply supervisor.
  */
 export const PowerSupply_TIDA00699 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props} routingDisabled>
+  <subcircuit
+    schMaxTraceDistance="12mm"
+    autorouterEffortLevel="10x"
+    {...props}
+    routingDisabled
+  >
     {referenceCapacitors.map((capacitorProps) => (
       <ReferenceCapacitor key={capacitorProps.name} {...capacitorProps} />
     ))}
@@ -1118,151 +1388,131 @@ export const PowerSupply_TIDA00699 = (props: SubcircuitProps) => (
 
     <BAS4005
       name="D1"
-      schX={-9.3219 * schematicScale}
-      schY={-2.3762 * schematicScale}
-      connections={{
-        pin1: "net.NetC3_1",
-        pin2: "net.VBST",
-        pin3: "net.NetC7_1",
-      }}
+      schX={-10.4 * schematicScale}
+      schY={-2.1 * schematicScale}
     />
     <BAS4005
       name="DSHT"
       schX={9.5046 * schematicScale}
       schY={0.1828 * schematicScale}
-      connections={{
-        pin1: "net.SHT_BST",
-        pin2: "net.SHT_BCK",
-        pin3: "net.NetDSHT_3",
-      }}
     />
 
     <CSD18531Q5A
       name="Q1"
       schX={-2.6229 * schematicScale}
       schY={-5.849 * schematicScale}
-      connections={{
-        source: "net.GND",
-        drain: "net.NetC13_2",
-      }}
     />
     <CSD18531Q5A
       name="Q2"
       schX={-1.645 * schematicScale}
       schY={-1.5262 * schematicScale}
       schRotation={270}
-      connections={{
-        source: "net.NetC13_2",
-        drain: "net.VBST",
-      }}
     />
     <SQ4850EY
       name="Q3"
       schX={-6.5801 * schematicScale}
       schY={7.0645 * schematicScale}
       schRotation={270}
-      connections={{
-        source: "net.VBAT",
-        gate: "net.NetQ3_4",
-        drain: "net.VBAT_PROTECT",
-      }}
     />
 
     <LM74610QDGKRQ1
       name="U1"
       schX={-6.7629 * schematicScale}
       schY={4.5695 * schematicScale}
-      connections={{
-        pin1: "net.NetC9_2",
-        pin2: "net.NetQ3_4",
-        pin4: "net.VBAT",
-        pin6: "net.NetQ3_4",
-        pin7: "net.NetC9_1",
-        pin8: "net.VBAT_PROTECT",
+      schWidth="2.5mm"
+      schHeight="2.2mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [7, 1, 4, 8],
+        },
+        rightSide: {
+          direction: "top-to-bottom",
+          pins: [6, 2, 3, 5],
+        },
       }}
     />
     <LM25122QPWPTQ1
       name="U2"
       schX={-6.3973 * schematicScale}
       schY={-5.1179 * schematicScale}
-      noConnect={["pin1"]}
-      connections={{
-        pin2: "net.GND",
-        pin3: "net.CS_N",
-        pin4: "net.CS_P",
-        pin5: "net.NetC7_1",
-        pin6: "net.SHT_BST",
-        pin7: "net.NetC16_1",
-        pin8: "net.SYNC_BST",
-        pin9: "net.GND",
-        pin10: "net.NetC15_2",
-        pin11: "net.NetC14_1",
-        pin12: "net.NetR9_2",
-        pin13: "net.NetR19_2",
-        pin14: "net.NetC17_1",
-        pin15: "net.GND",
-        pin16: "net.NetR22_2",
-        pin17: "net.NetC12_2",
-        pin18: "net.NetC13_2",
-        pin19: "net.NetR23_2",
-        pin20: "net.NetC13_1",
-        pin21: "net.GND",
+      schWidth="3.2mm"
+      schHeight="5.2mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [5, 6, 12, 11, 10, 7, 14, 8, 1, 2, 9],
+        },
+        rightSide: {
+          direction: "top-to-bottom",
+          pins: [4, 3, 13, 17, 20, 18, 16, 19, 15, 21],
+        },
       }}
+      schPinStyle={{
+        pin13: { marginTop: 0.2 },
+        pin17: { marginTop: 0.2 },
+        pin20: { marginTop: 0.2 },
+        pin18: { marginTop: 0.2 },
+        pin16: { marginTop: 0.2 },
+        pin19: { marginTop: 0.2 },
+        pin15: { marginTop: 0.2 },
+        pin21: { marginTop: 0.2 },
+      }}
+      noConnect={["pin1"]}
     />
     <LM536035QPWPRQ1
       name="U3"
       schX={7.8596 * schematicScale}
       schY={-5.3007 * schematicScale}
-      connections={{
-        pin1: "net.NetC18_1",
-        pin2: "net.NetC18_1",
-        pin3: "net.NetC18_2",
-        pin4: "net.NetC27_1",
-        pin5: "net.NetC28_1",
-        pin6: "net.SYNC_BUCK",
-        pin7: "net.NetC27_1",
-        pin8: "net.RST_OUT",
-        pin9: "net.VSYS",
-        pin10: "net.GND",
-        pin11: "net.SHT_BCK",
-        pin12: "net.NetC19_1",
-        pin13: "net.NetC19_1",
-        pin15: "net.GND",
-        pin16: "net.GND",
-        pin17: "net.GND",
+      schWidth="3.2mm"
+      schHeight="4.2mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [12, 13, 11, 8, 4, 7, 6, 14],
+        },
+        rightSide: {
+          direction: "top-to-bottom",
+          pins: [3, 1, 2, 9, 5],
+        },
+        bottomSide: {
+          direction: "left-to-right",
+          pins: [10, 15, 16, 17],
+        },
       }}
     />
     <TPS3808G01QDBVRQ1
       name="U4"
       schX={10.053 * schematicScale}
       schY={4.7523 * schematicScale}
-      noConnect={["pin3"]}
-      connections={{
-        pin1: "net.SVS_OUT",
-        pin2: "net.GND",
-        pin4: "net.NetC26_1",
-        pin5: "net.NetR17_1",
-        pin6: "net.VSYS",
+      schWidth="2.4mm"
+      schHeight="1.9mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: [6, 4, 3],
+        },
+        rightSide: {
+          direction: "top-to-bottom",
+          pins: [1, 5, 2],
+        },
       }}
+      noConnect={["pin3"]}
     />
 
-    <trace from=".R22 > .pin1" to=".Q1 > .gate" />
-    <netlabel
-      net="Q2_GATE"
-      connectsTo=".R23 > .pin1"
-      schX={-5.1834}
-      schY={-14.988}
-      anchorSide="left"
-    />
-    <netlabel
-      net="Q2_GATE"
-      connectsTo=".Q2 > .gate"
-      schX={-3.39}
-      schY={-2.6324}
-      anchorSide="bottom"
-    />
+    {referenceTraceProps.map((traceProps) => (
+      <ReferenceTrace
+        key={`${traceProps.from}->${traceProps.to}`}
+        {...traceProps}
+      />
+    ))}
 
     <net name="GND" isGroundNet />
+    <net name="VBAT" isPowerNet />
+    <net name="VBAT_PROTECT" isPowerNet />
+    <net name="VBAT_FILT" isPowerNet />
+    <net name="VBST" isPowerNet />
+    <net name="VSYS" isPowerNet />
   </subcircuit>
 );
 
