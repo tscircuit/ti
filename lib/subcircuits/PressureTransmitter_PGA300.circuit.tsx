@@ -164,7 +164,7 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
     <netlabel
       net="GND"
       connectsTo="R1.pin2"
-      schX={5.2}
+      schX={5.49}
       schY={-2.25}
       anchorSide="top"
     />
@@ -273,7 +273,7 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       name="R1"
       resistance="150"
       footprint="0603"
-      schX={5.2}
+      schX={5.49}
       schY={-1.1}
       schOrientation="vertical"
     />
