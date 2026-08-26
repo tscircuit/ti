@@ -20,6 +20,7 @@ export { HDC3020 } from "./HDC3020.circuit.tsx";
 export { HDC3022 } from "./HDC3022.circuit.tsx";
 export { INA237 } from "./INA237.circuit.tsx";
 export { ISOW7841 } from "./ISOW7841.circuit.tsx";
+export { LMK1C1104 } from "./LMK1C1104.circuit.tsx";
 export { MSP430G2230ID } from "./MSP430G2230ID.circuit.tsx";
 export { MSP430F5229 } from "./MSP430F5229.circuit.tsx";
 export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";
@@ -71,6 +72,7 @@ export {
   LM50HVQDBZRQ1,
   LM50HVQDBZRQ1_PIN_LABELS,
 } from "./LM50HVQDBZRQ1.circuit.tsx";
+export { LMK1C1104PWR } from "./LMK1C1104PWR.circuit.tsx";
 export { MSP430F5229IRGCR } from "./MSP430F5229IRGCR.circuit.tsx";
 export { MSP430G2332IPW20 } from "./MSP430G2332IPW20.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
