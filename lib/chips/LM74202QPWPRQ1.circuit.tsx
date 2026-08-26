@@ -2,8 +2,7 @@ import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
 
 export const LM74202QPWPRQ1_PIN_LABELS = {
-  pin1: ["IN1", "IN"],
-  pin2: "IN2",
+  pin2: "IN",
   pin3: "UVLO",
   pin4: "NC1",
   pin5: "OVP",
@@ -16,8 +15,7 @@ export const LM74202QPWPRQ1_PIN_LABELS = {
   pin12: "DVDT",
   pin13: "NC2",
   pin14: "FLT",
-  pin15: ["OUT1", "OUT"],
-  pin16: "OUT2",
+  pin15: ["OUT"],
   pin17: ["PAD", "thermalpad"],
 } as const;
 
@@ -29,8 +27,8 @@ export const LM74202QPWPRQ1 = (
     manufacturerPartNumber="LM74202QPWPRQ1"
     datasheetUrl="https://www.ti.com/lit/ds/symlink/lm74202-q1.pdf"
     footprint="tssop16_p0.65mm_w4.4mm_thermalpad3mmx3mm"
-    schWidth="4.2mm"
-    schHeight="6.4mm"
+    schWidth="3.5mm"
+    schHeight="5mm"
     pinLabels={LM74202QPWPRQ1_PIN_LABELS}
     pinAttributes={{
       IN1: { requiresPower: true },
@@ -41,24 +39,22 @@ export const LM74202QPWPRQ1 = (
       SHDN: { requiresPower: true },
       IMON: { providesPower: true },
       FLT: { providesPower: true },
-      OUT1: { providesPower: true },
       OUT2: { providesPower: true },
       RTN: { requiresGround: true },
       GND: { requiresGround: true },
-      PAD: { requiresGround: true },
     }}
     schPinArrangement={{
       leftSide: {
         direction: "top-to-bottom",
-        pins: [1, 2, 3, 5, 12, 6, 8],
+        pins: [2, 3, 5, 12, 6, 8],
       },
       rightSide: {
         direction: "top-to-bottom",
-        pins: [16, 15, 14, 7, 10, 11],
+        pins: [15, 14, 7, 10, 11],
       },
       bottomSide: {
         direction: "left-to-right",
-        pins: [4, 9, 17, 13],
+        pins: [9],
       },
     }}
     schPinStyle={{
@@ -69,7 +65,7 @@ export const LM74202QPWPRQ1 = (
       pin12: { marginBottom: "0.5mm" },
       pin6: { marginBottom: "0.5mm" },
       pin16: { marginBottom: "0.2mm" },
-      pin15: { marginBottom: "0.5mm" },
+      pin15: { marginBottom: "1mm" },
       pin14: { marginBottom: "0.8mm" },
       pin7: { marginBottom: "0.8mm" },
       pin10: { marginBottom: "0.5mm" },

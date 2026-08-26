@@ -31,16 +31,18 @@ export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
       variant="tvs"
       schX={-9.5}
       schY={-1.6}
+      
       schRotation={90}
       connections={{ anode: "net.GND", cathode: "net.VIN" }}
     />
     <capacitor
       name="CIN"
       capacitance="1uF"
+      polarized
       maxVoltageRating="50V"
       footprint="1206"
       schX={-7.8}
-      schY={-1.6}
+      schY={1.2}
       schOrientation="vertical"
       connections={{ pin1: "net.VIN", pin2: "net.GND" }}
     />
@@ -70,18 +72,15 @@ export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
       schX={0}
       schY={0}
       connections={{
-        IN1: "net.VIN",
-        IN2: "net.VIN",
+        IN: "net.VIN",
         UVLO: "net.VIN",
         MODE: "net.GND",
         SHDN: "net.ON_OFF_CONTROL",
         RTN: "net.GND",
         GND: "net.GND",
-        PAD: "net.GND",
         IMON: "net.LOAD_MONITOR",
         FLT: "net.HEALTH_MONITOR",
-        OUT1: "net.VOUT",
-        OUT2: "net.VOUT",
+        OUT: "net.VOUT",
       }}
     />
 
@@ -100,8 +99,8 @@ export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
       resistance="100kohm"
       tolerance="1%"
       footprint="0603"
-      schX={7}
-      schY={0.8}
+      schX={5}
+      schY={1.3}
       schOrientation="vertical"
       connections={{ pin1: "net.VOUT", pin2: "net.HEALTH_MONITOR" }}
     />
@@ -111,7 +110,7 @@ export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       schX={6.7}
-      schY={-1.1}
+      schY={-2}
       schOrientation="vertical"
       connections={{ pin1: "net.LOAD_MONITOR", pin2: "net.GND" }}
     />
@@ -121,7 +120,7 @@ export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       schX={5.5}
-      schY={-1.6}
+      schY={-2.8}
       schOrientation="vertical"
       connections={{ pin1: "U1.ILIM", pin2: "net.GND" }}
     />
