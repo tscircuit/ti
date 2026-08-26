@@ -95,6 +95,45 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 ## Exported Subcircuits
 
+### DRV8210 PWM motor driver
+
+`MotorDriver_DRV8210` implements the full-bridge PWM application for the
+8-pin WSON `DRV8210DSGR`. The Controller and BDC motor use
+`group showAsSchematicBox` with real schematic signal ports, not PCB components.
+Their port-to-port traces use `schDisplayLabel` for inline PWM1/PWM2 and
+OUT1/OUT2 labels. Local bypass-capacitor ground labels keep ground wiring clear
+of those signals. The two PWM inputs drive IN1 and IN2; OUT1 and OUT2 connect
+to the motor.
+
+```tsx
+import { MotorDriver_DRV8210 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="16mm" height="12mm">
+    <MotorDriver_DRV8210 name="Driver" />
+  </board>
+)
+```
+
+Connect a parent circuit to `.Driver .U1 > .IN1`, `.Driver .U1 > .IN2`,
+`.Driver .U1 > .OUT1`, `.Driver .U1 > .OUT2`, `.Driver .U1 > .VM`,
+`.Driver .U1 > .VCC`, and `.Driver .U1 > .GND`. The schematic labels are
+PWM1, PWM2, OUT1, OUT2, VM, VCC, and GND respectively.
+
+Unlike the six-pin DRL reference diagram, the DSG device also requires a
+separate VCC supply and MODE selection. This subcircuit grounds MODE for PWM,
+grounds the exposed thermal pad, and includes 0.1 uF bypass capacitors on both
+VM and VCC. Keep VCC within 1.65–5.5 V and VM within the DSG operating range
+of 0–11 V; add VM bulk capacitance sized for your motor and supply.
+See the [TI pinout and supply requirements](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-F506A16B-1B46-4CAD-B811-DC3055E727BD),
+[PWM mode](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-2C006377-A449-4600-82B4-EA20AA948DEF),
+and [bulk capacitance guidance](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-AFD3F9A7-FA96-4E90-8B0B-C551CB6B7E0B).
+
+The raw chip is available as `DRV8210DSGR` or as
+`DRV8210` with `footprintVariant="wson_8_ep_2x2"`.
+
+### Available subcircuits
+
 The package currently exports these subcircuit components:
 
 - `BatteryManagement_BQ24072`
@@ -107,6 +146,7 @@ The package currently exports these subcircuit components:
 - `BluetoothController_CC2564C`
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
+- `MotorDriver_DRV8210`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
 - `EnvironmentalSensor_HDC2080`
@@ -118,6 +158,7 @@ The package currently exports these subcircuit components:
 - `ReverseBatteryProtection_TLV1805_SQJ461EP`
 - `VoltageRegulator_LM73605`
 - `SupervisorWatchdog_TPS3850`
+- `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
@@ -157,6 +198,7 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
@@ -165,6 +207,7 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
 | `LM73605` | `wqfn_30_rnp_4x6` | `LM73605QRNPRQ1` |
+| `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
