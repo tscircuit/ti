@@ -35,6 +35,10 @@ example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
+The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.circuit.tsx)
+example is intentionally minimal: it composes the independently renderable
+power sections through `SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092`.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
@@ -294,6 +298,13 @@ The package currently exports these subcircuit components:
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
+- `SystemPowerPmicBuck_LP87524B_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC sheet)
+- `SystemPowerPmicSequencer_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC control sections)
+- `SystemPowerLdo1_TPS7A8101_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C 1.8 V LDO sheet)
+- `SystemPowerLdo2_TPS7A8801_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C dual 1.3 V LDO sheet)
+- `SystemPowerVpp_TPS79601_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C VPP sheet)
+- `SystemPowerReference_LM4060_Datasheet` ([LM4060 datasheet](https://www.ti.com/lit/ds/symlink/lm4060.pdf), Figure 9-1 and Section 9.2.2; datasheet-derived, not a TIDEP-0092 board section)
+- `SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092` (composite for [Obstacle Detection Sensor subsystem 21584](https://www.ti.com/solution/obstacle-detection-sensor?variantid=35081&subsystemid=21584#block-diagram))
 
 ## Exported Chips
 
@@ -321,10 +332,12 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM4060A33EDBZR` | `sot23_3` | `LM4060A33EDBZR` |
 | `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
+| `LP87524BRNFRQ1` | `qfn26_w4.5mm_h4mm_p0.5mm_pw0.25mm_pl0.7mm_thermalpad3.2mmx2.7mm` | `LP87524BRNFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
@@ -343,6 +356,9 @@ chip is listed individually below, including whether it supports a
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPS7A20` | `sot_23_5` | `TPS7A2018PDBVR`, `TPS7A2033PDBVR` |
+| `TPS79601DRBR` | `son8_w3mm_h3mm_p0.65mm_pl0.7mm_pw0.3mm_ep_epw1.6mm_eph2.4mm` | `TPS79601DRBR` |
+| `TPS7A8101QDRBRQ1` | `son8_w3mm_h3mm_p0.65mm_pl0.7mm_pw0.3mm_ep_epw1.6mm_eph2.4mm` | `TPS7A8101QDRBRQ1` |
+| `TPS7A8801RTJR` | `qfn20_w4mm_h4mm_p0.5mm_pw0.28mm_pl0.75mm_thermalpad2.65mmx2.65mm` | `TPS7A8801RTJR` |
 | `TPS7E81Q1` | `-` | `TPS7E8133QDBVRQ1` |
 | `TPS92638` | `-` | `TPS92638QPWPRQ1` |
 | `TPS7A2028PDBVR` | `-` | `TPS7A2028PDBVR` |
