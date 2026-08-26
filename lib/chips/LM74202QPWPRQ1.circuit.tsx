@@ -40,8 +40,6 @@ export const LM74202QPWPRQ1 = (
       MODE: { requiresPower: true },
       SHDN: { requiresPower: true },
       IMON: { providesPower: true },
-      ILIM: { requiresPower: true, providesPower: true },
-      DVDT: { requiresPower: true, providesPower: true },
       FLT: { providesPower: true },
       OUT1: { providesPower: true },
       OUT2: { providesPower: true },
@@ -62,6 +60,19 @@ export const LM74202QPWPRQ1 = (
         direction: "left-to-right",
         pins: [4, 9, 17, 13],
       },
+    }}
+    schPinStyle={{
+      pin1: { marginBottom: "0.2mm" },
+      pin2: { marginBottom: "0.3mm" },
+      pin3: { marginBottom: "0.2mm" },
+      pin5: { marginBottom: "0.5mm" },
+      pin12: { marginBottom: "0.5mm" },
+      pin6: { marginBottom: "0.5mm" },
+      pin16: { marginBottom: "0.2mm" },
+      pin15: { marginBottom: "0.5mm" },
+      pin14: { marginBottom: "0.8mm" },
+      pin7: { marginBottom: "0.8mm" },
+      pin10: { marginBottom: "0.5mm" },
     }}
     noConnect={["pin4", "pin13"]}
     {...props}
