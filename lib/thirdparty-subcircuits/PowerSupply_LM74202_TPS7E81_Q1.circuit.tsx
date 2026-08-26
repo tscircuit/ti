@@ -11,14 +11,14 @@ const bidirectionalTvsSymbol = (
       schX={0}
       schY={1.2}
       direction="up"
-      schStemLength={0.72}
+      schStemLength={0.68}
     />
     <schematicpath
       points={[
-        { x: -0.32, y: 0.48 },
-        { x: 0.32, y: 0.48 },
-        { x: 0, y: 0.04 },
-        { x: -0.32, y: 0.48 },
+        { x: -0.34, y: 0.52 },
+        { x: 0.34, y: 0.52 },
+        { x: 0, y: 0 },
+        { x: -0.34, y: 0.52 },
       ]}
       strokeWidth={0.025}
       strokeColor="#840000"
@@ -27,31 +27,33 @@ const bidirectionalTvsSymbol = (
     />
     <schematicpath
       points={[
-        { x: -0.32, y: -0.48 },
-        { x: 0.32, y: -0.48 },
-        { x: 0, y: -0.04 },
-        { x: -0.32, y: -0.48 },
+        { x: -0.34, y: -0.52 },
+        { x: 0.34, y: -0.52 },
+        { x: 0, y: 0 },
+        { x: -0.34, y: -0.52 },
       ]}
       strokeWidth={0.025}
       strokeColor="#840000"
       fillColor="#840000"
       isFilled
     />
-    <schematicline
-      x1={-0.04}
-      y1={0.03}
-      x2={-0.43}
-      y2={-0.3}
-      strokeWidth={0.04}
-      color="#840000"
+    <schematicpath
+      points={[
+        { x: -0.52, y: -0.3 },
+        { x: -0.3, y: 0 },
+        { x: 0, y: 0 },
+      ]}
+      strokeWidth={0.035}
+      strokeColor="#840000"
     />
-    <schematicline
-      x1={0.04}
-      y1={-0.03}
-      x2={0.43}
-      y2={0.3}
-      strokeWidth={0.04}
-      color="#840000"
+    <schematicpath
+      points={[
+        { x: 0, y: 0 },
+        { x: 0.3, y: 0 },
+        { x: 0.52, y: 0.3 },
+      ]}
+      strokeWidth={0.035}
+      strokeColor="#840000"
     />
     <port
       name="pin1"
@@ -59,12 +61,12 @@ const bidirectionalTvsSymbol = (
       schX={0}
       schY={-1.2}
       direction="down"
-      schStemLength={0.72}
+      schStemLength={0.68}
     />
     <schematictext
       text="{NAME}"
-      schX={0.55}
-      schY={-0.72}
+      schX={0.12}
+      schY={-0.78}
       fontSize={0.22}
       anchor="left"
     />
