@@ -40,8 +40,6 @@ export const LM74202QPWPRQ1 = (
       MODE: { requiresPower: true },
       SHDN: { requiresPower: true },
       IMON: { providesPower: true },
-      ILIM: { requiresPower: true, providesPower: true },
-      DVDT: { requiresPower: true, providesPower: true },
       FLT: { providesPower: true },
       OUT1: { providesPower: true },
       OUT2: { providesPower: true },

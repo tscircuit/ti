@@ -164,7 +164,7 @@ The package currently exports these subcircuit components:
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
 - `TemperatureSensor_LM50HV_Q1` ([LM50-Q1/LM50HV-Q1 datasheet, Figure 8-3](https://www.ti.com/lit/ds/symlink/lm50-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
-- `PowerSupply_LM74202_TPS7E81_Q1` ([LM74202-Q1 datasheet, Figure 39](https://www.ti.com/lit/ds/symlink/lm74202-q1.pdf) and [TPS7E81-Q1 datasheet, Figure 7-5](https://www.ti.com/lit/ds/symlink/tps7e81-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
+- `PowerSupply_LM74202_TPS7E81_Q1` ([LM74202-Q1 datasheet, page-1 Simplified Schematic and Figure 39 values](https://www.ti.com/lit/ds/symlink/lm74202-q1.pdf) and [TPS7E81-Q1 datasheet, Figure 7-5](https://www.ti.com/lit/ds/symlink/tps7e81-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
@@ -288,8 +288,8 @@ for blocks that do not provide a TI reference design. These circuits clearly
 identify the datasheet figure used as their source. For example,
 `TemperatureSensor_LM50HV_Q1` follows Figure 8-3 of the LM50-Q1/LM50HV-Q1
 datasheet, while `PowerSupply_LM74202_TPS7E81_Q1` combines the LM74202-Q1
-Figure 39 battery-protection stage with the TPS7E81-Q1 Figure 7-5 fixed-output
-LDO stage.
+page-1 Simplified Schematic (with Figure 39 values) and the TPS7E81-Q1 Figure
+7-5 fixed-output LDO stage.
 
 ### `lib/simulations`
 
