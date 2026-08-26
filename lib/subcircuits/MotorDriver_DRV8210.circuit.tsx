@@ -20,10 +20,11 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
       schWidth={2}
       schHeight={2.2}
       schX={-5}
-      schY={0.1}
+      schY={0.25}
       schPinArrangement={{
         rightSide: { pins: ["PWM1", "PWM2"], direction: "top-to-bottom" },
       }}
+      schPinStyle={{ PWM2: { marginTop: 0.3 } }}
     >
       <port name="PWM1" direction="right" />
       <port name="PWM2" direction="right" />
@@ -38,18 +39,24 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
       schDisplayLabel="PWM2"
       path={[".Controller > .PWM2", ".U1 > .IN2", "net.PWM2"]}
     />
-    <schematicline x1={-5} y1={1.2} x2={-5} y2={1.6} strokeWidth={0.02} />
-    <schematicline x1={-5.14} y1={1.6} x2={-4.86} y2={1.6} strokeWidth={0.02} />
-    <schematictext text="VCC" schX={-5} schY={1.8} fontSize={0.18} />
-    <schematicline x1={-5} y1={-1} x2={-5} y2={-1.4} strokeWidth={0.02} />
+    <schematicline x1={-5} y1={1.35} x2={-5} y2={1.75} strokeWidth={0.02} />
     <schematicline
       x1={-5.14}
-      y1={-1.4}
+      y1={1.75}
       x2={-4.86}
-      y2={-1.4}
+      y2={1.75}
       strokeWidth={0.02}
     />
-    <schematictext text="GND" schX={-5} schY={-1.6} fontSize={0.18} />
+    <schematictext text="VCC" schX={-5} schY={1.95} fontSize={0.18} />
+    <schematicline x1={-5} y1={-0.85} x2={-5} y2={-1.25} strokeWidth={0.02} />
+    <schematicline
+      x1={-5.14}
+      y1={-1.25}
+      x2={-4.86}
+      y2={-1.25}
+      strokeWidth={0.02}
+    />
+    <schematictext text="GND" schX={-5} schY={-1.45} fontSize={0.18} />
 
     <group
       name="BDC"
@@ -58,10 +65,11 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
       schWidth={1.6}
       schHeight={1.5}
       schX={5}
-      schY={-0.1}
+      schY={-0.25}
       schPinArrangement={{
         leftSide: { pins: ["OUT1", "OUT2"], direction: "top-to-bottom" },
       }}
+      schPinStyle={{ OUT2: { marginTop: 0.3 } }}
     >
       <port name="OUT1" direction="left" />
       <port name="OUT2" direction="left" />

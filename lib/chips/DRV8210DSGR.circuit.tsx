@@ -22,12 +22,19 @@ export const DRV8210DSGR = (props: ChipProps<typeof pinLabels>) => {
       manufacturerPartNumber="DRV8210DSGR"
       datasheetUrl="https://www.ti.com/lit/ds/symlink/drv8210.pdf"
       schWidth={2.8}
-      schHeight={2.2}
+      schHeight={1.5}
       schPinArrangement={{
         leftSide: { direction: "top-to-bottom", pins: ["IN1", "IN2", "MODE"] },
         rightSide: { direction: "top-to-bottom", pins: ["VM", "OUT1", "OUT2"] },
         topSide: { direction: "left-to-right", pins: ["VCC"] },
         bottomSide: { direction: "left-to-right", pins: ["GND", "EP"] },
+      }}
+      schPinStyle={{
+        IN2: { marginTop: 0.3 },
+        MODE: { marginTop: 0.3 },
+        OUT1: { marginTop: 0.3 },
+        OUT2: { marginTop: 0.3 },
+        EP: { marginLeft: 0.3 },
       }}
       footprint={
         <footprint>

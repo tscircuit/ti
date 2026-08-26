@@ -43,6 +43,18 @@ function getConnectedIds(circuit: TestCircuit, start: string) {
   return connected;
 }
 
+function getSchematicPort(
+  circuit: TestCircuit,
+  component: string,
+  pin: string,
+) {
+  const port = circuit.db.schematic_port.getWhere({
+    source_port_id: getPort(circuit, component, pin).source_port_id,
+  });
+  assert.ok(port, component + "." + pin + " schematic port");
+  return port;
+}
+
 function assertPinNet(
   circuit: TestCircuit,
   componentName: string,
@@ -69,7 +81,7 @@ function assertNoErrors(circuit: TestCircuit) {
   );
 }
 
-test("DRV8210 exports the DSG pinout, aliases, supplier part, and nine pads", async () => {
+test("DRV8210 exports the DSG pinout, nine pads, and a compact pin-spaced symbol", async () => {
   assert.equal(TiChipComponents.DRV8210, DRV8210);
   assert.equal(TiSubcircuitComponents.MotorDriver_DRV8210, MotorDriver_DRV8210);
 
@@ -124,6 +136,33 @@ test("DRV8210 exports the DSG pinout, aliases, supplier part, and nine pads", as
     assert.ok(pad && pad.shape === "rect");
     assert.ok(Math.abs(pad.width - 1.8) < 0.001);
     assert.ok(Math.abs(pad.height - 0.9) < 0.001);
+
+    const symbolId = getSchematicPort(
+      circuit,
+      "U1",
+      "VM",
+    ).schematic_component_id;
+    assert.ok(symbolId);
+    const symbol = circuit.db.schematic_component.get(symbolId);
+    assert.ok(symbol);
+    assert.equal(symbol.size.width, 2.8);
+    assert.equal(symbol.size.height, 1.5);
+    for (const [first, second, axis] of [
+      ["IN1", "IN2", "y"],
+      ["IN2", "MODE", "y"],
+      ["VM", "OUT1", "y"],
+      ["OUT1", "OUT2", "y"],
+      ["GND", "EP", "x"],
+    ] as const) {
+      const spacing = Math.abs(
+        getSchematicPort(circuit, "U1", first).center[axis] -
+          getSchematicPort(circuit, "U1", second).center[axis],
+      );
+      assert.ok(
+        Math.abs(spacing - 0.5) < 1e-6,
+        first + "/" + second + " spacing",
+      );
+    }
   }
 });
 
@@ -182,7 +221,20 @@ test("PWM application keeps its seven nets separate and external blocks off the 
       schematic_component_id: box.schematic_component_id,
     });
     assert.equal(ports.length, 2);
+    assert.ok(
+      Math.abs(Math.abs(ports[0].center.y - ports[1].center.y) - 0.5) < 1e-6,
+    );
     for (const port of ports) {
+      const signal = port.display_pin_label;
+      assert.ok(signal);
+      const driverPin =
+        signal === "PWM1" ? "IN1" : signal === "PWM2" ? "IN2" : signal;
+      assert.ok(
+        Math.abs(
+          port.center.y - getSchematicPort(circuit, "U1", driverPin).center.y,
+        ) < 1e-6,
+        title + "." + signal + " must align with U1." + driverPin,
+      );
       assert.equal(
         circuit.db.pcb_port.list({ source_port_id: port.source_port_id })
           .length,
