@@ -226,6 +226,12 @@ The package currently exports these subcircuit components:
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
+- `PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699`
+- `PowerSupply_EmiFilter_TIDA00699`
+- `PowerSupply_Boost_LM25122_TIDA00699`
+- `PowerSupply_Buck_LM53603_TIDA00699`
+- `PowerSupply_Supervisor_TPS3808_TIDA00699`
+- `PowerSupply_TIDA00699`
 
 ## Exported Chips
 
