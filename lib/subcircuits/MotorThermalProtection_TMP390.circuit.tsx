@@ -40,9 +40,8 @@ export const TMP390_FIGURE_8_3_DEFAULTS = {
  * (1000,351), and OUTB (1000,427).
  *
  * Native-symbol normalization keeps both threshold-resistor lower pins on the
- * source ground baseline at schY = -3.2 mm, so R1/R2 centers are -2.9 mm.
- * U1's paired side pins use the source's 1.52 mm vertical separation, and its
- * box is 4.5 x 3.4 mm to match the requested visual proportion. Refdes are
+ * source ground baseline at schY = -3.2 mm, so R1/R2 centers are -2.9 mm. U1
+ * uses tscircuit's native schematic-symbol sizing and pin spacing. Refdes are
  * implementation-defined because Figure 7-1 supplies functional labels but no
  * component designators.
  */
@@ -50,7 +49,6 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
   <subcircuit
     routingDisabled
     schAutoLayoutEnabled={false}
-    schTraceAutoLabelEnabled={false}
     schMaxTraceDistance="15mm"
     autorouterEffortLevel="10x"
     {...props}
@@ -61,17 +59,7 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
     <net name="OUTA" />
     <net name="OUTB" />
 
-    <TMP390AQDRLRQ1
-      name="U1"
-      schX={0}
-      schY={0}
-      connections={{
-        VDD: "net.VDD",
-        GND: "net.GND",
-        OUTA: "net.OUTA",
-        OUTB: "net.OUTB",
-      }}
-    />
+    <TMP390AQDRLRQ1 name="U1" schX={0} schY={0} />
 
     <capacitor
       name="C1"
@@ -79,7 +67,6 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       schX={-8.38}
       schY={0.26}
       schOrientation="vertical"
-      connections={{ pin1: "net.VDD", pin2: "net.GND" }}
     />
 
     <resistor
@@ -89,7 +76,6 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       schX={-5.98}
       schY={-2.9}
       schOrientation="vertical"
-      connections={{ pin2: "net.GND" }}
     />
     <resistor
       name="R2"
@@ -98,7 +84,6 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       schX={-5.04}
       schY={-2.9}
       schOrientation="vertical"
-      connections={{ pin2: "net.GND" }}
     />
 
     <resistor
@@ -107,7 +92,6 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       schX={4.36}
       schY={1.98}
       schOrientation="vertical"
-      connections={{ pin1: "net.VDDIO", pin2: "net.OUTA" }}
     />
     <resistor
       name="R4"
@@ -115,7 +99,6 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       schX={5.72}
       schY={1.98}
       schOrientation="vertical"
-      connections={{ pin1: "net.VDDIO", pin2: "net.OUTB" }}
     />
 
     <port name="VDD" direction="up" schX={0} schY={3.84} connectsTo="net.VDD" />
@@ -137,32 +120,30 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       name="OUTA"
       direction="right"
       schX={8.54}
-      schY={0.76}
+      schY={0.1}
       connectsTo="net.OUTA"
     />
     <port
       name="OUTB"
       direction="right"
       schX={8.54}
-      schY={-0.76}
+      schY={-0.1}
       connectsTo="net.OUTB"
     />
     <trace from="U1.SETA" to="R1.pin1" />
     <trace from="U1.SETB" to="R2.pin1" />
-    <netlabel
-      net="OUTA"
-      connectsTo="R3.pin2"
-      schX={8.54}
-      schY={0.76}
-      anchorSide="left"
-    />
-    <netlabel
-      net="OUTB"
-      connectsTo="R4.pin2"
-      schX={8.54}
-      schY={-0.76}
-      anchorSide="left"
-    />
+    <trace from="U1.VDD" to="net.VDD" />
+    <trace from="U1.GND" to="net.GND" />
+    <trace from="U1.OUTA" to="net.OUTA" />
+    <trace from="U1.OUTB" to="net.OUTB" />
+    <trace from="C1.pin1" to="net.VDD" />
+    <trace from="C1.pin2" to="net.GND" />
+    <trace from="R1.pin2" to="net.GND" />
+    <trace from="R2.pin2" to="net.GND" />
+    <trace from="R3.pin1" to="net.VDDIO" />
+    <trace from="R3.pin2" to="net.OUTA" />
+    <trace from="R4.pin1" to="net.VDDIO" />
+    <trace from="R4.pin2" to="net.OUTB" />
   </subcircuit>
 );
 

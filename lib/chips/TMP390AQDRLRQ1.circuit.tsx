@@ -24,8 +24,6 @@ export const TMP390AQDRLRQ1 = (
     manufacturerPartNumber="TMP390AQDRLRQ1"
     datasheetUrl="https://www.ti.com/lit/ds/symlink/tmp390-q1.pdf"
     pinLabels={TMP390AQDRLRQ1_PIN_LABELS}
-    schWidth="4.5mm"
-    schHeight="3.4mm"
     schPinArrangement={{
       leftSide: {
         direction: "top-to-bottom",
@@ -43,10 +41,6 @@ export const TMP390AQDRLRQ1 = (
         direction: "left-to-right",
         pins: [3],
       },
-    }}
-    schPinStyle={{
-      SETA: { marginBottom: "1.32mm" },
-      OUTB: { marginTop: "1.32mm" },
     }}
     footprint={
       <footprint>

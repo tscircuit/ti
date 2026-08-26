@@ -176,15 +176,6 @@ test("MotorThermalProtection_TMP390 exposes and connects every interface net", a
     schematicPortCenter(null, "OUTB").y,
   );
 
-  const u1Schematic = circuitJson.find(
-    (element) =>
-      element.type === "schematic_component" &&
-      element.source_component_id === componentId("U1"),
-  );
-  expect(u1Schematic).toMatchObject({
-    size: { width: 4.5, height: 3.4 },
-  });
-
   expect(
     circuitJson.filter(
       (element) =>
