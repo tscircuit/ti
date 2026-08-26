@@ -13,6 +13,7 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  DAC101C081Q,
   DRV8210,
   DRV8833,
   DRV8876,
@@ -21,15 +22,22 @@ import {
   HDC3022,
   INA237,
   ISOW7841,
+  LM74202Q1,
+  LM50HVQ1,
   LMK1C1104,
+  LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
+  MSPM0L1306,
   MSPM33C3x,
   MSPM0G3507,
+  OPT3001,
   SN65HVD1473,
   TAS2505,
+  TCAN1042HGV,
   TLC59116,
+  TLV316,
   TLV755P,
   TLV9152IDR,
   TMP1827,
@@ -44,7 +52,9 @@ import {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS7E81Q1,
   TPS78230DRVR,
+  TPS92638,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -77,9 +87,11 @@ import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.c
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
 import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
 import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit.tsx";
+import { Microcontroller_MSPM0L1306 } from "./lib/subcircuits/Microcontroller_MSPM0L1306.circuit.tsx";
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
+import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "./lib/subcircuits/OutputUserInterface_LEDMatrix_LP5892_Q1.circuit.tsx";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
 import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
 import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit.tsx";
@@ -104,6 +116,12 @@ import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
 import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
+import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/CommunicationInterface_TCAN1042_TIDA01428.circuit.tsx";
+import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
+import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
+import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
+import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
+import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -134,9 +152,11 @@ export {
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
+  Microcontroller_MSPM0L1306,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
+  OutputUserInterface_LEDMatrix_LP5892_Q1,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   LoadSwitch_TPS22919,
@@ -159,6 +179,12 @@ export {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_TCAN1042_TIDA01428,
+  ElectrochromicMirrorDriver_TIDA01539,
+  LampDriver_TPS92638_TIDA00356,
+  LightSensor_OPT3001_TIDA01539,
+  PowerSupply_LM74202_TPS7E81_Q1,
+  TemperatureSensor_LM50HV_Q1,
 };
 
 export const TiChipComponents = {
@@ -176,6 +202,7 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  DAC101C081Q,
   DRV8210,
   DRV8833,
   DRV8876,
@@ -184,15 +211,22 @@ export const TiChipComponents = {
   HDC3022,
   INA237,
   ISOW7841,
+  LM74202Q1,
+  LM50HVQ1,
   LMK1C1104,
+  LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
+  MSPM0L1306,
   MSPM33C3x,
   MSPM0G3507,
+  OPT3001,
   SN65HVD1473,
   TAS2505,
+  TCAN1042HGV,
   TLC59116,
+  TLV316,
   TLV755P,
   TLV9152IDR,
   TMP1827,
@@ -207,7 +241,9 @@ export const TiChipComponents = {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS7E81Q1,
   TPS78230DRVR,
+  TPS92638,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -242,9 +278,11 @@ export const TiSubcircuitComponents = {
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
+  Microcontroller_MSPM0L1306,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
+  OutputUserInterface_LEDMatrix_LP5892_Q1,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   LoadSwitch_TPS22919,
@@ -266,6 +304,12 @@ export const TiSubcircuitComponents = {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_TCAN1042_TIDA01428,
+  ElectrochromicMirrorDriver_TIDA01539,
+  LampDriver_TPS92638_TIDA00356,
+  LightSensor_OPT3001_TIDA01539,
+  PowerSupply_LM74202_TPS7E81_Q1,
+  TemperatureSensor_LM50HV_Q1,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
