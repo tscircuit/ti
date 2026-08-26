@@ -198,7 +198,7 @@ The package also exports:
 
 ### TMP390-Q1 Motor Thermal Protection Source Scope
 
-`MotorThermalProtection_TMP390` is derived from TMP390-Q1 datasheet Figure 8-1
+`MotorThermalProtection_TMP390` is derived from TMP390-Q1 datasheet Figure 7-1
 for topology and relative schematic placement, and Figure 8-3 plus Tables 7-1
 and 7-2 for component values and thresholds. It is **not** an exact TI Window
 Module reference design because TI does not attach schematic or CAD source to

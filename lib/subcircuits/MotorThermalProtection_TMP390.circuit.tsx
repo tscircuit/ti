@@ -21,7 +21,7 @@ export const TMP390_FIGURE_8_3_DEFAULTS = {
  *
  * This is not an exact TI Window Module reference design: TI attaches no
  * schematic/CAD source to that subsystem. Topology and relative placement are
- * derived from TMP390-Q1 datasheet Figure 8-1, using the user-provided
+ * derived from TMP390-Q1 datasheet Figure 7-1, using the user-provided
  * 1084 x 602 px capture. Values are from datasheet Figure 8-3:
  * https://www.ti.com/lit/ds/symlink/tmp390-q1.pdf
  *
@@ -31,14 +31,14 @@ export const TMP390_FIGURE_8_3_DEFAULTS = {
  * - OUTA resets at +80 C; OUTB resets at -15 C.
  * - R3/R4 = 10 kOhm pull-ups and C1 = 0.1 uF.
  *
- * Coordinate transform from the attached Figure 8-1 capture:
+ * Coordinate transform from the attached Figure 7-1 capture:
  *   schX = (sourcePixelX - 573) * 0.020 mm
  *   schY = (389 - sourcePixelY) * 0.020 mm
  * The source origin is the TMP39x block center at (573, 389) px. Source
  * centers used are C1 (154,376), R1 (274,456), R2 (321,475), R3 (791,290),
  * R4 (859,290), VDD (573,197), VDDIO (824,198), GND (575,549), OUTA
  * (1000,351), and OUTB (1000,427). Refdes are implementation-defined because
- * Figure 8-1 supplies functional labels but no component designators.
+ * Figure 7-1 supplies functional labels but no component designators.
  */
 export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
   <subcircuit
