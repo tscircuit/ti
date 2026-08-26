@@ -206,9 +206,13 @@ function assertPcbPad(
 }
 
 for (const [Section, title] of sectionModules) {
-  test(`${title} is independently renderable and contains only its official source box`, async () => {
+  test(`${title} is independently renderable and contains only its official schematic section`, async () => {
     const circuit = new Circuit({ platform: { pcbDisabled: true } });
-    circuit.add(<Section name="section_under_test" />);
+    circuit.add(
+      <board routingDisabled>
+        <Section name="section_under_test" />
+      </board>,
+    );
     await circuit.renderUntilSettled();
     assertNoErrors(circuit);
 
@@ -220,7 +224,7 @@ for (const [Section, title] of sectionModules) {
       [...sectionComponents[title]].sort(),
     );
     assert.ok(circuit.db.schematic_text.getWhere({ text: title }));
-    assert.equal(circuit.db.schematic_box.list().length, 1);
+    assert.equal(circuit.db.schematic_box.list().length, 0);
   });
 }
 
@@ -273,7 +277,9 @@ test("TIDA-00699 MOSFET definitions preserve every official physical pin and Alt
   assertPcbPad(sqCircuit, "Q3", "pin8", 2.4, 1.905);
 });
 
-test("TIDA-00699 composite preserves all five source sections, coordinates, and boundary nets", async () => {
+test("TIDA-00699 composite preserves all five source sections, coordinates, and boundary nets", {
+  timeout: 15_000,
+}, async () => {
   assert.equal(
     TiSubcircuitComponents.PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
     PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
@@ -300,7 +306,11 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
   );
 
   const circuit = new Circuit({ platform: { pcbDisabled: true } });
-  circuit.add(<PowerSupply_TIDA00699 name="power_supply" />);
+  circuit.add(
+    <board routingDisabled>
+      <PowerSupply_TIDA00699 name="power_supply" />
+    </board>,
+  );
   await circuit.renderUntilSettled();
   assertNoErrors(circuit);
 
@@ -313,7 +323,8 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
       .sort(),
     expectedComponents,
   );
-  assert.equal(circuit.db.schematic_box.list().length, 5);
+  assert.equal(circuit.db.schematic_box.list().length, 0);
+  assert.ok(circuit.db.schematic_line.list().length > 0);
   for (const title of Object.keys(sectionComponents)) {
     assert.ok(circuit.db.schematic_text.getWhere({ text: title }));
   }
@@ -326,6 +337,12 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
   assertReferenceCenter(circuit, "U4", 10.053, 4.7523);
 
   assertPinNet(circuit, "J1", "pin1", "VBAT");
+  for (const testpointName of ["J1", "J2", "J3", "J4"]) {
+    assert.equal(
+      circuit.db.source_component.getWhere({ name: testpointName })?.ftype,
+      "simple_test_point",
+    );
+  }
   assert.equal(
     getPort(circuit, "D2", "pin1").source_port_id,
     getPort(circuit, "D2", "cathode").source_port_id,

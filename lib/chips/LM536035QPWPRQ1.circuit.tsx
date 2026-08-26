@@ -2,8 +2,8 @@ import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
 
 const pinLabels = {
-  pin1: "SW_1",
-  pin2: "SW_2",
+  pin1: ["SW", "SW_1"],
+  pin2: ["SW", "SW_2"],
   pin3: "CBOOT",
   pin4: "VCC",
   pin5: "BIAS",
@@ -13,11 +13,11 @@ const pinLabels = {
   pin9: "FB",
   pin10: "AGND",
   pin11: "EN",
-  pin12: "VIN_1",
-  pin13: "VIN_2",
+  pin12: ["VIN", "VIN_1"],
+  pin13: ["VIN", "VIN_2"],
   pin14: "NC",
-  pin15: "PGND_1",
-  pin16: "PGND_2",
+  pin15: ["PGND", "PGND_1"],
+  pin16: ["PGND", "PGND_2"],
   pin17: "PAD",
 } as const;
 
@@ -27,13 +27,13 @@ export const LM536035QPWPRQ1 = (props: ChipProps<typeof pinLabels>) => (
     manufacturerPartNumber="LM536035QPWPRQ1"
     datasheetUrl="https://www.ti.com/lit/ds/symlink/lm53603-q1.pdf"
     footprint="soic16_p0.65mm_w5.9mm_pw0.45mm_pl1.4mm_thermalpad2.48mmx3.37mm"
-    schWidth="4.8mm"
-    schHeight="5.8mm"
+    schWidth="3.0707mm"
+    schHeight="4.6061mm"
     pinLabels={pinLabels}
     schPinArrangement={{
       leftSide: {
         direction: "top-to-bottom",
-        pins: [4, 12, 13, 8, 11, 6, 7, 14],
+        pins: [12, 13, 11, 8, 4, 7, 6, 14],
       },
       rightSide: {
         direction: "top-to-bottom",

@@ -48,6 +48,8 @@ const referenceSchematicRotations: Record<string, number> = {
   D3: 90,
   D4: 90,
   D5: 270,
+  J1: 180,
+  J3: 180,
   R3: 180,
   R4: 180,
   R5: 90,
@@ -296,6 +298,17 @@ const createPmeg6010Footprint = () => (
       width="1.2mm"
       height="1.2mm"
       shape="rect"
+    />
+  </footprint>
+);
+
+const create5758TestpointFootprint = () => (
+  <footprint>
+    <platedhole
+      portHints={["pin1"]}
+      shape="circle"
+      holeDiameter="5.450mm"
+      outerDiameter="10mm"
     />
   </footprint>
 );
@@ -870,54 +883,6 @@ const referenceDiodes = [
 
 const referenceConnectors = [
   {
-    name: "J1",
-    pinCount: 1,
-    manufacturerPartNumber: "575-8",
-    holeDiameter: "5.450mm",
-    platedDiameter: "10mm",
-    pinLabels: ["1"],
-    schFacingDirection: "right",
-    referenceSchX: -13.8914,
-    referenceSchY: 5.6662,
-    connections: { pin1: "net.VBAT" },
-  },
-  {
-    name: "J2",
-    pinCount: 1,
-    manufacturerPartNumber: "575-8",
-    holeDiameter: "5.450mm",
-    platedDiameter: "10mm",
-    pinLabels: ["1"],
-    schFacingDirection: "left",
-    referenceSchX: 14.6225,
-    referenceSchY: -4.3868,
-    connections: { pin1: "net.VSYS" },
-  },
-  {
-    name: "J3",
-    pinCount: 1,
-    manufacturerPartNumber: "575-8",
-    holeDiameter: "5.450mm",
-    platedDiameter: "10mm",
-    pinLabels: ["1"],
-    schFacingDirection: "right",
-    referenceSchX: -13.8914,
-    referenceSchY: 4.9351,
-    connections: { pin1: "net.GND" },
-  },
-  {
-    name: "J4",
-    pinCount: 1,
-    manufacturerPartNumber: "575-8",
-    holeDiameter: "5.450mm",
-    platedDiameter: "10mm",
-    pinLabels: ["1"],
-    schFacingDirection: "left",
-    referenceSchX: 14.4397,
-    referenceSchY: -5.849,
-    connections: { pin1: "net.GND" },
-  },
-  {
     name: "J5",
     pinCount: 6,
     pitch: "1.27mm",
@@ -941,6 +906,50 @@ const referenceConnectors = [
 ] satisfies ReferencePinHeaderProps[];
 
 const referenceTestpoints = [
+  {
+    name: "J1",
+    manufacturerPartNumber: "575-8",
+    footprintVariant: "through_hole",
+    footprint: create5758TestpointFootprint(),
+    holeDiameter: "5.450mm",
+    padDiameter: "10mm",
+    referenceSchX: -13.8914,
+    referenceSchY: 5.6662,
+    connections: { pin1: "net.VBAT" },
+  },
+  {
+    name: "J2",
+    manufacturerPartNumber: "575-8",
+    footprintVariant: "through_hole",
+    footprint: create5758TestpointFootprint(),
+    holeDiameter: "5.450mm",
+    padDiameter: "10mm",
+    referenceSchX: 14.6225,
+    referenceSchY: -4.3868,
+    connections: { pin1: "net.VSYS" },
+  },
+  {
+    name: "J3",
+    manufacturerPartNumber: "575-8",
+    footprintVariant: "through_hole",
+    footprint: create5758TestpointFootprint(),
+    holeDiameter: "5.450mm",
+    padDiameter: "10mm",
+    referenceSchX: -13.8914,
+    referenceSchY: 4.9351,
+    connections: { pin1: "net.GND" },
+  },
+  {
+    name: "J4",
+    manufacturerPartNumber: "575-8",
+    footprintVariant: "through_hole",
+    footprint: create5758TestpointFootprint(),
+    holeDiameter: "5.450mm",
+    padDiameter: "10mm",
+    referenceSchX: 14.4397,
+    referenceSchY: -5.849,
+    connections: { pin1: "net.GND" },
+  },
   {
     name: "TP1",
     manufacturerPartNumber: "5010",
@@ -1421,11 +1430,7 @@ const referenceComponentNamesBySection: Record<
 };
 
 type ReferenceSectionVisual = {
-  boxCenter: { x: number; y: number };
-  boxHeight: number;
-  boxWidth: number;
   title: string;
-  titlePosition: { x: number; y: number };
   annotations?: readonly {
     position: { x: number; y: number };
     text: string;
@@ -1437,25 +1442,13 @@ const referenceSectionVisualByName: Record<
   ReferenceSectionVisual
 > = {
   reverse_battery_protection: {
-    boxCenter: { x: -8.68211556276054, y: 4.569534506716074 },
-    boxWidth: 12.246352477999075,
-    boxHeight: 6.5801296896711445,
     title: "Transient & Reverse Polarity Protection",
-    titlePosition: { x: -7.311255210745717, y: 2.0105951829550737 },
   },
   emi_filter: {
-    boxCenter: { x: 1.553641732283463, y: 4.569534506716074 },
-    boxWidth: 7.49403659101436,
-    boxHeight: 6.5801296896711445,
     title: "EMI Filter",
-    titlePosition: { x: -0.9139069013432142, y: 2.1933765632237154 },
   },
   boost_regulator: {
-    boxCenter: { x: -6.762911069939788, y: -4.386753126447429 },
-    boxWidth: 16.084761463640575,
-    boxHeight: 8.042380731820288,
     title: "WVIN Boost",
-    titlePosition: { x: -0.18278138026864355, y: -7.494036591014359 },
     annotations: [
       {
         text: "2A @ 9V",
@@ -1464,11 +1457,7 @@ const referenceSectionVisualByName: Record<
     ],
   },
   buck_regulator: {
-    boxCenter: { x: 8.225162112088931, y: -5.392050717924965 },
-    boxWidth: 13.525822139879576,
-    boxHeight: 6.031785548865217,
     title: "WVIN Buck",
-    titlePosition: { x: 12.429133858267718, y: -7.494036591014359 },
     annotations: [
       {
         text: "3A @ 5V",
@@ -1481,11 +1470,7 @@ const referenceSectionVisualByName: Record<
     ],
   },
   supervisor_and_header: {
-    boxCenter: { x: 10.327147985178325, y: 3.290064844835573 },
-    boxWidth: 9.321850393700789,
-    boxHeight: 9.139069013432145,
     title: "SVS & Header",
-    titlePosition: { x: 7.859599351551644, y: 2.1933765632237154 },
   },
 };
 
@@ -1501,15 +1486,18 @@ const referenceConnectedComponents: ReferenceConnectedComponent[] = [
 
 type ReferenceSpecialComponentsProps = {
   componentNames: ReadonlySet<string>;
+  schSectionName: Tida00699ReferenceSectionName;
 };
 
 const ReferenceSpecialComponents = ({
   componentNames,
+  schSectionName,
 }: ReferenceSpecialComponentsProps) => (
   <>
     {componentNames.has("D1") && (
       <BAS4005
         name="D1"
+        schSectionName={schSectionName}
         schX={-10.4 * schematicScale}
         schY={-2.1 * schematicScale}
       />
@@ -1517,6 +1505,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("DSHT") && (
       <BAS4005
         name="DSHT"
+        schSectionName={schSectionName}
         schX={9.5046 * schematicScale}
         schY={0.1828 * schematicScale}
       />
@@ -1524,6 +1513,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q1") && (
       <CSD18531Q5A
         name="Q1"
+        schSectionName={schSectionName}
         schX={-2.6229 * schematicScale}
         schY={-5.849 * schematicScale}
         symbolOrientation="vertical"
@@ -1532,6 +1522,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q2") && (
       <CSD18531Q5A
         name="Q2"
+        schSectionName={schSectionName}
         schX={-1.645 * schematicScale}
         schY={-1.5262 * schematicScale}
       />
@@ -1539,6 +1530,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q3") && (
       <SQ4850EY
         name="Q3"
+        schSectionName={schSectionName}
         schX={-6.5801 * schematicScale}
         schY={7.0645 * schematicScale}
       />
@@ -1546,6 +1538,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U1") && (
       <LM74610QDGKRQ1
         name="U1"
+        schSectionName={schSectionName}
         schX={-6.7629 * schematicScale}
         schY={4.5695 * schematicScale}
         schWidth="2.5mm"
@@ -1565,6 +1558,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U2") && (
       <LM25122QPWPTQ1
         name="U2"
+        schSectionName={schSectionName}
         schX={-6.3973 * schematicScale}
         schY={-5.1179 * schematicScale}
         schWidth="3.2mm"
@@ -1595,10 +1589,11 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U3") && (
       <LM536035QPWPRQ1
         name="U3"
+        schSectionName={schSectionName}
         schX={7.8596 * schematicScale}
         schY={-5.3007 * schematicScale}
-        schWidth="3.2mm"
-        schHeight="4.2mm"
+        schWidth="3.0707mm"
+        schHeight="4.6061mm"
         schPinArrangement={{
           leftSide: {
             direction: "top-to-bottom",
@@ -1618,6 +1613,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U4") && (
       <TPS3808G01QDBVRQ1
         name="U4"
+        schSectionName={schSectionName}
         schX={10.053 * schematicScale}
         schY={4.7523 * schematicScale}
         schWidth="2.4mm"
@@ -1645,7 +1641,8 @@ type Tida00699ReferenceSectionContentsProps = {
 /**
  * Component centers are converted from the official TIDA-00699 source with
  * schX = sourceX * 1.4 and schY = sourceY * 1.4. The same transform is used
- * for the source functional boxes and annotations.
+ * for the source annotations. Native schematic sections derive their own
+ * dividers from those fixed component centers.
  */
 export const Tida00699ReferenceSectionContents = ({
   sectionName,
@@ -1660,18 +1657,10 @@ export const Tida00699ReferenceSectionContents = ({
 
   return (
     <>
-      <schematicbox
-        name={`${sectionName}_SECTION`}
-        schX={referenceSectionVisual.boxCenter.x * schematicScale}
-        schY={referenceSectionVisual.boxCenter.y * schematicScale}
-        width={referenceSectionVisual.boxWidth * schematicScale}
-        height={referenceSectionVisual.boxHeight * schematicScale}
-      />
-      <schematictext
-        text={referenceSectionVisual.title}
-        schX={referenceSectionVisual.titlePosition.x * schematicScale}
-        schY={referenceSectionVisual.titlePosition.y * schematicScale}
-        fontSize={0.5117878647522002}
+      <schematicsection
+        name={sectionName}
+        displayName={referenceSectionVisual.title}
+        sectionTitleFontSize="0.18mm"
       />
       {referenceSectionVisual.annotations?.[0] && (
         <schematictext
@@ -1700,34 +1689,61 @@ export const Tida00699ReferenceSectionContents = ({
       {referenceCapacitors
         .filter(({ name }) => componentNames.has(name))
         .map((capacitorProps) => (
-          <ReferenceCapacitor key={capacitorProps.name} {...capacitorProps} />
+          <ReferenceCapacitor
+            key={capacitorProps.name}
+            {...capacitorProps}
+            schSectionName={sectionName}
+          />
         ))}
       {referenceResistors
         .filter(({ name }) => componentNames.has(name))
         .map((resistorProps) => (
-          <ReferenceResistor key={resistorProps.name} {...resistorProps} />
+          <ReferenceResistor
+            key={resistorProps.name}
+            {...resistorProps}
+            schSectionName={sectionName}
+          />
         ))}
       {referenceInductors
         .filter(({ name }) => componentNames.has(name))
         .map((inductorProps) => (
-          <ReferenceInductor key={inductorProps.name} {...inductorProps} />
+          <ReferenceInductor
+            key={inductorProps.name}
+            {...inductorProps}
+            schSectionName={sectionName}
+          />
         ))}
       {referenceDiodes
         .filter(({ name }) => componentNames.has(name))
         .map((diodeProps) => (
-          <ReferenceDiode key={diodeProps.name} {...diodeProps} />
+          <ReferenceDiode
+            key={diodeProps.name}
+            {...diodeProps}
+            schSectionName={sectionName}
+          />
         ))}
       {referenceConnectors
         .filter(({ name }) => componentNames.has(name))
         .map((pinHeaderProps) => (
-          <ReferencePinHeader key={pinHeaderProps.name} {...pinHeaderProps} />
+          <ReferencePinHeader
+            key={pinHeaderProps.name}
+            {...pinHeaderProps}
+            schSectionName={sectionName}
+          />
         ))}
       {referenceTestpoints
         .filter(({ name }) => componentNames.has(name))
         .map((testpointProps) => (
-          <ReferenceTestpoint key={testpointProps.name} {...testpointProps} />
+          <ReferenceTestpoint
+            key={testpointProps.name}
+            {...testpointProps}
+            schSectionName={sectionName}
+          />
         ))}
-      <ReferenceSpecialComponents componentNames={componentNames} />
+      <ReferenceSpecialComponents
+        componentNames={componentNames}
+        schSectionName={sectionName}
+      />
       {referenceTraceProps.map((traceProps) => (
         <ReferenceTrace
           key={`${traceProps.from}->${traceProps.to}`}
