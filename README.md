@@ -332,6 +332,12 @@ position encoding with two DRV5013-Q1 latching Hall sensors. This extraction is
 independent of the DRV8703/H-bridge work in PR #116 and does not duplicate that
 motor-driver circuitry.
 
+The TIDA-01389 BOM identifies U5/U6 as `DRV5013ADQDBZRQ1`, C13/C14 as
+`GRM155R61H104ME14D`, R14/R15 as `CRCW040210K0JNED`, R9 as
+`CRCW06030000Z0EA`, and J1/J2 as `SSQ-110-01-T-S`. Following repository
+convention, passive and connector MPNs are documented here instead of being
+rendered as schematic component values.
+
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.
 

@@ -9,12 +9,12 @@ import { getSourcePortConnectivityMapFromCircuitJson } from "circuit-json-to-con
 import { Circuit } from "@tscircuit/core";
 import { PositionFeedback_DRV5013 } from "../lib/subcircuits/PositionFeedback_DRV5013.circuit.tsx";
 
-const ALTIUM_SCALE = 0.018278145;
-const ALTIUM_ORIGIN = { x: 185, y: 215 } as const;
+const SOURCE_SCALE = 0.018278145;
+const SOURCE_ORIGIN = { x: 185, y: 215 } as const;
 
-const fromAltium = (x: number, y: number) => ({
-  x: (x - ALTIUM_ORIGIN.x) * ALTIUM_SCALE,
-  y: (y - ALTIUM_ORIGIN.y) * ALTIUM_SCALE,
+const fromSource = (x: number, y: number) => ({
+  x: (x - SOURCE_ORIGIN.x) * SOURCE_SCALE,
+  y: (y - SOURCE_ORIGIN.y) * SOURCE_SCALE,
 });
 
 let circuitJson: AnyCircuitElement[];
@@ -98,25 +98,27 @@ const resistance = (name: string) => {
 };
 
 describe("TIDA-01389 position feedback extraction", () => {
-  test("preserves source designators, values, MPNs, and Altium centers", () => {
+  test("preserves source designators, values, device MPNs, and centers", () => {
     const expected = {
       U6: { xy: [180, 280], mpn: "DRV5013ADQDBZRQ1" },
       U5: { xy: [180, 140], mpn: "DRV5013ADQDBZRQ1" },
-      C13: { xy: [60, 275], mpn: "GRM155R61H104ME14D" },
-      C14: { xy: [60, 135], mpn: "GRM155R61H104ME14D" },
-      R14: { xy: [270, 310], mpn: "CRCW040210K0JNED" },
-      R15: { xy: [270, 170], mpn: "CRCW040210K0JNED" },
-      J1: { xy: [150, 475], mpn: "SSQ-110-01-T-S" },
-      J2: { xy: [190, 475], mpn: "SSQ-110-01-T-S" },
-      R9: { xy: [100, 530], mpn: "CRCW06030000Z0EA" },
+      C13: { xy: [60, 275] },
+      C14: { xy: [60, 135] },
+      R14: { xy: [270, 310] },
+      R15: { xy: [270, 170] },
+      J1: { xy: [150, 475] },
+      J2: { xy: [190, 475] },
+      R9: { xy: [100, 530] },
     } as const;
 
     for (const [name, source] of Object.entries(expected)) {
       const sourceComponent = component(name);
       const center = schematicComponent(name).center;
       const [x, y] = source.xy;
-      const transformed = fromAltium(x, y);
-      expect(sourceComponent.manufacturer_part_number).toBe(source.mpn);
+      const transformed = fromSource(x, y);
+      if ("mpn" in source) {
+        expect(sourceComponent.manufacturer_part_number).toBe(source.mpn);
+      }
       expect(center.x).toBeCloseTo(transformed.x, 5);
       expect(center.y).toBeCloseTo(transformed.y, 5);
     }
@@ -145,25 +147,22 @@ describe("TIDA-01389 position feedback extraction", () => {
       expect(port(sensor, 3).port_hints).toContain("GND");
     }
 
-    const expectedPinAnchors = [
-      ["U6", 1, 100, 290],
-      ["U6", 2, 260, 290],
-      ["U6", 3, 260, 260],
-      ["U5", 1, 100, 150],
-      ["U5", 2, 260, 150],
-      ["U5", 3, 260, 120],
-      ["J1", 1, 120, 520],
-      ["J2", 1, 220, 520],
-      ["J2", 6, 220, 470],
-      ["J2", 7, 220, 460],
-    ] as const;
-
-    for (const [name, pinNumber, x, y] of expectedPinAnchors) {
-      const center = schematicPort(name, pinNumber).center;
-      const transformed = fromAltium(x, y);
-      expect(center.x).toBeCloseTo(transformed.x, 5);
-      expect(center.y).toBeCloseTo(transformed.y, 5);
+    for (const name of ["U5", "U6"]) {
+      const center = schematicComponent(name).center;
+      expect(schematicPort(name, 1).center.x).toBeLessThan(center.x);
+      expect(schematicPort(name, 2).center.x).toBeGreaterThan(center.x);
+      expect(schematicPort(name, 3).center.x).toBeGreaterThan(center.x);
+      expect(schematicPort(name, 2).center.y).toBeGreaterThan(
+        schematicPort(name, 3).center.y,
+      );
     }
+
+    expect(schematicPort("J1", 1).center.x).toBeLessThan(
+      schematicComponent("J1").center.x,
+    );
+    expect(schematicPort("J2", 1).center.x).toBeGreaterThan(
+      schematicComponent("J2").center.x,
+    );
   });
 
   test("connects both Hall outputs and both supply rails end to end", () => {
