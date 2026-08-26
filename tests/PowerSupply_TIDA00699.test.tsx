@@ -205,6 +205,16 @@ function assertPcbPad(
   assert.ok(Math.abs(pad.y - expectedY) < 1e-6, `${componentName}.${pin} y`);
 }
 
+function assertSimpleMosfetSymbol(circuit: TestCircuit, componentName: string) {
+  assert.equal(
+    circuit.db.schematic_text
+      .list()
+      .some(({ text }) => /^\d+(,\d+)+$/.test(text)),
+    false,
+    `${componentName} must not draw grouped package-pin numbers`,
+  );
+}
+
 for (const [Section, title] of sectionModules) {
   test(`${title} is independently renderable and contains only its official schematic section`, async () => {
     const circuit = new Circuit({ platform: { pcbDisabled: true } });
@@ -228,7 +238,7 @@ for (const [Section, title] of sectionModules) {
   });
 }
 
-test("TIDA-00699 MOSFET definitions preserve every official physical pin and Altium land center", async () => {
+test("TIDA-00699 MOSFETs preserve every physical pad without grouped pin-number text", async () => {
   assert.equal(TiChipComponents.CSD18531Q5A, CSD18531Q5A);
   assert.equal(TiChipComponents.SQ4850EY, SQ4850EY);
 
@@ -240,6 +250,7 @@ test("TIDA-00699 MOSFET definitions preserve every official physical pin and Alt
   );
   await csdCircuit.renderUntilSettled();
   assertNoErrors(csdCircuit);
+  assertSimpleMosfetSymbol(csdCircuit, "Q1");
   assert.equal(
     csdCircuit.db.source_port.list({
       source_component_id: csdCircuit.db.source_component.getWhere({
@@ -262,6 +273,7 @@ test("TIDA-00699 MOSFET definitions preserve every official physical pin and Alt
   );
   await sqCircuit.renderUntilSettled();
   assertNoErrors(sqCircuit);
+  assertSimpleMosfetSymbol(sqCircuit, "Q3");
   assert.equal(
     sqCircuit.db.source_port.list({
       source_component_id: sqCircuit.db.source_component.getWhere({
