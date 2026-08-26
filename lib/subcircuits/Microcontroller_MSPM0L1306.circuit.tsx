@@ -9,7 +9,7 @@ import { MSPM0L1306SRHBR } from "../../imports/MSPM0L1306SRHBR.tsx";
  * enabled; otherwise PA2 remains available as GPIO.
  */
 export const Microcontroller_MSPM0L1306 = (props: SubcircuitProps) => (
-  <subcircuit width={40} height={30} schMaxTraceDistance="20mm" {...props}>
+  <subcircuit width={40} height={30} schMaxTraceDistance="6mm" {...props}>
     <MSPM0L1306SRHBR
       name="U1"
       schX={0}
@@ -89,11 +89,18 @@ export const Microcontroller_MSPM0L1306 = (props: SubcircuitProps) => (
       resistance="100k"
       footprint="0402"
       schX={4}
-      schY={1.2}
+      schY={2.05}
       pcbX={4.4}
       pcbY={1.5}
-      schRotation={270}
-      connections={{ pin1: "U1.ROSC", pin2: "net.GND" }}
+      schRotation={0}
+      connections={{ pin1: "U1.ROSC" }}
+    />
+    <netlabel
+      net="GND"
+      connectsTo="R2.pin2"
+      schX={4.8}
+      schY={1.55}
+      anchorSide="top"
     />
 
     <resistor
@@ -119,24 +126,21 @@ export const Microcontroller_MSPM0L1306 = (props: SubcircuitProps) => (
       connections={{ pin1: ["U1.PA0", "net.PA0"], pin2: "net.VPU" }}
     />
 
-    <pinheader
+    <connector
       name="J1"
-      pinCount={2}
-      gender="female"
-      pitch="2.54mm"
-      schPinStyle={{
-        SWDIO: {
-          marginTop: 0.1,
-          marginBottom: 0.2,
-        },
-      }}
-      schFacingDirection="left"
+      footprint="pinrow2_p2.54_female"
       schX={5}
-      schY={-2.1}
+      schY={-2.2}
       pcbX={9}
       pcbY={0}
-      showSilkscreenPinLabels
-      pinLabels={["SWDIO", "SWCLK"]}
+      pinLabels={{ pin1: ["SWDIO"], pin2: ["SWCLK"] }}
+      schWidth={1.6}
+      schHeight={1.1}
+      // Add 0.3 mm to the default 0.2 mm pitch to match U1's SWD pins.
+      schPinStyle={{ pin2: { marginTop: 0.3 } }}
+      schPinArrangement={{
+        leftSide: { pins: ["pin1", "pin2"], direction: "top-to-bottom" },
+      }}
       connections={{
         pin1: "U1.SWDIO",
         pin2: "U1.SWCLK",
