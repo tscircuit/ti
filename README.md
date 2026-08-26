@@ -201,6 +201,7 @@ The package currently exports these subcircuit components:
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
 - `Microcontroller_MSPM33C3x`
+- `Microcontroller_MSP430G2553_TIDA01539` ([TIDA-01539 design guide, Figure 12](https://www.ti.com/lit/pdf/TIDUDR8) and [MSP430G2553 LaunchPad target schematic, Figure 19](https://www.ti.com/lit/pdf/SLAU772))
 - `LEDDriver_TLC59116`
 - `OutputUserInterface_LEDMatrix_LP5892_Q1`
 - `TemperatureSensor_TMP1075`
@@ -257,6 +258,7 @@ chip is listed individually below, including whether it supports a
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
+| `MSP430G2553Q1` | `-` | `MSP430G2553IPW0RQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |

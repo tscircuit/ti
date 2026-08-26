@@ -28,6 +28,7 @@ import {
   LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
+  MSP430G2553Q1,
   MSP430F5229,
   MSPM0L1306,
   MSPM33C3x,
@@ -112,6 +113,7 @@ import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128J
 import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits/BatteryCharging_2to5CellNVDCBuckBoost_BQ25731.circuit.tsx";
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
+import { Microcontroller_MSP430G2553_TIDA01539 } from "./lib/subcircuits/Microcontroller_MSP430G2553_TIDA01539.circuit.tsx";
 import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
 import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/CommunicationInterface_TCAN1042_TIDA01428.circuit.tsx";
 import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
@@ -172,6 +174,7 @@ export {
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
+  Microcontroller_MSP430G2553_TIDA01539,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
   CommunicationInterface_TCAN1042_TIDA01428,
   ElectrochromicMirrorDriver_TIDA01539,
@@ -211,6 +214,7 @@ export const TiChipComponents = {
   LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
+  MSP430G2553Q1,
   MSP430F5229,
   MSPM0L1306,
   MSPM33C3x,
@@ -294,6 +298,7 @@ export const TiSubcircuitComponents = {
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
+  Microcontroller_MSP430G2553_TIDA01539,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
   CommunicationInterface_TCAN1042_TIDA01428,
   ElectrochromicMirrorDriver_TIDA01539,
