@@ -17,7 +17,6 @@
     "snapshot": "tsci snapshot",
     "snapshot:update": "tsci snapshot --update",
     "start": "tsci dev",
-    "test": "bun tests/Microcontroller_MSP430FR6007.test.tsx",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write",
     "format:check": "biome format ."
@@ -25,7 +24,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
     "@types/react": "^19.2.17",
-    "tscircuit": "^0.0.2444",
+    "tscircuit": "^0.0.2445",
     "typescript": "^5.0.0"
   },
   "peerDependencies": {
