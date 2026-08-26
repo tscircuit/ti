@@ -54,6 +54,8 @@ export default () => (
     <Microcontroller_MSP430G2332
       name="microcontroller"
       schSheetName="microcontroller"
+      schX={4.5}
+      schY={2.9}
     />
     <USBC_PowerDeliveryProgrammablePowerSupply_TPS61288
       name="usb_c_output"
