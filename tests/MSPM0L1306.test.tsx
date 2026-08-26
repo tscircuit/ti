@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
 import { Microcontroller_MSPM0L1306 } from "../lib/subcircuits/Microcontroller_MSPM0L1306.circuit.tsx";
 
-test("MSPM0L1306 keeps ROSC horizontal and SWD traces straight", async () => {
+test("MSPM0L1306 keeps ROSC, NRST, and SWD traces aligned", async () => {
   const circuit = new Circuit({ platform: { pcbDisabled: true } });
   circuit.add(<Microcontroller_MSPM0L1306 />);
   await circuit.renderUntilSettled();
@@ -42,6 +42,41 @@ test("MSPM0L1306 keeps ROSC horizontal and SWD traces straight", async () => {
     r2Right.source.subcircuit_connectivity_map_key,
     ground.subcircuit_connectivity_map_key,
   );
+
+  const nrst = getPort("U1", "NRST");
+  const c4Top = getPort("C4", "pin1");
+  const c4Ground = getPort("C4", "pin2");
+  assert.ok(c4Top.schematic.center.y < nrst.schematic.center.y);
+  assert.equal(
+    c4Top.source.subcircuit_connectivity_map_key,
+    nrst.source.subcircuit_connectivity_map_key,
+  );
+  assert.equal(
+    c4Ground.source.subcircuit_connectivity_map_key,
+    ground.subcircuit_connectivity_map_key,
+  );
+  const nrstEdges = circuit.db.schematic_trace
+    .list()
+    .filter(
+      (trace) =>
+        trace.subcircuit_connectivity_map_key ===
+        nrst.source.subcircuit_connectivity_map_key,
+    )
+    .flatMap((trace) => trace.edges);
+  const horizontalResetEdges = nrstEdges.filter(
+    (edge) => !close(edge.from.x, edge.to.x),
+  );
+  assert.ok(horizontalResetEdges.length > 0);
+  for (const edge of horizontalResetEdges) {
+    assert.ok(close(edge.from.y, nrst.schematic.center.y));
+    assert.ok(close(edge.to.y, nrst.schematic.center.y));
+  }
+  const resetXs = horizontalResetEdges.flatMap((edge) => [
+    edge.from.x,
+    edge.to.x,
+  ]);
+  assert.ok(close(Math.min(...resetXs), c4Top.schematic.center.x));
+  assert.ok(close(Math.max(...resetXs), nrst.schematic.center.x));
 
   for (const [signal, pin] of [
     ["SWDIO", "pin1"],

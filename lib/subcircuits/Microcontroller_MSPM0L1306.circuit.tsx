@@ -78,7 +78,7 @@ export const Microcontroller_MSPM0L1306 = (props: SubcircuitProps) => (
       footprint="0402"
       schOrientation="vertical"
       schX={-5.5}
-      schY={-1.7}
+      schY={-2.05}
       pcbX={-4.4}
       pcbY={4.5}
       connections={{ pin2: "net.GND" }}
