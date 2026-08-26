@@ -101,6 +101,7 @@ import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
 import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
+import { TIDA010070_OutputProtection } from "./lib/subcircuits/TIDA010070_OutputProtection.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -153,6 +154,7 @@ export {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  TIDA010070_OutputProtection,
 };
 
 export const TiChipComponents = {
@@ -257,6 +259,7 @@ export const TiSubcircuitComponents = {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  TIDA010070_OutputProtection,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
