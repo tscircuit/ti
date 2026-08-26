@@ -114,6 +114,7 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
 - `IsolatedRS485_ISOW7841`
+- `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
@@ -165,6 +166,7 @@ chip is listed individually below, including whether it supports a
 | `LM25122Q1` | `htssop_20` | `LM25122QPWPTQ1` |
 | `LM53603Q1` | `htssop_16` | `LM536035QPWPRQ1` |
 | `LM74610Q1` | `vssop_8` | `LM74610QDGKRQ1` |
+| `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
