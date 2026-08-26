@@ -170,9 +170,26 @@ test("PWM application keeps its seven nets separate and external blocks off the 
     );
   }
 
-  assert.equal(circuit.db.schematic_box.list().length, 2);
   for (const title of ["Controller", "BDC"]) {
     assert.ok(circuit.db.schematic_text.getWhere({ text: title }));
+    const group = circuit.db.source_group.getWhere({ name: title });
+    assert.ok(group);
+    const box = circuit.db.schematic_component.getWhere({
+      source_group_id: group.source_group_id,
+    });
+    assert.ok(box?.is_schematic_group && box.is_box_with_pins);
+    const ports = circuit.db.schematic_port.list({
+      schematic_component_id: box.schematic_component_id,
+    });
+    assert.equal(ports.length, 2);
+    for (const port of ports) {
+      assert.equal(
+        circuit.db.pcb_port.list({ source_port_id: port.source_port_id })
+          .length,
+        0,
+        title + " must not create physical PCB ports",
+      );
+    }
   }
   assert.deepEqual(
     circuit.db.source_component
@@ -182,6 +199,75 @@ test("PWM application keeps its seven nets separate and external blocks off the 
     ["C1", "C2", "U1"],
   );
   assert.equal(circuit.db.pcb_component.list().length, 3);
+});
+
+test("external signal traces have inline labels and no wire crossings", async () => {
+  const circuit = new Circuit();
+  circuit.add(
+    <board width={16} height={12} routingDisabled>
+      <MotorDriver_DRV8210 name="Driver" />
+    </board>,
+  );
+  await circuit.renderUntilSettled();
+  assertNoErrors(circuit);
+
+  type Point = { x: number; y: number };
+  const orientation = (a: Point, b: Point, c: Point) =>
+    (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+  const traces = circuit.db.schematic_trace.list();
+
+  for (const [name, label] of [
+    ["CONTROLLER_PWM1", "PWM1"],
+    ["CONTROLLER_PWM2", "PWM2"],
+    ["MOTOR_OUT1", "OUT1"],
+    ["MOTOR_OUT2", "OUT2"],
+  ]) {
+    const sourceTrace = circuit.db.source_trace.getWhere({ name });
+    assert.ok(sourceTrace);
+    assert.equal(sourceTrace.connected_source_port_ids.length, 2);
+    assert.ok(
+      circuit.db.schematic_text
+        .list()
+        .some(
+          (text) =>
+            text.text === label &&
+            text.source_trace_id === sourceTrace.source_trace_id,
+        ),
+      label + " must be an inline trace label",
+    );
+    assert.equal(
+      circuit.db.schematic_net_label.list({ text: label }).length,
+      0,
+      label + " must not use an anchored net label",
+    );
+
+    const signalTraces = traces.filter(
+      (trace) =>
+        trace.subcircuit_connectivity_map_key ===
+        sourceTrace.subcircuit_connectivity_map_key,
+    );
+    assert.ok(signalTraces.length > 0, label + " must have a routed wire");
+    const otherEdges = traces
+      .filter(
+        (trace) =>
+          trace.subcircuit_connectivity_map_key !==
+          sourceTrace.subcircuit_connectivity_map_key,
+      )
+      .flatMap((trace) => trace.edges);
+    for (const edge of signalTraces.flatMap((trace) => trace.edges)) {
+      assert.ok(!edge.is_crossing, label + " has a crossing marker");
+      for (const other of otherEdges) {
+        const crosses =
+          orientation(edge.from, edge.to, other.from) *
+            orientation(edge.from, edge.to, other.to) <
+            -1e-9 &&
+          orientation(other.from, other.to, edge.from) *
+            orientation(other.from, other.to, edge.to) <
+            -1e-9;
+        assert.ok(!crosses, label + " crosses another net");
+      }
+    }
+  }
 });
 
 test("a parent circuit can connect to all seven external driver signals", async () => {

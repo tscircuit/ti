@@ -12,31 +12,31 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <DRV8210DSGR name="U1" pcbX={0} pcbY={0} schX={0} schY={0} />
 
-    {/* External devices are annotations; labeled nets are the connection points. */}
-    <schematicbox
+    {/* External blocks have schematic ports but no footprint or BOM entry. */}
+    <group
       name="Controller"
-      title="Controller"
-      titleInside
-      titleAlignment="top_center"
-      titleFontSize={0.22}
-      width={2}
-      height={2.2}
+      showAsSchematicBox
+      schTitle="Controller"
+      schWidth={2}
+      schHeight={2.2}
       schX={-5}
       schY={0.1}
+      schPinArrangement={{
+        rightSide: { pins: ["PWM1", "PWM2"], direction: "top-to-bottom" },
+      }}
+    >
+      <port name="PWM1" direction="right" />
+      <port name="PWM2" direction="right" />
+    </group>
+    <trace
+      name="CONTROLLER_PWM1"
+      schDisplayLabel="PWM1"
+      path={[".Controller > .PWM1", ".U1 > .IN1", "net.PWM1"]}
     />
-    <netlabel
-      net="PWM1"
-      schX={-4}
-      schY={0.2}
-      anchorSide="right"
-      connectsTo=".U1 > .IN1"
-    />
-    <netlabel
-      net="PWM2"
-      schX={-4}
-      schY={0}
-      anchorSide="right"
-      connectsTo=".U1 > .IN2"
+    <trace
+      name="CONTROLLER_PWM2"
+      schDisplayLabel="PWM2"
+      path={[".Controller > .PWM2", ".U1 > .IN2", "net.PWM2"]}
     />
     <schematicline x1={-5} y1={1.2} x2={-5} y2={1.6} strokeWidth={0.02} />
     <schematicline x1={-5.14} y1={1.6} x2={-4.86} y2={1.6} strokeWidth={0.02} />
@@ -51,30 +51,31 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
     />
     <schematictext text="GND" schX={-5} schY={-1.6} fontSize={0.18} />
 
-    <schematicbox
+    <group
       name="BDC"
-      title="BDC"
-      titleInside
-      titleAlignment="top_center"
-      titleFontSize={0.22}
-      width={1.6}
-      height={1.5}
+      showAsSchematicBox
+      schTitle="BDC"
+      schWidth={1.6}
+      schHeight={1.5}
       schX={5}
       schY={-0.1}
+      schPinArrangement={{
+        leftSide: { pins: ["OUT1", "OUT2"], direction: "top-to-bottom" },
+      }}
+    >
+      <port name="OUT1" direction="left" />
+      <port name="OUT2" direction="left" />
+    </group>
+    {/* Real schematic ports let these labels stay inline on routed traces. */}
+    <trace
+      name="MOTOR_OUT1"
+      schDisplayLabel="OUT1"
+      path={[".U1 > .OUT1", ".BDC > .OUT1", "net.OUT1"]}
     />
-    <netlabel
-      net="OUT1"
-      schX={4.2}
-      schY={0}
-      anchorSide="left"
-      connectsTo=".U1 > .OUT1"
-    />
-    <netlabel
-      net="OUT2"
-      schX={4.2}
-      schY={-0.2}
-      anchorSide="left"
-      connectsTo=".U1 > .OUT2"
+    <trace
+      name="MOTOR_OUT2"
+      schDisplayLabel="OUT2"
+      path={[".U1 > .OUT2", ".BDC > .OUT2", "net.OUT2"]}
     />
 
     {/* DSG pin 7 selects PWM mode when grounded; pin 9 is the exposed pad. */}
@@ -95,7 +96,13 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
     />
     <trace name="MOTOR_SUPPLY" from=".U1 > .VM" to=".C1 > .pin1" />
     <trace name="VM_BYPASS_SUPPLY" from=".C1 > .pin1" to="net.VM" />
-    <trace name="VM_BYPASS_GND" from=".C1 > .pin2" to="net.GND" />
+    <netlabel
+      net="GND"
+      schX={3}
+      schY={1.2}
+      anchorSide="top"
+      connectsTo=".C1 > .pin2"
+    />
 
     <capacitor
       name="C2"
@@ -108,7 +115,13 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
       schRotation={-90}
     />
     <trace name="VCC_BYPASS_SUPPLY" from=".C2 > .pin1" to="net.VCC" />
-    <trace name="VCC_BYPASS_GND" from=".C2 > .pin2" to="net.GND" />
+    <netlabel
+      net="GND"
+      schX={-2}
+      schY={1.8}
+      anchorSide="top"
+      connectsTo=".C2 > .pin2"
+    />
   </subcircuit>
 );
 

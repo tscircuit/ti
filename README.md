@@ -98,9 +98,12 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 ### DRV8210 PWM motor driver
 
 `MotorDriver_DRV8210` implements the full-bridge PWM application for the
-8-pin WSON `DRV8210DSGR`. The Controller and BDC motor are plain
-`schematicbox` annotations with labeled connection points, not PCB components.
-The two PWM inputs drive IN1 and IN2; OUT1 and OUT2 connect to the motor.
+8-pin WSON `DRV8210DSGR`. The Controller and BDC motor use
+`group showAsSchematicBox` with real schematic signal ports, not PCB components.
+Their port-to-port traces use `schDisplayLabel` for inline PWM1/PWM2 and
+OUT1/OUT2 labels. Local bypass-capacitor ground labels keep ground wiring clear
+of those signals. The two PWM inputs drive IN1 and IN2; OUT1 and OUT2 connect
+to the motor.
 
 ```tsx
 import { MotorDriver_DRV8210 } from "@tsci/tscircuit.ti"
