@@ -95,6 +95,45 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 ## Exported Subcircuits
 
+### INA350 instrumentation amplifier
+
+`InstrumentationAmplifier_INA350` implements the single-supply amplifier
+section of [TI's INA350 datasheet, Figure 9-3](https://www.ti.com/lit/ds/symlink/ina350.pdf).
+The [import example](examples/InstrumentationAmplifier_INA350.circuit.tsx)
+connects all five interface signals to a header on an 18 x 14 mm board.
+It uses `INA350ABSIDSGR` (8-pin WSON, 2 x 2 mm), a 100 nF bypass capacitor,
+and a triangular amplifier symbol. The default gain is 20 V/V; `gain={10}`
+grounds GS instead. SHDN is tied high to enable the amplifier. V-, REF, and
+the exposed pad are grounded. Supply VS with 1.8-5.5 V.
+
+```tsx
+import { InstrumentationAmplifier_INA350 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="18mm" height="14mm">
+    <InstrumentationAmplifier_INA350 name="Amp" gain={20} />
+    <trace from=".Amp .U1 > .VS" to="net.VS" />
+    <trace from=".Amp .U1 > .V_NEG" to="net.GND" />
+    <trace from=".Amp .U1 > .IN_POS" to="net.SENSOR_POS" />
+    <trace from=".Amp .U1 > .IN_NEG" to="net.SENSOR_NEG" />
+    <trace from=".Amp .U1 > .OUT" to="net.ADC_IN" />
+  </board>
+)
+```
+
+The sensor/bridge, excitation reference, and ADC are supplied by the parent
+circuit. Inputs need a DC bias-current return path and must meet the datasheet's
+common-mode/output-swing limits. Figure 9-3 uses VS = 5.5 V and a separate,
+precise 5 V bridge excitation. This module has no ADC, sensor, voltage regulator,
+or analog simulation model. Its 0.1 mm traces require suitable PCB fabrication
+rules; validate the final board's routing and clearances.
+
+For a different REF voltage, split supplies, or external GS/SHDN control,
+use the raw `INA350` or `INA350ABSIDSGR` component. REF must be driven by a
+low-impedance source and the exposed pad must connect to V-. `INA350` supports
+`footprintVariant="wson_8_ep_2x2"`; its underlying ABS part provides gains 10/20,
+not the CDS variant's 30/50 gains. No supplier SKU or 3D model is assumed.
+
 ### DRV8210 PWM motor driver
 
 `MotorDriver_DRV8210` implements the full-bridge PWM application for the
@@ -153,6 +192,7 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
+- `InstrumentationAmplifier_INA350`
 - `IsolatedRS485_ISOW7841`
 - `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
@@ -201,6 +241,7 @@ chip is listed individually below, including whether it supports a
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
+| `INA350` | `wson_8_ep_2x2` | `INA350ABSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |

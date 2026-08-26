@@ -20,6 +20,7 @@ import {
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
   ISOW7841,
   LMK1C1104,
   MSP430G2230ID,
@@ -69,6 +70,7 @@ import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
+import { InstrumentationAmplifier_INA350 } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
 import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.circuit.tsx";
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
@@ -103,6 +105,7 @@ import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_M
 import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
+export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
   BatteryManagement_BQ24072,
@@ -123,6 +126,7 @@ export {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  InstrumentationAmplifier_INA350,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,
@@ -177,6 +181,7 @@ export const TiChipComponents = {
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
   ISOW7841,
   LMK1C1104,
   MSP430G2230ID,
@@ -228,6 +233,7 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  InstrumentationAmplifier_INA350,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,
