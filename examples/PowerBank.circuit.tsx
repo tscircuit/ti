@@ -45,7 +45,12 @@ export default () => (
       name="battery_charging"
       schSheetName="battery_charging"
     />
-    <BoostConverter_TPS61236 name="system_power" schSheetName="system_power" />
+    <BoostConverter_TPS61236
+      name="system_power"
+      schSheetName="system_power"
+      schX={5.5}
+      schY={-3.5}
+    />
     <Microcontroller_MSP430G2332
       name="microcontroller"
       schSheetName="microcontroller"
