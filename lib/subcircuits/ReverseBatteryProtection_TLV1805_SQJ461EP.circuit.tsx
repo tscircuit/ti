@@ -23,12 +23,7 @@ const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
 export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit
-    schMaxTraceDistance="30mm"
-    schTraceAutoLabelEnabled={false}
-    routingDisabled
-    {...props}
-  >
+  <subcircuit schMaxTraceDistance="30mm" routingDisabled {...props}>
     <net name="GND" isPowerNet isGroundNet />
 
     <schematicbox
@@ -302,8 +297,6 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       symbolName="inductor"
       schX={sx(34.798)}
       schY={sy(22.098)}
-      schWidth={0.88}
-      schHeight={0.74}
       pinLabels={{ pin1: "1", pin2: "2" }}
       connections={{ pin1: "net.LOAD_SENS_PCH", pin2: "net.FILTER_MID" }}
     />

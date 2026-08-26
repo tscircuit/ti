@@ -17,13 +17,9 @@ const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
  * rotation, or component re-layout is applied.
  */
 export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
-  <subcircuit
-    schMaxTraceDistance="20mm"
-    schTraceAutoLabelEnabled={false}
-    routingDisabled
-    {...props}
-  >
+  <subcircuit schMaxTraceDistance="20mm" routingDisabled {...props}>
     <net name="GND" isPowerNet isGroundNet />
+    <net name="V3_3" isPowerNet />
 
     <schematicbox
       name="TPS3850_SUPERVISOR_WATCHDOG_SECTION"
@@ -44,16 +40,16 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(22.606)}
       schY={sy(19.05)}
       connections={{
-        VDD: "net.V3P3",
+        VDD: "net.V3_3",
         CWD: "net.CWD",
-        SET0: "net.V3P3",
+        SET0: "net.V3_3",
         CRST: "net.CRST",
         GND: "net.GND",
         SET1: "net.SET1",
         WDI: "net.WDI",
         nWDO: "net.WDO",
         nRESET: "net.RESET_3V3",
-        SENSE: "net.V3P3",
+        SENSE: "net.V3_3",
         PAD: "net.GND",
       }}
     />
@@ -66,7 +62,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(17.78)}
       schY={sy(22.225)}
       schRotation={270}
-      connections={{ pin1: "net.V3P3", pin2: "net.GND" }}
+      connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
     />
     <capacitor
       name="C13"
@@ -77,7 +73,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(19.558)}
       schY={sy(17.399)}
       schRotation={270}
-      connections={{ pin1: "net.V3P3", pin2: "net.GND" }}
+      connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
     />
     <pinheader
       name="J1"
@@ -89,8 +85,8 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(16.002)}
       schY={sy(19.05)}
       schFacingDirection="right"
-      pinLabels={["V3P3", "SET1", "GND"]}
-      connections={{ pin1: "net.V3P3", pin2: "net.SET1", pin3: "net.GND" }}
+      pinLabels={["V3_3", "SET1", "GND"]}
+      connections={{ pin1: "net.V3_3", pin2: "net.SET1", pin3: "net.GND" }}
     />
     <capacitor
       name="C12"
@@ -112,7 +108,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(14.986)}
       schY={sy(17.018)}
       schRotation={90}
-      connections={{ pin1: "net.CRST", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.CRST", pin2: "net.V3_3" }}
     />
 
     <resistor
@@ -124,7 +120,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(25.4)}
       schY={sy(22.098)}
       schRotation={90}
-      connections={{ pin1: "net.WDO", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.WDO", pin2: "net.V3_3" }}
     />
     <resistor
       name="R16"
@@ -135,7 +131,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(26.416)}
       schY={sy(22.86)}
       schRotation={270}
-      connections={{ pin1: "net.V3P3", pin2: "net.WDO_LED_A" }}
+      connections={{ pin1: "net.V3_3", pin2: "net.WDO_LED_A" }}
     />
     <led
       name="D9"
@@ -157,7 +153,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(27.686)}
       schY={sy(22.098)}
       schRotation={90}
-      connections={{ pin1: "net.RESET_3V3", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.RESET_3V3", pin2: "net.V3_3" }}
     />
     <resistor
       name="R15"
@@ -168,7 +164,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(28.702)}
       schY={sy(22.86)}
       schRotation={270}
-      connections={{ pin1: "net.V3P3", pin2: "net.RESET_LED_A" }}
+      connections={{ pin1: "net.V3_3", pin2: "net.RESET_LED_A" }}
     />
     <led
       name="D8"
@@ -209,9 +205,9 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       connections={{ pin1: "net.WDO" }}
     />
 
-    <trace from=".U3 > .pin9" to=".TP6 > .pin1" schDisplayLabel="3.3RESET" />
+    <trace from=".U3 > .pin9" to=".TP6 > .pin1" />
 
-    <port name="V3P3" direction="left" connectsTo="U3.VDD" />
+    <port name="V3_3" direction="left" connectsTo="U3.VDD" />
     <port name="GND" direction="left" connectsTo="U3.GND" />
     <port name="WDI" direction="right" connectsTo="TP1.pin1" />
     <port name="WDO" direction="right" connectsTo="TP8.pin1" />

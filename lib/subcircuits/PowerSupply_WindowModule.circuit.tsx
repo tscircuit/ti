@@ -16,8 +16,9 @@ import { VoltageRegulator_LM73605 } from "./VoltageRegulator_LM73605.circuit.tsx
  * dividers, or grounding arrangements.
  */
 export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
-  <subcircuit schTraceAutoLabelEnabled={false} routingDisabled {...props}>
+  <subcircuit routingDisabled {...props}>
     <net name="GND" isPowerNet isGroundNet />
+    <net name="V3_3" isPowerNet />
 
     <ReverseBatteryProtection_TLV1805_SQJ461EP
       name="reverseBattery"
@@ -34,7 +35,7 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
       schY={-8}
       connections={{
         VIN1: "net.VIN1",
-        V3P3: "net.V3P3",
+        V3_3: "net.V3_3",
         GND: "net.GND",
         V_CTRL1: "net.V_CTRL1",
       }}
@@ -44,7 +45,7 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
       schX={23}
       schY={-8}
       connections={{
-        V3P3: "net.V3P3",
+        V3_3: "net.V3_3",
         GND: "net.GND",
         WDI: "net.WDI",
         WDO: "net.WDO",
@@ -53,13 +54,13 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
     />
 
     <trace from=".reverseBattery > .VIN1" to=".regulator > .VIN1" />
-    <trace from=".regulator > .V3P3" to=".supervisorWatchdog > .V3P3" />
+    <trace from=".regulator > .V3_3" to=".supervisorWatchdog > .V3_3" />
     <trace from=".reverseBattery > .GND" to=".regulator > .GND" />
     <trace from=".regulator > .GND" to=".supervisorWatchdog > .GND" />
 
     <port name="VBATT" direction="left" connectsTo="reverseBattery.VBATT" />
     <port name="GND" direction="left" connectsTo="reverseBattery.GND" />
-    <port name="V3P3" direction="right" connectsTo="regulator.V3P3" />
+    <port name="V3_3" direction="right" connectsTo="regulator.V3_3" />
     <port name="V_CTRL1" direction="right" connectsTo="regulator.V_CTRL1" />
     <port name="WDI" direction="left" connectsTo="supervisorWatchdog.WDI" />
     <port name="WDO" direction="right" connectsTo="supervisorWatchdog.WDO" />

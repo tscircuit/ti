@@ -314,7 +314,7 @@ test("regulator child preserves the TIDA-050008 sheet-2 netlist", async () => {
     ["U2", 16],
     ["RPG", 1],
   ]);
-  assertNet(circuitJson, "V3P3", [
+  assertNet(circuitJson, "V3_3", [
     ["L1", 2],
     ["CO", 2],
     ["CO1", 1],
@@ -384,7 +384,7 @@ test("supervisor/watchdog child preserves the TIDA-050008 sheet-3 netlist", asyn
   );
   expectNoCircuitErrors(circuitJson);
 
-  assertNet(circuitJson, "V3P3", [
+  assertNet(circuitJson, "V3_3", [
     ["U3", 1],
     ["U3", 3],
     ["U3", 10],
@@ -460,8 +460,8 @@ test("composite joins only the shared TI sheet nets", async () => {
   );
   assertSubcircuitTrace(
     circuitJson,
-    ["regulator", "V3P3"],
-    ["supervisorWatchdog", "V3P3"],
+    ["regulator", "V3_3"],
+    ["supervisorWatchdog", "V3_3"],
   );
   assertSubcircuitTrace(
     circuitJson,
@@ -476,8 +476,8 @@ test("composite joins only the shared TI sheet nets", async () => {
 
   assertSubcircuitPortNet(circuitJson, "reverseBattery", "VIN1", "VIN1");
   assertSubcircuitPortNet(circuitJson, "regulator", "VIN1", "VIN1");
-  assertSubcircuitPortNet(circuitJson, "regulator", "V3P3", "V3P3");
-  assertSubcircuitPortNet(circuitJson, "supervisorWatchdog", "V3P3", "V3P3");
+  assertSubcircuitPortNet(circuitJson, "regulator", "V3_3", "V3_3");
+  assertSubcircuitPortNet(circuitJson, "supervisorWatchdog", "V3_3", "V3_3");
   assertSubcircuitPortNet(circuitJson, "reverseBattery", "GND", "GND");
   assertSubcircuitPortNet(circuitJson, "regulator", "GND", "GND");
   assertSubcircuitPortNet(circuitJson, "supervisorWatchdog", "GND", "GND");

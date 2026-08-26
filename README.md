@@ -30,6 +30,10 @@ export default () => (
 
 ## Complete Examples
 
+The [`AutomotiveWindowModule_PowerSupply.circuit.tsx`](examples/AutomotiveWindowModule_PowerSupply.circuit.tsx)
+example is intentionally thin: it imports and places the verified
+`PowerSupply_WindowModule` composite without duplicating its TI-derived wiring.
+
 The [`BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx`](examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx)
 example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
@@ -262,10 +266,9 @@ and a TPS7B6933-Q1 LDO, so it is not used to invent a cross-reference composite.
 
 All four functions on TI's high-level Power Supply block are covered: reverse
 battery protection, voltage regulation, supply supervision, and watchdog. The
-source net names `+3.3V`, `SS/TRK`, and `3.3RESET` are recorded on the matching
-native electrical traces with `schDisplayLabel`; selector-safe TSX
-net/interface names are `V3P3`, `SS_TRK`, and `RESET_3V3` because tscircuit net
-selectors cannot contain those source punctuation characters.
+source net names `+3.3V`, `SS/TRK`, and `3.3RESET` map to the selector-safe
+native TSX net/interface names `V3_3`, `SS_TRK`, and `RESET_3V3`, because
+tscircuit net selectors cannot contain the source punctuation characters.
 
 The TI window-module page's uncited product recommendations (LM74500-Q1,
 TPS7B4255-Q1, TPS7B63-Q1, TPS7B68-Q1, TPS7E81-Q1, and TPS7E82-Q1) are not

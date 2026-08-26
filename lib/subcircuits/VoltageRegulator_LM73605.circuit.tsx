@@ -16,8 +16,6 @@ const NetTie = () => (
       internallyConnectedPins={[[1, 2]]}
       schX={sx(22.86)}
       schY={sy(3.048)}
-      schWidth={0.508}
-      schHeight={0.4}
       connections={{ pin1: "net.GND", pin2: "net.AGND" }}
     />
     <schematictext
@@ -39,14 +37,10 @@ const NetTie = () => (
  * rotation, or component re-layout is applied.
  */
 export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
-  <subcircuit
-    schMaxTraceDistance="25mm"
-    schTraceAutoLabelEnabled={false}
-    routingDisabled
-    {...props}
-  >
+  <subcircuit schMaxTraceDistance="25mm" routingDisabled {...props}>
     <net name="GND" isPowerNet isGroundNet />
     <net name="AGND" isPowerNet isGroundNet />
+    <net name="V3_3" isPowerNet />
 
     <schematicbox
       name="LM73605_REGULATOR_SECTION"
@@ -176,7 +170,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(24.892)}
       schY={sy(10.4775)}
       schOrientation="horizontal"
-      connections={{ pin1: "net.SW", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.SW", pin2: "net.V3_3" }}
     />
     <capacitor
       name="CO"
@@ -187,7 +181,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(26.289)}
       schY={sy(9.525)}
       schRotation={90}
-      connections={{ pin1: "net.GND", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.GND", pin2: "net.V3_3" }}
     />
     {[
       ["CO1", 27.813],
@@ -206,7 +200,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
         schX={sx(Number(x))}
         schY={sy(9.525)}
         schRotation={270}
-        connections={{ pin1: "net.V3P3", pin2: "net.GND" }}
+        connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
       />
     ))}
 
@@ -252,7 +246,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(24.13)}
       schY={sy(8.128)}
       schOrientation="horizontal"
-      connections={{ pin1: "net.PGOOD_NET", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.PGOOD_NET", pin2: "net.V3_3" }}
     />
     <capacitor
       name="CFF"
@@ -263,7 +257,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(25.908)}
       schY={sy(6.223)}
       schRotation={270}
-      connections={{ pin1: "net.V3P3", pin2: "net.FB1" }}
+      connections={{ pin1: "net.V3_3", pin2: "net.FB1" }}
     />
     <resistor
       name="RFBT"
@@ -274,7 +268,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(27.178)}
       schY={sy(6.096)}
       schRotation={90}
-      connections={{ pin1: "net.FB1", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.FB1", pin2: "net.V3_3" }}
     />
     <resistor
       name="RFBB"
@@ -318,7 +312,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(33.401)}
       schY={sy(6.096)}
       schOrientation="horizontal"
-      connections={{ pin1: "net.BIAS", pin2: "net.V3P3" }}
+      connections={{ pin1: "net.BIAS", pin2: "net.V3_3" }}
     />
 
     <NetTie />
@@ -338,7 +332,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
       schX={sx(36.83)}
       schY={sy(10.5156)}
-      connections={{ pin1: "net.V3P3" }}
+      connections={{ pin1: "net.V3_3" }}
     />
     <testpoint
       name="TP19"
@@ -367,11 +361,11 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       connections={{ pin1: "net.GND" }}
     />
 
-    <trace from=".P3 > .pin1" to=".TP18 > .pin1" schDisplayLabel="+3.3V" />
-    <trace from=".U2 > .pin10" to=".CSS > .pin1" schDisplayLabel="SS/TRK" />
+    <trace from=".P3 > .pin1" to=".TP18 > .pin1" />
+    <trace from=".U2 > .pin10" to=".CSS > .pin1" />
 
     <port name="VIN1" direction="left" connectsTo="Cbulk1.pin1" />
-    <port name="V3P3" direction="right" connectsTo="P3.pin1" />
+    <port name="V3_3" direction="right" connectsTo="P3.pin1" />
     <port name="GND" direction="right" connectsTo="P4.pin1" />
     <port name="V_CTRL1" direction="right" connectsTo="TP5.pin1" />
   </subcircuit>
