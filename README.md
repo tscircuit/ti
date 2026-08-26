@@ -177,6 +177,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `PMP22606_FilterRectifier` — PMP22606 EMI filter, inrush, and rectifier input section reproduced from TI's native TIDMBE3 schematic
 
 ## Exported Chips
 
