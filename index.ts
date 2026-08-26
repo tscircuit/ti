@@ -28,6 +28,7 @@ import {
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
+  MSPM0L1306,
   MSPM33C3x,
   MSPM0G3507,
   OPT3001,
@@ -82,6 +83,7 @@ import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.c
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
 import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
 import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit.tsx";
+import { Microcontroller_MSPM0L1306 } from "./lib/subcircuits/Microcontroller_MSPM0L1306.circuit.tsx";
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
@@ -142,6 +144,7 @@ export {
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
+  Microcontroller_MSPM0L1306,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
@@ -205,6 +208,7 @@ export const TiChipComponents = {
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
+  MSPM0L1306,
   MSPM33C3x,
   MSPM0G3507,
   OPT3001,
@@ -261,6 +265,7 @@ export const TiSubcircuitComponents = {
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
+  Microcontroller_MSPM0L1306,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
