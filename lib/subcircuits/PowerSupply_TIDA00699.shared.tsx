@@ -99,7 +99,6 @@ const ReferenceCapacitor = ({
 }: ReferenceCapacitorProps) => (
   <capacitor
     {...capacitorProps}
-    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(capacitorProps.name)}
@@ -113,7 +112,6 @@ const ReferenceResistor = ({
 }: ReferenceResistorProps) => (
   <resistor
     {...resistorProps}
-    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(resistorProps.name)}
@@ -127,7 +125,6 @@ const ReferenceInductor = ({
 }: ReferenceInductorProps) => (
   <inductor
     {...inductorProps}
-    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(inductorProps.name)}
@@ -141,7 +138,6 @@ const ReferenceDiode = ({
 }: ReferenceDiodeProps) => (
   <diode
     {...diodeProps}
-    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(diodeProps.name)}
@@ -155,7 +151,6 @@ const ReferencePinHeader = ({
 }: ReferencePinHeaderProps) => (
   <pinheader
     {...pinHeaderProps}
-    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(pinHeaderProps.name)}
@@ -169,7 +164,6 @@ const ReferenceTestpoint = ({
 }: ReferenceTestpointProps) => (
   <testpoint
     {...testpointProps}
-    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(testpointProps.name)}
@@ -1022,63 +1016,6 @@ const referenceTestpoints = [
   },
 ] satisfies ReferenceTestpointProps[];
 
-type ReferenceConnectedComponent = {
-  name: string;
-  connections: Record<string, string | undefined>;
-  referenceSchX: number;
-  referenceSchY: number;
-};
-
-type ReferenceTraceProps = {
-  from: string;
-  to: string;
-};
-
-type ReferenceTraceEndpoint = {
-  componentPortSelector: string;
-  referenceSchX: number;
-  referenceSchY: number;
-};
-
-const ReferenceTrace = ({ from, to }: ReferenceTraceProps) => (
-  <trace from={from} to={to} />
-);
-
-const referenceLabeledNetNames = new Set([
-  "GND",
-  "VBAT",
-  "VBAT_PROTECT",
-  "VBAT_FILT",
-  "VBST",
-  "VSYS",
-  "CS_P",
-  "CS_N",
-  "SHT_BST",
-  "SHT_BCK",
-  "SYNC_BST",
-  "SYNC_BUCK",
-  "RST_OUT",
-  "SVS_OUT",
-]);
-
-const referenceTraceOverridesByNetName: Partial<
-  Record<string, ReferenceTraceProps[]>
-> = {
-  NetC13_1: [
-    { from: ".U2 > .pin20", to: ".C13 > .pin1" },
-    { from: ".U2 > .pin20", to: ".D4 > .pin1" },
-  ],
-  NetC12_2: [
-    { from: ".U2 > .pin17", to: ".C12 > .pin2" },
-    { from: ".U2 > .pin17", to: ".D4 > .pin2" },
-    { from: ".R19 > .pin1", to: ".D4 > .pin2" },
-  ],
-  NetR19_2: [
-    { from: ".U2 > .pin13", to: ".R20 > .pin2" },
-    { from: ".U2 > .pin13", to: ".R19 > .pin2" },
-  ],
-};
-
 const d1Connections = {
   pin1: "net.NetC3_1",
   pin2: "net.VBST",
@@ -1166,180 +1103,6 @@ const u4Connections = {
   pin4: "net.NetC26_1",
   pin5: "net.NetR17_1",
   pin6: "net.VSYS",
-};
-
-const referenceSpecialComponentConnections = [
-  {
-    name: "D1",
-    connections: d1Connections,
-    referenceSchX: -10.4,
-    referenceSchY: -2.1,
-  },
-  {
-    name: "DSHT",
-    connections: dshtConnections,
-    referenceSchX: 9.5046,
-    referenceSchY: 0.1828,
-  },
-  {
-    name: "Q1",
-    connections: q1Connections,
-    referenceSchX: -2.6229,
-    referenceSchY: -5.849,
-  },
-  {
-    name: "Q2",
-    connections: q2Connections,
-    referenceSchX: -1.645,
-    referenceSchY: -1.5262,
-  },
-  {
-    name: "Q3",
-    connections: q3Connections,
-    referenceSchX: -6.5801,
-    referenceSchY: 7.0645,
-  },
-  {
-    name: "U1",
-    connections: u1Connections,
-    referenceSchX: -6.7629,
-    referenceSchY: 4.5695,
-  },
-  {
-    name: "U2",
-    connections: u2Connections,
-    referenceSchX: -6.3973,
-    referenceSchY: -5.1179,
-  },
-  {
-    name: "U3",
-    connections: u3Connections,
-    referenceSchX: 7.8596,
-    referenceSchY: -5.3007,
-  },
-  {
-    name: "U4",
-    connections: u4Connections,
-    referenceSchX: 10.053,
-    referenceSchY: 4.7523,
-  },
-] satisfies ReferenceConnectedComponent[];
-
-const createReferenceTraceProps = ({
-  connectedComponents,
-}: {
-  connectedComponents: ReferenceConnectedComponent[];
-}): ReferenceTraceProps[] => {
-  const directTraceEndpointsByNetName: Record<
-    string,
-    ReferenceTraceEndpoint[]
-  > = {};
-  const referenceTraceProps: ReferenceTraceProps[] = [];
-
-  for (const connectedComponent of connectedComponents) {
-    for (const [portName, netSelector] of Object.entries(
-      connectedComponent.connections,
-    )) {
-      if (!netSelector) continue;
-
-      const componentPortSelector = `.${connectedComponent.name} > .${portName}`;
-      const netName = netSelector.slice("net.".length);
-
-      if (referenceLabeledNetNames.has(netName)) {
-        referenceTraceProps.push({
-          from: componentPortSelector,
-          to: netSelector,
-        });
-        continue;
-      }
-
-      directTraceEndpointsByNetName[netName] ??= [];
-      directTraceEndpointsByNetName[netName].push({
-        componentPortSelector,
-        referenceSchX: connectedComponent.referenceSchX,
-        referenceSchY: connectedComponent.referenceSchY,
-      });
-    }
-  }
-
-  for (const [netName, traceEndpoints] of Object.entries(
-    directTraceEndpointsByNetName,
-  )) {
-    const referenceTraceOverrides = referenceTraceOverridesByNetName[netName];
-    if (referenceTraceOverrides) {
-      referenceTraceProps.push(...referenceTraceOverrides);
-      continue;
-    }
-
-    const [firstTraceEndpoint, ...unconnectedTraceEndpoints] = traceEndpoints;
-
-    if (!firstTraceEndpoint || unconnectedTraceEndpoints.length === 0) {
-      throw new Error(
-        `Internal reference net ${netName} has fewer than two endpoints`,
-      );
-    }
-
-    const connectedTraceEndpoints = [firstTraceEndpoint];
-
-    while (unconnectedTraceEndpoints.length > 0) {
-      let nearestConnectedEndpointIndex = 0;
-      let nearestUnconnectedEndpointIndex = 0;
-      let nearestSquaredDistance = Number.POSITIVE_INFINITY;
-
-      for (
-        let connectedEndpointIndex = 0;
-        connectedEndpointIndex < connectedTraceEndpoints.length;
-        connectedEndpointIndex += 1
-      ) {
-        const connectedTraceEndpoint =
-          connectedTraceEndpoints[connectedEndpointIndex];
-        if (!connectedTraceEndpoint) continue;
-
-        for (
-          let unconnectedEndpointIndex = 0;
-          unconnectedEndpointIndex < unconnectedTraceEndpoints.length;
-          unconnectedEndpointIndex += 1
-        ) {
-          const unconnectedTraceEndpoint =
-            unconnectedTraceEndpoints[unconnectedEndpointIndex];
-          if (!unconnectedTraceEndpoint) continue;
-
-          const deltaX =
-            connectedTraceEndpoint.referenceSchX -
-            unconnectedTraceEndpoint.referenceSchX;
-          const deltaY =
-            connectedTraceEndpoint.referenceSchY -
-            unconnectedTraceEndpoint.referenceSchY;
-          const squaredDistance = deltaX * deltaX + deltaY * deltaY;
-
-          if (squaredDistance < nearestSquaredDistance) {
-            nearestConnectedEndpointIndex = connectedEndpointIndex;
-            nearestUnconnectedEndpointIndex = unconnectedEndpointIndex;
-            nearestSquaredDistance = squaredDistance;
-          }
-        }
-      }
-
-      const nearestConnectedTraceEndpoint =
-        connectedTraceEndpoints[nearestConnectedEndpointIndex];
-      const nearestUnconnectedTraceEndpoint = unconnectedTraceEndpoints.splice(
-        nearestUnconnectedEndpointIndex,
-        1,
-      )[0];
-
-      if (!nearestConnectedTraceEndpoint || !nearestUnconnectedTraceEndpoint) {
-        throw new Error(`Could not connect internal reference net ${netName}`);
-      }
-
-      referenceTraceProps.push({
-        from: nearestConnectedTraceEndpoint.componentPortSelector,
-        to: nearestUnconnectedTraceEndpoint.componentPortSelector,
-      });
-      connectedTraceEndpoints.push(nearestUnconnectedTraceEndpoint);
-    }
-  }
-
-  return referenceTraceProps;
 };
 
 export type Tida00699ReferenceSectionName =
@@ -1474,16 +1237,6 @@ const referenceSectionVisualByName: Record<
   },
 };
 
-const referenceConnectedComponents: ReferenceConnectedComponent[] = [
-  ...referenceCapacitors,
-  ...referenceResistors,
-  ...referenceInductors,
-  ...referenceDiodes,
-  ...referenceConnectors,
-  ...referenceTestpoints,
-  ...referenceSpecialComponentConnections,
-];
-
 type ReferenceSpecialComponentsProps = {
   componentNames: ReadonlySet<string>;
   schSectionName: Tida00699ReferenceSectionName;
@@ -1497,6 +1250,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("D1") && (
       <BAS4005
         name="D1"
+        connections={d1Connections}
         schSectionName={schSectionName}
         schX={-10.4 * schematicScale}
         schY={-2.1 * schematicScale}
@@ -1505,6 +1259,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("DSHT") && (
       <BAS4005
         name="DSHT"
+        connections={dshtConnections}
         schSectionName={schSectionName}
         schX={9.5046 * schematicScale}
         schY={0.1828 * schematicScale}
@@ -1513,6 +1268,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q1") && (
       <CSD18531Q5A
         name="Q1"
+        connections={q1Connections}
         schSectionName={schSectionName}
         schX={-2.6229 * schematicScale}
         schY={-5.849 * schematicScale}
@@ -1522,6 +1278,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q2") && (
       <CSD18531Q5A
         name="Q2"
+        connections={q2Connections}
         schSectionName={schSectionName}
         schX={-1.645 * schematicScale}
         schY={-1.5262 * schematicScale}
@@ -1530,6 +1287,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q3") && (
       <SQ4850EY
         name="Q3"
+        connections={q3Connections}
         schSectionName={schSectionName}
         schX={-6.5801 * schematicScale}
         schY={7.0645 * schematicScale}
@@ -1538,6 +1296,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U1") && (
       <LM74610QDGKRQ1
         name="U1"
+        connections={u1Connections}
         schSectionName={schSectionName}
         schX={-6.7629 * schematicScale}
         schY={4.5695 * schematicScale}
@@ -1558,6 +1317,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U2") && (
       <LM25122QPWPTQ1
         name="U2"
+        connections={u2Connections}
         schSectionName={schSectionName}
         schX={-6.3973 * schematicScale}
         schY={-5.1179 * schematicScale}
@@ -1589,6 +1349,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U3") && (
       <LM536035QPWPRQ1
         name="U3"
+        connections={u3Connections}
         schSectionName={schSectionName}
         schX={7.8596 * schematicScale}
         schY={-5.3007 * schematicScale}
@@ -1613,6 +1374,7 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U4") && (
       <TPS3808G01QDBVRQ1
         name="U4"
+        connections={u4Connections}
         schSectionName={schSectionName}
         schX={10.053 * schematicScale}
         schY={4.7523 * schematicScale}
@@ -1649,11 +1411,6 @@ export const Tida00699ReferenceSectionContents = ({
 }: Tida00699ReferenceSectionContentsProps) => {
   const componentNames = new Set(referenceComponentNamesBySection[sectionName]);
   const referenceSectionVisual = referenceSectionVisualByName[sectionName];
-  const referenceTraceProps = createReferenceTraceProps({
-    connectedComponents: referenceConnectedComponents.filter(({ name }) =>
-      componentNames.has(name),
-    ),
-  });
 
   return (
     <>
@@ -1744,12 +1501,6 @@ export const Tida00699ReferenceSectionContents = ({
         componentNames={componentNames}
         schSectionName={sectionName}
       />
-      {referenceTraceProps.map((traceProps) => (
-        <ReferenceTrace
-          key={`${traceProps.from}->${traceProps.to}`}
-          {...traceProps}
-        />
-      ))}
     </>
   );
 };

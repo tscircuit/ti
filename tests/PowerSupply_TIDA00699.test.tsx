@@ -1,6 +1,7 @@
 /// <reference types="node" />
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
 import type { SubcircuitProps } from "@tscircuit/props";
@@ -110,6 +111,30 @@ const sectionModules: readonly [
   [PowerSupply_Buck_LM53603_TIDA00699, "WVIN Buck"],
   [PowerSupply_Supervisor_TPS3808_TIDA00699, "SVS & Header"],
 ];
+
+test("TIDA-00699 delegates trace topology and routing to native tscircuit behavior", () => {
+  const implementationSource = readFileSync(
+    new URL(
+      "../lib/subcircuits/PowerSupply_TIDA00699.shared.tsx",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+
+  for (const forbiddenRoutingConstruct of [
+    "schematicRouteHints",
+    "routeHints",
+    "<tracehint",
+    "referenceTraceOverridesByNetName",
+    "createReferenceTraceProps",
+  ]) {
+    assert.equal(
+      implementationSource.includes(forbiddenRoutingConstruct),
+      false,
+      `${forbiddenRoutingConstruct} must not be used`,
+    );
+  }
+});
 
 function getPort(circuit: TestCircuit, componentName: string, pin: string) {
   const component = circuit.db.source_component.getWhere({

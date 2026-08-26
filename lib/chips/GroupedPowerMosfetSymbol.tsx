@@ -29,6 +29,11 @@ const PORT_DIRECTIONS = {
 const PRIMARY_COLOR = "#840000";
 const REFERENCE_COLOR = "#006464";
 
+const getNativeMosfetSymbol = (symbolName: string): SchSymbol | undefined =>
+  Object.entries(symbols).find(
+    ([candidateSymbolName]) => candidateSymbolName === symbolName,
+  )?.[1];
+
 /**
  * Adapts the standard tscircuit N-channel MOSFET symbol to a package whose
  * source and drain each occupy several internally connected physical pins.
@@ -40,9 +45,7 @@ export const GroupedPowerMosfetSymbol = ({
   sourcePins,
   drainPins,
 }: GroupedPowerMosfetSymbolProps) => {
-  const nativeSymbol = symbols[MOSFET_SYMBOL_NAMES[orientation]] as unknown as
-    | SchSymbol
-    | undefined;
+  const nativeSymbol = getNativeMosfetSymbol(MOSFET_SYMBOL_NAMES[orientation]);
   if (!nativeSymbol) {
     throw new Error("The native N-channel MOSFET symbol is unavailable");
   }
