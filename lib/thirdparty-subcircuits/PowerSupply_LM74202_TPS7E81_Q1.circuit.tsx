@@ -3,6 +3,74 @@ import "tscircuit";
 import { LM74202QPWPRQ1 } from "../chips/LM74202QPWPRQ1.circuit.tsx";
 import { TPS7E8133QDBVRQ1 } from "../chips/TPS7E8133QDBVRQ1.circuit.tsx";
 
+const bidirectionalTvsSymbol = (
+  <symbol>
+    <port
+      name="pin2"
+      pinNumber={2}
+      schX={0}
+      schY={1.2}
+      direction="up"
+      schStemLength={0.72}
+    />
+    <schematicpath
+      points={[
+        { x: -0.32, y: 0.48 },
+        { x: 0.32, y: 0.48 },
+        { x: 0, y: 0.04 },
+        { x: -0.32, y: 0.48 },
+      ]}
+      strokeWidth={0.025}
+      strokeColor="#840000"
+      fillColor="#840000"
+      isFilled
+    />
+    <schematicpath
+      points={[
+        { x: -0.32, y: -0.48 },
+        { x: 0.32, y: -0.48 },
+        { x: 0, y: -0.04 },
+        { x: -0.32, y: -0.48 },
+      ]}
+      strokeWidth={0.025}
+      strokeColor="#840000"
+      fillColor="#840000"
+      isFilled
+    />
+    <schematicline
+      x1={-0.04}
+      y1={0.03}
+      x2={-0.43}
+      y2={-0.3}
+      strokeWidth={0.04}
+      color="#840000"
+    />
+    <schematicline
+      x1={0.04}
+      y1={-0.03}
+      x2={0.43}
+      y2={0.3}
+      strokeWidth={0.04}
+      color="#840000"
+    />
+    <port
+      name="pin1"
+      pinNumber={1}
+      schX={0}
+      schY={-1.2}
+      direction="down"
+      schStemLength={0.72}
+    />
+    <schematictext
+      text="{NAME}"
+      schX={0.55}
+      schY={-0.72}
+      fontSize={0.22}
+      anchor="left"
+    />
+  </symbol>
+);
+
 /**
  * Datasheet-derived power supply for the Rearview Mirror Module.
  *
@@ -31,9 +99,8 @@ export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
       variant="tvs"
       schX={-9.5}
       schY={-1.6}
-      
-      schRotation={90}
-      connections={{ anode: "net.GND", cathode: "net.VIN" }}
+      symbol={bidirectionalTvsSymbol}
+      connections={{ pin1: "net.GND", pin2: "net.VIN" }}
     />
     <capacitor
       name="CIN"
