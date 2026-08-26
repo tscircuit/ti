@@ -46,7 +46,6 @@ const noConnectPins = Array.from({ length: 100 }, (_, index) => index + 1)
 export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
   <subcircuit
     schMaxTraceDistance="40mm"
-    schTraceAutoLabelEnabled={false}
     // The extracted source is schematic-only. Native schematic autorouting
     // remains enabled; routingDisabled prevents a synthesized PCB routing.
     // Its checked-in snapshot is schematic-only because no exact CAD exists.
@@ -378,8 +377,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
       noConnect={["NC_6", "NC_10", "NC_13"]}
       schX={-17.7}
       schY={9.7}
-      schWidth="2.8mm"
-      schHeight="2.4mm"
       schPinArrangement={{
         leftSide: {
           direction: "top-to-bottom",
