@@ -425,7 +425,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       channelType="n"
       mosfetMode="enhancement"
       schRotation={90}
-      schX={8.53}
+      schX={8.03}
       schY={8.02}
     />
     <mosfet
