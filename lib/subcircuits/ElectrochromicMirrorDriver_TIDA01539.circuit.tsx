@@ -140,7 +140,6 @@ export const ElectrochromicMirrorDriver_TIDA01539 = (
       footprint="electrolytic_d6.3mm_p2.5mm"
       schX={5.4}
       schY={1.8}
-
       connections={{ pin1: "net.VSUP", pin2: "net.GND" }}
     />
 
