@@ -120,6 +120,28 @@ test("MotorThermalProtection_TMP390 exposes and connects every interface net", a
     expect(port).toBeDefined();
     return port!.subcircuit_connectivity_map_key;
   };
+  const schematicPortCenter = (
+    componentName: string | null,
+    portName: string,
+  ) => {
+    const sourceComponentId = componentName ? componentId(componentName) : null;
+    const sourcePort = sourcePorts.find(
+      (element) =>
+        element.source_component_id === sourceComponentId &&
+        element.name === portName,
+    );
+    expect(sourcePort).toBeDefined();
+    const schematicPort = circuitJson.find(
+      (element) =>
+        element.type === "schematic_port" &&
+        element.source_port_id === sourcePort!.source_port_id,
+    );
+    expect(schematicPort).toBeDefined();
+    if (!schematicPort || schematicPort.type !== "schematic_port") {
+      throw new Error(`Missing schematic port ${componentName}.${portName}`);
+    }
+    return schematicPort.center;
+  };
   const expectSameNet = (
     expected: [string | null, string],
     ...members: Array<[string | null, string]>
@@ -143,6 +165,25 @@ test("MotorThermalProtection_TMP390 exposes and connects every interface net", a
   expectSameNet(["U1", "SETB"], ["R2", "pin1"]);
   expectSameNet([null, "OUTA"], ["U1", "OUTA"], ["R3", "pin2"]);
   expectSameNet([null, "OUTB"], ["U1", "OUTB"], ["R4", "pin2"]);
+
+  const groundY = schematicPortCenter(null, "GND").y;
+  expect(schematicPortCenter("R1", "pin2").y).toBeCloseTo(groundY);
+  expect(schematicPortCenter("R2", "pin2").y).toBeCloseTo(groundY);
+  expect(schematicPortCenter("U1", "OUTA").y).toBeCloseTo(
+    schematicPortCenter(null, "OUTA").y,
+  );
+  expect(schematicPortCenter("U1", "OUTB").y).toBeCloseTo(
+    schematicPortCenter(null, "OUTB").y,
+  );
+
+  const u1Schematic = circuitJson.find(
+    (element) =>
+      element.type === "schematic_component" &&
+      element.source_component_id === componentId("U1"),
+  );
+  expect(u1Schematic).toMatchObject({
+    size: { width: 4.5, height: 3.4 },
+  });
 
   expect(
     circuitJson.filter(

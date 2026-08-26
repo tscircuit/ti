@@ -34,11 +34,17 @@ export const TMP390_FIGURE_8_3_DEFAULTS = {
  * Coordinate transform from the attached Figure 7-1 capture:
  *   schX = (sourcePixelX - 573) * 0.020 mm
  *   schY = (389 - sourcePixelY) * 0.020 mm
- * The source origin is the TMP39x block center at (573, 389) px. Source
- * centers used are C1 (154,376), R1 (274,456), R2 (321,475), R3 (791,290),
+ * The source origin is the TMP39x block center at (573, 389) px. Measured
+ * source centers are C1 (154,376), R1 (274,456), R2 (321,475), R3 (791,290),
  * R4 (859,290), VDD (573,197), VDDIO (824,198), GND (575,549), OUTA
- * (1000,351), and OUTB (1000,427). Refdes are implementation-defined because
- * Figure 7-1 supplies functional labels but no component designators.
+ * (1000,351), and OUTB (1000,427).
+ *
+ * Native-symbol normalization keeps both threshold-resistor lower pins on the
+ * source ground baseline at schY = -3.2 mm, so R1/R2 centers are -2.9 mm.
+ * U1's paired side pins use the source's 1.52 mm vertical separation, and its
+ * box is 4.5 x 3.4 mm to match the requested visual proportion. Refdes are
+ * implementation-defined because Figure 7-1 supplies functional labels but no
+ * component designators.
  */
 export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
   <subcircuit
@@ -81,7 +87,7 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       resistance="78.7kohm"
       tolerance="1%"
       schX={-5.98}
-      schY={-1.34}
+      schY={-2.9}
       schOrientation="vertical"
       connections={{ pin2: "net.GND" }}
     />
@@ -90,7 +96,7 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
       resistance="215kohm"
       tolerance="1%"
       schX={-5.04}
-      schY={-1.72}
+      schY={-2.9}
       schOrientation="vertical"
       connections={{ pin2: "net.GND" }}
     />
