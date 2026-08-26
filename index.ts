@@ -10,6 +10,7 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  DAC101C081Q,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -17,13 +18,17 @@ import {
   HDC3022,
   INA237,
   ISOW7841,
+  LM50HVQ1,
   MSP430G2230ID,
   MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
+  OPT3001,
   SN65HVD1473,
   TAS2505,
+  TCAN1042HGV,
   TLC59116,
+  TLV316,
   TLV755P,
   TMP1827,
   TMP1075,
@@ -35,6 +40,7 @@ import {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS92638,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -84,6 +90,11 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
+import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/CommunicationInterface_TCAN1042_TIDA01428.circuit.tsx";
+import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
+import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
+import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
+import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -129,6 +140,11 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  CommunicationInterface_TCAN1042_TIDA01428,
+  ElectrochromicMirrorDriver_TIDA01539,
+  LampDriver_TPS92638_TIDA00356,
+  LightSensor_OPT3001_TIDA01539,
+  TemperatureSensor_LM50HV_Q1,
 };
 
 export const TiChipComponents = {
@@ -143,6 +159,7 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  DAC101C081Q,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -150,13 +167,17 @@ export const TiChipComponents = {
   HDC3022,
   INA237,
   ISOW7841,
+  LM50HVQ1,
   MSP430G2230ID,
   MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
+  OPT3001,
   SN65HVD1473,
   TAS2505,
+  TCAN1042HGV,
   TLC59116,
+  TLV316,
   TLV755P,
   TMP1827,
   TMP1075,
@@ -168,6 +189,7 @@ export const TiChipComponents = {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS92638,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
@@ -216,6 +238,11 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  CommunicationInterface_TCAN1042_TIDA01428,
+  ElectrochromicMirrorDriver_TIDA01539,
+  LampDriver_TPS92638_TIDA00356,
+  LightSensor_OPT3001_TIDA01539,
+  TemperatureSensor_LM50HV_Q1,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
