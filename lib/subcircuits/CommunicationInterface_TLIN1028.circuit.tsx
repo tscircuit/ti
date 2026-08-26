@@ -19,7 +19,7 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
   <subcircuit
     schMaxTraceDistance="12mm"
     autorouterEffortLevel="10x"
-    schTraceAutoLabelEnabled={false}
+    schTraceAutoLabelEnabled
     // This source extraction is schematic-only. PCB autorouting is intentionally
     // disabled while the native schematic autorouter remains active.
     routingDisabled
@@ -165,20 +165,8 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
 
     {/* Logic-side signal boundaries. */}
     <trace from="U4.RXD" to="R19.pin2" />
-    <netlabel
-      net="RXD"
-      connectsTo="R19.pin2"
-      schX={-6.858}
-      schY={0}
-      anchorSide="right"
-    />
-    <netlabel
-      net="TXD"
-      connectsTo="R20.pin1"
-      schX={-6.858}
-      schY={-0.508}
-      anchorSide="right"
-    />
+    <trace from="R19.pin2" to="net.RXD" />
+    <trace from="R20.pin1" to="net.TXD" />
     <trace from="R20.pin2" to="U4.TXD" />
     <trace from="C31.pin1" to="R20.pin2" />
     <netlabel
@@ -188,20 +176,8 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       schY={-1.27}
       anchorSide="top"
     />
-    <netlabel
-      net="EN_1028"
-      connectsTo="U4.EN"
-      schX={-3.048}
-      schY={0.508}
-      anchorSide="right"
-    />
-    <netlabel
-      net="nRST"
-      connectsTo="U4.nRST"
-      schX={-2.904}
-      schY={-1.016}
-      anchorSide="right"
-    />
+    <trace from="U4.EN" to="net.EN_1028" />
+    <trace from="U4.nRST" to="net.nRST" />
 
     {/* VSUP rail and its two source-local bypass capacitors. */}
     <trace
@@ -214,13 +190,7 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       ]}
     />
     <trace from="C25.pin1" to="C26.pin1" />
-    <netlabel
-      net="Vsup"
-      connectsTo="C26.pin1"
-      schX={4.826}
-      schY={2.794}
-      anchorSide="bottom"
-    />
+    <trace from="C26.pin1" to="net.Vsup" />
     <netlabel
       net="GND"
       connectsTo="C25.pin2"
@@ -238,13 +208,7 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
 
     {/* LIN bus shunt capacitor and external LIN boundary. */}
     <trace from="U4.LIN" to="C29.pin1" />
-    <netlabel
-      net="LIN"
-      connectsTo="C29.pin1"
-      schX={4.572}
-      schY={0.508}
-      anchorSide="left"
-    />
+    <trace from="C29.pin1" to="net.LIN" />
     <netlabel
       net="GND"
       connectsTo="C29.pin2"
