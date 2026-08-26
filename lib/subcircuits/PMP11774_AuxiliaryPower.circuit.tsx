@@ -6,7 +6,7 @@ import "tscircuit";
  * @see https://www.ti.com/lit/pdf/TIDRLL5
  */
 export const PMP11774_AuxiliaryPower = (props: SubcircuitProps) => (
-  <group
+  <subcircuit
     {...props}
     routingDisabled
     schMaxTraceDistance="100mm"
@@ -557,7 +557,7 @@ export const PMP11774_AuxiliaryPower = (props: SubcircuitProps) => (
     <trace from="R16.pin2" to="net.GND" schDisplayLabel="GND" />
     <trace from="R17.pin1" to="net.Vsec_5" schDisplayLabel="Vsec_5" />
     <trace from="C10.pin2" to="net.GND" schDisplayLabel="GND" />
-  </group>
+  </subcircuit>
 );
 
 export default PMP11774_AuxiliaryPower;
