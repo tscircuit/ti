@@ -124,6 +124,7 @@ The package currently exports these subcircuit components:
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
 - `TemperatureSensor_LM50HV_Q1` ([LM50-Q1/LM50HV-Q1 datasheet, Figure 8-3](https://www.ti.com/lit/ds/symlink/lm50-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
+- `PowerSupply_LM74202_TPS7E81_Q1` ([LM74202-Q1 datasheet, Figure 39](https://www.ti.com/lit/ds/symlink/lm74202-q1.pdf) and [TPS7E81-Q1 datasheet, Figure 7-5](https://www.ti.com/lit/ds/symlink/tps7e81-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
@@ -167,6 +168,7 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
@@ -186,6 +188,7 @@ chip is listed individually below, including whether it supports a
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPS7A20` | `sot_23_5` | `TPS7A2018PDBVR`, `TPS7A2033PDBVR` |
+| `TPS7E81Q1` | `-` | `TPS7E8133QDBVRQ1` |
 | `TPS92638` | `-` | `TPS92638QPWPRQ1` |
 | `TPS7A2028PDBVR` | `-` | `TPS7A2028PDBVR` |
 | `TPSM82823` | `-` | `TPSM82823` |
@@ -243,7 +246,9 @@ The `lib/thirdparty-subcircuits` directory contains application wiring circuits
 for blocks that do not provide a TI reference design. These circuits clearly
 identify the datasheet figure used as their source. For example,
 `TemperatureSensor_LM50HV_Q1` follows Figure 8-3 of the LM50-Q1/LM50HV-Q1
-datasheet.
+datasheet, while `PowerSupply_LM74202_TPS7E81_Q1` combines the LM74202-Q1
+Figure 39 battery-protection stage with the TPS7E81-Q1 Figure 7-5 fixed-output
+LDO stage.
 
 ### `lib/simulations`
 
