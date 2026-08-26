@@ -177,6 +177,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `PMP11774_AuxiliaryPower` — PMP11774 auxiliary flyback supply reproduced from TI's native TIDRLL5 schematic
 
 ## Exported Chips
 
