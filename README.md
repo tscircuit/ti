@@ -177,6 +177,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `TIDA01281_ControlUnit` — TIDA-01281 C2000 isolated control and communications unit reproduced from TI's native TIDRPC0 schematic
 
 ## Exported Chips
 
