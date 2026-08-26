@@ -4,28 +4,31 @@ import { TLIN10283DDARQ1 } from "../chips/TLIN10283DDARQ1.circuit.tsx";
 
 /**
  * LIN communication and system-supply block extracted from the "Power & LIN"
- * section of TI TIDA-020027, SideMirror_Logic_TLIN1028.SchDoc.
+ * section of TI TIDA-020027.
  *
- * Altium Location coordinates are normalized without re-layout using:
+ * Source coordinates are normalized without re-layout using:
  *   schX = (sourceX - 390) * 0.0254
  *   schY = (sourceY - 380) * 0.0254
+ * C29, C31, and C31's GND label receive a -0.127 mm Y correction for the
+ * native capacitor pin-lead geometry, preserving the source's straight bus
+ * with a downward shunt branch instead of forcing an autorouter dogleg.
  *
- * The source's "3.3V" label is retained as a trace display label because a
- * period is not legal in a tscircuit net selector.
+ * The source's "3.3V" rail is represented by the repository-safe V3_3 net
+ * name because a period is not legal in a tscircuit net selector.
  *
  * Reference: https://www.ti.com/tool/TIDA-020027
  */
-export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
+export const CommunicationInterface_LIN_TLIN1028 = (props: SubcircuitProps) => (
   <subcircuit
     schMaxTraceDistance="12mm"
     autorouterEffortLevel="10x"
-    schTraceAutoLabelEnabled
     // This source extraction is schematic-only. PCB autorouting is intentionally
     // disabled while the native schematic autorouter remains active.
     routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />
+    <net name="V3_3" isPowerNet />
     <net name="Vsup" isPowerNet />
     <net name="EN_1028" />
     <net name="RXD" />
@@ -49,11 +52,9 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       maxVoltageRating="10V"
       schShowRatings
       footprint="0603"
-      manufacturerPartNumber="GRM188Z71A106MA73D"
       schX={-5.08}
       schY={2.667}
       schRotation={270}
-      schSize={0.762}
     />
     <capacitor
       name="C24"
@@ -61,22 +62,18 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       maxVoltageRating="16V"
       schShowRatings
       footprint="0603"
-      manufacturerPartNumber="C0603C104K4RACTU"
       schX={-3.81}
       schY={2.667}
       schRotation={270}
-      schSize={0.762}
     />
     <resistor
       name="R19"
       resistance="10kohm"
       tolerance="5%"
       footprint="0402"
-      manufacturerPartNumber="CRCW040210K0JNED"
       schX={-5.588}
       schY={0.508}
       schRotation={270}
-      schSize={1.016}
     />
 
     {/* VSUP input bypassing. */}
@@ -86,11 +83,9 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       schShowRatings
       footprint="0603"
-      manufacturerPartNumber="C1608X7R1H104K080AA"
       schX={3.302}
       schY={2.413}
       schRotation={270}
-      schSize={0.762}
     />
     <capacitor
       name="C26"
@@ -98,11 +93,9 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       schShowRatings
       footprint="1206"
-      manufacturerPartNumber="CGA5L3X5R1H106M160AB"
       schX={4.826}
       schY={2.413}
       schOrientation="vertical"
-      schSize={0.762}
     />
 
     {/* LIN-bus and TXD filtering. TLIN1028-Q1 supplies the source design's
@@ -113,21 +106,17 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       schShowRatings
       footprint="0603"
-      manufacturerPartNumber="C0603C221K5RACTU"
       schX={4.064}
-      schY={0.127}
+      schY={0}
       schOrientation="vertical"
-      schSize={0.762}
     />
     <resistor
       name="R20"
       resistance="1kohm"
       tolerance="1%"
       footprint="0603"
-      manufacturerPartNumber="CRCW06031K00FKEA"
       schX={-5.588}
       schY={-0.508}
-      schSize={1.016}
     />
     <capacitor
       name="C31"
@@ -135,11 +124,9 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       maxVoltageRating="25V"
       schShowRatings
       footprint="0603"
-      manufacturerPartNumber="06033C101KAT2A"
       schX={-5.08}
-      schY={-0.889}
+      schY={-1.016}
       schRotation={270}
-      schSize={0.762}
     />
 
     {/* 3.3 V rail: U4 VCC, C23/C24, and the RXD pull-up. */}
@@ -153,7 +140,8 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       ]}
     />
     <trace from="C24.pin1" to="C23.pin1" />
-    <trace from="C23.pin1" to="R19.pin1" schDisplayLabel="3.3V" />
+    <trace from="C23.pin1" to="net.V3_3" />
+    <trace from="R19.pin1" to="net.V3_3" />
     <trace from="C23.pin2" to="C24.pin2" />
     <netlabel
       net="GND"
@@ -173,7 +161,7 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
       net="GND"
       connectsTo="C31.pin2"
       schX={-5.08}
-      schY={-1.27}
+      schY={-1.397}
       anchorSide="top"
     />
     <trace from="U4.EN" to="net.EN_1028" />
@@ -229,4 +217,4 @@ export const CommunicationInterface_TLIN1028 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default CommunicationInterface_TLIN1028;
+export default CommunicationInterface_LIN_TLIN1028;

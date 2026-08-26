@@ -136,7 +136,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
-- `CommunicationInterface_TLIN1028`
+- `CommunicationInterface_LIN_TLIN1028`
 
 ## Exported Chips
 
