@@ -126,6 +126,12 @@ describe("TIDA-01389 position feedback extraction", () => {
     expect(resistance("R14")).toBe(10_000);
     expect(resistance("R15")).toBe(10_000);
     expect(resistance("R9")).toBe(0);
+
+    for (const pullup of ["R14", "R15"]) {
+      const centerY = schematicComponent(pullup).center.y;
+      expect(schematicPort(pullup, 1).center.y).toBeLessThan(centerY);
+      expect(schematicPort(pullup, 2).center.y).toBeGreaterThan(centerY);
+    }
   });
 
   test("uses the data-sheet DBZ pin numbers and aliases", () => {

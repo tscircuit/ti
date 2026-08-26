@@ -1,4 +1,5 @@
 import type { ChipProps, SubcircuitProps } from "@tscircuit/props";
+import { Fragment } from "react";
 import "tscircuit";
 import { DRV5013ADQDBZRQ1 } from "../chips/DRV5013ADQDBZRQ1.circuit.tsx";
 
@@ -40,35 +41,8 @@ const inHallEncoder = (x: number, y: number) =>
 const inConnector = (x: number, y: number) => inChild(x, y, CONNECTOR_CENTER);
 const asSchematicPosition = ({ x, y }: Point) => ({ schX: x, schY: y });
 
-const connectorJ1PinLabels = {
-  pin1: "VCC",
-  pin2: "SO",
-  pin3: "SDO",
-  pin4: "SDI",
-  pin5: "SCS",
-  pin6: "SCLK",
-  pin7: "SLEEP",
-  pin8: "NC",
-  pin9: "IN1_PH",
-  pin10: "IN2_EN",
-} as const;
-
-const connectorJ2PinLabels = {
-  pin1: "GND",
-  pin2: "NC_2",
-  pin3: "PINCH",
-  pin4: "NC_4",
-  pin5: "NC_5",
-  pin6: "HALL_1",
-  pin7: "HALL_2",
-  pin8: ["nFAULT", "FAULT"],
-  pin9: "UP",
-  pin10: "DOWN",
-} as const;
-
 type SourceConnectorProps = ChipProps & {
   pinSide: "left" | "right";
-  pinLabels: typeof connectorJ1PinLabels | typeof connectorJ2PinLabels;
 };
 
 const sourceConnectorPinY = [
@@ -77,22 +51,15 @@ const sourceConnectorPinY = [
 ] as const;
 
 type SourceConnectorPinProps = {
-  aliases: readonly string[];
   isLeft: boolean;
   pin: number;
   schY: number;
 };
 
-const SourceConnectorPin = ({
-  aliases,
-  isLeft,
-  pin,
-  schY,
-}: SourceConnectorPinProps) => (
+const SourceConnectorPin = ({ isLeft, pin, schY }: SourceConnectorPinProps) => (
   <>
     <port
       name={`pin${pin}`}
-      aliases={[...aliases]}
       schX={isLeft ? -0.548344 : 0.548344}
       schY={schY}
       direction={isLeft ? "left" : "right"}
@@ -104,17 +71,24 @@ const SourceConnectorPin = ({
 );
 
 /** SSQ-110-01-T-S 1x10 receptacle, mirrored by selecting its pin side. */
-const SourceConnector = ({
-  pinLabels,
-  pinSide,
-  ...props
-}: SourceConnectorProps) => {
+const SourceConnector = ({ pinSide, ...props }: SourceConnectorProps) => {
   const isLeft = pinSide === "left";
   return (
     <chip
       manufacturerPartNumber="SSQ-110-01-T-S"
       footprint="pinrow10"
-      pinLabels={pinLabels}
+      pinLabels={{
+        pin1: "1",
+        pin2: "2",
+        pin3: "3",
+        pin4: "4",
+        pin5: "5",
+        pin6: "6",
+        pin7: "7",
+        pin8: "8",
+        pin9: "9",
+        pin10: "10",
+      }}
       symbol={
         <symbol>
           <schematicrect
@@ -127,12 +101,9 @@ const SourceConnector = ({
           />
           {sourceConnectorPinY.map((schY, index) => {
             const pin = index + 1;
-            const labels = pinLabels[`pin${pin}` as keyof typeof pinLabels];
-            const aliases = typeof labels === "string" ? [labels] : [...labels];
             return (
               <SourceConnectorPin
                 key={`pin-${pin}`}
-                aliases={aliases}
                 isLeft={isLeft}
                 pin={pin}
                 schY={schY}
@@ -145,6 +116,31 @@ const SourceConnector = ({
     />
   );
 };
+
+type SourceConnectorPinNumbersProps = {
+  center: Point;
+  pinSide: "left" | "right";
+};
+
+/** Pin numbers sit at their Altium trace positions, outside the symbol body. */
+const SourceConnectorPinNumbers = ({
+  center,
+  pinSide,
+}: SourceConnectorPinNumbersProps) => (
+  <>
+    {sourceConnectorPinY.map((schY, index) => (
+      <Fragment key={`${pinSide}-pin-${index + 1}`}>
+        <schematictext
+          schX={center.x + (pinSide === "left" ? -0.365563 : 0.365563)}
+          schY={center.y + schY}
+          text={String(index + 1)}
+          fontSize={0.09}
+          color="#840000"
+        />
+      </Fragment>
+    ))}
+  </>
+);
 
 /**
  * The two-channel Hall encoder box from TIDA-01389. U6 generates HALL_1 and
@@ -234,7 +230,7 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
         manufacturerPartNumber="CRCW040210K0JNED"
         schX={r14.x}
         schY={r14.y}
-        schOrientation="vertical"
+        schRotation="90deg"
       />
       <resistor
         name="R15"
@@ -243,7 +239,7 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
         manufacturerPartNumber="CRCW040210K0JNED"
         schX={r15.x}
         schY={r15.y}
-        schOrientation="vertical"
+        schRotation="90deg"
       />
 
       <trace
@@ -276,11 +272,11 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
         to="R14.pin1"
         schematicRouteHints={[inHallEncoder(260, 290), inHallEncoder(270, 290)]}
       />
-      <trace
-        from="R14.pin1"
-        to="net.HALL_1"
-        schDisplayLabel="HALL_1"
-        schematicRouteHints={[inHallEncoder(290, 290)]}
+      <netlabel
+        net="HALL_1"
+        connectsTo="R14.pin1"
+        {...asSchematicPosition(inHallEncoder(290, 290))}
+        anchorSide="left"
       />
       <netlabel
         net="VCC"
@@ -319,11 +315,11 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
         to="R15.pin1"
         schematicRouteHints={[inHallEncoder(260, 150), inHallEncoder(270, 150)]}
       />
-      <trace
-        from="R15.pin1"
-        to="net.HALL_2"
-        schDisplayLabel="HALL_2"
-        schematicRouteHints={[inHallEncoder(290, 150)]}
+      <netlabel
+        net="HALL_2"
+        connectsTo="R15.pin1"
+        {...asSchematicPosition(inHallEncoder(290, 150))}
+        anchorSide="left"
       />
       <netlabel
         net="VCC"
@@ -368,20 +364,10 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
         fontSize={0.3}
       />
 
-      <SourceConnector
-        name="J1"
-        pinSide="left"
-        pinLabels={connectorJ1PinLabels}
-        schX={j1.x}
-        schY={j1.y}
-      />
-      <SourceConnector
-        name="J2"
-        pinSide="right"
-        pinLabels={connectorJ2PinLabels}
-        schX={j2.x}
-        schY={j2.y}
-      />
+      <SourceConnector name="J1" pinSide="left" schX={j1.x} schY={j1.y} />
+      <SourceConnector name="J2" pinSide="right" schX={j2.x} schY={j2.y} />
+      <SourceConnectorPinNumbers center={j1} pinSide="left" />
+      <SourceConnectorPinNumbers center={j2} pinSide="right" />
       <schematictext
         {...asSchematicPosition(inConnector(139, 530))}
         text="J1"
@@ -407,7 +393,7 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
       <trace
         name="VCC_CONNECTOR_FEED"
         from="R9.pin1"
-        to="J1.VCC"
+        to="J1.pin1"
         schematicRouteHints={[inConnector(120, 530), inConnector(120, 520)]}
       />
       <netlabel
@@ -418,21 +404,22 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
       />
       <netlabel
         net="GND"
-        connectsTo="J2.GND"
+        connectsTo="J2.pin1"
         {...asSchematicPosition(inConnector(230, 520))}
         anchorSide="left"
       />
-      <trace
-        from="J2.HALL_1"
-        to="net.HALL_1"
-        schDisplayLabel="HALL_1"
-        schematicRouteHints={[inConnector(230, 470)]}
+      {/* Repeated native labels join the Hall nets without a cross-box wire. */}
+      <netlabel
+        net="HALL_1"
+        connectsTo="J2.pin6"
+        {...asSchematicPosition(inConnector(230, 470))}
+        anchorSide="left"
       />
-      <trace
-        from="J2.HALL_2"
-        to="net.HALL_2"
-        schDisplayLabel="HALL_2"
-        schematicRouteHints={[inConnector(230, 460)]}
+      <netlabel
+        net="HALL_2"
+        connectsTo="J2.pin7"
+        {...asSchematicPosition(inConnector(230, 460))}
+        anchorSide="left"
       />
 
       <port name="VCC" direction="left" connectsTo="net.VCC" />
@@ -476,7 +463,6 @@ export const PositionFeedback_DRV5013 = (props: SubcircuitProps) => (
         HALL_2: "net.HALL_2",
       }}
     />
-
     <port name="VCC" direction="left" connectsTo="net.VCC" />
     <port name="GND" direction="left" connectsTo="net.GND" />
     <port name="HALL_1" direction="right" connectsTo="net.HALL_1" />
