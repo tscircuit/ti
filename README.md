@@ -95,6 +95,86 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 ## Exported Subcircuits
 
+### DRV8210 PWM motor driver
+
+`MotorDriver_DRV8210` implements the full-bridge PWM application for the
+8-pin WSON `DRV8210DSGR`. The Controller and BDC motor use
+`group showAsSchematicBox` with real schematic signal ports, not PCB components.
+Their port-to-port traces use `schDisplayLabel` for inline PWM1/PWM2 and
+OUT1/OUT2 labels. Local bypass-capacitor ground labels keep ground wiring clear
+of those signals. The two PWM inputs drive IN1 and IN2; OUT1 and OUT2 connect
+to the motor.
+
+```tsx
+import { MotorDriver_DRV8210 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="16mm" height="12mm">
+    <MotorDriver_DRV8210 name="Driver" />
+  </board>
+)
+```
+
+Connect a parent circuit to `.Driver .U1 > .IN1`, `.Driver .U1 > .IN2`,
+`.Driver .U1 > .OUT1`, `.Driver .U1 > .OUT2`, `.Driver .U1 > .VM`,
+`.Driver .U1 > .VCC`, and `.Driver .U1 > .GND`. The schematic labels are
+PWM1, PWM2, OUT1, OUT2, VM, VCC, and GND respectively.
+
+Unlike the six-pin DRL reference diagram, the DSG device also requires a
+separate VCC supply and MODE selection. This subcircuit grounds MODE for PWM,
+grounds the exposed thermal pad, and includes 0.1 uF bypass capacitors on both
+VM and VCC. Keep VCC within 1.65–5.5 V and VM within the DSG operating range
+of 0–11 V; add VM bulk capacitance sized for your motor and supply.
+See the [TI pinout and supply requirements](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-F506A16B-1B46-4CAD-B811-DC3055E727BD),
+[PWM mode](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-2C006377-A449-4600-82B4-EA20AA948DEF),
+and [bulk capacitance guidance](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-AFD3F9A7-FA96-4E90-8B0B-C551CB6B7E0B).
+
+The raw chip is available as `DRV8210DSGR` or as
+`DRV8210` with `footprintVariant="wson_8_ep_2x2"`.
+
+### LP5892-Q1 LED matrix output interface
+
+`OutputUserInterface_LEDMatrix_LP5892_Q1` implements the 48-source,
+16-scan-line interface for a common-cathode 16-by-16 RGB LED matrix. It exposes
+the four supply domains (`VCC`, `VR`, `VG`, and `VB`), `GND`, the
+`SCLK`/`SIN`/`SOUT` serial interface, `R0`-`R15`, `G0`-`G15`, `B0`-`B15`, and
+`LINE0`-`LINE15` as public subcircuit nets. Connect from a parent circuit with
+selectors such as `.DisplayDriver > net.SCLK`, `.DisplayDriver > net.R0`, and
+`.DisplayDriver > net.GND`.
+
+```tsx
+import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="28mm" height="24mm" isViaInPadAllowed>
+    <OutputUserInterface_LEDMatrix_LP5892_Q1 name="DisplayDriver" />
+    <led
+      name="D_R0_LINE0"
+      color="red"
+      footprint="0603"
+      connections={{
+        anode: ".DisplayDriver > net.R0",
+        cathode: ".DisplayDriver > net.LINE0",
+      }}
+    />
+  </board>
+)
+```
+
+The internal 23 kohm IREF resistor matches TI's 3 mA, BC=`011` design example;
+firmware must configure the matching brightness/current registers. SCLK must
+run continuously and SIN should remain high while idle. VCC and VR may share a
+rail, as may VG and VB; use at least 3.5 V on VCC when operating at 20 mA or
+more per channel.
+
+The exposed-pad thermal-via array requires `isViaInPadAllowed` on the parent
+`board`. Follow TI's fabrication guidance by filling, plugging, or tenting the
+vias. The implementation follows the
+[LP5892-Q1 datasheet](https://www.ti.com/lit/ds/symlink/lp5892-q1.pdf) and the
+related [LP5891Q1EVM hardware guide](https://www.ti.com/lit/pdf/snvu836).
+
+### Available subcircuits
+
 The package currently exports these subcircuit components:
 
 - `BatteryManagement_BQ24072`
@@ -107,6 +187,7 @@ The package currently exports these subcircuit components:
 - `BluetoothController_CC2564C`
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
+- `MotorDriver_DRV8210`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
 - `EnvironmentalSensor_HDC2080`
@@ -114,14 +195,18 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
 - `IsolatedRS485_ISOW7841`
+- `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
+- `OutputUserInterface_LEDMatrix_LP5892_Q1`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
+- `TemperatureSensor_LM50HV_Q1` ([LM50-Q1/LM50HV-Q1 datasheet, Figure 8-3](https://www.ti.com/lit/ds/symlink/lm50-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
+- `PowerSupply_LM74202_TPS7E81_Q1` ([LM74202-Q1 datasheet, page-1 Simplified Schematic and Figure 39 values](https://www.ti.com/lit/ds/symlink/lm74202-q1.pdf) and [TPS7E81-Q1 datasheet, Figure 7-5](https://www.ti.com/lit/ds/symlink/tps7e81-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
@@ -137,6 +222,10 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
 - `CommunicationInterface_LIN_TLIN1028`
+- `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
+- `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
 
 ## Exported Chips
 
@@ -154,6 +243,8 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
+| `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
@@ -161,12 +252,19 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
+| `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
+| `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
+| `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
+| `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
+| `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
+| `TLV316` | `-` | `TLV316QDBVTQ1` |
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
@@ -176,6 +274,8 @@ chip is listed individually below, including whether it supports a
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPS7A20` | `sot_23_5` | `TPS7A2018PDBVR`, `TPS7A2033PDBVR` |
+| `TPS7E81Q1` | `-` | `TPS7E8133QDBVRQ1` |
+| `TPS92638` | `-` | `TPS92638QPWPRQ1` |
 | `TPS7A2028PDBVR` | `-` | `TPS7A2028PDBVR` |
 | `TPSM82823` | `-` | `TPSM82823` |
 | `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
@@ -225,6 +325,16 @@ For example, `PowerMonitor_INA237` comes from
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.
+
+### `lib/thirdparty-subcircuits`
+
+The `lib/thirdparty-subcircuits` directory contains application wiring circuits
+for blocks that do not provide a TI reference design. These circuits clearly
+identify the datasheet figure used as their source. For example,
+`TemperatureSensor_LM50HV_Q1` follows Figure 8-3 of the LM50-Q1/LM50HV-Q1
+datasheet, while `PowerSupply_LM74202_TPS7E81_Q1` combines the LM74202-Q1
+page-1 Simplified Schematic (with Figure 39 values) and the TPS7E81-Q1 Figure
+7-5 fixed-output LDO stage.
 
 ### `lib/simulations`
 

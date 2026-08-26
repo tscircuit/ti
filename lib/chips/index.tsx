@@ -9,6 +9,11 @@ export { CC2340R5 } from "./CC2340R5.circuit.tsx";
 export { CC2564C } from "./CC2564C.circuit.tsx";
 export { CC2745R10 } from "./CC2745R10.circuit.tsx";
 export { CC3235SF } from "./CC3235SF.circuit.tsx";
+export {
+  DAC101C081Q,
+  DAC101C081QISD_NOPB,
+} from "./DAC101C081QISD_NOPB.circuit.tsx";
+export { DRV8210 } from "./DRV8210.circuit.tsx";
 export { DRV8833 } from "./DRV8833.circuit.tsx";
 export { DRV8876 } from "./DRV8876.circuit.tsx";
 export { HDC2080 } from "./HDC2080.circuit.tsx";
@@ -16,14 +21,28 @@ export { HDC3020 } from "./HDC3020.circuit.tsx";
 export { HDC3022 } from "./HDC3022.circuit.tsx";
 export { INA237 } from "./INA237.circuit.tsx";
 export { ISOW7841 } from "./ISOW7841.circuit.tsx";
+export {
+  LM74202Q1,
+  LM74202QPWPRQ1,
+  LM74202QPWPRQ1_PIN_LABELS,
+} from "./LM74202QPWPRQ1.circuit.tsx";
+export { LMK1C1104 } from "./LMK1C1104.circuit.tsx";
+export { LP5892Q1 } from "./LP5892Q1.circuit.tsx";
 export { MSP430G2230ID } from "./MSP430G2230ID.circuit.tsx";
 export { MSP430F5229 } from "./MSP430F5229.circuit.tsx";
+export { MSPM0L1306 } from "./MSPM0L1306.circuit.tsx";
 export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";
 export { MSPM0G3507 } from "./MSPM0G3507.circuit.tsx";
+export { OPT3001, OPT3001IDNPRQ1 } from "./OPT3001IDNPRQ1.circuit.tsx";
 export { SN65HVD1473 } from "./SN65HVD1473.circuit.tsx";
 export { TAS2505 } from "./TAS2505.circuit.tsx";
+export {
+  TCAN1042HGV,
+  TCAN1042HGVDRBQ1,
+} from "./TCAN1042HGVDRBQ1.circuit.tsx";
 export { TLC59116 } from "./TLC59116.circuit.tsx";
 export { TLIN1028 } from "./TLIN1028.circuit.tsx";
+export { TLV316, TLV316QDBVTQ1 } from "./TLV316QDBVTQ1.circuit.tsx";
 export { TLV755P } from "./TLV755P.circuit.tsx";
 export { TMP1827 } from "./TMP1827.circuit.tsx";
 export { TMP1075 } from "./TMP1075.circuit.tsx";
@@ -36,6 +55,12 @@ export { TPS63802 } from "./TPS63802.circuit.tsx";
 export { TRF7960RHB } from "./TRF7960RHB.circuit.tsx";
 export { TPS7A02 } from "./TPS7A02.circuit.tsx";
 export { TPS7A20 } from "./TPS7A20.circuit.tsx";
+export {
+  TPS7E81Q1,
+  TPS7E8133QDBVRQ1,
+  TPS7E8133QDBVRQ1_PIN_LABELS,
+} from "./TPS7E8133QDBVRQ1.circuit.tsx";
+export { TPS92638, TPS92638QPWPRQ1 } from "./TPS92638QPWPRQ1.circuit.tsx";
 export { TPSM82823 } from "./TPSM82823.circuit.tsx";
 export { TXB0104 } from "./TXB0104.circuit.tsx";
 export { TXS0102 } from "./TXS0102.circuit.tsx";
@@ -46,15 +71,26 @@ export { BQ24073RGTR } from "./BQ24073RGTR.circuit.tsx";
 export { BQ24074RGTR } from "./BQ24074RGTR.circuit.tsx";
 export { BQ25895RTWR } from "./BQ25895RTWR.circuit.tsx";
 export { BQ25731RSN } from "./BQ25731RSN.circuit.tsx";
+export { BQ294700DSG } from "./BQ294700DSG.circuit.tsx";
+export { BQ40Z60RHB } from "./BQ40Z60RHB.circuit.tsx";
 export { BQ27441DRZR_G1B } from "./BQ27441DRZR_G1B.circuit.tsx";
 export { CC2745R10E0WRHARQ1 } from "./CC2745R10E0WRHARQ1.circuit.tsx";
 export { CC3235SF12RGKR } from "./CC3235SF12RGKR.circuit.tsx";
+export { DRV8210DSGR } from "./DRV8210DSGR.circuit.tsx";
 export { HDC2080DMBR } from "./HDC2080DMBR.circuit.tsx";
 export { HDC3020DEFR } from "./HDC3020DEFR.circuit.tsx";
 export { HDC3022DEJR } from "./HDC3022DEJR.circuit.tsx";
 export { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1.circuit.tsx";
 export { ISOW7841DWR } from "./ISOW7841DWR.circuit.tsx";
+export {
+  LM50HVQ1,
+  LM50HVQDBZRQ1,
+  LM50HVQDBZRQ1_PIN_LABELS,
+} from "./LM50HVQDBZRQ1.circuit.tsx";
+export { LMK1C1104PWR } from "./LMK1C1104PWR.circuit.tsx";
+export { LP5892QRRFRQ1 } from "./LP5892QRRFRQ1.circuit.tsx";
 export { MSP430F5229IRGCR } from "./MSP430F5229IRGCR.circuit.tsx";
+export { MSPM0L1306SRHBR } from "../../imports/MSPM0L1306SRHBR.tsx";
 export { MSP430G2332IPW20 } from "./MSP430G2332IPW20.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
 export { SN65HVD1473DGSR } from "./SN65HVD1473DGSR.circuit.tsx";
