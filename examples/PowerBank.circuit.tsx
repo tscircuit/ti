@@ -38,6 +38,8 @@ export default () => (
     <BatteryManagement_2to4Cell_BQ40Z60
       name="battery_management"
       schSheetName="battery_management"
+      schX={1.5}
+      schY={-2}
     />
     <BatteryCharging_2to5CellNVDCBuckBoost_BQ25731
       name="battery_charging"
