@@ -26,7 +26,7 @@ const motorConnectorPinLabels = {
   pin2: "V_MINUS",
 } as const;
 
-/** J1, reproduced from the mirrored 1727010 Altium symbol. */
+/** J1, reproduced from the mirrored 1727010 source symbol. */
 const MotorCurrentConnector = (
   props: ChipProps<typeof motorConnectorPinLabels>,
 ) => (
@@ -82,11 +82,17 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
   <subcircuit
     schAutoLayoutEnabled={false}
     schMaxTraceDistance="30mm"
-    schTraceAutoLabelEnabled={false}
     routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />
+    <net name="V_PLUS" />
+    <net name="V_MINUS" />
+    <net name="V5" isPowerNet />
+    <net name="V3_3" isPowerNet />
+    <net name="BIAS" />
+    <net name="ADCMOTOR" />
+    <net name="TIMER" />
 
     {/* Current-shunt input, common-mode filter, and INA240A1-Q1 stage. */}
     <MotorCurrentConnector name="J1" {...p(180, 890)} />
@@ -94,29 +100,15 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R6"
       resistance="0.003ohm"
       footprint="2512"
-      manufacturerPartNumber="CRE2512-FZ-R003E-3"
       schOrientation="vertical"
       {...p(320, 890)}
     />
-    <resistor
-      name="R5"
-      resistance="10ohm"
-      footprint="0805"
-      manufacturerPartNumber="PATT0805E10R0BGT1"
-      {...p(370, 910)}
-    />
-    <resistor
-      name="R7"
-      resistance="10ohm"
-      footprint="0805"
-      manufacturerPartNumber="PATT0805E10R0BGT1"
-      {...p(370, 870)}
-    />
+    <resistor name="R5" resistance="10ohm" footprint="0805" {...p(370, 910)} />
+    <resistor name="R7" resistance="10ohm" footprint="0805" {...p(370, 870)} />
     <capacitor
       name="C8"
       capacitance="2.2uF"
       footprint="0805"
-      manufacturerPartNumber="CGA4J3X7R1H225K125AB"
       schOrientation="vertical"
       {...p(400, 890)}
     />
@@ -125,7 +117,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C3"
       capacitance="1uF"
       footprint="0603"
-      manufacturerPartNumber="LMK107B7105KAHT"
       schOrientation="vertical"
       {...p(520, 1000)}
     />
@@ -133,7 +124,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C4"
       capacitance="0.1uF"
       footprint="0603"
-      manufacturerPartNumber="GCM188R71C104KA37J"
       schOrientation="vertical"
       {...p(550, 1000)}
     />
@@ -153,32 +143,12 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     {/* tscircuit net identifiers reject '+' and '-'. The source V+ and V-
         labels are therefore normalized to V_PLUS and V_MINUS; the J1 aliases
         retain the exact Altium labels. */}
-    <netlabel
-      net="V_PLUS"
-      connectsTo="R5.pin1"
-      anchorSide="right"
-      {...p(260, 910)}
-    />
-    <netlabel
-      net="V_MINUS"
-      connectsTo="R7.pin1"
-      anchorSide="right"
-      {...p(260, 870)}
-    />
-    <netlabel net="V5" connectsTo="U2.VS" anchorSide="right" {...p(440, 920)} />
-    <netlabel
-      net="V5"
-      connectsTo="U2.REF1"
-      anchorSide="left"
-      {...p(590, 900)}
-    />
+    <trace from="R5.pin1" to="net.V_PLUS" />
+    <trace from="R7.pin1" to="net.V_MINUS" />
+    <trace from="U2.VS" to="net.V5" />
+    <trace from="U2.REF1" to="net.V5" />
     <netlabel net="GND" connectsTo="U2.GND" anchorSide="top" {...p(610, 870)} />
-    <netlabel
-      net="V5"
-      connectsTo="C3.pin1"
-      anchorSide="bottom"
-      {...p(520, 1020)}
-    />
+    <trace from="C3.pin1" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="C3.pin2"
@@ -191,14 +161,12 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R12"
       resistance="33.2kohm"
       footprint="0603"
-      manufacturerPartNumber="CRCW060333K2FKEA"
       {...p(670, 670)}
     />
     <resistor
       name="R20"
       resistance="33.2kohm"
       footprint="0603"
-      manufacturerPartNumber="CRCW060333K2FKEA"
       schOrientation="vertical"
       {...p(710, 650)}
     />
@@ -206,7 +174,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C10"
       capacitance="0.1uF"
       footprint="0603"
-      manufacturerPartNumber="CGA3E2X7R1H104K080AA"
       schOrientation="vertical"
       {...p(750, 640)}
     />
@@ -214,12 +181,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="R12.pin2" to="R20.pin2" />
     <trace from="R20.pin2" to="C10.pin1" />
     <trace from="R20.pin1" to="C10.pin2" />
-    <netlabel
-      net="ADCMOTOR"
-      connectsTo="R12.pin2"
-      anchorSide="left"
-      {...p(788, 670)}
-    />
+    <trace from="R12.pin2" to="net.ADCMOTOR" />
     <netlabel
       net="GND"
       connectsTo="C10.pin2"
@@ -232,16 +194,9 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C7"
       capacitance="0.068uF"
       footprint="0603"
-      manufacturerPartNumber="CGA3E2X7R1H683K080AA"
       {...p(660, 920)}
     />
-    <resistor
-      name="R3"
-      resistance="30kohm"
-      footprint="0603"
-      manufacturerPartNumber="ERJ-3EKF3002V"
-      {...p(720, 920)}
-    />
+    <resistor name="R3" resistance="30kohm" footprint="0603" {...p(720, 920)} />
     {/* Native TSX does not yet bind two independently placed schematic units
         to one physical chip. U3 is the exact hidden package/BOM record; the
         two do-not-place units retain the source's centers and pin numbers. */}
@@ -276,21 +231,18 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C1"
       capacitance="3300pF"
       footprint="0603"
-      manufacturerPartNumber="GCM188R72A332KA37D"
       {...p(780, 1040)}
     />
     <resistor
       name="R1"
       resistance="75kohm"
       footprint="0603"
-      manufacturerPartNumber="CRCW060375K0JNEA"
       {...p(790, 1000)}
     />
     <capacitor
       name="C5"
       capacitance="1uF"
       footprint="0603"
-      manufacturerPartNumber="LMK107B7105KAHT"
       schOrientation="vertical"
       {...p(860, 1000)}
     />
@@ -298,7 +250,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C6"
       capacitance="0.1uF"
       footprint="0603"
-      manufacturerPartNumber="GCM188R71C104KA37J"
       schOrientation="vertical"
       {...p(890, 1000)}
     />
@@ -306,7 +257,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R11"
       resistance="10kohm"
       footprint="0603"
-      manufacturerPartNumber="RMCF0603FT10K0"
       schOrientation="vertical"
       {...p(670, 840)}
     />
@@ -314,29 +264,15 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R17"
       resistance="10kohm"
       footprint="0603"
-      manufacturerPartNumber="RMCF0603FT10K0"
       schOrientation="vertical"
       {...p(670, 790)}
     />
-    <resistor
-      name="R8"
-      resistance="20kohm"
-      footprint="0603"
-      manufacturerPartNumber="ERJ-3EKF2002V"
-      {...p(930, 910)}
-    />
-    <resistor
-      name="R9"
-      resistance="20kohm"
-      footprint="0603"
-      manufacturerPartNumber="ERJ-3EKF2002V"
-      {...p(930, 890)}
-    />
+    <resistor name="R8" resistance="20kohm" footprint="0603" {...p(930, 910)} />
+    <resistor name="R9" resistance="20kohm" footprint="0603" {...p(930, 890)} />
     <capacitor
       name="C9"
       capacitance="1500pF"
       footprint="0603"
-      manufacturerPartNumber="CGA3E2X7R2A152K080AA"
       schOrientation="vertical"
       {...p(980, 860)}
     />
@@ -344,7 +280,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R10"
       resistance="1.1Mohm"
       footprint="0603"
-      manufacturerPartNumber="CRCW06031M10FKEA"
       schOrientation="vertical"
       {...p(1010, 860)}
     />
@@ -352,7 +287,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R2"
       resistance="1.1Mohm"
       footprint="0603"
-      manufacturerPartNumber="CRCW06031M10FKEA"
       {...p(1050, 980)}
     />
 
@@ -376,60 +310,30 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="C5.pin1" to="C6.pin1" />
     <trace from="C5.pin2" to="C6.pin2" />
 
-    <netlabel
-      net="V5"
-      connectsTo="R11.pin2"
-      anchorSide="bottom"
-      {...p(670, 860)}
-    />
+    <trace from="R11.pin2" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="R17.pin1"
       anchorSide="top"
       {...p(670, 770)}
     />
-    <netlabel
-      net="BIAS"
-      connectsTo="R11.pin1"
-      anchorSide="top"
-      {...p(710, 820)}
-    />
-    <netlabel
-      net="BIAS"
-      connectsTo="R10.pin1"
-      anchorSide="top"
-      {...p(1010, 800)}
-    />
-    <netlabel
-      net="V5"
-      connectsTo="U3A.V_PLUS"
-      anchorSide="bottom"
-      {...p(790, 950)}
-    />
+    <trace from="R11.pin1" to="net.BIAS" />
+    <trace from="R10.pin1" to="net.BIAS" />
+    <trace from="U3A.V_PLUS" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="U3A.V_MINUS"
       anchorSide="top"
       {...p(790, 870)}
     />
-    <netlabel
-      net="V5"
-      connectsTo="U3B.V_PLUS"
-      anchorSide="bottom"
-      {...p(1080, 940)}
-    />
+    <trace from="U3B.V_PLUS" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="U3B.V_MINUS"
       anchorSide="top"
       {...p(1080, 860)}
     />
-    <netlabel
-      net="V5"
-      connectsTo="C5.pin1"
-      anchorSide="bottom"
-      {...p(860, 1020)}
-    />
+    <trace from="C5.pin1" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="C5.pin2"
@@ -449,7 +353,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C2"
       capacitance="0.1uF"
       footprint="0603"
-      manufacturerPartNumber="GCM188R71C104KA37J"
       schOrientation="vertical"
       {...p(1280, 1010)}
     />
@@ -457,7 +360,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R15"
       resistance="95.3kohm"
       footprint="0603"
-      manufacturerPartNumber="CRCW060395K3FKEA"
       schOrientation="vertical"
       {...p(1200, 830)}
     />
@@ -465,7 +367,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R18"
       resistance="100kohm"
       footprint="0603"
-      manufacturerPartNumber="TNPW0603100KBEEA"
       schOrientation="vertical"
       {...p(1200, 780)}
     />
@@ -473,14 +374,12 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R16"
       resistance="806kohm"
       footprint="0603"
-      manufacturerPartNumber="CRCW0603806KFKEA"
       {...p(1300, 800)}
     />
     <resistor
       name="R4"
       resistance="10kohm"
       footprint="0603"
-      manufacturerPartNumber="RMCF0603FT10K0"
       schOrientation="vertical"
       {...p(1400, 910)}
     />
@@ -488,7 +387,6 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C15"
       capacitance="0.1uF"
       footprint="0603"
-      manufacturerPartNumber="CGJ3E2X7R1C104K080AA"
       schOrientation="vertical"
       doNotPlace
       {...p(1460, 870)}
@@ -503,54 +401,29 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="U1.OUT" to="C15.pin1" />
     <trace from="C2.pin2" to="U1.V_MINUS" />
 
-    <netlabel
-      net="V5"
-      connectsTo="C2.pin1"
-      anchorSide="bottom"
-      {...p(1280, 1030)}
-    />
+    <trace from="C2.pin1" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="C2.pin2"
       anchorSide="top"
       {...p(1280, 1000)}
     />
-    <netlabel
-      net="V5"
-      connectsTo="U1.V_PLUS"
-      anchorSide="bottom"
-      {...p(1300, 930)}
-    />
+    <trace from="U1.V_PLUS" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="U1.V_MINUS"
       anchorSide="top"
       {...p(1300, 850)}
     />
-    <netlabel
-      net="V5"
-      connectsTo="R15.pin2"
-      anchorSide="bottom"
-      {...p(1200, 850)}
-    />
+    <trace from="R15.pin2" to="net.V5" />
     <netlabel
       net="GND"
       connectsTo="R18.pin1"
       anchorSide="top"
       {...p(1200, 760)}
     />
-    <netlabel
-      net="V3_3"
-      connectsTo="R4.pin2"
-      anchorSide="bottom"
-      {...p(1400, 930)}
-    />
-    <netlabel
-      net="TIMER"
-      connectsTo="U1.OUT"
-      anchorSide="left"
-      {...p(1428, 890)}
-    />
+    <trace from="R4.pin2" to="net.V3_3" />
+    <trace from="U1.OUT" to="net.TIMER" />
     <netlabel
       net="GND"
       connectsTo="C15.pin2"

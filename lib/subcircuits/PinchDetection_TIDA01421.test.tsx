@@ -10,12 +10,15 @@ import {
   PinchDetectionSignalChain_TIDA01421,
   TIDA01421_SIGNAL_CHAIN_ORIGIN,
 } from "./PinchDetectionSignalChain_TIDA01421.circuit.tsx";
+import { PinchDetection_TIDA01421 } from "./PinchDetection_TIDA01421.circuit.tsx";
 
 type SourceComponent = Extract<AnyCircuitElement, { type: "source_component" }>;
 type SourcePort = Extract<AnyCircuitElement, { type: "source_port" }>;
+type SourceTrace = Extract<AnyCircuitElement, { type: "source_trace" }>;
 
 let signalJson: AnyCircuitElement[];
 let powerJson: AnyCircuitElement[];
+let compositeJson: AnyCircuitElement[];
 
 const renderSchematic = async (element: React.ReactElement) => {
   const circuit = new Circuit({
@@ -37,9 +40,10 @@ beforeAll(async () => {
     if (!isExpectedSchematicOnlyFootprintMessage) originalConsoleError(...args);
   };
   try {
-    [signalJson, powerJson] = await Promise.all([
+    [signalJson, powerJson, compositeJson] = await Promise.all([
       renderSchematic(<PinchDetectionSignalChain_TIDA01421 name="pinch" />),
       renderSchematic(<PinchDetectionPower_TIDA01421 name="power" />),
+      renderSchematic(<PinchDetection_TIDA01421 name="pinchComposite" />),
     ]);
   } finally {
     console.error = originalConsoleError;
@@ -86,6 +90,20 @@ const expectOneNet = (
   expect(new Set(keys).size).toBe(1);
 };
 
+const getTraceConnectivityKey = (
+  circuitJson: AnyCircuitElement[],
+  displayName: string,
+) => {
+  const trace = circuitJson.find(
+    (element): element is SourceTrace =>
+      element.type === "source_trace" && element.display_name === displayName,
+  );
+  if (!trace?.subcircuit_connectivity_map_key) {
+    throw new Error(`Missing wrapper trace ${displayName}`);
+  }
+  return trace.subcircuit_connectivity_map_key;
+};
+
 test("uses the authoritative devices, values, and one coordinate transform", () => {
   expect(TIDA01421_ALTIUM_SCALE).toBe(0.01827814);
   expect(tida01421Position(1280, 910, TIDA01421_SIGNAL_CHAIN_ORIGIN)).toEqual({
@@ -96,10 +114,7 @@ test("uses the authoritative devices, values, and one coordinate transform", () 
   expect(getComponent(signalJson, "J1").manufacturer_part_number).toBe(
     "1727010",
   );
-  expect(getComponent(signalJson, "R6")).toMatchObject({
-    manufacturer_part_number: "CRE2512-FZ-R003E-3",
-    resistance: 0.003,
-  });
+  expect(getComponent(signalJson, "R6")).toMatchObject({ resistance: 0.003 });
   expect(getComponent(signalJson, "U2").manufacturer_part_number).toBe(
     "INA240A1QDRQ1",
   );
@@ -109,9 +124,9 @@ test("uses the authoritative devices, values, and one coordinate transform", () 
   expect(getComponent(signalJson, "U1").manufacturer_part_number).toBe(
     "LMV7275IDCKRQ1",
   );
-  expect(getComponent(signalJson, "C15").manufacturer_part_number).toBe(
-    "CGJ3E2X7R1C104K080AA",
-  );
+  expect(getComponent(signalJson, "C15")).toMatchObject({
+    capacitance: 0.1e-6,
+  });
   expect(getComponent(powerJson, "U4").manufacturer_part_number).toBe(
     "TPS7B6933QDBVRQ1",
   );
@@ -226,4 +241,26 @@ test("preserves the local power nets and renders without circuit errors", () => 
     element.type.endsWith("_error"),
   );
   expect(circuitErrors).toEqual([]);
+});
+
+test("joins the child power rails in the composite without circuit errors", () => {
+  const expectWrapperNet = (netName: "V3_3" | "V5" | "GND") => {
+    const powerKey = getTraceConnectivityKey(
+      compositeJson,
+      `.power > .${netName} to net.${netName}`,
+    );
+    const signalKey = getTraceConnectivityKey(
+      compositeJson,
+      `.signalChain > .${netName} to net.${netName}`,
+    );
+    expect(powerKey).toBe(signalKey);
+  };
+
+  expectWrapperNet("V3_3");
+  expectWrapperNet("V5");
+  expectWrapperNet("GND");
+
+  expect(
+    compositeJson.filter((element) => element.type.endsWith("_error")),
+  ).toEqual([]);
 });

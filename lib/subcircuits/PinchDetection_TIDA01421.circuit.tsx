@@ -21,12 +21,19 @@ const wrapperOrigin = { x: 820, y: 620 };
  */
 export const PinchDetection_TIDA01421 = (props: SubcircuitProps) => (
   <subcircuit
+    exposedNets={["PWR", "V_PLUS", "V_MINUS", "GND", "ADCMOTOR", "TIMER"]}
     schAutoLayoutEnabled={false}
-    schTraceAutoLabelEnabled={false}
     routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />
+    <net name="PWR" isPowerNet />
+    <net name="V5" isPowerNet />
+    <net name="V3_3" isPowerNet />
+    <net name="V_PLUS" />
+    <net name="V_MINUS" />
+    <net name="ADCMOTOR" />
+    <net name="TIMER" />
     <PinchDetectionSignalChain_TIDA01421
       name="signalChain"
       {...tida01421Position(
@@ -34,15 +41,6 @@ export const PinchDetection_TIDA01421 = (props: SubcircuitProps) => (
         TIDA01421_SIGNAL_CHAIN_ORIGIN.y,
         wrapperOrigin,
       )}
-      connections={{
-        V_PLUS: "net.V_PLUS",
-        V_MINUS: "net.V_MINUS",
-        V5: "net.V5",
-        V3_3: "net.V3_3",
-        GND: "net.GND",
-        ADCMOTOR: "net.ADCMOTOR",
-        TIMER: "net.TIMER",
-      }}
     />
     <PinchDetectionPower_TIDA01421
       name="power"
@@ -51,20 +49,19 @@ export const PinchDetection_TIDA01421 = (props: SubcircuitProps) => (
         TIDA01421_POWER_ORIGIN.y,
         wrapperOrigin,
       )}
-      connections={{
-        PWR: "net.PWR",
-        V3_3: "net.V3_3",
-        V5: "net.V5",
-        GND: "net.GND",
-      }}
     />
 
-    <port name="PWR" direction="left" connectsTo="power.PWR" />
-    <port name="V_PLUS" direction="left" connectsTo="signalChain.V_PLUS" />
-    <port name="V_MINUS" direction="left" connectsTo="signalChain.V_MINUS" />
-    <port name="GND" direction="left" connectsTo="power.GND" />
-    <port name="ADCMOTOR" direction="right" connectsTo="signalChain.ADCMOTOR" />
-    <port name="TIMER" direction="right" connectsTo="signalChain.TIMER" />
+    <trace from=".power > .PWR" to="net.PWR" />
+    <trace from=".power > .V3_3" to="net.V3_3" />
+    <trace from=".signalChain > .V3_3" to="net.V3_3" />
+    <trace from=".power > .V5" to="net.V5" />
+    <trace from=".signalChain > .V5" to="net.V5" />
+    <trace from=".power > .GND" to="net.GND" />
+    <trace from=".signalChain > .GND" to="net.GND" />
+    <trace from=".signalChain > .V_PLUS" to="net.V_PLUS" />
+    <trace from=".signalChain > .V_MINUS" to="net.V_MINUS" />
+    <trace from=".signalChain > .ADCMOTOR" to="net.ADCMOTOR" />
+    <trace from=".signalChain > .TIMER" to="net.TIMER" />
   </subcircuit>
 );
 
