@@ -29,6 +29,7 @@ import {
   LM74202Q1,
   LM50HVQ1,
   LMK1C1104,
+  LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
@@ -92,6 +93,7 @@ import { Microcontroller_MSPM0L1306 } from "./lib/subcircuits/Microcontroller_MS
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
+import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "./lib/subcircuits/OutputUserInterface_LEDMatrix_LP5892_Q1.circuit.tsx";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
 import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
 import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit.tsx";
@@ -154,6 +156,7 @@ export {
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
+  OutputUserInterface_LEDMatrix_LP5892_Q1,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   LoadSwitch_TPS22919,
@@ -216,6 +219,7 @@ export const TiChipComponents = {
   LM74202Q1,
   LM50HVQ1,
   LMK1C1104,
+  LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
@@ -281,6 +285,7 @@ export const TiSubcircuitComponents = {
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
+  OutputUserInterface_LEDMatrix_LP5892_Q1,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   LoadSwitch_TPS22919,
