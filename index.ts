@@ -21,7 +21,6 @@ import {
   HDC3022,
   INA237,
   ISOW7841,
-  LM50HVQ1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
@@ -107,7 +106,6 @@ import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/Com
 import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
 import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
-import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -162,7 +160,6 @@ export {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
-  TemperatureSensor_LM50HV_Q1,
 };
 
 export const TiChipComponents = {
@@ -188,7 +185,6 @@ export const TiChipComponents = {
   HDC3022,
   INA237,
   ISOW7841,
-  LM50HVQ1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
@@ -273,7 +269,6 @@ export const TiSubcircuitComponents = {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
-  TemperatureSensor_LM50HV_Q1,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

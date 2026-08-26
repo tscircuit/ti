@@ -122,7 +122,6 @@ The package currently exports these subcircuit components:
 - `LEDDriver_TLC59116`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
-- `TemperatureSensor_LM50HV_Q1` ([LM50-Q1/LM50HV-Q1 datasheet, Figure 8-3](https://www.ti.com/lit/ds/symlink/lm50-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
@@ -166,7 +165,6 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
-| `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
@@ -234,14 +232,6 @@ For example, `PowerMonitor_INA237` comes from
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.
-
-### `lib/thirdparty-subcircuits`
-
-The `lib/thirdparty-subcircuits` directory contains application wiring circuits
-for blocks that do not provide a TI reference design. These circuits clearly
-identify the datasheet figure used as their source. For example,
-`TemperatureSensor_LM50HV_Q1` follows Figure 8-3 of the LM50-Q1/LM50HV-Q1
-datasheet and exposes a three-wire sensor terminal.
 
 ### `lib/simulations`
 
