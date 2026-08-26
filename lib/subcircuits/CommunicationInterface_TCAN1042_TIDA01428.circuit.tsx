@@ -26,8 +26,8 @@ const commonModeChokeSymbol = (
       strokeColor="#840000"
     />
     <schematiccircle
-      center={{ x: -0.55, y: 0.5 }}
-      radius={0.09}
+      center={{ x: -0.35, y: 0.34 }}
+      radius={0.07}
       strokeWidth={0.025}
       color="#840000"
       fillColor="#840000"
@@ -55,8 +55,8 @@ const commonModeChokeSymbol = (
       strokeColor="#840000"
     />
     <schematiccircle
-      center={{ x: -0.55, y: -0.5 }}
-      radius={0.09}
+      center={{ x: -0.35, y: -0.34 }}
+      radius={0.07}
       strokeWidth={0.025}
       color="#840000"
       fillColor="#840000"
