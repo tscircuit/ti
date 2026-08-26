@@ -35,6 +35,9 @@ export default () => (
       sheetIndex={4}
     />
 
+    <net name="SCL" />
+    <net name="SDA" />
+
     <BatteryManagement_2to4Cell_BQ40Z60
       name="battery_management"
       schSheetName="battery_management"
@@ -96,22 +99,12 @@ export default () => (
       to=".usb_c_output > .C29 > .pin2"
     />
 
-    <trace
-      from=".microcontroller > .U4 > .pin14"
-      to=".battery_charging > .U1 > .pin13"
-    />
-    <trace
-      from=".microcontroller > .U4 > .pin14"
-      to=".battery_management > .U2 > .pin17"
-    />
-    <trace
-      from=".microcontroller > .U4 > .pin15"
-      to=".battery_charging > .U1 > .pin12"
-    />
-    <trace
-      from=".microcontroller > .U4 > .pin15"
-      to=".battery_management > .U2 > .pin16"
-    />
+    <trace from=".microcontroller > .U4 > .pin14" to="net.SCL" />
+    <trace from=".battery_charging > .U1 > .pin13" to="net.SCL" />
+    <trace from=".battery_management > .U2 > .pin17" to="net.SCL" />
+    <trace from=".battery_management > .U2 > .pin16" to="net.SDA" />
+    <trace from=".battery_charging > .U1 > .pin12" to="net.SDA" />
+    <trace from=".microcontroller > .U4 > .pin15" to="net.SDA" />
 
     <trace
       from=".microcontroller > .U4 > .pin12"
