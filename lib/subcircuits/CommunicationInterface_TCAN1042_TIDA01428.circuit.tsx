@@ -2,12 +2,127 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { TCAN1042HGVDRBQ1 } from "../chips/TCAN1042HGVDRBQ1.circuit.tsx";
 
-const chokePinLabels = {
-  pin1: "CANL_IN",
-  pin2: "CANL_OUT",
-  pin3: "CANH_OUT",
-  pin4: "CANH_IN",
-} as const;
+const commonModeChokeSymbol = (
+  <symbol>
+    <port
+      name="pin4"
+      pinNumber={4}
+      schX={-0.65}
+      schY={1.2}
+      direction="up"
+      schStemLength={0.7}
+    />
+    <port
+      name="pin3"
+      pinNumber={3}
+      schX={0.65}
+      schY={1.2}
+      direction="up"
+      schStemLength={0.7}
+    />
+    <schematicpath
+      svgPath="M -0.65 0.5 L -0.5 0.5 C -0.5 0.22 -0.2 0.22 -0.2 0.5 C -0.2 0.22 0.1 0.22 0.1 0.5 C 0.1 0.22 0.4 0.22 0.4 0.5 L 0.65 0.5"
+      strokeWidth={0.04}
+      strokeColor="#840000"
+    />
+    <schematiccircle
+      center={{ x: -0.55, y: 0.5 }}
+      radius={0.09}
+      strokeWidth={0.025}
+      color="#840000"
+      fillColor="#840000"
+      isFilled
+    />
+    <schematicline
+      x1={-0.55}
+      y1={0.1}
+      x2={0.55}
+      y2={0.1}
+      strokeWidth={0.035}
+      color="#840000"
+    />
+    <schematicline
+      x1={-0.55}
+      y1={-0.1}
+      x2={0.55}
+      y2={-0.1}
+      strokeWidth={0.035}
+      color="#840000"
+    />
+    <schematicpath
+      svgPath="M -0.65 -0.5 L -0.5 -0.5 C -0.5 -0.22 -0.2 -0.22 -0.2 -0.5 C -0.2 -0.22 0.1 -0.22 0.1 -0.5 C 0.1 -0.22 0.4 -0.22 0.4 -0.5 L 0.65 -0.5"
+      strokeWidth={0.04}
+      strokeColor="#840000"
+    />
+    <schematiccircle
+      center={{ x: -0.55, y: -0.5 }}
+      radius={0.09}
+      strokeWidth={0.025}
+      color="#840000"
+      fillColor="#840000"
+      isFilled
+    />
+    <port
+      name="pin1"
+      pinNumber={1}
+      schX={-0.65}
+      schY={-1.2}
+      direction="down"
+      schStemLength={0.7}
+    />
+    <port
+      name="pin2"
+      pinNumber={2}
+      schX={0.65}
+      schY={-1.2}
+      direction="down"
+      schStemLength={0.7}
+    />
+    <schematictext
+      text="4"
+      schX={-0.8}
+      schY={0.95}
+      schRotation={90}
+      fontSize={0.16}
+      anchor="center"
+      color="#840000"
+    />
+    <schematictext
+      text="3"
+      schX={0.8}
+      schY={0.95}
+      schRotation={90}
+      fontSize={0.16}
+      anchor="center"
+      color="#840000"
+    />
+    <schematictext
+      text="1"
+      schX={-0.8}
+      schY={-0.95}
+      schRotation={90}
+      fontSize={0.16}
+      anchor="center"
+      color="#840000"
+    />
+    <schematictext
+      text="2"
+      schX={0.8}
+      schY={-0.95}
+      schRotation={90}
+      fontSize={0.16}
+      anchor="center"
+      color="#840000"
+    />
+    <schematictext
+      text="{NAME}"
+      schX={0.85}
+      schY={0.42}
+      fontSize={0.22}
+      anchor="left"
+    />
+  </symbol>
+);
 
 /**
  * CAN FD interface topology from the TIDA-01428 reference design.
@@ -68,8 +183,8 @@ export const CommunicationInterface_TCAN1042_TIDA01428 = (
         TXD: "net.CAN_TXD",
         STB: "net.CAN_STB",
         RXD: "net.CAN_RXD",
-        CANH: "L7.CANH_IN",
-        CANL: "L7.CANL_IN",
+        CANH: "L7.pin4",
+        CANL: "L7.pin1",
         GND: "net.GND",
         PAD: "net.GND",
       }}
@@ -80,16 +195,12 @@ export const CommunicationInterface_TCAN1042_TIDA01428 = (
       manufacturerPartNumber="B82789C0104H001"
       datasheetUrl="https://www.tdk-electronics.tdk.com/inf/30/db/ind_2008/b82789c0.pdf"
       footprint="soic4"
-      pinLabels={chokePinLabels}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [4, 1] },
-        rightSide: { direction: "top-to-bottom", pins: [3, 2] },
-      }}
+      symbol={commonModeChokeSymbol}
       schX={5}
       schY={0.6}
       connections={{
-        CANH_OUT: "net.CANH",
-        CANL_OUT: "net.CANL",
+        pin3: "net.CANH",
+        pin2: "net.CANL",
       }}
     />
 
