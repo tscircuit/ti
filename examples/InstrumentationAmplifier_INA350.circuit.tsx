@@ -1,68 +1,29 @@
 import { InstrumentationAmplifier_INA350 } from "@tsci/tscircuit.ti";
 
-/** Single-supply INA350 module with a parent-circuit signal/supply header. */
-export default ({ gain = 20 }: { gain?: 10 | 20 } = {}) => (
-  <board width={18} height={14} minTraceWidth={0.1} nominalTraceWidth={0.1}>
-    <InstrumentationAmplifier_INA350 name="Amp" gain={gain} pcbX={2} schX={3} />
-    <connector
-      name="J1"
-      footprint="pinrow5"
-      pcbRotation={90}
-      pcbX={-5}
-      pcbY={0}
-      schX={-4}
-      schY={0}
-      schWidth={1.8}
-      schHeight={3.2}
-      pinLabels={{
-        pin1: "VS",
-        pin2: "IN_NEG",
-        pin3: "IN_POS",
-        pin4: "OUT",
-        pin5: "GND",
-      }}
-      schPinArrangement={{
-        rightSide: {
-          direction: "top-to-bottom",
-          pins: ["VS", "IN_NEG", "IN_POS", "OUT", "GND"],
-        },
-      }}
-      schPinStyle={{
-        IN_NEG: { marginTop: 0.3 },
-        IN_POS: { marginTop: 0.3 },
-        OUT: { marginTop: 0.3 },
-        GND: { marginTop: 0.3 },
-      }}
-    />
+/**
+ * Header-free parent wiring for the TIDA-010266 amplifier stage.
+ * The parent supplies 3.3 V, a buffered 1.25 V reference, and sensor/ADC signals.
+ * No reference generator, sensor, ADC, or optional J10 gain jumper is included.
+ * Routing stays disabled until real parent components terminate these nets.
+ */
+export default ({
+  gain = "external",
+}: {
+  gain?: 30 | 50 | "external";
+} = {}) => (
+  <board width={12} height={10} routingDisabled>
+    <InstrumentationAmplifier_INA350 name="Amp" gain={gain} />
+    <trace from=".Amp .U1 > .VS" to="net.V3_3" schDisplayLabel="3.3V" />
+    <trace from=".Amp .U1 > .V_NEG" to="net.GND" />
+    <trace from=".Amp .U1 > .IN_NEG" to="net.INA_IN_NEG" />
+    <trace from=".Amp .U1 > .IN_POS" to="net.INA_IN_POS" />
+    <trace from=".Amp .U1 > .OUT" to="net.INA_OUT" />
     <trace
-      name="HEADER_SUPPLY"
-      schDisplayLabel="VS"
-      from=".J1 > .VS"
-      to=".Amp .U1 > .VS"
+      from=".Amp .U1 > .REF"
+      to="net.VREF_1_25"
+      schDisplayLabel="1.25V_REF"
     />
-    <trace
-      name="HEADER_INPUT_NEGATIVE"
-      schDisplayLabel="IN_NEG"
-      from=".J1 > .IN_NEG"
-      to=".Amp .U1 > .IN_NEG"
-    />
-    <trace
-      name="HEADER_INPUT_POSITIVE"
-      schDisplayLabel="IN_POS"
-      from=".J1 > .IN_POS"
-      to=".Amp .U1 > .IN_POS"
-    />
-    <trace
-      name="HEADER_OUTPUT"
-      schDisplayLabel="OUT"
-      from=".J1 > .OUT"
-      to=".Amp .U1 > .OUT"
-    />
-    <trace
-      name="HEADER_GROUND"
-      schDisplayLabel="GND"
-      from=".J1 > .GND"
-      to=".Amp .U1 > .V_NEG"
-    />
+    {gain === "external" && <trace from=".Amp .U1 > .GS" to="net.INA_GS" />}
+    {/* SHDN is not tied to ground: its internal pull-up enables the device. */}
   </board>
 );

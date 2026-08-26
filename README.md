@@ -97,42 +97,58 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 ### INA350 instrumentation amplifier
 
-`InstrumentationAmplifier_INA350` implements the single-supply amplifier
-section of [TI's INA350 datasheet, Figure 9-3](https://www.ti.com/lit/ds/symlink/ina350.pdf).
-The [import example](examples/InstrumentationAmplifier_INA350.circuit.tsx)
-connects all five interface signals to a header on an 18 x 14 mm board.
-It uses `INA350ABSIDSGR` (8-pin WSON, 2 x 2 mm), a 100 nF bypass capacitor,
-and a triangular amplifier symbol. The default gain is 20 V/V; `gain={10}`
-grounds GS instead. SHDN is tied high to enable the amplifier. V-, REF, and
-the exposed pad are grounded. Supply VS with 1.8-5.5 V.
+`InstrumentationAmplifier_INA350` contains **only `INA350CDSIDSGR` and a 100 nF
+bypass capacitor**: the U5/C13 amplifier stage in
+[TI TIDA-010266, Figure 4-1](https://www.ti.com/lit/ug/tiduf53/tiduf53.pdf#page=17).
+It contains no pin headers, connectors, or gain-selection jumper. The
+[import example](examples/InstrumentationAmplifier_INA350.circuit.tsx) also uses
+only named parent nets, with no header. J10 in TI's schematic is an optional
+parent-board gain jumper, not part of this module.
+
+The CDS variant provides gains **30/50 V/V**. `gain="external"` (default) exposes
+GS for the parent: low selects 30, high or unconnected selects 50. `gain={30}`
+or `gain={50}` straps GS internally to GND or VS. REF is **not grounded**; drive
+it from a low-impedance source such as the buffered 1.25 V reference in TIDA-010266.
+`shutdown="external"` (default) exposes SHDN; high or unconnected enables the
+amplifier, while low disables it. `shutdown="enabled"` ties SHDN to VS. Do not
+populate a pull-down on SHDN if the amplifier must remain enabled.
 
 ```tsx
 import { InstrumentationAmplifier_INA350 } from "@tsci/tscircuit.ti"
 
 export default () => (
-  <board width="18mm" height="14mm">
-    <InstrumentationAmplifier_INA350 name="Amp" gain={20} />
-    <trace from=".Amp .U1 > .VS" to="net.VS" />
+  <board width="12mm" height="10mm" routingDisabled>
+    <InstrumentationAmplifier_INA350 name="Amp" gain="external" />
+    <trace from=".Amp .U1 > .VS" to="net.V3_3" />
     <trace from=".Amp .U1 > .V_NEG" to="net.GND" />
-    <trace from=".Amp .U1 > .IN_POS" to="net.SENSOR_POS" />
-    <trace from=".Amp .U1 > .IN_NEG" to="net.SENSOR_NEG" />
-    <trace from=".Amp .U1 > .OUT" to="net.ADC_IN" />
+    <trace from=".Amp .U1 > .IN_POS" to="net.INA_IN_POS" />
+    <trace from=".Amp .U1 > .IN_NEG" to="net.INA_IN_NEG" />
+    <trace from=".Amp .U1 > .OUT" to="net.INA_OUT" />
+    <trace from=".Amp .U1 > .REF" to="net.VREF_1_25" />
+    <trace from=".Amp .U1 > .GS" to="net.INA_GS" />
   </board>
 )
 ```
 
-The sensor/bridge, excitation reference, and ADC are supplied by the parent
-circuit. Inputs need a DC bias-current return path and must meet the datasheet's
-common-mode/output-swing limits. Figure 9-3 uses VS = 5.5 V and a separate,
-precise 5 V bridge excitation. This module has no ADC, sensor, voltage regulator,
-or analog simulation model. Its 0.1 mm traces require suitable PCB fabrication
-rules; validate the final board's routing and clearances.
+The supply, reference generator, sensor, ADC/filter, and optional controls belong
+to the parent circuit. Named nets do not generate voltages or add physical
+terminals: the example disables routing until the parent supplies real endpoints.
+Connect an optional MCU shutdown signal to `.Amp .U1 > .SHDN`. REF, GS, and SHDN
+remain separate from ground unless explicitly wired otherwise by the parent or
+selected props. V- and the exposed pad are grounded, and C1 bypasses VS to GND.
 
-For a different REF voltage, split supplies, or external GS/SHDN control,
-use the raw `INA350` or `INA350ABSIDSGR` component. REF must be driven by a
-low-impedance source and the exposed pad must connect to V-. `INA350` supports
-`footprintVariant="wson_8_ep_2x2"`; its underlying ABS part provides gains 10/20,
-not the CDS variant's 30/50 gains. No supplier SKU or 3D model is assumed.
+Supply VS with 1.8-5.5 V. Inputs need a DC bias-current return path and must meet
+the [INA350 datasheet's common-mode/output-swing limits](https://www.ti.com/lit/ds/symlink/ina350.pdf).
+The module uses 0.1 mm traces. Fixed gain 50 uses a bottom-layer strap and two vias
+to keep the SHDN escape clear; use at least two copper layers. Verify the completed
+parent board's routing and fabrication clearances. It has no analog simulation model and is not a validated
+medical-device design.
+
+`INA350` defaults to the raw `INA350CDSIDSGR` chip with
+`footprintVariant="wson_8_ep_2x2"`. The exact `INA350ABSIDSGR` export is also
+available for designs requiring gains 10/20. Both share the DSG0008A footprint
+and pinout, but their gain settings are not interchangeable. No supplier SKU or
+3D model is assumed.
 
 ### DRV8210 PWM motor driver
 
@@ -241,7 +257,7 @@ chip is listed individually below, including whether it supports a
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
-| `INA350` | `wson_8_ep_2x2` | `INA350ABSIDSGR` |
+| `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |

@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
-import { INA350ABSIDSGR } from "./INA350ABSIDSGR.circuit.tsx";
+import { INA350CDSIDSGR } from "./INA350CDSIDSGR.circuit.tsx";
 
-type INA350Props = ComponentProps<typeof INA350ABSIDSGR> & {
+type INA350Props = ComponentProps<typeof INA350CDSIDSGR> & {
   footprintVariant?: "wson_8_ep_2x2";
 };
 
@@ -14,7 +14,7 @@ export const INA350 = ({
       `Unsupported INA350 footprint variant: ${footprintVariant}`,
     );
   }
-  return <INA350ABSIDSGR {...props} />;
+  return <INA350CDSIDSGR {...props} />;
 };
 
 export default INA350;

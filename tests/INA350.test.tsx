@@ -7,6 +7,7 @@ import INA350ModuleExample from "../examples/InstrumentationAmplifier_INA350.cir
 import {
   INA350,
   INA350ABSIDSGR,
+  INA350CDSIDSGR,
   InstrumentationAmplifier_INA350,
   TiChipComponents,
   TiSubcircuitComponents,
@@ -73,7 +74,11 @@ test("INA350 package exports use the datasheet DSG pinout and land pattern", asy
     TiSubcircuitComponents.InstrumentationAmplifier_INA350,
     InstrumentationAmplifier_INA350,
   );
-  for (const Chip of [INA350, INA350ABSIDSGR]) {
+  for (const [Chip, mpn] of [
+    [INA350, "INA350CDSIDSGR"],
+    [INA350CDSIDSGR, "INA350CDSIDSGR"],
+    [INA350ABSIDSGR, "INA350ABSIDSGR"],
+  ] as const) {
     const circuit = new Circuit();
     circuit.add(
       <board width={12} height={12} routingDisabled>
@@ -83,7 +88,7 @@ test("INA350 package exports use the datasheet DSG pinout and land pattern", asy
     await circuit.renderUntilSettled();
     assertNoErrors(circuit);
     const component = circuit.db.source_component.getWhere({ name: "U1" });
-    assert.equal(component?.manufacturer_part_number, "INA350ABSIDSGR");
+    assert.equal(component?.manufacturer_part_number, mpn);
     assert.equal(circuit.db.source_port.list().length, 9);
     assert.equal(circuit.db.pcb_smtpad.list().length, 9);
     // TI Table 6-1, Figure 6-2, and DSG0008A land-pattern drawing.
@@ -128,12 +133,21 @@ test("INA350 package exports use the datasheet DSG pinout and land pattern", asy
   );
 });
 
-for (const gain of [undefined, 10] as const) {
-  test(`INA350 amplifier connects gain ${gain ?? 20}, bypass, reference and exposed pad`, async () => {
+for (const settings of [
+  {},
+  { gain: 30 },
+  { gain: 50 },
+  { gain: 50, shutdown: "enabled" },
+] as const) {
+  const { gain = "external", shutdown = "external" } = settings as {
+    gain?: 30 | 50 | "external";
+    shutdown?: "external" | "enabled";
+  };
+  test(`INA350CDS module connects gain ${gain} and shutdown ${shutdown} without headers or grounding REF`, async () => {
     const circuit = new Circuit();
     circuit.add(
       <board width={12} height={10} routingDisabled>
-        <InstrumentationAmplifier_INA350 name="Amp" gain={gain} />
+        <InstrumentationAmplifier_INA350 name="Amp" {...settings} />
       </board>,
     );
     await circuit.renderUntilSettled();
@@ -144,10 +158,10 @@ for (const gain of [undefined, 10] as const) {
       ["U1", "IN_POS", "IN_POS"],
       ["U1", "OUT", "OUT"],
       ["U1", "V_POS", "VS"],
-      ["U1", "SHDN", "VS"],
-      ["U1", "GS", gain === 10 ? "GND" : "VS"],
+      ["U1", "SHDN", shutdown === "external" ? "SHDN" : "VS"],
+      ["U1", "GS", gain === "external" ? "GS" : gain === 30 ? "GND" : "VS"],
       ["U1", "V_NEG", "GND"],
-      ["U1", "REF", "GND"],
+      ["U1", "REF", "REF"],
       ["U1", "EP", "GND"],
       ["C1", "pin1", "VS"],
       ["C1", "pin2", "GND"],
@@ -161,7 +175,10 @@ for (const gain of [undefined, 10] as const) {
       );
     }
     const nets = circuit.db.source_net.list();
-    assert.equal(nets.length, 5);
+    assert.equal(
+      nets.length,
+      6 + Number(gain === "external") + Number(shutdown === "external"),
+    );
     for (const net of nets) {
       const connected = connectedIds(circuit, net.source_net_id);
       assert.equal(
@@ -174,10 +191,18 @@ for (const gain of [undefined, 10] as const) {
     assert.ok(capacitor?.ftype === "simple_capacitor");
     assert.equal(capacitor.capacitance, 1e-7);
     assert.equal(circuit.db.pcb_component.list().length, 2);
+    assert.deepEqual(
+      circuit.db.source_component
+        .list()
+        .map((c) => c.name)
+        .sort(),
+      ["C1", "U1"],
+    );
 
     // Custom-symbol ports must be the physical pins, not disconnected drawing-only duplicates.
     const chip = circuit.db.source_component.getWhere({ name: "U1" });
     assert.ok(chip);
+    assert.equal(chip.manufacturer_part_number, "INA350CDSIDSGR");
     const ports = circuit.db.source_port.list({
       source_component_id: chip.source_component_id,
     });
@@ -210,21 +235,26 @@ for (const gain of [undefined, 10] as const) {
 
 test("two imported INA350 modules accept parent connections without shorting their nets", async () => {
   const circuit = new Circuit();
-  const signals = ["IN_NEG", "IN_POS", "OUT", "VS", "V_NEG"] as const;
+  const signals = [
+    "IN_NEG",
+    "IN_POS",
+    "OUT",
+    "VS",
+    "V_NEG",
+    "REF",
+    "GS",
+    "SHDN",
+  ] as const;
   circuit.add(
-    <board width={36} height={20} routingDisabled>
+    <board width={36} height={26} routingDisabled>
       <InstrumentationAmplifier_INA350 name="AmpA" pcbX={-6} schX={-6} />
-      <InstrumentationAmplifier_INA350
-        name="AmpB"
-        pcbX={6}
-        schX={6}
-        gain={10}
-      />
+      <InstrumentationAmplifier_INA350 name="AmpB" pcbX={6} schX={6} />
       <chip
         name="JA"
-        footprint="pinrow5"
-        pcbX={-8}
-        pcbY={5}
+        footprint="pinrow8"
+        pcbRotation={90}
+        pcbX={-13}
+        pcbY={0}
         schX={-6}
         schY={6}
         pinLabels={Object.fromEntries(
@@ -236,9 +266,10 @@ test("two imported INA350 modules accept parent connections without shorting the
       />
       <chip
         name="JB"
-        footprint="pinrow5"
-        pcbX={8}
-        pcbY={5}
+        footprint="pinrow8"
+        pcbRotation={90}
+        pcbX={13}
+        pcbY={0}
         schX={6}
         schY={6}
         pinLabels={Object.fromEntries(
@@ -275,25 +306,96 @@ test("two imported INA350 modules accept parent connections without shorting the
   }
 });
 
-for (const gain of [10, 20] as const) {
-  test(`INA350 import example routes gain ${gain} and all five header connections`, async () => {
+for (const gain of ["external", 30, 50] as const) {
+  test(`INA350 import example connects gain ${gain} with external REF and no headers`, async () => {
     const circuit = new Circuit();
     circuit.add(<INA350ModuleExample gain={gain} />);
     await circuit.renderUntilSettled();
     assertNoErrors(circuit);
-    assert.ok(circuit.db.pcb_trace.list().length > 0);
-    for (const [headerPin, chipPin] of [
-      ["VS", "VS"],
+    assert.deepEqual(
+      circuit.db.source_component
+        .list()
+        .map((c) => c.name)
+        .sort(),
+      ["C1", "U1"],
+    );
+    for (const [netName, chipPin] of [
+      ["V3_3", "VS"],
       ["GND", "V_NEG"],
-      ["IN_NEG", "IN_NEG"],
-      ["IN_POS", "IN_POS"],
-      ["OUT", "OUT"],
+      ["INA_IN_NEG", "IN_NEG"],
+      ["INA_IN_POS", "IN_POS"],
+      ["INA_OUT", "OUT"],
+      ["VREF_1_25", "REF"],
+      ...(gain === "external" ? [["INA_GS", "GS"]] : []),
     ]) {
-      const connected = connectedIds(
-        circuit,
-        getPort(circuit, "J1", headerPin).source_port_id,
-      );
+      const net = circuit.db.source_net.getWhere({ name: netName });
+      assert.ok(net, netName);
+      const connected = connectedIds(circuit, net.source_net_id);
       assert.ok(connected.has(getPort(circuit, "U1", chipPin).source_port_id));
+    }
+    const ground = connectedIds(
+      circuit,
+      getPort(circuit, "U1", "V_NEG").source_port_id,
+    );
+    assert.ok(!ground.has(getPort(circuit, "U1", "REF").source_port_id));
+    assert.ok(!ground.has(getPort(circuit, "U1", "SHDN").source_port_id));
+  });
+}
+
+test("INA350CDS rejects ABS gains instead of silently choosing an incorrect gain", () => {
+  assert.throws(
+    () => InstrumentationAmplifier_INA350({ name: "Amp", gain: 20 as never }),
+    /INA350CDS supports gains 30\/50/,
+  );
+});
+
+for (const gain of ["external", 30, 50] as const) {
+  test(`INA350 module routes all parent interface connections at gain ${gain}`, async () => {
+    const circuit = new Circuit();
+    const interfaces = [
+      {
+        name: "ParentInput",
+        x: -6,
+        signals: ["V_NEG", "IN_POS", "IN_NEG", "GS"],
+      },
+      { name: "ParentOutput", x: 8, signals: ["REF", "OUT", "VS", "SHDN"] },
+    ];
+    circuit.add(
+      <board width={26} height={18} minTraceWidth={0.1} nominalTraceWidth={0.1}>
+        <InstrumentationAmplifier_INA350 name="Amp" gain={gain} />
+        {/* Test-only physical endpoints stand in for the parent application's parts. */}
+        {interfaces.map(({ name, x, signals }) => (
+          <chip
+            key={name}
+            name={name}
+            footprint="pinrow4"
+            pcbRotation={90}
+            pcbX={x}
+            pinLabels={Object.fromEntries(
+              signals.map((s, i) => [`pin${i + 1}`, s]),
+            )}
+            connections={Object.fromEntries(
+              signals
+                .filter((s) => s !== "GS" || gain === "external")
+                .map((s) => [s, `.Amp .U1 > .${s}`]),
+            )}
+          />
+        ))}
+      </board>,
+    );
+    await circuit.renderUntilSettled();
+    assertNoErrors(circuit);
+    assert.ok(circuit.db.pcb_trace.list().length > 0);
+    for (const { name, signals } of interfaces) {
+      for (const signal of signals.filter(
+        (s) => s !== "GS" || gain === "external",
+      )) {
+        const connected = connectedIds(
+          circuit,
+          getPort(circuit, name, signal).source_port_id,
+        );
+        assert.ok(connected.has(getPort(circuit, "U1", signal).source_port_id));
+      }
     }
   });
 }

@@ -59,6 +59,7 @@ export { HDC3020DEFR } from "./HDC3020DEFR.circuit.tsx";
 export { HDC3022DEJR } from "./HDC3022DEJR.circuit.tsx";
 export { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1.circuit.tsx";
 export { INA350ABSIDSGR } from "./INA350ABSIDSGR.circuit.tsx";
+export { INA350CDSIDSGR } from "./INA350CDSIDSGR.circuit.tsx";
 export { ISOW7841DWR } from "./ISOW7841DWR.circuit.tsx";
 export { LMK1C1104PWR } from "./LMK1C1104PWR.circuit.tsx";
 export { MSP430F5229IRGCR } from "./MSP430F5229IRGCR.circuit.tsx";
