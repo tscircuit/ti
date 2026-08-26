@@ -177,6 +177,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `TIDA010070_OutputProtection` — TIDA-010070 ORing and hot-swap protection reproduced from TI's native TIDM357 schematic
 
 ## Exported Chips
 
