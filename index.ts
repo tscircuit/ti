@@ -14,6 +14,7 @@ import {
   CC2745R10,
   CC3235SF,
   DAC101C081Q,
+  DRV8210,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -69,6 +70,7 @@ import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.cir
 import { BluetoothController_CC2564C } from "./lib/subcircuits/BluetoothController_CC2564C.circuit.tsx";
 import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit.tsx";
 import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit.tsx";
+import { MotorDriver_DRV8210 } from "./lib/subcircuits/MotorDriver_DRV8210.circuit.tsx";
 import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit.tsx";
 import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit.tsx";
 import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSensor_HDC2080.circuit.tsx";
@@ -128,6 +130,7 @@ export {
   BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
+  MotorDriver_DRV8210,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
   EnvironmentalSensor_HDC2080,
@@ -188,6 +191,7 @@ export const TiChipComponents = {
   CC2745R10,
   CC3235SF,
   DAC101C081Q,
+  DRV8210,
   DRV8833,
   DRV8876,
   HDC2080,
@@ -245,6 +249,7 @@ export const TiSubcircuitComponents = {
   BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
+  MotorDriver_DRV8210,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
   EnvironmentalSensor_HDC2080,
