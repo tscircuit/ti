@@ -45,39 +45,45 @@ const pinLabels = {
 } as const;
 
 /*
- * The TI Altium symbol draws input markers on NRST and every PA pin. Power,
- * VCORE, VSS and the exposed pad are plain pins in that reference.
+ * The TI Altium symbol draws NRST as an input and every PA pin as
+ * bidirectional. Power, VCORE, VSS and the exposed pad are plain pins.
  */
-const inputPinAttributes = {
-  pin1: { requiresPower: true },
-  pin2: { requiresPower: true },
+const bidirectionalGpioPinAttributes = {
+  requiresPower: true,
+  providesPower: true,
+  isGpio: true,
+} as const;
+
+const pinAttributes = {
+  pin1: bidirectionalGpioPinAttributes,
+  pin2: bidirectionalGpioPinAttributes,
   pin3: { requiresPower: true },
-  pin6: { requiresPower: true },
-  pin7: { requiresPower: true },
-  pin8: { requiresPower: true },
-  pin9: { requiresPower: true },
-  pin10: { requiresPower: true },
-  pin11: { requiresPower: true },
-  pin12: { requiresPower: true },
-  pin13: { requiresPower: true },
-  pin14: { requiresPower: true },
-  pin15: { requiresPower: true },
-  pin16: { requiresPower: true },
-  pin17: { requiresPower: true },
-  pin18: { requiresPower: true },
-  pin19: { requiresPower: true },
-  pin20: { requiresPower: true },
-  pin21: { requiresPower: true },
-  pin22: { requiresPower: true },
-  pin23: { requiresPower: true },
-  pin24: { requiresPower: true },
-  pin25: { requiresPower: true },
-  pin26: { requiresPower: true },
-  pin27: { requiresPower: true },
-  pin28: { requiresPower: true },
-  pin29: { requiresPower: true },
-  pin30: { requiresPower: true },
-  pin31: { requiresPower: true },
+  pin6: bidirectionalGpioPinAttributes,
+  pin7: bidirectionalGpioPinAttributes,
+  pin8: bidirectionalGpioPinAttributes,
+  pin9: bidirectionalGpioPinAttributes,
+  pin10: bidirectionalGpioPinAttributes,
+  pin11: bidirectionalGpioPinAttributes,
+  pin12: bidirectionalGpioPinAttributes,
+  pin13: bidirectionalGpioPinAttributes,
+  pin14: bidirectionalGpioPinAttributes,
+  pin15: bidirectionalGpioPinAttributes,
+  pin16: bidirectionalGpioPinAttributes,
+  pin17: bidirectionalGpioPinAttributes,
+  pin18: bidirectionalGpioPinAttributes,
+  pin19: bidirectionalGpioPinAttributes,
+  pin20: bidirectionalGpioPinAttributes,
+  pin21: bidirectionalGpioPinAttributes,
+  pin22: bidirectionalGpioPinAttributes,
+  pin23: bidirectionalGpioPinAttributes,
+  pin24: bidirectionalGpioPinAttributes,
+  pin25: bidirectionalGpioPinAttributes,
+  pin26: bidirectionalGpioPinAttributes,
+  pin27: bidirectionalGpioPinAttributes,
+  pin28: bidirectionalGpioPinAttributes,
+  pin29: bidirectionalGpioPinAttributes,
+  pin30: bidirectionalGpioPinAttributes,
+  pin31: bidirectionalGpioPinAttributes,
 } satisfies NonNullable<ChipProps["pinAttributes"]>;
 
 const edgePadOffsets = [
@@ -158,7 +164,7 @@ const RHB32Footprint = () => (
 export const MSPM0L1306QRHBRQ1 = (props: ChipProps<typeof pinLabels>) => (
   <chip
     pinLabels={pinLabels}
-    pinAttributes={inputPinAttributes}
+    pinAttributes={pinAttributes}
     manufacturerPartNumber="MSPM0L1306QRHBRQ1"
     datasheetUrl="https://www.ti.com/lit/ds/symlink/mspm0l1306-q1.pdf"
     footprint={<RHB32Footprint />}
