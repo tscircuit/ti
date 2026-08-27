@@ -100,7 +100,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R6"
       resistance="0.003ohm"
       footprint="2512"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(320, 890)}
     />
     <resistor name="R5" resistance="10ohm" footprint="0805" {...p(370, 910)} />
@@ -162,7 +162,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R20"
       resistance="33.2kohm"
       footprint="0603"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(710, 650)}
     />
     <capacitor
@@ -184,6 +184,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C7"
       capacitance="0.068uF"
       footprint="0603"
+      schOrientation="pos_right"
       {...p(660, 920)}
     />
     <resistor name="R3" resistance="30kohm" footprint="0603" {...p(720, 920)} />
@@ -221,6 +222,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="C1"
       capacitance="3300pF"
       footprint="0603"
+      schOrientation="pos_right"
       {...p(780, 1040)}
     />
     <resistor
@@ -247,14 +249,14 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R11"
       resistance="10kohm"
       footprint="0603"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(670, 840)}
     />
     <resistor
       name="R17"
       resistance="10kohm"
       footprint="0603"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(670, 790)}
     />
     <resistor name="R8" resistance="20kohm" footprint="0603" {...p(930, 910)} />
@@ -270,7 +272,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R10"
       resistance="1.1Mohm"
       footprint="0603"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(1010, 860)}
     />
     <resistor
@@ -325,14 +327,14 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R15"
       resistance="95.3kohm"
       footprint="0603"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(1200, 830)}
     />
     <resistor
       name="R18"
       resistance="100kohm"
       footprint="0603"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(1200, 780)}
     />
     <resistor
@@ -345,7 +347,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       name="R4"
       resistance="10kohm"
       footprint="0603"
-      schOrientation="vertical"
+      schOrientation="pos_bottom"
       {...p(1400, 910)}
     />
     <capacitor
