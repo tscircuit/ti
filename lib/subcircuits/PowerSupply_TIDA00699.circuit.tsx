@@ -12,7 +12,12 @@ import { Tida00699ReferenceNets } from "./PowerSupply_TIDA00699.shared.tsx";
  * official functional sections in the TI schematic source.
  */
 export const PowerSupply_TIDA00699 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props} routingDisabled>
+  <subcircuit
+    schMaxTraceDistance="12mm"
+    {...props}
+    routingDisabled
+    schTraceAutoLabelEnabled={false}
+  >
     <PowerSupplyReverseBatteryProtectionTida00699Contents />
     <PowerSupplyEmiFilterTida00699Contents />
     <PowerSupplyBoostTida00699Contents />

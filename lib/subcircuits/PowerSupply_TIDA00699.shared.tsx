@@ -7,6 +7,7 @@ import type {
   ResistorProps,
   TestpointProps,
 } from "@tscircuit/props";
+import { Fragment } from "react";
 import "tscircuit";
 import { CSD18531Q5A } from "../chips/CSD18531Q5A.circuit.tsx";
 import { LM25122QPWPTQ1 } from "../chips/LM25122QPWPTQ1.circuit.tsx";
@@ -99,6 +100,7 @@ const ReferenceCapacitor = ({
 }: ReferenceCapacitorProps) => (
   <capacitor
     {...capacitorProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(capacitorProps.name)}
@@ -112,6 +114,7 @@ const ReferenceResistor = ({
 }: ReferenceResistorProps) => (
   <resistor
     {...resistorProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(resistorProps.name)}
@@ -125,6 +128,7 @@ const ReferenceInductor = ({
 }: ReferenceInductorProps) => (
   <inductor
     {...inductorProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(inductorProps.name)}
@@ -138,6 +142,7 @@ const ReferenceDiode = ({
 }: ReferenceDiodeProps) => (
   <diode
     {...diodeProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(diodeProps.name)}
@@ -151,6 +156,7 @@ const ReferencePinHeader = ({
 }: ReferencePinHeaderProps) => (
   <pinheader
     {...pinHeaderProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(pinHeaderProps.name)}
@@ -164,6 +170,7 @@ const ReferenceTestpoint = ({
 }: ReferenceTestpointProps) => (
   <testpoint
     {...testpointProps}
+    connections={undefined}
     schX={referenceSchX * schematicScale}
     schY={referenceSchY * schematicScale}
     schRotation={getReferenceSchematicRotation(testpointProps.name)}
@@ -758,6 +765,7 @@ const referenceResistors = [
     resistance: "0ohm",
     tolerance: "5%",
     footprint: "0402",
+    schSize: "xs",
     referenceSchX: -3.9,
     referenceSchY: -4.4036,
     connections: { pin1: "net.NetC12_2", pin2: "net.NetR19_2" },
@@ -1029,21 +1037,21 @@ const dshtConnections = {
 };
 
 const q1Connections = {
-  pin1: "net.GND",
-  pin4: "net.NetR22_1",
-  pin5: "net.NetC13_2",
+  source: "net.GND",
+  gate: "net.NetR22_1",
+  drain: "net.NetC13_2",
 };
 
 const q2Connections = {
-  pin1: "net.NetC13_2",
-  pin4: "net.NetR23_1",
-  pin5: "net.VBST",
+  source: "net.NetC13_2",
+  gate: "net.NetR23_1",
+  drain: "net.VBST",
 };
 
 const q3Connections = {
-  pin1: "net.VBAT",
-  pin4: "net.NetQ3_4",
-  pin5: "net.VBAT_PROTECT",
+  source: "net.VBAT",
+  gate: "net.NetQ3_4",
+  drain: "net.VBAT_PROTECT",
 };
 
 const u1Connections = {
@@ -1192,6 +1200,482 @@ const referenceComponentNamesBySection: Record<
   supervisor_and_header: ["U4", "C6", "C26", "R16", "R17", "R18", "J5", "DSHT"],
 };
 
+type ReferenceComponentConnection = {
+  componentName: string;
+  pinName: string;
+  netName: string;
+};
+
+type ReferenceComponentWithConnections = {
+  name: string;
+  connections: Readonly<Record<string, string>>;
+};
+
+const toReferenceComponentConnections = ({
+  name,
+  connections,
+}: ReferenceComponentWithConnections): ReferenceComponentConnection[] =>
+  Object.entries(connections).map(([pinName, netSelector]) => ({
+    componentName: name,
+    pinName,
+    netName: netSelector.replace(/^net\./, ""),
+  }));
+
+const referenceSpecialComponentsWithConnections = [
+  { name: "D1", connections: d1Connections },
+  { name: "DSHT", connections: dshtConnections },
+  { name: "Q1", connections: q1Connections },
+  { name: "Q2", connections: q2Connections },
+  { name: "Q3", connections: q3Connections },
+  { name: "U1", connections: u1Connections },
+  { name: "U2", connections: u2Connections },
+  { name: "U3", connections: u3Connections },
+  { name: "U4", connections: u4Connections },
+] satisfies ReferenceComponentWithConnections[];
+
+const referenceComponentConnections = [
+  ...referenceCapacitors.flatMap(toReferenceComponentConnections),
+  ...referenceResistors.flatMap(toReferenceComponentConnections),
+  ...referenceInductors.flatMap(toReferenceComponentConnections),
+  ...referenceDiodes.flatMap(toReferenceComponentConnections),
+  ...referenceConnectors.flatMap(toReferenceComponentConnections),
+  ...referenceTestpoints.flatMap(toReferenceComponentConnections),
+  ...referenceSpecialComponentsWithConnections.flatMap(
+    toReferenceComponentConnections,
+  ),
+];
+
+type ReferenceNamedNetOccurrence = {
+  sectionName: Tida00699ReferenceSectionName;
+  netName: string;
+  ports: readonly string[];
+};
+
+/**
+ * Each entry is one visible TI power port, port, or net-label occurrence.
+ * Internal Altium net names are intentionally absent and render as direct
+ * port-to-port traces instead.
+ */
+const referenceNamedNetOccurrences = [
+  {
+    sectionName: "reverse_battery_protection",
+    netName: "GND",
+    ports: [".J3 > .pin1"],
+  },
+  {
+    sectionName: "reverse_battery_protection",
+    netName: "GND",
+    ports: [".C11 > .pin2", ".D3 > .pin1"],
+  },
+  {
+    sectionName: "reverse_battery_protection",
+    netName: "VBAT",
+    ports: [
+      ".C8 > .pin1",
+      ".D2 > .pin1",
+      ".J1 > .pin1",
+      ".Q3 > .source",
+      ".U1 > .pin4",
+    ],
+  },
+  {
+    sectionName: "reverse_battery_protection",
+    netName: "VBAT_PROTECT",
+    ports: [".Q3 > .drain", ".U1 > .pin8"],
+  },
+  {
+    sectionName: "emi_filter",
+    netName: "VBAT_PROTECT",
+    ports: [".C25 > .pin1", ".L3 > .pin1", ".TP5 > .pin1"],
+  },
+  {
+    sectionName: "emi_filter",
+    netName: "GND",
+    ports: [".TP7 > .pin1"],
+  },
+  {
+    sectionName: "emi_filter",
+    netName: "GND",
+    ports: [".C25 > .pin2"],
+  },
+  {
+    sectionName: "emi_filter",
+    netName: "GND",
+    ports: [".C2 > .pin2"],
+  },
+  {
+    sectionName: "emi_filter",
+    netName: "VBAT_FILT",
+    ports: [".C2 > .pin1", ".L3 > .pin2"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "VBAT_FILT",
+    ports: [".R14 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "SHT_BST",
+    ports: [".D5 > .pin1", ".R5 > .pin1", ".R6 > .pin2", ".U2 > .pin6"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "VBST",
+    ports: [".R7 > .pin2"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "VBST",
+    ports: [".D1 > .pin2"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "VBST",
+    ports: [
+      ".C1 > .pin1",
+      ".C4 > .pin1",
+      ".C5 > .pin1",
+      ".Q2 > .drain",
+      ".TP3 > .pin1",
+    ],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "SYNC_BST",
+    ports: [".R10 > .pin2", ".U2 > .pin8"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "CS_N",
+    ports: [".C10 > .pin2", ".R3 > .pin1", ".U2 > .pin3"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "CS_P",
+    ports: [".C10 > .pin1", ".R4 > .pin1", ".U2 > .pin4"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".TP2 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".D5 > .pin2", ".R6 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".R9 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".R11 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".C3 > .pin2"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".C16 > .pin2"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".C17 > .pin2"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".R10 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".C7 > .pin2"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".U2 > .pin2", ".U2 > .pin9"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".U2 > .pin15", ".U2 > .pin21"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".C12 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".R20 > .pin1"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".Q1 > .source"],
+  },
+  {
+    sectionName: "boost_regulator",
+    netName: "GND",
+    ports: [".C4 > .pin2", ".C5 > .pin2"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "VBST",
+    ports: [".R15 > .pin1"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "SHT_BCK",
+    ports: [".R12 > .pin2", ".U3 > .pin11"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "SYNC_BUCK",
+    ports: [".R21 > .pin2", ".U3 > .pin6"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "RST_OUT",
+    ports: [".U3 > .pin8"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "VSYS",
+    ports: [
+      ".C22 > .pin1",
+      ".C23 > .pin1",
+      ".C24 > .pin1",
+      ".J2 > .pin1",
+      ".L2 > .pin2",
+      ".R13 > .pin2",
+      ".U3 > .pin9",
+    ],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".TP6 > .pin1"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".C19 > .pin2", ".C20 > .pin2", ".C21 > .pin2"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".C27 > .pin2"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".R21 > .pin1"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".U3 > .pin10", ".U3 > .pin15", ".U3 > .pin16", ".U3 > .pin17"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".C28 > .pin2"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".C22 > .pin2", ".C23 > .pin2", ".C24 > .pin2"],
+  },
+  {
+    sectionName: "buck_regulator",
+    netName: "GND",
+    ports: [".J4 > .pin1"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "VSYS",
+    ports: [".C6 > .pin1", ".U4 > .pin6"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "VSYS",
+    ports: [".R16 > .pin2"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "VSYS",
+    ports: [".R17 > .pin2"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "SVS_OUT",
+    ports: [".R16 > .pin1", ".U4 > .pin1"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "SVS_OUT",
+    ports: [".J5 > .pin1"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "SHT_BST",
+    ports: [".DSHT > .pin1"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "SHT_BCK",
+    ports: [".DSHT > .pin2"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "SYNC_BUCK",
+    ports: [".J5 > .pin2"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "RST_OUT",
+    ports: [".J5 > .pin3"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "SYNC_BST",
+    ports: [".J5 > .pin4"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "GND",
+    ports: [".C6 > .pin2", ".C26 > .pin2"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "GND",
+    ports: [".U4 > .pin2"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "GND",
+    ports: [".J5 > .pin6"],
+  },
+  {
+    sectionName: "supervisor_and_header",
+    netName: "GND",
+    ports: [".R18 > .pin1"],
+  },
+] satisfies ReferenceNamedNetOccurrence[];
+
+type ReferenceTraceGroup = {
+  netName: string;
+  ports: string[];
+};
+
+type ReferenceTraceSegment = {
+  from: string;
+  to: string;
+};
+
+const toReferenceTraceSegments = (
+  ports: readonly string[],
+): ReferenceTraceSegment[] =>
+  ports.slice(1).map((to, segmentIndex) => {
+    const from = ports[segmentIndex];
+    if (!from) {
+      throw new Error("A TIDA-00699 trace segment is missing its source port");
+    }
+    return { from, to };
+  });
+
+const toPortSelector = ({
+  componentName,
+  pinName,
+}: ReferenceComponentConnection) => `.${componentName} > .${pinName}`;
+
+const getInternalReferenceTraceGroups = (
+  sectionName: Tida00699ReferenceSectionName,
+): ReferenceTraceGroup[] => {
+  const componentNames = new Set(referenceComponentNamesBySection[sectionName]);
+  const portsByNetName = referenceComponentConnections
+    .filter(
+      ({ componentName, netName }) =>
+        componentNames.has(componentName) && netName.startsWith("Net"),
+    )
+    .reduce<Record<string, string[]>>((tracePortsByNetName, connection) => {
+      const ports = tracePortsByNetName[connection.netName] ?? [];
+      ports.push(toPortSelector(connection));
+      tracePortsByNetName[connection.netName] = ports;
+      return tracePortsByNetName;
+    }, {});
+
+  return Object.entries(portsByNetName)
+    .map(([netName, ports]) => ({ netName, ports }))
+    .filter(({ ports }) => ports.length > 1);
+};
+
+type ReferenceTracesProps = {
+  sectionName: Tida00699ReferenceSectionName;
+};
+
+type ReferenceNamedNetOccurrenceTracesProps = {
+  occurrence: ReferenceNamedNetOccurrence;
+};
+
+const ReferenceNamedNetOccurrenceTraces = ({
+  occurrence,
+}: ReferenceNamedNetOccurrenceTracesProps) => {
+  const { sectionName, netName, ports } = occurrence;
+  const labelPort = ports[0];
+  if (!labelPort) {
+    throw new Error(`The ${netName} label occurrence has no connected port`);
+  }
+  const traceSegments = toReferenceTraceSegments(ports);
+
+  return (
+    <>
+      {traceSegments.map(({ from, to }) => (
+        <Fragment key={`${sectionName}-${netName}-${from}-${to}`}>
+          <trace from={from} to={to} />
+        </Fragment>
+      ))}
+      <trace from={labelPort} to={`net.${netName}`} schDisplayLabel={netName} />
+    </>
+  );
+};
+
+const ReferenceTraces = ({ sectionName }: ReferenceTracesProps) => {
+  const internalTraceGroups = getInternalReferenceTraceGroups(sectionName);
+  const namedNetOccurrences = referenceNamedNetOccurrences.filter(
+    (occurrence) => occurrence.sectionName === sectionName,
+  );
+
+  return (
+    <>
+      {internalTraceGroups.flatMap(({ netName, ports }) =>
+        toReferenceTraceSegments(ports).map(({ from, to }) => (
+          <Fragment key={`${sectionName}-${netName}-${from}-${to}`}>
+            <trace from={from} to={to} />
+          </Fragment>
+        )),
+      )}
+      {namedNetOccurrences.map((occurrence) => (
+        <ReferenceNamedNetOccurrenceTraces
+          key={`${sectionName}-${occurrence.netName}-${occurrence.ports.join("-")}`}
+          occurrence={occurrence}
+        />
+      ))}
+    </>
+  );
+};
+
 type ReferenceSectionVisual = {
   title: string;
   annotations?: readonly {
@@ -1250,7 +1734,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("D1") && (
       <BAS4005
         name="D1"
-        connections={d1Connections}
         schSectionName={schSectionName}
         schX={-10.4 * schematicScale}
         schY={-2.1 * schematicScale}
@@ -1259,7 +1742,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("DSHT") && (
       <BAS4005
         name="DSHT"
-        connections={dshtConnections}
         schSectionName={schSectionName}
         schX={9.5046 * schematicScale}
         schY={0.1828 * schematicScale}
@@ -1268,7 +1750,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q1") && (
       <CSD18531Q5A
         name="Q1"
-        connections={q1Connections}
         schSectionName={schSectionName}
         schX={-2.6229 * schematicScale}
         schY={-5.849 * schematicScale}
@@ -1278,7 +1759,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q2") && (
       <CSD18531Q5A
         name="Q2"
-        connections={q2Connections}
         schSectionName={schSectionName}
         schX={-1.645 * schematicScale}
         schY={-1.5262 * schematicScale}
@@ -1287,7 +1767,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("Q3") && (
       <SQ4850EY
         name="Q3"
-        connections={q3Connections}
         schSectionName={schSectionName}
         schX={-6.5801 * schematicScale}
         schY={7.0645 * schematicScale}
@@ -1296,7 +1775,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U1") && (
       <LM74610QDGKRQ1
         name="U1"
-        connections={u1Connections}
         schSectionName={schSectionName}
         schX={-6.7629 * schematicScale}
         schY={4.5695 * schematicScale}
@@ -1307,7 +1785,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U2") && (
       <LM25122QPWPTQ1
         name="U2"
-        connections={u2Connections}
         schSectionName={schSectionName}
         schX={-6.3973 * schematicScale}
         schY={-5.1179 * schematicScale}
@@ -1329,7 +1806,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U3") && (
       <LM536035QPWPRQ1
         name="U3"
-        connections={u3Connections}
         schSectionName={schSectionName}
         schX={7.8596 * schematicScale}
         schY={-5.3007 * schematicScale}
@@ -1340,7 +1816,6 @@ const ReferenceSpecialComponents = ({
     {componentNames.has("U4") && (
       <TPS3808G01QDBVRQ1
         name="U4"
-        connections={u4Connections}
         schSectionName={schSectionName}
         schX={10.053 * schematicScale}
         schY={4.7523 * schematicScale}
@@ -1457,6 +1932,7 @@ export const Tida00699ReferenceSectionContents = ({
         componentNames={componentNames}
         schSectionName={sectionName}
       />
+      <ReferenceTraces sectionName={sectionName} />
     </>
   );
 };

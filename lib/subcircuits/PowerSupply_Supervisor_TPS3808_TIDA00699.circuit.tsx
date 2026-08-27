@@ -13,7 +13,12 @@ export const PowerSupplySupervisorTida00699Contents = () => (
 export const PowerSupply_Supervisor_TPS3808_TIDA00699 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props} routingDisabled>
+  <subcircuit
+    schMaxTraceDistance="12mm"
+    {...props}
+    routingDisabled
+    schTraceAutoLabelEnabled={false}
+  >
     <PowerSupplySupervisorTida00699Contents />
     <Tida00699ReferenceNets />
   </subcircuit>

@@ -13,7 +13,12 @@ export const PowerSupplyReverseBatteryProtectionTida00699Contents = () => (
 export const PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props} routingDisabled>
+  <subcircuit
+    schMaxTraceDistance="12mm"
+    {...props}
+    routingDisabled
+    schTraceAutoLabelEnabled={false}
+  >
     <PowerSupplyReverseBatteryProtectionTida00699Contents />
     <Tida00699ReferenceNets />
   </subcircuit>

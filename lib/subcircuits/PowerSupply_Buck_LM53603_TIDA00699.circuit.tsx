@@ -11,7 +11,12 @@ export const PowerSupplyBuckTida00699Contents = () => (
 
 /** TIDA-00699 5-V wide-input buck section. */
 export const PowerSupply_Buck_LM53603_TIDA00699 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props} routingDisabled>
+  <subcircuit
+    schMaxTraceDistance="12mm"
+    {...props}
+    routingDisabled
+    schTraceAutoLabelEnabled={false}
+  >
     <PowerSupplyBuckTida00699Contents />
     <Tida00699ReferenceNets />
   </subcircuit>

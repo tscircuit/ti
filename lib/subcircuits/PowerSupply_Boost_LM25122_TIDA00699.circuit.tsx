@@ -11,7 +11,12 @@ export const PowerSupplyBoostTida00699Contents = () => (
 
 /** TIDA-00699 9-V wide-input boost section. */
 export const PowerSupply_Boost_LM25122_TIDA00699 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props} routingDisabled>
+  <subcircuit
+    schMaxTraceDistance="12mm"
+    {...props}
+    routingDisabled
+    schTraceAutoLabelEnabled={false}
+  >
     <PowerSupplyBoostTida00699Contents />
     <Tida00699ReferenceNets />
   </subcircuit>

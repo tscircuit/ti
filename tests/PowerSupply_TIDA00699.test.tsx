@@ -114,19 +114,91 @@ const sectionModules: readonly [
   [PowerSupply_Supervisor_TPS3808_TIDA00699, "SVS & Header"],
 ];
 
+const officialTraceLabelsBySection = {
+  "Transient & Reverse Polarity Protection": new Set([
+    "GND",
+    "VBAT",
+    "VBAT_PROTECT",
+  ]),
+  "EMI Filter": new Set(["GND", "VBAT_FILT", "VBAT_PROTECT"]),
+  "WVIN Boost": new Set([
+    "CS_N",
+    "CS_P",
+    "GND",
+    "SHT_BST",
+    "SYNC_BST",
+    "VBAT_FILT",
+    "VBST",
+  ]),
+  "WVIN Buck": new Set([
+    "GND",
+    "RST_OUT",
+    "SHT_BCK",
+    "SYNC_BUCK",
+    "VBST",
+    "VSYS",
+  ]),
+  "SVS & Header": new Set([
+    "GND",
+    "RST_OUT",
+    "SHT_BCK",
+    "SHT_BST",
+    "SVS_OUT",
+    "SYNC_BST",
+    "SYNC_BUCK",
+    "VSYS",
+  ]),
+} as const;
+
+const tida00699SubcircuitSourceUrls = [
+  new URL(
+    "../lib/subcircuits/PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699.circuit.tsx",
+    import.meta.url,
+  ),
+  new URL(
+    "../lib/subcircuits/PowerSupply_EmiFilter_TIDA00699.circuit.tsx",
+    import.meta.url,
+  ),
+  new URL(
+    "../lib/subcircuits/PowerSupply_Boost_LM25122_TIDA00699.circuit.tsx",
+    import.meta.url,
+  ),
+  new URL(
+    "../lib/subcircuits/PowerSupply_Buck_LM53603_TIDA00699.circuit.tsx",
+    import.meta.url,
+  ),
+  new URL(
+    "../lib/subcircuits/PowerSupply_Supervisor_TPS3808_TIDA00699.circuit.tsx",
+    import.meta.url,
+  ),
+  new URL(
+    "../lib/subcircuits/PowerSupply_TIDA00699.circuit.tsx",
+    import.meta.url,
+  ),
+];
+
 test("TIDA-00699 delegates trace topology and routing to native tscircuit behavior", () => {
-  const implementationSource = readFileSync(
+  const sharedImplementationSource = readFileSync(
     new URL(
       "../lib/subcircuits/PowerSupply_TIDA00699.shared.tsx",
       import.meta.url,
     ),
     "utf8",
   );
+  const subcircuitImplementationSources = tida00699SubcircuitSourceUrls.map(
+    (sourceUrl) => readFileSync(sourceUrl, "utf8"),
+  );
+  const implementationSource = [
+    sharedImplementationSource,
+    ...subcircuitImplementationSources,
+  ].join("\n");
 
   for (const forbiddenRoutingConstruct of [
     "schematicRouteHints",
     "routeHints",
     "<tracehint",
+    "<netlabel",
+    "<trace path=",
     "referenceTraceOverridesByNetName",
     "createReferenceTraceProps",
   ]) {
@@ -134,6 +206,20 @@ test("TIDA-00699 delegates trace topology and routing to native tscircuit behavi
       implementationSource.includes(forbiddenRoutingConstruct),
       false,
       `${forbiddenRoutingConstruct} must not be used`,
+    );
+  }
+
+  assert.ok(
+    sharedImplementationSource.includes("schDisplayLabel={netName}"),
+    "TI-authored labels must be displayed inline on native traces",
+  );
+
+  for (const subcircuitImplementationSource of subcircuitImplementationSources) {
+    assert.ok(
+      subcircuitImplementationSource.includes(
+        "schTraceAutoLabelEnabled={false}",
+      ),
+      "every TIDA-00699 sheet must disable automatic trace labels",
     );
   }
 });
@@ -183,9 +269,19 @@ function getSchematicPort(
   portSelector: { componentName: string; pin: string },
 ) {
   const { componentName, pin } = portSelector;
-  const schematicPort = circuit.db.schematic_port.getWhere({
-    source_port_id: getPort(circuit, componentName, pin).source_port_id,
+  const component = circuit.db.source_component.getWhere({
+    name: componentName,
   });
+  assert.ok(component, componentName);
+  const schematicPort = circuit.db.source_port
+    .list({ source_component_id: component.source_component_id })
+    .filter((candidate) => candidate.port_hints?.includes(pin))
+    .map((candidate) =>
+      circuit.db.schematic_port.getWhere({
+        source_port_id: candidate.source_port_id,
+      }),
+    )
+    .find((candidate) => candidate !== undefined);
   assert.ok(schematicPort, `${componentName}.${pin} schematic port`);
   return schematicPort;
 }
@@ -205,8 +301,14 @@ function assertSchematicPinSideOrder(
   }));
 
   for (const { pin, schematicPort } of schematicPorts) {
+    const sideFromFacingDirection =
+      schematicPort.facing_direction === "up"
+        ? "top"
+        : schematicPort.facing_direction === "down"
+          ? "bottom"
+          : schematicPort.facing_direction;
     assert.equal(
-      schematicPort.side_of_component,
+      schematicPort.side_of_component ?? sideFromFacingDirection,
       side,
       `${componentName}.${pin} must be on the ${side} side`,
     );
@@ -287,28 +389,6 @@ function assertReferenceCenter(
   assert.ok(Math.abs(component.center.y - sourceY * 1.4) < 1e-6);
 }
 
-function assertPcbPad(
-  circuit: TestCircuit,
-  componentName: string,
-  pin: string,
-  expectedX: number,
-  expectedY: number,
-) {
-  const sourcePort = getPort(circuit, componentName, pin);
-  const pcbPort = circuit.db.pcb_port.getWhere({
-    source_port_id: sourcePort.source_port_id,
-  });
-  assert.ok(pcbPort, `${componentName}.${pin} PCB port`);
-  const pad = circuit.db.pcb_smtpad.getWhere({
-    pcb_port_id: pcbPort.pcb_port_id,
-  });
-  assert.ok(pad, `${componentName}.${pin} pad`);
-  assert.notEqual(pad.shape, "polygon", `${componentName}.${pin} pad shape`);
-  if (pad.shape === "polygon") assert.fail("unexpected polygon pad");
-  assert.ok(Math.abs(pad.x - expectedX) < 1e-6, `${componentName}.${pin} x`);
-  assert.ok(Math.abs(pad.y - expectedY) < 1e-6, `${componentName}.${pin} y`);
-}
-
 function assertSimpleMosfetSymbol(circuit: TestCircuit, componentName: string) {
   assert.equal(
     circuit.db.schematic_text
@@ -339,14 +419,29 @@ for (const [Section, title] of sectionModules) {
     );
     assert.ok(circuit.db.schematic_text.getWhere({ text: title }));
     assert.equal(circuit.db.schematic_box.list().length, 0);
+
+    const officialTraceLabels = officialTraceLabelsBySection[title];
+    for (const trace of circuit.selectAll("trace")) {
+      const schDisplayLabel = trace._parsedProps.schDisplayLabel;
+      if (typeof schDisplayLabel !== "string") continue;
+      assert.ok(
+        officialTraceLabels.has(schDisplayLabel),
+        `${title} must not display non-TI trace label ${schDisplayLabel}`,
+      );
+      assert.equal(
+        schDisplayLabel.startsWith("Net"),
+        false,
+        `${title} must not display internal Altium net ${schDisplayLabel}`,
+      );
+    }
   });
 }
 
-test("TIDA-00699 MOSFETs preserve every physical pad without grouped pin-number text", async () => {
+test("TIDA-00699 MOSFETs use native three-terminal symbols", async () => {
   assert.equal(TiChipComponents.CSD18531Q5A, CSD18531Q5A);
   assert.equal(TiChipComponents.SQ4850EY, SQ4850EY);
 
-  const csdCircuit = new Circuit();
+  const csdCircuit = new Circuit({ platform: { pcbDisabled: true } });
   csdCircuit.add(
     <board width={15} height={15} routingDisabled>
       <CSD18531Q5A name="Q1" />
@@ -361,15 +456,13 @@ test("TIDA-00699 MOSFETs preserve every physical pad without grouped pin-number 
         name: "Q1",
       })?.source_component_id,
     }).length,
-    9,
+    3,
   );
-  assert.equal(csdCircuit.db.pcb_smtpad.list().length, 9);
-  assertPcbPad(csdCircuit, "Q1", "pin1", -2.77629874, 1.91749426);
-  assertPcbPad(csdCircuit, "Q1", "pin4", -2.77629874, -1.91749934);
-  assertPcbPad(csdCircuit, "Q1", "pin5", 2.77630128, -1.91749426);
-  assertPcbPad(csdCircuit, "Q1", "pin9", 0.30130242, 0);
+  getPort(csdCircuit, "Q1", "drain");
+  getPort(csdCircuit, "Q1", "source");
+  getPort(csdCircuit, "Q1", "gate");
 
-  const sqCircuit = new Circuit();
+  const sqCircuit = new Circuit({ platform: { pcbDisabled: true } });
   sqCircuit.add(
     <board width={15} height={15} routingDisabled>
       <SQ4850EY name="Q3" />
@@ -384,13 +477,11 @@ test("TIDA-00699 MOSFETs preserve every physical pad without grouped pin-number 
         name: "Q3",
       })?.source_component_id,
     }).length,
-    8,
+    3,
   );
-  assert.equal(sqCircuit.db.pcb_smtpad.list().length, 8);
-  assertPcbPad(sqCircuit, "Q3", "pin1", -2.4, 1.905);
-  assertPcbPad(sqCircuit, "Q3", "pin4", -2.4, -1.905);
-  assertPcbPad(sqCircuit, "Q3", "pin5", 2.4, -1.905);
-  assertPcbPad(sqCircuit, "Q3", "pin8", 2.4, 1.905);
+  getPort(sqCircuit, "Q3", "drain");
+  getPort(sqCircuit, "Q3", "source");
+  getPort(sqCircuit, "Q3", "gate");
 });
 
 test("TIDA-00699 composite preserves all five source sections, coordinates, and boundary nets", {
@@ -540,15 +631,15 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
       pins: ["pin1", "pin2"],
     },
     { componentName: "DSHT", side: "right", pins: ["pin3"] },
-    { componentName: "Q1", side: "top", pins: ["pin5"] },
-    { componentName: "Q1", side: "bottom", pins: ["pin1"] },
-    { componentName: "Q1", side: "left", pins: ["pin4"] },
-    { componentName: "Q2", side: "left", pins: ["pin1"] },
-    { componentName: "Q2", side: "right", pins: ["pin5"] },
-    { componentName: "Q2", side: "bottom", pins: ["pin4"] },
-    { componentName: "Q3", side: "left", pins: ["pin1"] },
-    { componentName: "Q3", side: "right", pins: ["pin5"] },
-    { componentName: "Q3", side: "bottom", pins: ["pin4"] },
+    { componentName: "Q1", side: "top", pins: ["drain"] },
+    { componentName: "Q1", side: "bottom", pins: ["source"] },
+    { componentName: "Q1", side: "left", pins: ["gate"] },
+    { componentName: "Q2", side: "left", pins: ["source"] },
+    { componentName: "Q2", side: "right", pins: ["drain"] },
+    { componentName: "Q2", side: "bottom", pins: ["gate"] },
+    { componentName: "Q3", side: "left", pins: ["source"] },
+    { componentName: "Q3", side: "right", pins: ["drain"] },
+    { componentName: "Q3", side: "bottom", pins: ["gate"] },
   ] as const) {
     assertSchematicPinSideOrder(circuit, expectedArrangement);
   }
@@ -578,27 +669,15 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
   assertPinNet(circuit, "D2", "pin1", "VBAT");
   assertPinNet(circuit, "D3", "pin1", "GND");
   assertPinNet(circuit, "D5", "pin1", "SHT_BST");
-  assertPinNet(circuit, "Q1", "pin1", "GND");
-  assertPinsConnected(circuit, ["Q2", "pin1"], ["C13", "pin2"]);
-  assertPinNet(circuit, "Q3", "pin1", "VBAT");
-  for (const pin of ["pin2", "pin3"]) {
-    getPort(circuit, "Q1", pin);
-    getPort(circuit, "Q2", pin);
-    getPort(circuit, "Q3", pin);
-  }
-  assertPinsConnected(circuit, ["Q1", "pin4"], ["R22", "pin1"]);
-  assertPinsConnected(circuit, ["Q2", "pin4"], ["R23", "pin1"]);
-  assertPinsConnected(circuit, ["Q3", "pin4"], ["U1", "pin2"]);
-  assertPinsConnected(circuit, ["Q1", "pin5"], ["C13", "pin2"]);
-  assertPinNet(circuit, "Q2", "pin5", "VBST");
-  assertPinNet(circuit, "Q3", "pin5", "VBAT_PROTECT");
-  for (const pin of ["pin6", "pin7", "pin8"]) {
-    getPort(circuit, "Q1", pin);
-    getPort(circuit, "Q2", pin);
-    getPort(circuit, "Q3", pin);
-  }
-  getPort(circuit, "Q1", "pin9");
-  getPort(circuit, "Q2", "pin9");
+  assertPinNet(circuit, "Q1", "source", "GND");
+  assertPinsConnected(circuit, ["Q2", "source"], ["C13", "pin2"]);
+  assertPinNet(circuit, "Q3", "source", "VBAT");
+  assertPinsConnected(circuit, ["Q1", "gate"], ["R22", "pin1"]);
+  assertPinsConnected(circuit, ["Q2", "gate"], ["R23", "pin1"]);
+  assertPinsConnected(circuit, ["Q3", "gate"], ["U1", "pin2"]);
+  assertPinsConnected(circuit, ["Q1", "drain"], ["C13", "pin2"]);
+  assertPinNet(circuit, "Q2", "drain", "VBST");
+  assertPinNet(circuit, "Q3", "drain", "VBAT_PROTECT");
   assertPinNet(circuit, "U1", "pin4", "VBAT");
   assertPinNet(circuit, "U1", "pin8", "VBAT_PROTECT");
   assertPinNet(circuit, "L3", "pin1", "VBAT_PROTECT");

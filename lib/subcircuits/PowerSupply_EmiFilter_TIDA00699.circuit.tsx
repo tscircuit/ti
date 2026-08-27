@@ -11,7 +11,12 @@ export const PowerSupplyEmiFilterTida00699Contents = () => (
 
 /** TIDA-00699 protected-input EMI filter section. */
 export const PowerSupply_EmiFilter_TIDA00699 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="12mm" {...props} routingDisabled>
+  <subcircuit
+    schMaxTraceDistance="12mm"
+    {...props}
+    routingDisabled
+    schTraceAutoLabelEnabled={false}
+  >
     <PowerSupplyEmiFilterTida00699Contents />
     <Tida00699ReferenceNets />
   </subcircuit>
