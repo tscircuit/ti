@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   calculateSchematicPdfPageLayout,
-  copyDominantBaselinesForSvg2Pdf,
+  normalizeTextBaselinesForSvg2Pdf,
 } from "./export-pdf";
 
 const baselineElement = (
@@ -64,19 +64,30 @@ describe("SVG text baseline compatibility", () => {
       "dominant-baseline": "central",
       "alignment-baseline": "hanging",
     });
+    const explicitlyPositioned = baselineElement({
+      "dominant-baseline": "central",
+      dy: "0.2em",
+    });
 
-    copyDominantBaselinesForSvg2Pdf([
+    normalizeTextBaselinesForSvg2Pdf([
       centered.element,
       explicitlyAligned.element,
+      explicitlyPositioned.element,
     ]);
 
     expect(Object.fromEntries(centered.attributes)).toEqual({
       "dominant-baseline": "central",
       "alignment-baseline": "central",
+      dy: "0.175em",
     });
     expect(Object.fromEntries(explicitlyAligned.attributes)).toEqual({
       "dominant-baseline": "central",
       "alignment-baseline": "hanging",
+    });
+    expect(Object.fromEntries(explicitlyPositioned.attributes)).toEqual({
+      "dominant-baseline": "central",
+      "alignment-baseline": "central",
+      dy: "0.2em",
     });
   });
 });

@@ -54,7 +54,7 @@ type SvgTextBaselineElement = Pick<
   "getAttribute" | "hasAttribute" | "setAttribute"
 >;
 
-export const copyDominantBaselinesForSvg2Pdf = (
+export const normalizeTextBaselinesForSvg2Pdf = (
   elements: Iterable<SvgTextBaselineElement>,
 ): void => {
   for (const element of elements) {
@@ -62,6 +62,12 @@ export const copyDominantBaselinesForSvg2Pdf = (
     const dominantBaseline = element.getAttribute("dominant-baseline");
     if (dominantBaseline) {
       element.setAttribute("alignment-baseline", dominantBaseline);
+      // jsPDF's middle baseline renders Helvetica slightly above the SVG
+      // central baseline. Apply the measured em-relative correction while
+      // preserving any explicit author positioning.
+      if (dominantBaseline === "central" && !element.hasAttribute("dy")) {
+        element.setAttribute("dy", "0.175em");
+      }
     }
   }
 };
@@ -192,7 +198,7 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
       throw new TypeError(`Schematic sheet ${index + 1} has no SVG content`);
     }
     const element = parseSvg(sheet.svg);
-    copyDominantBaselinesForSvg2Pdf(element.querySelectorAll("text, tspan"));
+    normalizeTextBaselinesForSvg2Pdf(element.querySelectorAll("text, tspan"));
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
     return { element };
