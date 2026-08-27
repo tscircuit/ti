@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { svg2pdf } from "svg2pdf.js";
 import { downloadBlob } from "./download-blob";
 
 export { downloadBlob } from "./download-blob";
@@ -6,9 +7,25 @@ export { downloadBlob } from "./download-blob";
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const DEFAULT_FILE_NAME = "system-schematic.pdf";
 const DEFAULT_ORIENTATION = "landscape";
-const DEFAULT_RASTER_DPI = 200;
-const JPEG_QUALITY = 0.98;
-const MILLIMETERS_PER_INCH = 25.4;
+const PDF_FONT_FAMILY = "LiberationSans";
+const EMBEDDED_PDF_FONTS = [
+  {
+    fileName: "LiberationSans-Regular.ttf",
+    style: "normal",
+    url: new URL(
+      "../../node_modules/@docx-editor.dev/fonts/assets/LiberationSans-Regular.ttf",
+      import.meta.url,
+    ).href,
+  },
+  {
+    fileName: "LiberationSans-Bold.ttf",
+    style: "bold",
+    url: new URL(
+      "../../node_modules/@docx-editor.dev/fonts/assets/LiberationSans-Bold.ttf",
+      import.meta.url,
+    ).href,
+  },
+] as const;
 
 /** The evaluator's richer sheet objects are structurally assignable here. */
 export interface SchematicPdfSheet {
@@ -43,17 +60,6 @@ export interface SchematicPdfPageLayoutRequest {
 export interface SchematicPdfPageLayout {
   x: number;
   y: number;
-  width: number;
-  height: number;
-}
-
-export interface SchematicPdfRasterDimensionsRequest {
-  pageWidthMm: number;
-  pageHeightMm: number;
-  dpi?: number;
-}
-
-export interface SchematicPdfRasterDimensions {
   width: number;
   height: number;
 }
@@ -143,11 +149,28 @@ const normalizeSvgViewport = (
   dimensions: SvgDimensions,
 ): void => {
   // circuit-to-svg currently emits width/height without a viewBox. Supplying
-  // one lets the browser scale the schematic uniformly into the PDF page.
+  // one lets svg2pdf scale the schematic uniformly into the PDF page.
   if (!svg.hasAttribute("viewBox")) {
     svg.setAttribute("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
   }
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+};
+
+const applyPdfFontFamily = (svg: Element): void => {
+  for (const textElement of svg.querySelectorAll("text, tspan")) {
+    textElement.setAttribute("font-family", PDF_FONT_FAMILY);
+
+    // Inline CSS overrides SVG presentation attributes. Appending the family
+    // keeps text that circuit-to-svg emits with style="font-family: ..." on
+    // the same embedded face as every other label.
+    const style = textElement.getAttribute("style");
+    if (style) {
+      textElement.setAttribute(
+        "style",
+        `${style};font-family:${PDF_FONT_FAMILY}`,
+      );
+    }
+  }
 };
 
 const validateFinitePositive = (name: string, value: number): void => {
@@ -172,69 +195,40 @@ export function calculateSchematicPdfPageLayout({
   };
 }
 
-/** Calculates a print-resolution raster matching the PDF page's aspect ratio. */
-export function calculateSchematicPdfRasterDimensions({
-  pageWidthMm,
-  pageHeightMm,
-  dpi = DEFAULT_RASTER_DPI,
-}: SchematicPdfRasterDimensionsRequest): SchematicPdfRasterDimensions {
-  validateFinitePositive("pageWidthMm", pageWidthMm);
-  validateFinitePositive("pageHeightMm", pageHeightMm);
-  validateFinitePositive("dpi", dpi);
-
-  return {
-    width: Math.round((pageWidthMm / MILLIMETERS_PER_INCH) * dpi),
-    height: Math.round((pageHeightMm / MILLIMETERS_PER_INCH) * dpi),
-  };
-}
-
-const renderSvgToCanvas = async (
-  svg: Element,
-  dimensions: SchematicPdfRasterDimensions,
-): Promise<HTMLCanvasElement> => {
-  if (
-    typeof document === "undefined" ||
-    typeof Image === "undefined" ||
-    typeof XMLSerializer === "undefined" ||
-    typeof URL === "undefined"
-  ) {
-    throw new Error("PDF export requires browser image and canvas APIs");
+const bytesToBase64 = (bytes: Uint8Array): string => {
+  if (typeof btoa === "undefined") {
+    throw new Error("PDF export requires the browser btoa API");
   }
 
-  svg.setAttribute("width", String(dimensions.width));
-  svg.setAttribute("height", String(dimensions.height));
-
-  const serializedSvg = new XMLSerializer().serializeToString(svg);
-  const svgBlob = new Blob([serializedSvg], {
-    type: "image/svg+xml;charset=utf-8",
-  });
-  const svgUrl = URL.createObjectURL(svgBlob);
-
-  try {
-    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const candidate = new Image();
-      candidate.decoding = "sync";
-      candidate.onload = () => resolve(candidate);
-      candidate.onerror = () =>
-        reject(new Error("Unable to rasterize schematic SVG"));
-      candidate.src = svgUrl;
-    });
-
-    const canvas = document.createElement("canvas");
-    canvas.width = dimensions.width;
-    canvas.height = dimensions.height;
-    const context = canvas.getContext("2d");
-    if (!context) {
-      throw new Error("Unable to create a canvas for PDF export");
-    }
-
-    context.fillStyle = "#ffffff";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return canvas;
-  } finally {
-    URL.revokeObjectURL(svgUrl);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(
+      ...bytes.subarray(offset, offset + chunkSize),
+    );
   }
+  return btoa(binary);
+};
+
+const registerPdfFonts = async (pdf: jsPDF): Promise<void> => {
+  const fonts = await Promise.all(
+    EMBEDDED_PDF_FONTS.map(async (font) => {
+      const response = await fetch(font.url);
+      if (!response.ok) {
+        throw new Error(
+          `Unable to load the embedded PDF font ${font.fileName}: HTTP ${response.status}`,
+        );
+      }
+      return { ...font, bytes: new Uint8Array(await response.arrayBuffer()) };
+    }),
+  );
+
+  for (const font of fonts) {
+    pdf.addFileToVFS(font.fileName, bytesToBase64(font.bytes));
+    pdf.addFont(font.fileName, PDF_FONT_FAMILY, font.style);
+  }
+
+  pdf.setFont(PDF_FONT_FAMILY, "normal");
 };
 
 const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
@@ -253,11 +247,12 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
     const element = parseSvg(sheet.svg);
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
+    applyPdfFontFamily(element);
     return { element };
   });
 };
 
-/** Converts one or more schematic SVGs into a one-sheet-per-page PDF. */
+/** Converts one or more schematic SVGs into a vector, one-sheet-per-page PDF. */
 export async function createSchematicPdfBlob(
   input: SchematicPdfInput,
   options: SchematicPdfOptions = {},
@@ -274,7 +269,10 @@ export async function createSchematicPdfBlob(
     unit: "mm",
     format,
     compress: true,
+    putOnlyUsedFonts: true,
   });
+
+  await registerPdfFonts(pdf);
 
   pdf.setProperties({
     ...(options.title ? { title: options.title } : {}),
@@ -290,37 +288,19 @@ export async function createSchematicPdfBlob(
       pageWidthMm: pageWidth,
       pageHeightMm: pageHeight,
     });
-    const rasterDimensions = calculateSchematicPdfRasterDimensions({
-      pageWidthMm: pageWidth,
-      pageHeightMm: pageHeight,
+    await svg2pdf(sheet.element, pdf, {
+      x: layout.x,
+      y: layout.y,
+      width: layout.width,
+      height: layout.height,
+      loadExternalStyleSheets: false,
     });
-    const canvas = await renderSvgToCanvas(sheet.element, rasterDimensions);
-    const imageData = canvas.toDataURL("image/jpeg", JPEG_QUALITY);
-
-    // Browser rasterization keeps the exact SVG glyphs and font metrics. The
-    // previous svg2pdf path substituted unsupported Unicode (for example Ω)
-    // and changed text widths, making net-label text overflow its outline.
-    pdf.addImage(
-      imageData,
-      "JPEG",
-      layout.x,
-      layout.y,
-      layout.width,
-      layout.height,
-      undefined,
-      "FAST",
-    );
-
-    // jsPDF has already encoded the canvas; release its backing store before
-    // rasterizing the next sheet.
-    canvas.width = 1;
-    canvas.height = 1;
   }
 
   return pdf.output("blob");
 }
 
-/** Builds and downloads a schematic PDF, returning the downloaded Blob. */
+/** Builds and downloads a vector schematic PDF, returning the downloaded Blob. */
 export async function downloadSchematicPdf(
   input: SchematicPdfInput,
   options: DownloadSchematicPdfOptions = {},

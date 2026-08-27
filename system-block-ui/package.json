@@ -14,6 +14,7 @@
     "format:check": "biome format ."
   },
   "dependencies": {
+    "@docx-editor.dev/fonts": "2.11.0",
     "@tscircuit/alphabet": "0.0.26",
     "@tscircuit/core": "0.0.1785",
     "@tscircuit/eval": "0.0.1294",
@@ -25,6 +26,7 @@
     "jspdf": "4.2.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "svg2pdf.js": "2.7.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
