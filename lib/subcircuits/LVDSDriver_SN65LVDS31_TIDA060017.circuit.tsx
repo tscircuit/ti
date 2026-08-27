@@ -27,7 +27,7 @@ const SN65LVDS31_PIN_LABELS = {
  * "TIDA-060017 Schematic(SN65LVDS31_33)", omitting only test headers.
  * @see https://www.ti.com/tool/TIDA-060017
  */
-export const InputOutputConnection_TIDA060017 = (props: SubcircuitProps) => (
+export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <chip
       name="U1"
@@ -112,4 +112,4 @@ export const InputOutputConnection_TIDA060017 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default InputOutputConnection_TIDA060017;
+export default LVDSDriver_SN65LVDS31_TIDA060017;
