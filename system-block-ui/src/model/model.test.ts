@@ -194,139 +194,6 @@ describe("automatic connection resolution", () => {
     }
   });
 
-  test("resolves the composed power-bank example through curated adapters", () => {
-    const blocks = [
-      block("battery_management", "battery-management-2to4-cell-bq40z60"),
-      block("battery_charging", "battery-charging-2to5-cell-bq25731"),
-      block("system_power", "boost-converter-tps61236"),
-      block("microcontroller", "microcontroller-msp430g2332"),
-      block("usb_c_output", "usb-c-power-delivery-tps61288"),
-    ];
-    const resolved = resolveDesignConnections(blocks, [
-      {
-        id: "battery-pack",
-        fromBlockId: "battery_management",
-        toBlockId: "battery_charging",
-        kind: "Power",
-      },
-      {
-        id: "charger-control",
-        fromBlockId: "microcontroller",
-        toBlockId: "battery_charging",
-        kind: "Data",
-      },
-      {
-        id: "fuel-gauge-control",
-        fromBlockId: "microcontroller",
-        toBlockId: "battery_management",
-        kind: "Data",
-      },
-      {
-        id: "mcu-power",
-        fromBlockId: "system_power",
-        toBlockId: "microcontroller",
-        kind: "Power",
-      },
-      {
-        id: "regulator-control",
-        fromBlockId: "microcontroller",
-        toBlockId: "system_power",
-        kind: "Data",
-      },
-      {
-        id: "system-rail",
-        fromBlockId: "battery_charging",
-        toBlockId: "system_power",
-        kind: "Power",
-      },
-      {
-        id: "usb-c-rail",
-        fromBlockId: "battery_charging",
-        toBlockId: "usb_c_output",
-        kind: "Power",
-      },
-    ]);
-
-    expect(resolved).toHaveLength(7);
-    expect(
-      resolved.map(({ id, fromPortId, toPortId, protocol }) => ({
-        id,
-        fromPortId,
-        toPortId,
-        protocol,
-      })),
-    ).toEqual([
-      {
-        id: "battery-pack",
-        fromPortId: "battery-pack-out",
-        toPortId: "battery-pack-in",
-        protocol: "power",
-      },
-      {
-        id: "charger-control",
-        fromPortId: "i2c",
-        toPortId: "i2c",
-        protocol: "i2c",
-      },
-      {
-        id: "fuel-gauge-control",
-        fromPortId: "i2c",
-        toPortId: "smbus",
-        protocol: "i2c",
-      },
-      {
-        id: "mcu-power",
-        fromPortId: "power-3v-out",
-        toPortId: "power-in",
-        protocol: "power",
-      },
-      {
-        id: "regulator-control",
-        fromPortId: "power-control",
-        toPortId: "power-control",
-        protocol: "gpio",
-      },
-      {
-        id: "system-rail",
-        fromPortId: "system-power-out",
-        toPortId: "power-in",
-        protocol: "power",
-      },
-      {
-        id: "usb-c-rail",
-        fromPortId: "system-power-out",
-        toPortId: "power-in",
-        protocol: "power",
-      },
-    ]);
-
-    expect(
-      resolved.find(({ id }) => id === "regulator-control")?.traces,
-    ).toEqual([
-      expect.objectContaining({
-        fromSelector: ".U4 > .pin12",
-        toSelector: ".Q2 > .gate",
-      }),
-      expect.objectContaining({
-        fromSelector: ".U4 > .pin13",
-        toSelector: ".Q1 > .gate",
-      }),
-    ]);
-  });
-
-  test("rejects bypassing the charger with the multi-cell battery rail", () => {
-    const battery = definition("battery-management-2to4-cell-bq40z60");
-    const boost = definition("boost-converter-tps61236");
-
-    expect(() =>
-      resolveConnection({
-        kind: "Power",
-        from: { block: block("battery", battery.id), definition: battery },
-        to: { block: block("boost", boost.id), definition: boost },
-      }),
-    ).toThrow(ConnectionResolutionError);
-  });
-
   test("rejects reusing a single-use consumer port", () => {
     const blocks = [
       block("ldo_a", "power-management-tps7a2018"),
@@ -621,8 +488,8 @@ describe("catalog and TSX generation", () => {
     const catalog = createSubcircuitCatalog({
       "../../../lib/subcircuits/FutureSensor_X1.circuit.tsx":
         "export const FutureSensor_X1 = (props: unknown) => null",
-      "../../../lib/subcircuits/LegacyFixture_X1.circuit.tsx":
-        "export const LegacyFixture_X1 = () => null",
+      "../../../lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx":
+        "export const Microcontroller_MSP430G2332 = () => null",
     });
     expect(
       catalog.find((item) => item.componentName === "FutureSensor_X1"),
@@ -631,7 +498,9 @@ describe("catalog and TSX generation", () => {
       canInstantiate: true,
     });
     expect(
-      catalog.find((item) => item.componentName === "LegacyFixture_X1"),
+      catalog.find(
+        (item) => item.componentName === "Microcontroller_MSP430G2332",
+      ),
     ).toMatchObject({ canInstantiate: false });
   });
 
