@@ -1,274 +1,586 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 
-/** PMP11774 auxiliary flyback power supply.
- * Source placement and connectivity were extracted from TI's native Altium sheet (TIDRLL5).
+type GroundProps = {
+  net: "GND" | "_Vpri";
+  connectsTo: string | string[];
+  schX: number;
+  schY: number;
+  anchorSide?: "left" | "top" | "right" | "bottom";
+};
+
+const Ground = ({
+  net,
+  connectsTo,
+  schX,
+  schY,
+  anchorSide = "top",
+}: GroundProps) => (
+  <netlabel
+    net={net}
+    connectsTo={connectsTo}
+    schX={schX}
+    schY={schY}
+    anchorSide={anchorSide}
+  />
+);
+
+/**
+ * PMP11774 8 W auxiliary flyback power supply.
+ * Values, reference designators, pin nets, and functional placement follow
+ * TI's released PMP11774 Rev C schematic and BOM (TIDRLL5/TIDRLL6).
  * @see https://www.ti.com/lit/pdf/TIDRLL5
+ * @see https://www.ti.com/lit/pdf/TIDRLL6
  */
 export const PMP11774_AuxiliaryPower = (props: SubcircuitProps) => (
   <subcircuit
     {...props}
     routingDisabled
-    schMaxTraceDistance="100mm"
+    schMaxTraceDistance="4mm"
     schTraceAutoLabelEnabled={false}
   >
+    <net name="GND" isGroundNet />
+    <net name="_Vpri" isGroundNet />
+    <net name="Vbulk" isPowerNet />
+    <net name="VDD" isPowerNet />
+    <net name="DRAIN" />
+    <net name="VS" />
+    <net name="Vsec" />
+    <net name="Vsec_5" />
+    <net name="Vout_18" isPowerNet />
+    <net name="Vout_5" isPowerNet />
+
     <schematictext
       text="PMP11774 auxiliary flyback power supply"
       schX={0}
-      schY={9.313}
+      schY={8.8}
       fontSize={0.7}
     />
-    <testpoint
-      name="TP1"
-      schX={14.375}
-      schY={5.313}
-      footprintVariant="through_hole"
-      holeDiameter="1mm"
-      padDiameter="2mm"
-    />
-    <capacitor
-      name="C2"
-      schX={7.375}
-      schY={3.813}
-      capacitance="10uF"
-      footprint="1210"
-      schOrientation="vertical"
-    />
-    <diode
-      name="D1"
-      schX={3.75}
-      schY={5.313}
-      manufacturerPartNumber="STPS1150A"
-      footprint="sma"
-      variant="schottky"
-      schOrientation="horizontal"
-    />
-    <capacitor
-      name="C1"
-      schX={6.125}
-      schY={3.813}
-      capacitance="150uF"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-    />
-    <diode
-      name="D4"
-      schX={-13.25}
-      schY={-2.312}
-      manufacturerPartNumber="BAV20WS-TP"
-      footprint="sod-323"
-      variant="standard"
-      schOrientation="horizontal"
-    />
-    <resistor
-      name="R13"
-      schX={0.125}
-      schY={-4.312}
-      resistance="1.38k"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-    />
-    <capacitor
-      name="C9"
-      schX={-8.875}
-      schY={-3.437}
-      capacitance="0.1uF"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-    />
-    <resistor
-      name="R15"
-      schX={-7.125}
-      schY={-5.312}
-      resistance="61.9k"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-    />
-    <resistor
-      name="R10"
-      schX={-11.875}
-      schY={-2.312}
-      resistance="10ohm"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="horizontal"
-    />
-    <diode
-      name="D3"
-      schX={4.25}
-      schY={1.688}
-      manufacturerPartNumber="B160-13-F"
-      footprint="sma"
-      variant="schottky"
-      schOrientation="horizontal"
-    />
-    <resistor
-      name="R14"
-      schX={-7.875}
-      schY={-5.312}
-      resistance="1ohm"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-      doNotPlace
-    />
+
+    {/* AC input, EMI filter, and bridge rectifier */}
     <chip
-      name="J1"
-      schX={15.375}
-      schY={2.563}
-      manufacturerPartNumber="1757255"
-      footprint="pinrow3_p2.54mm"
-      pinLabels={{ pin1: "1", pin2: "2", pin3: "3" }}
+      name="J2"
+      schX={-16.9}
+      schY={2.7}
+      manufacturerPartNumber="770W-X2/10"
+      footprint="pinrow2_p2.54mm"
+      pinLabels={{ pin2: "2", pin1: "1" }}
       schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [1] },
-        rightSide: { direction: "top-to-bottom", pins: [3] },
-        bottomSide: { direction: "left-to-right", pins: [2] },
+        rightSide: { direction: "top-to-bottom", pins: [2, 1] },
       }}
-      schWidth="2.5mm"
-      schHeight="2mm"
-    />
-    <resistor
-      name="R1"
-      schX={-1.375}
-      schY={3.938}
-      resistance="1ohm"
-      footprint="1206"
-      schOrientation="vertical"
-      doNotPlace
-    />
-    <diode
-      name="D2"
-      schX={-1.125}
-      schY={2.188}
-      manufacturerPartNumber="DFLR1600-7"
-      footprint="pinrow2_p2.54mm"
-      variant="schottky"
-      schOrientation="horizontal"
-    />
-    <capacitor
-      name="C3"
-      schX={-2.875}
-      schY={3.813}
-      capacitance="1pF"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-      doNotPlace
-    />
-    <resistor
-      name="R7"
-      schX={-2.375}
-      schY={2.188}
-      resistance="1ohm"
-      footprint="1206"
-      schOrientation="horizontal"
-      doNotPlace
-    />
-    <testpoint
-      name="Neutral"
-      schX={-15.375}
-      schY={0.438}
-      footprintVariant="through_hole"
-      holeDiameter="1mm"
-      padDiameter="2mm"
+      schPinStyle={{ pin1: { marginTop: 0.7 } }}
+      schWidth="2.2mm"
+      schHeight="2.6mm"
     />
     <testpoint
       name="Line"
-      schX={-15.375}
-      schY={3.688}
+      schX={-14.8}
+      schY={3.35}
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="2mm"
+    />
+    <testpoint
+      name="Neutral"
+      schX={-14.4}
+      schY={1.55}
       footprintVariant="through_hole"
       holeDiameter="1mm"
       padDiameter="2mm"
     />
     <resistor
       name="R2"
-      schX={-13.625}
-      schY={3.688}
-      resistance="10 ohm"
+      schX={-13.1}
+      schY={3.35}
+      resistance="10ohm"
       footprint="pinrow2_p2.54mm"
-      schOrientation="horizontal"
     />
     <capacitor
       name="C5"
-      schX={-12.875}
-      schY={2.063}
+      schX={-11.9}
+      schY={2.45}
       capacitance="0.1uF"
       footprint="pinrow2_p2.54mm"
       schOrientation="vertical"
     />
-    <testpoint
-      name="TP2"
-      schX={14.375}
-      schY={1.688}
-      footprintVariant="through_hole"
-      holeDiameter="1mm"
-      padDiameter="2mm"
+    <inductor
+      name="L1"
+      schX={-10.3}
+      schY={3.35}
+      inductance="1mH"
+      footprint="pinrow2_p2.54mm"
     />
-    <testpoint
-      name="GND.1"
-      schX={6.875}
-      schY={-0.687}
-      footprintVariant="through_hole"
-      holeDiameter="1mm"
-      padDiameter="2mm"
+    <resistor
+      name="R4"
+      schX={-10.3}
+      schY={2.55}
+      resistance="10k"
+      footprint="1206"
+    />
+    <inductor
+      name="L2"
+      displayName="L2 (short)"
+      schX={-10.3}
+      schY={1.55}
+      inductance="1nH"
+      footprint="pinrow2_p2.54mm"
+    />
+    <resistor
+      name="R9"
+      displayName="R9 (DNP)"
+      schX={-10.3}
+      schY={0.75}
+      resistance="10k"
+      footprint="1206"
+      doNotPlace
+    />
+    <chip
+      name="D6"
+      schX={-8.2}
+      schY={2.45}
+      manufacturerPartNumber="DF06M"
+      footprint="pinrow4_p2.54mm"
+      pinLabels={{ pin1: "+", pin2: "-", pin3: "~", pin4: "~" }}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [4] },
+        rightSide: { direction: "top-to-bottom", pins: [3] },
+        topSide: { direction: "left-to-right", pins: [1] },
+        bottomSide: { direction: "left-to-right", pins: [2] },
+      }}
+      schWidth="1.8mm"
+      schHeight="2.2mm"
     />
     <capacitor
-      name="C8"
-      schX={11.125}
-      schY={1.063}
+      name="C4"
+      schX={-5.3}
+      schY={2.45}
+      capacitance="15uF"
+      footprint="pinrow2_p2.54mm"
+      schOrientation="vertical"
+    />
+
+    <trace from="J2.pin2" to="Line.pin1" />
+    <trace from="Line.pin1" to="R2.pin1" />
+    <trace from="J2.pin1" to="Neutral.pin1" />
+    <trace path={["R2.pin2", "C5.pin1", "L1.pin1", "R4.pin1"]} />
+    <trace path={["L1.pin2", "R4.pin2", "D6.pin4"]} />
+    <trace path={["Neutral.pin1", "C5.pin2", "L2.pin1", "R9.pin1"]} />
+    <trace path={["L2.pin2", "R9.pin2", "D6.pin3"]} />
+    <netlabel
+      net="Vbulk"
+      connectsTo={["D6.pin1", "C4.pin1"]}
+      schX={-6.7}
+      schY={3.9}
+      anchorSide="bottom"
+    />
+    <Ground
+      net="_Vpri"
+      connectsTo={["D6.pin2", "C4.pin2"]}
+      schX={-6.7}
+      schY={0.85}
+    />
+
+    {/* Primary winding, clamp network, and transformer */}
+    <capacitor
+      name="C3"
+      displayName="C3 (DNP)"
+      schX={-4.1}
+      schY={4.15}
+      capacitance="1000pF"
+      footprint="0805"
+      schOrientation="vertical"
+      doNotPlace
+    />
+    <resistor
+      name="R1"
+      displayName="R1 (DNP)"
+      schX={-3}
+      schY={4.15}
+      resistance="120k"
+      footprint="1206"
+      schOrientation="vertical"
+      doNotPlace
+    />
+    <resistor
+      name="R7"
+      displayName="R7 (DNP)"
+      schX={-3.55}
+      schY={2.75}
+      resistance="10ohm"
+      footprint="1206"
+      schRotation={180}
+      doNotPlace
+    />
+    <diode
+      name="D2"
+      displayName="D2 (DNP)"
+      schX={-2.15}
+      schY={2.75}
+      manufacturerPartNumber="DFLR1600-7"
+      footprint="pinrow2_p2.54mm"
+      variant="standard"
+      schRotation={180}
+      doNotPlace
+    />
+    <chip
+      name="T1"
+      schX={0}
+      schY={3.65}
+      manufacturerPartNumber="750315942_Rev01"
+      footprint="pinrow6_p2.54mm"
+      pinLabels={{
+        pin8: "8",
+        pin6: "6",
+        pin4: "4",
+        pin2: "2",
+        pin1: "1",
+        pin3: "3",
+      }}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [8, 6] },
+        rightSide: { direction: "top-to-bottom", pins: [4, 2, 1, 3] },
+      }}
+      schPinStyle={{
+        pin6: { marginTop: 1.2 },
+        pin2: { marginTop: 0.25 },
+        pin1: { marginTop: 0.35 },
+        pin3: { marginTop: 0.25 },
+      }}
+      schWidth="2.5mm"
+      schHeight="4.6mm"
+    />
+
+    <netlabel
+      net="Vbulk"
+      connectsTo={["C3.pin2", "R1.pin1", "T1.pin8"]}
+      schX={-2.8}
+      schY={5.1}
+      anchorSide="bottom"
+    />
+    <trace path={["C3.pin1", "R1.pin2", "R7.pin2"]} />
+    <trace from="R7.pin1" to="D2.pin2" />
+    <netlabel
+      net="DRAIN"
+      connectsTo={["D2.pin1", "T1.pin6"]}
+      schX={-1.15}
+      schY={2.75}
+      anchorSide="left"
+    />
+
+    {/* 18 V and 5 V rectifier/output networks */}
+    <diode
+      name="D1"
+      schX={2.25}
+      schY={5.55}
+      manufacturerPartNumber="STPS1150A"
+      footprint="sma"
+      variant="schottky"
+    />
+    <capacitor
+      name="C1"
+      schX={5.2}
+      schY={4.55}
+      capacitance="150uF"
+      footprint="pinrow2_p2.54mm"
+      schOrientation="vertical"
+    />
+    <capacitor
+      name="C2"
+      schX={6.7}
+      schY={4.55}
       capacitance="10uF"
       footprint="1210"
       schOrientation="vertical"
     />
+    <resistor
+      name="R3"
+      schX={10}
+      schY={4.55}
+      resistance="10k"
+      footprint="0805"
+      schOrientation="vertical"
+    />
+    <diode
+      name="D5"
+      schX={11.7}
+      schY={4.55}
+      manufacturerPartNumber="BZX84C20LT1G"
+      footprint="sot23"
+      variant="zener"
+      schOrientation="vertical"
+    />
+    <testpoint
+      name="TP1"
+      schX={14.2}
+      schY={5.55}
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="2mm"
+    />
+
+    <resistor
+      name="R5"
+      displayName="R5 (DNP)"
+      schX={1.75}
+      schY={2.55}
+      resistance="0ohm"
+      footprint="0805"
+      schOrientation="vertical"
+      doNotPlace
+    />
+    <diode
+      name="D3"
+      schX={3.1}
+      schY={1.75}
+      manufacturerPartNumber="B160-13-F"
+      footprint="sma"
+      variant="schottky"
+    />
+    <resistor
+      name="R6"
+      schX={4.45}
+      schY={2.55}
+      resistance="0ohm"
+      footprint="0805"
+      schOrientation="vertical"
+    />
+    <capacitor
+      name="C6"
+      schX={6.2}
+      schY={0.75}
+      capacitance="330uF"
+      footprint="pinrow2_p2.54mm"
+      schOrientation="vertical"
+    />
     <capacitor
       name="C7"
-      schX={8.875}
-      schY={1.063}
+      schX={7.7}
+      schY={0.75}
       capacitance="100uF"
       footprint="pinrow2_p2.54mm"
       schOrientation="vertical"
     />
     <capacitor
-      name="C6"
-      schX={7.375}
-      schY={1.063}
-      capacitance="330uF"
-      footprint="pinrow2_p2.54mm"
+      name="C8"
+      schX={9.2}
+      schY={0.75}
+      capacitance="10uF"
+      footprint="1210"
       schOrientation="vertical"
     />
+    <resistor
+      name="R8"
+      schX={10.7}
+      schY={0.75}
+      resistance="10k"
+      footprint="0805"
+      schOrientation="vertical"
+    />
+    <diode
+      name="D7"
+      schX={12.2}
+      schY={0.75}
+      manufacturerPartNumber="BZX84C6V8LT1G"
+      footprint="sot23"
+      variant="zener"
+      schOrientation="vertical"
+    />
+    <testpoint
+      name="TP2"
+      schX={14.2}
+      schY={1.75}
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="2mm"
+    />
+    <testpoint
+      name="GND1"
+      displayName="GND.1"
+      schX={7}
+      schY={-0.65}
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="2mm"
+    />
     <chip
-      name="J3"
-      schX={5.5}
-      schY={-2.937}
-      manufacturerPartNumber="923345-05-C"
-      footprint="pinrow2_p2.54mm"
-      pinLabels={{ pin1: "1", pin2: "2" }}
+      name="J1"
+      schX={16}
+      schY={3.65}
+      manufacturerPartNumber="1757255"
+      footprint="pinrow3_p2.54mm"
+      pinLabels={{ pin3: "18V", pin2: "GND", pin1: "5V" }}
       schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [1] },
-        rightSide: { direction: "top-to-bottom", pins: [2] },
+        leftSide: { direction: "top-to-bottom", pins: [3, 2, 1] },
       }}
-      schWidth="2.5mm"
-      schHeight="2mm"
+      schPinStyle={{
+        pin2: { marginTop: 0.75 },
+        pin1: { marginTop: 0.75 },
+      }}
+      schWidth="2.2mm"
+      schHeight="4.2mm"
+    />
+
+    <trace from="T1.pin4" to="D1.pin1" />
+    <netlabel
+      net="Vsec"
+      connectsTo="T1.pin4"
+      schX={1.4}
+      schY={6.1}
+      anchorSide="bottom"
+    />
+    <trace
+      path={[
+        "D1.pin2",
+        "C1.pin1",
+        "C2.pin1",
+        "R3.pin2",
+        "D5.pin1",
+        "TP1.pin1",
+        "J1.pin3",
+      ]}
+    />
+    <netlabel
+      net="Vout_18"
+      connectsTo="TP1.pin1"
+      schX={13.6}
+      schY={5.95}
+      anchorSide="bottom"
+    />
+    <trace path={["C1.pin2", "C2.pin2", "R3.pin1", "D5.pin2", "J1.pin2"]} />
+    <Ground net="GND" connectsTo="C1.pin2" schX={8.35} schY={3.25} />
+
+    <trace path={["T1.pin2", "R5.pin2", "R6.pin2"]} />
+    <trace path={["T1.pin1", "R5.pin1", "D3.pin1"]} />
+    <netlabel
+      net="Vsec_5"
+      connectsTo="T1.pin1"
+      schX={2.1}
+      schY={2.55}
+      anchorSide="bottom"
+    />
+    <trace
+      path={[
+        "D3.pin2",
+        "R6.pin1",
+        "C6.pin1",
+        "C7.pin1",
+        "C8.pin1",
+        "R8.pin2",
+        "D7.pin1",
+        "TP2.pin1",
+        "J1.pin1",
+      ]}
+    />
+    <netlabel
+      net="Vout_5"
+      connectsTo="TP2.pin1"
+      schX={13.6}
+      schY={2.15}
+      anchorSide="bottom"
+    />
+    <trace
+      path={["T1.pin3", "C6.pin2", "C7.pin2", "C8.pin2", "R8.pin1", "D7.pin2"]}
+    />
+    <Ground net="GND" connectsTo="D7.pin2" schX={12.2} schY={-0.55} />
+    <trace from="GND1.pin1" to="net.GND" schDisplayLabel="GND" />
+
+    {/* UCC28911 bias, regulation divider, and current-limit network */}
+    <diode
+      name="D4"
+      schX={-13.2}
+      schY={-2.4}
+      manufacturerPartNumber="BAV20WS-TP"
+      footprint="sod-323"
+      variant="standard"
+    />
+    <resistor
+      name="R10"
+      schX={-11.7}
+      schY={-2.4}
+      resistance="10ohm"
+      footprint="0603"
     />
     <capacitor
-      name="C11"
-      schX={0.875}
-      schY={-4.187}
-      capacitance="1pF"
+      name="C10"
+      schX={-10.4}
+      schY={-3.55}
+      capacitance="22uF"
+      footprint="1210"
+      schOrientation="vertical"
+    />
+    <resistor
+      name="R116"
+      schX={-9}
+      schY={-2.4}
+      resistance="0ohm"
       footprint="pinrow2_p2.54mm"
+    />
+    <capacitor
+      name="C9"
+      schX={-7.65}
+      schY={-3.55}
+      capacitance="0.1uF"
+      footprint="0603"
+      schOrientation="vertical"
+    />
+    <resistor
+      name="R17"
+      schX={-5.8}
+      schY={-2.9}
+      resistance="0ohm"
+      footprint="1206"
+      schOrientation="vertical"
+    />
+    <resistor
+      name="R12"
+      schX={-4.45}
+      schY={-3.8}
+      resistance="23.7k"
+      footprint="0603"
+      schOrientation="vertical"
+    />
+    <resistor
+      name="R11"
+      displayName="R11 (DNP)"
+      schX={-6.15}
+      schY={-4.55}
+      resistance="110k"
+      footprint="0603"
       schOrientation="vertical"
       doNotPlace
     />
+    <resistor
+      name="R14"
+      displayName="R14 (DNP)"
+      schX={-5.75}
+      schY={-5.9}
+      resistance="91k"
+      footprint="0603"
+      schOrientation="vertical"
+      doNotPlace
+    />
+    <resistor
+      name="R15"
+      schX={-4.45}
+      schY={-5.9}
+      resistance="61.9k"
+      footprint="0603"
+      schOrientation="vertical"
+    />
     <capacitor
       name="C12"
-      schX={-5.875}
-      schY={-5.187}
-      capacitance="1pF"
-      footprint="pinrow2_p2.54mm"
+      displayName="C12 (DNP)"
+      schX={-3.15}
+      schY={-5.9}
+      capacitance="10pF"
+      footprint="0603"
       schOrientation="vertical"
       doNotPlace
     />
     <chip
       name="U1"
-      schX={-2.375}
-      schY={-3.062}
+      schX={0}
+      schY={-3.95}
       manufacturerPartNumber="UCC28911DR"
       footprint="pinrow7_p2.54mm"
       pinLabels={{
@@ -281,282 +593,128 @@ export const PMP11774_AuxiliaryPower = (props: SubcircuitProps) => (
         pin8: "DRAIN",
       }}
       schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [1, 2, 3, 4] },
-        rightSide: { direction: "top-to-bottom", pins: [8, 6, 5] },
+        leftSide: { direction: "top-to-bottom", pins: [6, 5] },
+        rightSide: { direction: "top-to-bottom", pins: [8, 4, 1, 2, 3] },
       }}
-      schWidth="2.5mm"
-      schHeight="2mm"
-    />
-    <chip
-      name="J2"
-      schX={-14.875}
-      schY={1.938}
-      manufacturerPartNumber="770W-X2/10"
-      footprint="pinrow2_p2.54mm"
-      pinLabels={{ pin2: "Hot", pin1: "Neutral" }}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [2, 1] },
+      schPinStyle={{
+        pin5: { marginTop: 0.8 },
+        pin4: { marginTop: 0.65 },
+        pin1: { marginTop: 0.6 },
       }}
-      schWidth="2.5mm"
-      schHeight="2mm"
+      schWidth="3.4mm"
+      schHeight="4.2mm"
     />
     <resistor
-      name="R9"
-      schX={-10.875}
-      schY={-0.312}
-      resistance="1ohm"
-      footprint="1206"
-      schOrientation="horizontal"
-      doNotPlace
-    />
-    <resistor
-      name="R4"
-      schX={-10.875}
-      schY={2.938}
-      resistance="10.0k"
-      footprint="1206"
-      schOrientation="horizontal"
-    />
-    <inductor
-      name="L2"
-      schX={-10.875}
-      schY={0.438}
-      inductance="1nH"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="horizontal"
-    />
-    <inductor
-      name="L1"
-      schX={-10.875}
-      schY={3.688}
-      inductance="1mH"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="horizontal"
-    />
-    <chip
-      name="T1"
-      schX={1.25}
-      schY={3.313}
-      manufacturerPartNumber="750315942_Rev01"
-      footprint="pinrow6_p2.54mm"
-      pinLabels={{
-        pin3: "3",
-        pin1: "1",
-        pin6: "6",
-        pin8: "8",
-        pin4: "4",
-        pin2: "2",
-      }}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [8, 6] },
-        rightSide: { direction: "top-to-bottom", pins: [4, 2, 1, 3] },
-      }}
-      schWidth="2.5mm"
-      schHeight="2mm"
+      name="R13"
+      schX={2.6}
+      schY={-5}
+      resistance="1.38k"
+      footprint="0603"
+      schOrientation="vertical"
     />
     <capacitor
-      name="C4"
-      schX={-5.375}
-      schY={2.063}
-      capacitance="15uF"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-    />
-    <resistor
-      name="R11"
-      schX={-7.125}
-      schY={-3.812}
-      resistance="1ohm"
-      footprint="pinrow2_p2.54mm"
+      name="C11"
+      displayName="C11 (DNP)"
+      schX={3.75}
+      schY={-5}
+      capacitance="10pF"
+      footprint="0603"
       schOrientation="vertical"
       doNotPlace
     />
-    <resistor
-      name="R12"
-      schX={-5.875}
-      schY={-3.687}
-      resistance="23.7k"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
+
+    <netlabel
+      net="Vsec"
+      connectsTo={["D4.pin1", "R11.pin2"]}
+      schX={-14.15}
+      schY={-2.4}
+      anchorSide="right"
     />
-    <resistor
-      name="R5"
-      schX={3.125}
-      schY={2.438}
-      resistance="1ohm"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
-      doNotPlace
+    <trace path={["D4.pin2", "R10.pin1"]} />
+    <trace path={["R10.pin2", "C10.pin1", "R116.pin1"]} />
+    <trace path={["R116.pin2", "C9.pin1"]} />
+    <Ground net="GND" connectsTo="C10.pin2" schX={-10.4} schY={-4.6} />
+    <Ground net="_Vpri" connectsTo="C9.pin2" schX={-7.65} schY={-4.6} />
+    <netlabel
+      net="VDD"
+      connectsTo={["C9.pin1", "R17.pin1", "R12.pin2", "U1.pin6"]}
+      schX={-2.3}
+      schY={-1.9}
+      anchorSide="bottom"
     />
-    <resistor
-      name="R6"
-      schX={4.875}
-      schY={2.438}
-      resistance="0ohm"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
+    <netlabel
+      net="Vsec_5"
+      connectsTo="R17.pin2"
+      schX={-5.8}
+      schY={-1.9}
+      anchorSide="bottom"
     />
-    <resistor
-      name="R3"
-      schX={10.5}
-      schY={3.688}
-      resistance="10k"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
+    <netlabel
+      net="Vsec"
+      connectsTo="R11.pin2"
+      schX={-6.15}
+      schY={-3.55}
+      anchorSide="bottom"
     />
-    <resistor
-      name="R8"
-      schX={12.375}
-      schY={0.938}
-      resistance="10k"
+    <trace
+      path={["R11.pin1", "R12.pin1", "R14.pin2", "R15.pin2", "C12.pin2"]}
+    />
+    <netlabel
+      net="VS"
+      connectsTo={["R12.pin1", "U1.pin5"]}
+      schX={-2.45}
+      schY={-3.9}
+      anchorSide="bottom"
+    />
+    <Ground
+      net="_Vpri"
+      connectsTo={["R14.pin1", "R15.pin1", "C12.pin1"]}
+      schX={-4.45}
+      schY={-6.75}
+    />
+    <netlabel
+      net="DRAIN"
+      connectsTo="U1.pin8"
+      schX={2.55}
+      schY={-2.3}
+      anchorSide="bottom"
+    />
+    <trace path={["U1.pin4", "R13.pin2", "C11.pin2"]} />
+    <trace path={["U1.pin1", "U1.pin2", "U1.pin3"]} />
+    <Ground net="_Vpri" connectsTo="U1.pin3" schX={2.05} schY={-6} />
+    <Ground
+      net="_Vpri"
+      connectsTo={["R13.pin1", "C11.pin1"]}
+      schX={3.2}
+      schY={-6.05}
+    />
+
+    {/* Optional return-to-return links from the released design */}
+    <chip
+      name="J3"
+      schX={7.2}
+      schY={-3.7}
+      manufacturerPartNumber="923345-05-C"
       footprint="pinrow2_p2.54mm"
-      schOrientation="vertical"
+      pinLabels={{ pin1: "VPRI", pin2: "GND" }}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [1] },
+        rightSide: { direction: "top-to-bottom", pins: [2] },
+      }}
+      schWidth="2.2mm"
+      schHeight="1.5mm"
     />
     <resistor
       name="R16"
-      schX={5.25}
-      schY={-4.937}
+      schX={7.2}
+      schY={-5.65}
       resistance="0ohm"
       footprint="pinrow2_p2.54mm"
-      schOrientation="horizontal"
     />
-    <chip
-      name="D6"
-      schX={-7.625}
-      schY={1.938}
-      manufacturerPartNumber="DF06M"
-      footprint="pinrow4_p2.54mm"
-      pinLabels={{ pin3: "_", pin1: "+", pin4: "_", pin2: "-" }}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: [4] },
-        rightSide: { direction: "top-to-bottom", pins: [3] },
-        topSide: { direction: "left-to-right", pins: [1] },
-        bottomSide: { direction: "left-to-right", pins: [2] },
-      }}
-      schWidth="2.5mm"
-      schHeight="2mm"
-    />
-    <resistor
-      name="R17"
-      schX={-5.875}
-      schY={-2.687}
-      resistance="0ohm"
-      footprint="1206"
-      schOrientation="vertical"
-    />
-    <resistor
-      name="R116"
-      schX={-9.375}
-      schY={-2.312}
-      resistance="0ohm"
-      footprint="pinrow2_p2.54mm"
-      schOrientation="horizontal"
-    />
-    <diode
-      name="D5"
-      schX={12.125}
-      schY={4.438}
-      manufacturerPartNumber="BZX84C20LT1G"
-      footprint="sot23"
-      variant="zener"
-      schOrientation="vertical"
-    />
-    <diode
-      name="D7"
-      schX={14}
-      schY={0.813}
-      manufacturerPartNumber="BZX84C6V8LT1G"
-      footprint="sot23"
-      variant="zener"
-      schOrientation="vertical"
-    />
-    <capacitor
-      name="C10"
-      schX={-10.125}
-      schY={-3.437}
-      capacitance="22uF"
-      footprint="1210"
-      schOrientation="vertical"
-    />
-    <trace from="TP1.pin1" to="R3.pin1" />
-    <trace from="R3.pin1" to="C2.pin1" />
-    <trace from="C2.pin1" to="C1.pin1" />
-    <trace from="C1.pin1" to="D1.pin2" />
-    <trace from="TP1.pin1" to="net.Vout_18" schDisplayLabel="Vout_18" />
-    <trace from="C2.pin2" to="C1.pin2" />
-    <trace from="C2.pin2" to="C6.pin2" />
-    <trace from="C6.pin2" to="C7.pin2" />
-    <trace from="C6.pin2" to="GND.1.pin1" />
-    <trace from="C7.pin2" to="C8.pin2" />
-    <trace from="C8.pin2" to="R8.pin2" />
-    <trace from="C8.pin2" to="R3.pin2" />
-    <trace from="C1.pin2" to="T1.pin3" />
-    <trace from="C2.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace from="D1.pin1" to="T1.pin4" />
-    <trace from="D1.pin1" to="net.Vsec" schDisplayLabel="Vsec" />
-    <trace from="D4.pin2" to="R10.pin2" />
-    <trace from="R13.pin1" to="C11.pin2" />
-    <trace from="R13.pin2" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="C9.pin1" to="R116.pin1" />
-    <trace from="R116.pin1" to="U1.pin1" />
-    <trace from="C9.pin2" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="R15.pin1" to="R11.pin2" />
-    <trace from="R15.pin1" to="R14.pin1" />
-    <trace from="R15.pin1" to="C12.pin2" />
-    <trace from="C12.pin2" to="R12.pin2" />
-    <trace from="R15.pin2" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="R10.pin1" to="R116.pin2" />
-    <trace from="R116.pin2" to="C10.pin1" />
-    <trace from="D3.pin1" to="R5.pin2" />
-    <trace from="R5.pin2" to="T1.pin1" />
-    <trace from="D3.pin1" to="net.Vsec_5" schDisplayLabel="Vsec_5" />
-    <trace from="D3.pin2" to="R6.pin2" />
-    <trace from="D3.pin2" to="C6.pin1" />
-    <trace from="C6.pin1" to="C7.pin1" />
-    <trace from="C7.pin1" to="C8.pin1" />
-    <trace from="C8.pin1" to="R8.pin1" />
-    <trace from="R8.pin1" to="TP2.pin1" />
-    <trace from="TP2.pin1" to="J1.pin1" />
-    <trace from="D3.pin2" to="net.Vout_5" schDisplayLabel="Vout_5" />
-    <trace from="R14.pin2" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="R1.pin1" to="C3.pin1" />
-    <trace from="C3.pin1" to="R7.pin1" />
-    <trace from="R1.pin2" to="C3.pin2" />
-    <trace from="R1.pin2" to="T1.pin8" />
-    <trace from="C3.pin2" to="C4.pin1" />
-    <trace from="C4.pin1" to="D6.pin1" />
-    <trace from="R1.pin2" to="net.Vbulk" schDisplayLabel="Vbulk" />
-    <trace from="D2.pin1" to="T1.pin6" />
-    <trace from="D2.pin1" to="U1.pin8" />
-    <trace from="D2.pin2" to="R7.pin2" />
-    <trace from="Neutral.pin1" to="J2.pin1" />
-    <trace from="J2.pin1" to="C5.pin2" />
-    <trace from="C5.pin2" to="L2.pin1" />
-    <trace from="L2.pin1" to="R9.pin2" />
-    <trace from="Line.pin1" to="R2.pin2" />
-    <trace from="Line.pin1" to="J2.pin2" />
-    <trace from="R2.pin1" to="C5.pin1" />
-    <trace from="R2.pin1" to="L1.pin1" />
-    <trace from="L1.pin1" to="R4.pin2" />
     <trace from="J3.pin1" to="net._Vpri" schDisplayLabel="-Vpri" />
     <trace from="J3.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace from="C11.pin1" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="C12.pin1" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="U1.pin5" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="R9.pin1" to="L2.pin2" />
-    <trace from="L2.pin2" to="D6.pin3" />
-    <trace from="R4.pin1" to="L1.pin2" />
-    <trace from="R4.pin1" to="D6.pin4" />
-    <trace from="T1.pin2" to="R5.pin1" />
-    <trace from="R5.pin1" to="R6.pin1" />
-    <trace from="C4.pin2" to="D6.pin2" />
-    <trace from="C4.pin2" to="net._Vpri" schDisplayLabel="-Vpri" />
-    <trace from="R11.pin1" to="net.Vsec" schDisplayLabel="Vsec" />
-    <trace from="R12.pin1" to="R17.pin2" />
     <trace from="R16.pin1" to="net.GND" schDisplayLabel="GND" />
     <trace from="R16.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace from="R17.pin1" to="net.Vsec_5" schDisplayLabel="Vsec_5" />
-    <trace from="C10.pin2" to="net.GND" schDisplayLabel="GND" />
   </subcircuit>
 );
 
