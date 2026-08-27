@@ -4,10 +4,6 @@ import {
   getGeneratedSystemEvaluationFsMap,
   getGeneratedSystemSourceFiles,
 } from "./generated-source-files";
-import {
-  PINNED_TI_GIT_COMMIT,
-  PINNED_TI_PACKAGE_NAME,
-} from "./pinned-ti-sources";
 
 const artifacts = {
   tsx: 'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
@@ -29,15 +25,10 @@ describe("generated source files", () => {
     ]);
   });
 
-  test("provides the pinned TI manifest and companion modules to the evaluator", () => {
+  test("provides only companion modules to the evaluator fsMap", () => {
     expect(getGeneratedSystemEvaluationFsMap(artifacts)).toEqual({
       [artifacts.systemDiagramModuleFileName]:
         artifacts.systemDiagramModuleSource,
-      "package.json": JSON.stringify({
-        dependencies: {
-          [PINNED_TI_PACKAGE_NAME]: `github:tscircuit/ti#${PINNED_TI_GIT_COMMIT}`,
-        },
-      }),
     });
   });
 });

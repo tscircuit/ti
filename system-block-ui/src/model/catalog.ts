@@ -116,7 +116,7 @@ const genericDefinition = (
     title: titleFromComponentName(componentName),
     category: categoryFromComponentName(componentName),
     componentName,
-    importPath: "@tscircuit/ti",
+    importPath: "@tsci/tscircuit.ti",
     sourcePath: `lib/subcircuits/${fileName}`,
     source,
     ports: [],

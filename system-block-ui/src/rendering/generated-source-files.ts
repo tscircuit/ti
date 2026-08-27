@@ -1,5 +1,3 @@
-import { getPinnedTiEvaluationFsMap } from "./pinned-ti-sources";
-
 export const GENERATED_SYSTEM_MAIN_FILE_NAME = "GeneratedSystem.circuit.tsx";
 
 interface GeneratedSystemSourceArtifacts {
@@ -27,10 +25,9 @@ export const getGeneratedSystemSourceFiles = (
   },
 ];
 
-/** Returns companion modules and the pinned TI package for evaluation. */
+/** Returns companion modules for @tscircuit/eval's virtual filesystem. */
 export const getGeneratedSystemEvaluationFsMap = (
   artifacts: GeneratedSystemSourceArtifacts,
 ): Readonly<Record<string, string>> => ({
-  ...getPinnedTiEvaluationFsMap(),
   [artifacts.systemDiagramModuleFileName]: artifacts.systemDiagramModuleSource,
 });

@@ -6,7 +6,7 @@ import type {
   VoltageRequirement,
 } from "./types";
 
-const TI_PACKAGE = "@tscircuit/ti";
+const TI_PACKAGE = "@tsci/tscircuit.ti";
 const SOURCE_ROOT = "lib/subcircuits";
 
 const signal = (

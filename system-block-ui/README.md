@@ -89,7 +89,7 @@ with an explanation instead of guessing.
 ## Generated output and schematic PDF
 
 The generated main file, `GeneratedSystem.circuit.tsx`, mirrors the TSX under
-`../examples`: it imports selected subcircuits from `@tscircuit/ti`,
+`../examples`: it imports selected subcircuits from `@tsci/tscircuit.ti`,
 default-exports a `<board routingDisabled>`, places named block instances, and
 adds resolved traces. Its first schematic sheet is always a **System Diagram**
 containing a generated overview through `<schematicgraphic
