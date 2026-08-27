@@ -11,10 +11,7 @@ import {
   ResetIcon,
   SparkIcon,
 } from "./components/Icons";
-import {
-  OutputPanel,
-  type SchematicSheetPreview,
-} from "./components/OutputPanel";
+import { OutputPanel } from "./components/OutputPanel";
 import {
   createSystemBlockEditor,
   type SystemBlockEditorController,
@@ -41,8 +38,6 @@ interface Notice {
   message: string;
   tone: "default" | "error" | "success";
 }
-
-type RenderedSchematicSheet = EvaluatedSchematicSheet & SchematicSheetPreview;
 
 const componentId = (
   catalog: readonly SubcircuitDefinition[],
@@ -212,12 +207,11 @@ export function App() {
   const [notice, setNotice] = useState<Notice>();
   const [isRendering, setIsRendering] = useState(false);
   const [schematicSheets, setSchematicSheets] = useState<
-    readonly RenderedSchematicSheet[]
+    readonly EvaluatedSchematicSheet[]
   >([]);
   const [evaluatedCircuitJson, setEvaluatedCircuitJson] = useState<
     readonly AnyCircuitElement[] | undefined
   >();
-  const [previewError, setPreviewError] = useState<string>();
   const hasAutomaticPower = snapshot.connections.some(
     (connection) => connection.kind.toLowerCase() === "power",
   );
@@ -251,7 +245,6 @@ export function App() {
       }),
     [catalog, snapshot.blocks, snapshot.connections],
   );
-  const generatedTsx = generatedArtifacts.tsx;
 
   const invalidateSchematic = useCallback(() => {
     designRevisionRef.current += 1;
@@ -260,7 +253,6 @@ export function App() {
     setIsRendering(false);
     setSchematicSheets([]);
     setEvaluatedCircuitJson(undefined);
-    setPreviewError(undefined);
   }, []);
 
   useEffect(() => {
@@ -309,15 +301,6 @@ export function App() {
     };
   }, [catalog, invalidateSchematic, notify, starterDesign]);
 
-  useEffect(
-    () => () => {
-      for (const sheet of schematicSheets) {
-        URL.revokeObjectURL(sheet.svgUrl);
-      }
-    },
-    [schematicSheets],
-  );
-
   const insertDefinition = useCallback(
     async (
       definition: SubcircuitDefinition,
@@ -361,8 +344,7 @@ export function App() {
   const renderSchematic = useCallback(async () => {
     if (window.location.protocol === "file:") {
       const message =
-        'Schematic preview requires HTTP. In system-block-ui, run "bun run build && bun run preview", then open the shown local URL.';
-      setPreviewError(message);
+        'Schematic evaluation requires HTTP. In system-block-ui, run "bun run build && bun run preview", then open the shown local URL.';
       notify(message, "error");
       return;
     }
@@ -371,7 +353,6 @@ export function App() {
     if (!coordinator) return;
     const request = coordinator.startRequest();
     setIsRendering(true);
-    setPreviewError(undefined);
     try {
       const { evaluateGeneratedTsx } = await import(
         "./rendering/evaluate-schematic"
@@ -389,22 +370,14 @@ export function App() {
       if (!coordinator.isCurrent(request)) return;
       evaluatedCircuitJsonRef.current = rendered.circuitJson;
       setEvaluatedCircuitJson(rendered.circuitJson);
-      setSchematicSheets(
-        rendered.sheets.map((sheet) => ({
-          ...sheet,
-          svgUrl: URL.createObjectURL(
-            new Blob([sheet.svg], { type: "image/svg+xml" }),
-          ),
-        })),
-      );
+      setSchematicSheets(rendered.sheets);
       notify(
-        `${rendered.sheets.length} schematic sheet${rendered.sheets.length === 1 ? "" : "s"} rendered with PCB and routing disabled.`,
+        `${rendered.sheets.length} schematic sheet${rendered.sheets.length === 1 ? "" : "s"} evaluated with PCB and routing disabled.`,
         "success",
       );
     } catch (error) {
       if (!coordinator.isCurrent(request)) return;
       const message = errorMessage(error);
-      setPreviewError(message);
       notify(message, "error");
     } finally {
       if (coordinator.isCurrent(request)) setIsRendering(false);
@@ -421,18 +394,6 @@ export function App() {
       notify(errorMessage(error), "error");
     }
   }, [invalidateSchematic, notify, starterDesign]);
-
-  const copyTsx = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(generatedTsx);
-      notify(
-        `Copied ${GENERATED_SYSTEM_MAIN_FILE_NAME}. Download the tscircuit TSX ZIP to include its required ${generatedArtifacts.systemDiagramModuleFileName} module.`,
-        "success",
-      );
-    } catch (error) {
-      notify(`Could not copy TSX: ${errorMessage(error)}`, "error");
-    }
-  }, [generatedArtifacts.systemDiagramModuleFileName, generatedTsx, notify]);
 
   const downloadPdf = useCallback(async () => {
     const sheets = schematicSheets;
@@ -635,18 +596,15 @@ export function App() {
         </section>
 
         <OutputPanel
+          hasSchematic={schematicSheets.length > 0}
           isRendering={isRendering}
-          onCopyTsx={() => void copyTsx()}
           onDownloadAltiumProject={downloadAltiumProject}
           onDownloadCircuitJson={downloadCircuitJson}
           onDownloadKicadProject={downloadKicadProject}
           onDownloadSchematicPdf={downloadPdf}
           onDownloadTscircuitTsxZip={downloadTscircuitTsxZip}
-          onRender={() => void renderSchematic()}
-          previewError={previewError}
-          resolvedConnections={snapshot.resolvedConnections}
-          sheets={schematicSheets}
-          tsx={generatedTsx}
+          schematicSheetCount={schematicSheets.length}
+          tsx={generatedArtifacts.tsx}
         />
       </div>
     </main>
