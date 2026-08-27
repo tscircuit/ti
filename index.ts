@@ -133,6 +133,7 @@ import { SystemPowerPmicSequencer_TIDEP0092 } from "./lib/subcircuits/SystemPowe
 import { SystemPowerReference_LM4060_Datasheet } from "./lib/subcircuits/SystemPowerReference_LM4060_Datasheet.circuit.tsx";
 import { SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092 } from "./lib/subcircuits/SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092.circuit.tsx";
 import { SystemPowerVpp_TPS79601_TIDEP0092 } from "./lib/subcircuits/SystemPowerVpp_TPS79601_TIDEP0092.circuit.tsx";
+import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/TemperatureSensor_TMP103_TIDA00399.circuit.tsx";
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
@@ -204,6 +205,7 @@ export {
   SystemPowerReference_LM4060_Datasheet,
   SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092,
   SystemPowerVpp_TPS79601_TIDEP0092,
+  TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
@@ -343,6 +345,7 @@ export const TiSubcircuitComponents = {
   SystemPowerReference_LM4060_Datasheet,
   SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092,
   SystemPowerVpp_TPS79601_TIDEP0092,
+  TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
