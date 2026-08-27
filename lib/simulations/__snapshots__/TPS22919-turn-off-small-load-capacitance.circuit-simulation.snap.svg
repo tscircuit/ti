@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1236" height="742" viewBox="0 0 1236 742" data-simulation-experiment-id="simulation_experiment_0" data-simulation-experiment-name="TPS22919 Turn Off with Small Load Capacitance"><style>
+<svg xmlns="http://www.w3.org/2000/svg" width="1236" height="742" style="background-color: rgb(245, 241, 237)" viewBox="0 0 1236 742" data-simulation-experiment-id="simulation_experiment_0" data-simulation-experiment-name="TPS22919 Turn Off with Small Load Capacitance"><style>
 :root { color-scheme: light; }
 svg { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; }
 .background { fill: rgb(245, 241, 237); }
