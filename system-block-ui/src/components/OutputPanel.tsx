@@ -10,6 +10,7 @@ import { GENERATED_SYSTEM_MAIN_FILE_NAME } from "../rendering/generated-source-f
 import {
   ArchiveIcon,
   ChevronDownIcon,
+  CircuitIcon,
   CodeIcon,
   CopyIcon,
   DownloadIcon,
@@ -27,9 +28,10 @@ interface OutputPanelProps {
   previewError?: string;
   isRendering: boolean;
   onCopyTsx: () => void;
-  onDownloadSourceFiles: () => void;
   onRender: () => void;
   onDownloadSchematicPdf: () => void | Promise<void>;
+  onDownloadCircuitJson: () => void | Promise<void>;
+  onDownloadTscircuitTsxZip: () => void | Promise<void>;
   onDownloadKicadProject: () => void | Promise<void>;
   onDownloadAltiumProject: () => void | Promise<void>;
 }
@@ -44,10 +46,17 @@ export interface SchematicSheetPreview {
 const connectionColor = (kind: ResolvedConnection["kind"]): string =>
   kind === "power" ? "var(--power)" : "var(--data)";
 
-type DownloadKind = "pdf" | "kicad" | "altium";
+type DownloadKind =
+  | "pdf"
+  | "circuit-json"
+  | "tscircuit-tsx"
+  | "kicad"
+  | "altium";
 
 const DOWNLOAD_STATUS_LABELS: Record<DownloadKind, string> = {
   pdf: "PDF",
+  "circuit-json": "Circuit JSON",
+  "tscircuit-tsx": "tscircuit TSX",
   kicad: "KiCad",
   altium: "Altium",
 };
@@ -82,9 +91,10 @@ export function OutputPanel({
   previewError,
   isRendering,
   onCopyTsx,
-  onDownloadSourceFiles,
   onRender,
   onDownloadSchematicPdf,
+  onDownloadCircuitJson,
+  onDownloadTscircuitTsxZip,
   onDownloadKicadProject,
   onDownloadAltiumProject,
 }: OutputPanelProps) {
@@ -199,6 +209,22 @@ export function OutputPanel({
       action: onDownloadSchematicPdf,
     },
     {
+      kind: "circuit-json" as const,
+      label: "Circuit JSON",
+      description: "Evaluated design data · schematic-only",
+      extension: "JSON",
+      icon: <CircuitIcon />,
+      action: onDownloadCircuitJson,
+    },
+    {
+      kind: "tscircuit-tsx" as const,
+      label: "tscircuit TSX (ZIP)",
+      description: "Editable source · TSX + diagram module",
+      extension: "ZIP",
+      icon: <CodeIcon />,
+      action: onDownloadTscircuitTsxZip,
+    },
+    {
       kind: "kicad" as const,
       label: "KiCad Project (ZIP)",
       description: "Editable schematic-first project",
@@ -269,10 +295,10 @@ export function OutputPanel({
                 <CopyIcon />
               </button>
               <button
-                aria-label="Download both generated source files"
+                aria-label="Download tscircuit TSX ZIP"
                 className="icon-button"
-                onClick={onDownloadSourceFiles}
-                title="Download TSX and system diagram module"
+                onClick={onDownloadTscircuitTsxZip}
+                title="Download tscircuit TSX ZIP"
                 type="button"
               >
                 <CodeIcon />
@@ -388,7 +414,7 @@ export function OutputPanel({
               <div className="preview-empty">
                 <SparkIcon />
                 Render the generated TSX to inspect every schematic sheet and
-                enable PDF and editable CAD project exports.
+                enable PDF, Circuit JSON, and editable CAD project exports.
               </div>
             )}
           </div>
@@ -414,8 +440,8 @@ export function OutputPanel({
                   activeDownload
                     ? `Preparing ${DOWNLOAD_STATUS_LABELS[activeDownload]} download`
                     : hasSchematic
-                      ? `Download schematic or CAD project for ${sheets.length} sheet${sheets.length === 1 ? "" : "s"}`
-                      : "Download schematic or CAD project"
+                      ? `Download schematic, source, or CAD exports for ${sheets.length} sheet${sheets.length === 1 ? "" : "s"}`
+                      : "Download schematic, source, or CAD exports"
                 }
                 aria-disabled={activeDownload ? true : undefined}
                 className="primary-button download-menu-trigger"

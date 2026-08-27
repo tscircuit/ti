@@ -861,7 +861,9 @@ button {
   bottom: calc(100% + 7px);
   z-index: 40;
   width: min(310px, calc(100vw - 28px));
+  max-height: min(330px, calc(100vh - 28px));
   padding: 5px;
+  overflow-y: auto;
   background: white;
   border: 1px solid #d5dbe2;
   border-radius: 8px;

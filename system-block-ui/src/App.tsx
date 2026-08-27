@@ -6,7 +6,6 @@ import {
 } from "./components/BlockPalette";
 import {
   CircuitIcon,
-  CodeIcon,
   FitIcon,
   PdfIcon,
   ResetIcon,
@@ -35,7 +34,6 @@ import type { EvaluatedSchematicSheet } from "./rendering/evaluate-schematic";
 import {
   GENERATED_SYSTEM_MAIN_FILE_NAME,
   getGeneratedSystemEvaluationFsMap,
-  getGeneratedSystemSourceFiles,
 } from "./rendering/generated-source-files";
 import { SchematicEvaluationCoordinator } from "./schematic-evaluation-coordinator";
 
@@ -198,6 +196,7 @@ export function App() {
   const evaluatedCircuitJsonRef = useRef<
     readonly AnyCircuitElement[] | undefined
   >(undefined);
+  const designRevisionRef = useRef(0);
 
   const [snapshot, setSnapshot] = useState<SystemBlockGraphSnapshot>(() => ({
     blocks: [...starterDesign.blocks],
@@ -255,6 +254,7 @@ export function App() {
   const generatedTsx = generatedArtifacts.tsx;
 
   const invalidateSchematic = useCallback(() => {
+    designRevisionRef.current += 1;
     evaluationCoordinatorRef.current?.invalidateGraph();
     evaluatedCircuitJsonRef.current = undefined;
     setIsRendering(false);
@@ -304,6 +304,7 @@ export function App() {
         controllerRef.current = undefined;
       evaluationCoordinatorRef.current?.invalidateGraph();
       evaluatedCircuitJsonRef.current = undefined;
+      designRevisionRef.current += 1;
       controller?.destroy();
     };
   }, [catalog, invalidateSchematic, notify, starterDesign]);
@@ -425,27 +426,13 @@ export function App() {
     try {
       await navigator.clipboard.writeText(generatedTsx);
       notify(
-        `Copied ${GENERATED_SYSTEM_MAIN_FILE_NAME}. Use Export files to include its required ${generatedArtifacts.systemDiagramModuleFileName} module.`,
+        `Copied ${GENERATED_SYSTEM_MAIN_FILE_NAME}. Download the tscircuit TSX ZIP to include its required ${generatedArtifacts.systemDiagramModuleFileName} module.`,
         "success",
       );
     } catch (error) {
       notify(`Could not copy TSX: ${errorMessage(error)}`, "error");
     }
   }, [generatedArtifacts.systemDiagramModuleFileName, generatedTsx, notify]);
-
-  const downloadSourceFiles = useCallback(() => {
-    const files = getGeneratedSystemSourceFiles(generatedArtifacts);
-    for (const file of files) {
-      downloadBlob(
-        new Blob([file.source], { type: "text/typescript;charset=utf-8" }),
-        file.fileName,
-      );
-    }
-    notify(
-      `Downloaded ${files.map(({ fileName }) => fileName).join(" and ")}.`,
-      "success",
-    );
-  }, [generatedArtifacts, notify]);
 
   const downloadPdf = useCallback(async () => {
     const sheets = schematicSheets;
@@ -464,6 +451,44 @@ export function App() {
       notify(errorMessage(error), "error");
     }
   }, [evaluatedCircuitJson, notify, schematicSheets]);
+
+  const downloadCircuitJson = useCallback(async () => {
+    const circuitJson = evaluatedCircuitJson;
+    if (!circuitJson) return;
+    try {
+      const { createCircuitJsonDownloadBlob, getCircuitJsonDownloadFileName } =
+        await import("./rendering/export-circuit-json");
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
+      const options = { projectName: "GeneratedSystem" } as const;
+      const blob = createCircuitJsonDownloadBlob(circuitJson);
+      downloadBlob(blob, getCircuitJsonDownloadFileName(options));
+      notify("Circuit JSON downloaded.", "success");
+    } catch (error) {
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
+      notify(`Could not export Circuit JSON: ${errorMessage(error)}`, "error");
+    }
+  }, [evaluatedCircuitJson, notify]);
+
+  const downloadTscircuitTsxZip = useCallback(async () => {
+    const artifacts = generatedArtifacts;
+    const designRevision = designRevisionRef.current;
+    try {
+      const { createTscircuitTsxZipBlob, getTscircuitTsxZipFileName } =
+        await import("./rendering/export-tscircuit-tsx");
+      if (designRevisionRef.current !== designRevision) return;
+      const options = { projectName: "GeneratedSystem" } as const;
+      const blob = createTscircuitTsxZipBlob(artifacts);
+      if (designRevisionRef.current !== designRevision) return;
+      downloadBlob(blob, getTscircuitTsxZipFileName(options));
+      notify("tscircuit TSX ZIP downloaded.", "success");
+    } catch (error) {
+      if (designRevisionRef.current !== designRevision) return;
+      notify(
+        `Could not export the tscircuit TSX ZIP: ${errorMessage(error)}`,
+        "error",
+      );
+    }
+  }, [generatedArtifacts, notify]);
 
   const downloadKicadProject = useCallback(async () => {
     const circuitJson = evaluatedCircuitJson;
@@ -522,16 +547,6 @@ export function App() {
             <span className="status-dot" />
             Automatic resolver active
           </span>
-          <button
-            className="secondary-button"
-            onClick={downloadSourceFiles}
-            type="button"
-          >
-            <span className="button-content">
-              <CodeIcon />
-              Export files
-            </span>
-          </button>
           <button
             className="primary-button"
             disabled={isRendering}
@@ -623,9 +638,10 @@ export function App() {
           isRendering={isRendering}
           onCopyTsx={() => void copyTsx()}
           onDownloadAltiumProject={downloadAltiumProject}
+          onDownloadCircuitJson={downloadCircuitJson}
           onDownloadKicadProject={downloadKicadProject}
           onDownloadSchematicPdf={downloadPdf}
-          onDownloadSourceFiles={downloadSourceFiles}
+          onDownloadTscircuitTsxZip={downloadTscircuitTsxZip}
           onRender={() => void renderSchematic()}
           previewError={previewError}
           resolvedConnections={snapshot.resolvedConnections}

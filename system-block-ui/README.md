@@ -92,23 +92,26 @@ in deterministic order.
 
 To keep the displayed TSX readable, `SYSTEM_DIAGRAM_SVG` is imported from the
 sibling `GeneratedSystem.system-diagram.ts` module instead of being embedded in
-the main file. **Export files** downloads both required files, while Copy copies
-only the main TSX. The system diagram preserves the block positions from the
-editor and shows every Power and Data connection.
+the main file. **tscircuit TSX (ZIP)** downloads both required files in one
+archive, while Copy copies only the main TSX. The system diagram preserves the
+block positions from the editor and shows every Power and Data connection.
 
 Preview rendering runs the generated default export through `@tscircuit/eval`
 in a web worker with PCB generation, parts lookup, and PCB routing disabled.
-The resulting Circuit JSON is converted to schematic SVG and can be downloaded
-as a vector PDF or as editable KiCad and Altium project ZIPs. The project
-exporters run in lazy-loaded browser chunks and sanitize the project name before
-using it in archive entries.
+The resulting Circuit JSON is converted to schematic SVG. The download menu
+exports a vector PDF, the exact evaluated Circuit JSON, the generated tscircuit
+TSX source archive, or editable KiCad and Altium project ZIPs. Exporters run in
+lazy-loaded browser chunks and sanitize the project name before using it in
+filenames or archive entries.
 
 Because this preview intentionally evaluates with PCB generation and routing
 disabled, the CAD ZIPs are schematic-first projects. Each converter includes
 its required empty/default PCB document; it is not a routed system-board layout.
-The SVG-only System Diagram overview is omitted from these archives because the
-native KiCad and Altium converters do not support `schematic_graphic`; all
-editable detail sheets are retained.
+The direct `GeneratedSystem.circuit.json` download likewise reflects this
+schematic-only evaluation and retains the System Diagram `schematic_graphic`.
+The SVG-only System Diagram overview is omitted from the KiCad and Altium
+archives because those native converters do not support `schematic_graphic`;
+all editable detail sheets are retained.
 
 `circuit-json-to-altium` is temporarily pinned to the official repository's
 exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has
