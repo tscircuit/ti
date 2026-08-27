@@ -63,6 +63,24 @@ const findSubcircuitPort = (circuitJson: AnyCircuitElement[], name: string) => {
   return port;
 };
 
+const findSchematicCenter = (
+  circuitJson: AnyCircuitElement[],
+  componentName: string,
+) => {
+  const component = findSourceComponent(circuitJson, componentName);
+  const schematicComponent = circuitJson.find(
+    (element) =>
+      element.type === "schematic_component" &&
+      element.source_component_id === component.source_component_id,
+  );
+
+  assert(
+    schematicComponent?.type === "schematic_component",
+    `Missing schematic component ${componentName}`,
+  );
+  return schematicComponent.center;
+};
+
 const testPinMap = () => {
   assert(
     Object.keys(MSP430FR6007IPZ_PIN_LABELS).length === 100,
@@ -79,6 +97,21 @@ const testPinMap = () => {
 const testConnectivity = async () => {
   const circuitJson = await renderMcu();
   const connectivityMap = getFullConnectivityMapFromCircuitJson(circuitJson);
+
+  for (const connectorName of ["J3", "J4", "J5", "J6"]) {
+    const connector = findSourceComponent(circuitJson, connectorName);
+    assert(
+      "manufacturer_part_number" in connector &&
+        connector.manufacturer_part_number === "TSW-125-07-G-S",
+      `${connectorName} does not preserve the TI source part number`,
+    );
+  }
+
+  const icCenter = findSchematicCenter(circuitJson, "IC1");
+  assert(findSchematicCenter(circuitJson, "J3").x < icCenter.x, "J3 left");
+  assert(findSchematicCenter(circuitJson, "J4").y < icCenter.y, "J4 below");
+  assert(findSchematicCenter(circuitJson, "J5").x > icCenter.x, "J5 right");
+  assert(findSchematicCenter(circuitJson, "J6").y > icCenter.y, "J6 above");
 
   const netKey = (componentName: string, pinNumber: number) =>
     connectivityMap.getNetConnectedToId(
@@ -103,6 +136,13 @@ const testConnectivity = async () => {
       );
     }
   };
+
+  for (let mcuPin = 1; mcuPin <= 100; mcuPin += 1) {
+    const connectorNames = ["J3", "J4", "J5", "J6"] as const;
+    const connectorName = connectorNames[Math.floor((mcuPin - 1) / 25)];
+    const connectorPin = ((mcuPin - 1) % 25) + 1;
+    assertSameNet(["IC1", mcuPin], [connectorName, connectorPin]);
+  }
 
   assertSameNet(["IC1", 100], ["C3", 1], ["C11", 1]);
   assertSameNet(["IC1", 88], ["C16", 1], ["C13", 1]);

@@ -1,18 +1,35 @@
 import type { SubcircuitProps } from "@tscircuit/props";
+import { Fragment } from "react";
 import "tscircuit";
 import {
   MSP430FR6007IPZ,
   MSP430FR6007IPZ_PIN_LABELS,
 } from "../chips/MSP430FR6007IPZ.circuit.tsx";
 
-const connectedPins = new Set([
-  5, 6, 7, 8, 9, 10, 11, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 51, 52, 75, 76,
-  87, 88, 89, 96, 99, 100,
-]);
+const ascendingSocketPins = Array.from({ length: 25 }, (_, index) => index + 1);
+const descendingSocketPins = [...ascendingSocketPins].reverse();
 
-const noConnectPins = Array.from({ length: 100 }, (_, index) => index + 1)
-  .filter((pin) => !connectedPins.has(pin))
-  .map((pin) => `pin${pin}`) as Array<keyof typeof MSP430FR6007IPZ_PIN_LABELS>;
+const socketPinLabels = Object.fromEntries(
+  ascendingSocketPins.map((pin) => [`pin${pin}`, `${pin}`]),
+);
+
+/**
+ * Figure B-78 routes each IC1 side through one 25-position target-socket
+ * header: J3=1..25, J4=26..50, J5=51..75, and J6=76..100.
+ */
+const targetSocketNames = ["J3", "J4", "J5", "J6"] as const;
+const mcuToTargetSocketLinks = Array.from({ length: 100 }, (_, index) => {
+  const mcuPin = index + 1;
+  const connectorPin = ((mcuPin - 1) % 25) + 1;
+  const connector = targetSocketNames[Math.floor((mcuPin - 1) / 25)];
+  const pinDefinition =
+    MSP430FR6007IPZ_PIN_LABELS[
+      `pin${mcuPin}` as keyof typeof MSP430FR6007IPZ_PIN_LABELS
+    ];
+  const sourcePinLabel =
+    typeof pinDefinition === "string" ? pinDefinition : pinDefinition[0];
+  return { mcuPin, connector, connectorPin, sourcePinLabel };
+});
 
 /**
  * MSP430FR6007 minimum-system section extracted from TI's MSP-TS430PZ100E
@@ -20,9 +37,11 @@ const noConnectPins = Array.from({ length: 100 }, (_, index) => index + 1)
  * a socketed target rather than documenting it as a Window Module design.
  * The source assigns no motor-driver, pinch, position, thermal, CAN, or LIN
  * functions to MCU GPIOs, so this subcircuit intentionally does not invent
- * those interface names. Board-only power-selection/current-measurement
- * headers, GPIO breakout headers, LEDs, the user button, LCD bias parts, and
- * the optional USS sensing oscillator are outside this minimum-system extract.
+ * those interface names. J3-J6 are retained because Figure B-78 places them
+ * between all four sides of IC1 and the target-board circuitry. Board-only
+ * power-selection/current-measurement headers, LEDs, the user button, LCD
+ * bias parts, and the optional USS sensing oscillator remain outside this
+ * minimum-system extract.
  *
  * Authoritative sources:
  * - Exact device and pin map (SLASEV3A):
@@ -59,41 +78,124 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
     <net name="DVCC" isPowerNet />
     <net name="PVCC" isPowerNet />
 
-    <MSP430FR6007IPZ
-      name="IC1"
-      schX={0}
+    <MSP430FR6007IPZ name="IC1" schX={0} schY={0} />
+
+    {/*
+     * Four 25-position target-socket headers surrounding IC1 in Figure B-78.
+     * The pin orders intentionally follow the source drawing on each side.
+     */}
+    <connector
+      name="J3"
+      manufacturerPartNumber="TSW-125-07-G-S"
+      footprint="pinrow25_p2.54_nopinlabels"
+      pinLabels={socketPinLabels}
+      schX={-7.2}
       schY={0}
-      noConnect={noConnectPins}
+      schWidth="0.5mm"
+      schHeight="11mm"
+      schPinArrangement={{
+        rightSide: {
+          direction: "top-to-bottom",
+          pins: ascendingSocketPins,
+        },
+      }}
       connections={{
-        AVSS1: "net.AVSS",
-        AVSS2: "net.AVSS",
-        AVSS3: "net.AVSS",
-        AVSS4: "net.AVSS",
-        AVSS5: "net.AVSS",
-        DVSS1: "net.GND",
-        DVSS2: "net.GND",
-        DVSS3: "net.GND",
-        PVSS1: "net.PVSS",
-        PVSS2: "net.PVSS",
-        AVCC1: "net.AVCC",
-        DVCC1: "net.DVCC",
-        DVCC2: "net.DVCC",
-        DVCC3: "net.DVCC",
-        PVCC: "net.PVCC",
-        LFXIN: "net.LFXIN",
-        LFXOUT: "net.LFXOUT",
-        HFXIN: "net.HFXIN",
-        HFXOUT: "net.HFXOUT",
-        BSLTX: "net.BSL_TX",
-        BSLRX: "net.BSL_RX",
-        TEST: "net.TEST_SBWTCK",
-        RST_NMI_SBWTDIO: "net.RESET_SBWTDIO",
-        TDO: "net.TDO",
-        TDI: "net.TDI",
-        TMS: "net.TMS",
-        TCK: "net.TCK",
+        pin5: "net.AVSS",
+        pin6: "net.LFXIN",
+        pin7: "net.LFXOUT",
+        pin8: "net.AVSS",
+        pin9: "net.HFXIN",
+        pin10: "net.HFXOUT",
+        pin11: "net.AVSS",
+        pin16: "net.BSL_TX",
+        pin17: "net.BSL_RX",
+        pin20: "net.TEST_SBWTCK",
+        pin21: "net.RESET_SBWTDIO",
+        pin22: "net.TDO",
+        pin23: "net.TDI",
+        pin24: "net.TMS",
+        pin25: "net.TCK",
       }}
     />
+    <connector
+      name="J4"
+      manufacturerPartNumber="TSW-125-07-G-S"
+      footprint="pinrow25_p2.54_nopinlabels"
+      pinLabels={socketPinLabels}
+      schX={0}
+      schY={-7.2}
+      schWidth="11mm"
+      schHeight="0.5mm"
+      schPinArrangement={{
+        topSide: {
+          direction: "left-to-right",
+          pins: ascendingSocketPins,
+        },
+      }}
+      connections={{
+        pin1: "net.GND",
+        pin2: "net.DVCC",
+      }}
+    />
+    <connector
+      name="J5"
+      manufacturerPartNumber="TSW-125-07-G-S"
+      footprint="pinrow25_p2.54_nopinlabels"
+      pinLabels={socketPinLabels}
+      schX={7.2}
+      schY={0}
+      schWidth="0.5mm"
+      schHeight="11mm"
+      schPinArrangement={{
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: descendingSocketPins,
+        },
+      }}
+      connections={{
+        pin1: "net.GND",
+        pin2: "net.DVCC",
+        pin25: "net.GND",
+      }}
+    />
+    <connector
+      name="J6"
+      manufacturerPartNumber="TSW-125-07-G-S"
+      footprint="pinrow25_p2.54_nopinlabels"
+      pinLabels={socketPinLabels}
+      schX={0}
+      schY={7.2}
+      schWidth="11mm"
+      schHeight="0.5mm"
+      schPinArrangement={{
+        bottomSide: {
+          direction: "left-to-right",
+          pins: descendingSocketPins,
+        },
+      }}
+      connections={{
+        pin1: "net.DVCC",
+        pin12: "net.PVSS",
+        pin13: "net.PVCC",
+        pin14: "net.PVSS",
+        pin21: "net.AVSS",
+        pin24: "net.AVSS",
+        pin25: "net.AVCC",
+      }}
+    />
+
+    {mcuToTargetSocketLinks.map(
+      ({ mcuPin, connector, connectorPin, sourcePinLabel }) => (
+        <Fragment key={`IC1-${mcuPin}-${connector}-${connectorPin}`}>
+          <trace
+            name={`IC1_PIN${mcuPin}_${connector}_PIN${connectorPin}`}
+            from={`IC1.pin${mcuPin}`}
+            to={`${connector}.pin${connectorPin}`}
+            schDisplayLabel={sourcePinLabel}
+          />
+        </Fragment>
+      ),
+    )}
 
     {/* Target-board AVCC bypass network. */}
     <capacitor
