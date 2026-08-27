@@ -47,7 +47,7 @@ export const Microcontroller_MSPM0L1306Q1_TIDA020065 = (
     width="66mm"
     height="25mm"
     minTraceWidth="0.2mm"
-    schMaxTraceDistance="0mm"
+    schMaxTraceDistance="4mm"
     {...props}
   >
     <net name="GND" isGroundNet />
@@ -115,12 +115,7 @@ export const Microcontroller_MSPM0L1306Q1_TIDA020065 = (
       {...schematicPlacement.C16}
       {...pcbPlacement.C16}
     />
-    <trace
-      name="VCORE"
-      from=".U6 > .VCORE"
-      to=".C16 > .pin1"
-      schDisplayLabel="VCORE"
-    />
+    <trace name="VCORE" from=".U6 > .VCORE" to=".C16 > .pin1" />
     <trace
       name="VCORE_GND"
       from=".C16 > .pin2"
