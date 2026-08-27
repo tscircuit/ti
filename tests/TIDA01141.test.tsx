@@ -118,6 +118,8 @@ test("TIDA-01141 matches the TI current and voltage sensing sheet", async () => 
   assertPinNet(circuit, "U2", "pin9", "LV_AUX_3_3V");
   assertPinNet(circuit, "U2", "pin4", "SGND");
   assertPinNet(circuit, "U2", "pin10", "SGND");
+  assertPinNet(circuit, "R15", "pin1", "LV_AUX_3_3V");
+  assertPinNet(circuit, "R15", "pin2", "IBAT_ALERT");
 
   assertPinNet(circuit, "U3", "pin1", "VREF");
   assertPinNet(circuit, "U3", "pin2", "SGND");

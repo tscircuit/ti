@@ -62,7 +62,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       resistance={4.75}
       footprint="0603"
       schX={-8}
-      schY={1.8}
+      schY={2}
       connections={{ pin2: ["C7.pin1", "U1.pin2"] }}
     />
     <resistor
@@ -70,7 +70,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       resistance={4.75}
       footprint="0603"
       schX={-8}
-      schY={1.3}
+      schY={1.1}
       connections={{ pin2: ["C7.pin2", "U1.pin3"] }}
     />
     <capacitor
@@ -135,14 +135,14 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       net="IBAT_HS_POS"
       connectsTo="R7.pin1"
       schX={-8.8}
-      schY={1.8}
+      schY={2}
       anchorSide="right"
     />
     <netlabel
       net="IBAT_HS_NEG"
       connectsTo="R9.pin1"
       schX={-8.8}
-      schY={1.3}
+      schY={1.1}
       anchorSide="right"
     />
 
@@ -265,7 +265,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
     <trace from="C8.pin2" to="R10.pin2" />
     <Ground from="C8.pin2" schX={0.75} schY={0.05} />
 
-    <Ground from="C3.pin2" schX={2.4} schY={2} />
+    <Ground from="C3.pin2" schX={2.4} schY={2.1} />
     <trace from="R12.pin2" to="U2A.pin4" />
 
     <netlabel
@@ -298,7 +298,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       capacitance="1000pF"
       footprint="0603"
       schX={2.4}
-      schY={-0.47}
+      schY={-0.75}
       schRotation={-90}
     />
     <resistor
@@ -352,10 +352,8 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       footprint="0603"
       schX={7.4}
       schY={2.7}
-      schRotation={90}
+      schRotation={-90}
     />
-    <trace from="U2A.pin4" to="U2B.pin4" />
-    <trace from="U2A.pin4" to="R15.pin2" />
     <netlabel
       net="LV_AUX_3_3V"
       connectsTo="R15.pin1"
@@ -365,7 +363,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
     />
     <netlabel
       net="IBAT_ALERT"
-      connectsTo="U2A.pin4"
+      connectsTo={["U2A.pin4", "U2B.pin4", "R15.pin2"]}
       schX={8.6}
       schY={1.3}
       anchorSide="left"
