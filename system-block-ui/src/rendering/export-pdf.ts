@@ -1,5 +1,4 @@
 import { jsPDF } from "jspdf";
-import { svg2pdf } from "svg2pdf.js";
 import { downloadBlob } from "./download-blob";
 
 export { downloadBlob } from "./download-blob";
@@ -7,6 +6,9 @@ export { downloadBlob } from "./download-blob";
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const DEFAULT_FILE_NAME = "system-schematic.pdf";
 const DEFAULT_ORIENTATION = "landscape";
+const DEFAULT_RASTER_DPI = 200;
+const JPEG_QUALITY = 0.98;
+const MILLIMETERS_PER_INCH = 25.4;
 
 /** The evaluator's richer sheet objects are structurally assignable here. */
 export interface SchematicPdfSheet {
@@ -41,6 +43,17 @@ export interface SchematicPdfPageLayoutRequest {
 export interface SchematicPdfPageLayout {
   x: number;
   y: number;
+  width: number;
+  height: number;
+}
+
+export interface SchematicPdfRasterDimensionsRequest {
+  pageWidthMm: number;
+  pageHeightMm: number;
+  dpi?: number;
+}
+
+export interface SchematicPdfRasterDimensions {
   width: number;
   height: number;
 }
@@ -129,10 +142,8 @@ const normalizeSvgViewport = (
   svg: Element,
   dimensions: SvgDimensions,
 ): void => {
-  // circuit-to-svg currently emits width/height without a viewBox. svg2pdf's
-  // width/height options resize its viewport but do not scale that SVG's user
-  // coordinate system, which clips the drawing. Supplying this viewBox lets
-  // the A4-proportioned schematic scale uniformly over the full PDF page.
+  // circuit-to-svg currently emits width/height without a viewBox. Supplying
+  // one lets the browser scale the schematic uniformly into the PDF page.
   if (!svg.hasAttribute("viewBox")) {
     svg.setAttribute("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
   }
@@ -161,6 +172,71 @@ export function calculateSchematicPdfPageLayout({
   };
 }
 
+/** Calculates a print-resolution raster matching the PDF page's aspect ratio. */
+export function calculateSchematicPdfRasterDimensions({
+  pageWidthMm,
+  pageHeightMm,
+  dpi = DEFAULT_RASTER_DPI,
+}: SchematicPdfRasterDimensionsRequest): SchematicPdfRasterDimensions {
+  validateFinitePositive("pageWidthMm", pageWidthMm);
+  validateFinitePositive("pageHeightMm", pageHeightMm);
+  validateFinitePositive("dpi", dpi);
+
+  return {
+    width: Math.round((pageWidthMm / MILLIMETERS_PER_INCH) * dpi),
+    height: Math.round((pageHeightMm / MILLIMETERS_PER_INCH) * dpi),
+  };
+}
+
+const renderSvgToCanvas = async (
+  svg: Element,
+  dimensions: SchematicPdfRasterDimensions,
+): Promise<HTMLCanvasElement> => {
+  if (
+    typeof document === "undefined" ||
+    typeof Image === "undefined" ||
+    typeof XMLSerializer === "undefined" ||
+    typeof URL === "undefined"
+  ) {
+    throw new Error("PDF export requires browser image and canvas APIs");
+  }
+
+  svg.setAttribute("width", String(dimensions.width));
+  svg.setAttribute("height", String(dimensions.height));
+
+  const serializedSvg = new XMLSerializer().serializeToString(svg);
+  const svgBlob = new Blob([serializedSvg], {
+    type: "image/svg+xml;charset=utf-8",
+  });
+  const svgUrl = URL.createObjectURL(svgBlob);
+
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const candidate = new Image();
+      candidate.decoding = "sync";
+      candidate.onload = () => resolve(candidate);
+      candidate.onerror = () =>
+        reject(new Error("Unable to rasterize schematic SVG"));
+      candidate.src = svgUrl;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = dimensions.width;
+    canvas.height = dimensions.height;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      throw new Error("Unable to create a canvas for PDF export");
+    }
+
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    return canvas;
+  } finally {
+    URL.revokeObjectURL(svgUrl);
+  }
+};
+
 const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
   const sheets: readonly SchematicPdfSheet[] =
     typeof input === "string" ? [{ svg: input }] : input;
@@ -181,7 +257,7 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
   });
 };
 
-/** Converts one or more schematic SVGs into a vector, one-sheet-per-page PDF. */
+/** Converts one or more schematic SVGs into a one-sheet-per-page PDF. */
 export async function createSchematicPdfBlob(
   input: SchematicPdfInput,
   options: SchematicPdfOptions = {},
@@ -214,20 +290,37 @@ export async function createSchematicPdfBlob(
       pageWidthMm: pageWidth,
       pageHeightMm: pageHeight,
     });
-
-    await svg2pdf(sheet.element, pdf, {
-      x: layout.x,
-      y: layout.y,
-      width: layout.width,
-      height: layout.height,
-      loadExternalStyleSheets: false,
+    const rasterDimensions = calculateSchematicPdfRasterDimensions({
+      pageWidthMm: pageWidth,
+      pageHeightMm: pageHeight,
     });
+    const canvas = await renderSvgToCanvas(sheet.element, rasterDimensions);
+    const imageData = canvas.toDataURL("image/jpeg", JPEG_QUALITY);
+
+    // Browser rasterization keeps the exact SVG glyphs and font metrics. The
+    // previous svg2pdf path substituted unsupported Unicode (for example Ω)
+    // and changed text widths, making net-label text overflow its outline.
+    pdf.addImage(
+      imageData,
+      "JPEG",
+      layout.x,
+      layout.y,
+      layout.width,
+      layout.height,
+      undefined,
+      "FAST",
+    );
+
+    // jsPDF has already encoded the canvas; release its backing store before
+    // rasterizing the next sheet.
+    canvas.width = 1;
+    canvas.height = 1;
   }
 
   return pdf.output("blob");
 }
 
-/** Builds and downloads a vector schematic PDF, returning the downloaded Blob. */
+/** Builds and downloads a schematic PDF, returning the downloaded Blob. */
 export async function downloadSchematicPdf(
   input: SchematicPdfInput,
   options: DownloadSchematicPdfOptions = {},

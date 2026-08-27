@@ -99,7 +99,8 @@ editor and shows every Power and Data connection.
 Preview rendering runs the generated default export through `@tscircuit/eval`
 in a web worker with PCB generation, parts lookup, and PCB routing disabled.
 The resulting Circuit JSON is converted to schematic SVG and can be downloaded
-as a vector PDF.
+as a print-resolution PDF. Each page is rasterized by the browser so PDF font
+substitution cannot change Unicode symbols or schematic text measurements.
 
 Preview evaluation uses the same canonical TSX shown and exported by the UI,
 with the generated system-diagram module supplied to the evaluator's virtual

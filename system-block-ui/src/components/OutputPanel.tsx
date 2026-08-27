@@ -225,7 +225,7 @@ export function OutputPanel({
               <div className="preview-empty">
                 <SparkIcon />
                 Render the generated TSX to inspect every schematic sheet and
-                enable vector PDF export.
+                enable PDF export.
               </div>
             )}
           </div>
