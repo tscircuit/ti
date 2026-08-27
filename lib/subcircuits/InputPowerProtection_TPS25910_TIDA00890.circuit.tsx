@@ -112,14 +112,14 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       name="R26"
       resistance="47kohm"
       schX={5.05}
-      schY={-1.55}
-      schRotation={90}
+      schY={-0.97}
+      schRotation={270}
     />
     <capacitor
       name="C11"
       capacitance="47nF"
-      schX={6.35}
-      schY={-0.45}
+      schX={6.1}
+      schY={-0.17}
       schOrientation="vertical"
     />
     <capacitor
@@ -154,13 +154,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     />
 
     {/* Q1 gate and protected VBUS output follow the reference left-to-right. */}
-    <netlabel
-      net="Q1_GATE"
-      connectsTo="Q1.gate"
-      schX={-2.8}
-      schY={0.82}
-      anchorSide="right"
-    />
+    <trace from="Q1.gate" to="U7.GATE" />
     <trace from="Q1.source" to="U7.OUT3" />
     <trace from="U7.OUT1" to="U7.OUT2" />
     <trace from="U7.OUT2" to="U7.OUT3" />
@@ -192,13 +186,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schY={3.0}
       anchorSide="bottom"
     />
-    <netlabel
-      net="Q1_GATE"
-      connectsTo={["U7.GATE", "C11.pin1"]}
-      schX={5.95}
-      schY={0.2}
-      anchorSide="right"
-    />
+    <trace from="U7.GATE" to="C11.pin1" />
     <trace from="U7.ILIM" to="R26.pin1" />
 
     <trace from="U7.GND1" to="U7.GND2" />
@@ -210,7 +198,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       net="GND"
       connectsTo="R26.pin2"
       schX={5.05}
-      schY={-2.25}
+      schY={-1.65}
       anchorSide="top"
     />
 
