@@ -123,6 +123,7 @@ import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS9
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
+import { CurrentVoltageSense_TIDA01141 } from "./lib/subcircuits/CurrentVoltageSense_TIDA01141.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
@@ -186,6 +187,7 @@ export {
   LightSensor_OPT3001_TIDA01539,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  CurrentVoltageSense_TIDA01141,
 };
 
 export const TiChipComponents = {
@@ -312,6 +314,7 @@ export const TiSubcircuitComponents = {
   LightSensor_OPT3001_TIDA01539,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  CurrentVoltageSense_TIDA01141,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;
