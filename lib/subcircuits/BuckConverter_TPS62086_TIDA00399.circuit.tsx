@@ -18,7 +18,7 @@ const TPS62086_PIN_LABELS = {
  * TPS22922 load switch on the reference sheet.
  * @see https://www.ti.com/tool/TIDA-00399
  */
-export const DCDCPowerSupply_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
+export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
     <chip
       name="U3P3"
@@ -91,4 +91,4 @@ export const DCDCPowerSupply_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default DCDCPowerSupply_TPS62086_TIDA00399;
+export default BuckConverter_TPS62086_TIDA00399;
