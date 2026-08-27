@@ -32,14 +32,14 @@ const TPS25910RSA_PIN_LABELS = {
 export const InputPowerProtection_TPS25910_TIDA00890 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit routingDisabled schMaxTraceDistance="2mm" {...props}>
+  <subcircuit routingDisabled schMaxTraceDistance="3.6mm" {...props}>
     <chip
       name="U7"
       manufacturerPartNumber="TPS25910RSA"
       pinLabels={TPS25910RSA_PIN_LABELS}
       showPinAliases={false}
-      schX={2.8}
-      schY={0}
+      schX={3.15}
+      schY={-0.3}
       schWidth={2}
       schHeight={1.8}
       schPinArrangement={{
@@ -62,21 +62,6 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
         },
         bottomSide: { direction: "left-to-right", pins: ["PWPD"] },
       }}
-      connections={{
-        OUT1: "U7.OUT2",
-        OUT2: "U7.OUT3",
-        GND1: "U7.GND2",
-        GND2: "U7.GND3",
-        GND3: "net.GND",
-        GND4: "U7.GND5",
-        GND5: "U7.GND6",
-        GND6: ["U7.PWPD", "net.GND"],
-        IN1: "U7.IN2",
-        IN2: "U7.IN3",
-        IN3: "net.V5_COM",
-        GATE: ["C11.pin1", "net.TPS25910_GATE1"],
-        ILIM: "R26.pin1",
-      }}
     />
 
     <mosfet
@@ -84,87 +69,166 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       manufacturerPartNumber="CSD17313Q2"
       channelType="n"
       mosfetMode="enhancement"
-      symbolDrainSide="top"
-      symbolSourceSide="bottom"
-      symbolGateSide="left"
-      schX={-2.5}
-      schY={0}
-      connections={{
-        drain: ["D6.cathode", "net.TYPEC_VBUS"],
-        source: ["U7.OUT3", "net.MICRO_AB_VBUS_OUT"],
-        gate: "net.TPS25910_GATE1",
-      }}
+      symbolDrainSide="left"
+      symbolSourceSide="right"
+      symbolGateSide="bottom"
+      schX={-1.4}
+      schY={-0.3}
     />
 
     <resistor
       name="R25"
       resistance="1Mohm"
-      schX={-6.4}
-      schY={0.4}
+      schX={-6.2}
+      schY={-0.25}
       schRotation={90}
-      connections={{ pin1: "D6.cathode", pin2: "D6.anode" }}
     />
     <diode
       name="D6"
       manufacturerPartNumber="ESD5Z6.0T1G"
       variant="zener"
-      schX={-5.2}
-      schY={0.4}
+      schX={-4.6}
+      schY={-0.25}
       schRotation={90}
-      connections={{ anode: "net.GND" }}
     />
 
     <resistor
       name="R23"
       resistance="200kohm"
-      schX={0.55}
-      schY={1.65}
+      schX={0.4}
+      schY={2.2}
       schRotation={90}
-      connections={{ pin1: "U7.EN_NOT", pin2: "R24.pin2" }}
     />
     <resistor
       name="R24"
       resistance="10kohm"
-      schX={1.55}
-      schY={1.65}
+      schX={1.5}
+      schY={2.2}
       schRotation={90}
-      connections={{ pin1: "U7.FLT_NOT", pin2: "net.V5_COM" }}
     />
-    <resistor
-      name="R34"
-      resistance="0ohm"
-      doNotPlace
-      schX={0.35}
-      schY={0.55}
-      connections={{
-        pin1: "net.VCONN_FAULT_NOT",
-        pin2: "R24.pin1",
-      }}
-    />
+    <resistor name="R34" resistance="0ohm" doNotPlace schX={1} schY={0.75} />
 
     <resistor
       name="R26"
       resistance="47kohm"
-      schX={4.9}
-      schY={-1.65}
+      schX={5.05}
+      schY={-1.55}
       schRotation={90}
-      connections={{ pin2: "C11.pin2" }}
     />
     <capacitor
       name="C11"
       capacitance="47nF"
-      schX={6.15}
-      schY={-1.65}
+      schX={6.35}
+      schY={-0.45}
       schOrientation="vertical"
-      connections={{ pin2: ["C10.pin2", "net.GND"] }}
     />
     <capacitor
       name="C10"
       capacitance="47uF"
-      schX={7.4}
-      schY={-1.65}
+      schX={7.1}
+      schY={0.4}
       schOrientation="vertical"
-      connections={{ pin1: "net.V5_COM" }}
+    />
+
+    {/* Type-C VBUS input rail, discharge resistor, and ESD clamp. */}
+    <netlabel
+      net="TypeC_Vbus"
+      connectsTo={["R25.pin1", "D6.cathode", "Q1.drain"]}
+      schX={-4.8}
+      schY={2.3}
+      anchorSide="bottom"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="R25.pin2"
+      schX={-6.2}
+      schY={-0.85}
+      anchorSide="top"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="D6.anode"
+      schX={-4.6}
+      schY={-0.85}
+      anchorSide="top"
+    />
+
+    {/* Q1 gate and protected VBUS output follow the reference left-to-right. */}
+    <netlabel
+      net="TPS25910_GATE1"
+      connectsTo="Q1.gate"
+      schX={-2.8}
+      schY={-1.1}
+      anchorSide="right"
+    />
+    <netlabel
+      net="micABVBUS_OUT"
+      connectsTo={["Q1.source", "U7.OUT1", "U7.OUT2", "U7.OUT3"]}
+      schX={0.55}
+      schY={-0.3}
+      anchorSide="right"
+    />
+
+    {/* Pull-ups and logic nets use TI's displayed names. */}
+    <netlabel
+      net="V5_COM"
+      connectsTo={["R23.pin2", "R24.pin2"]}
+      schX={0.95}
+      schY={3.0}
+      anchorSide="bottom"
+    />
+    <netlabel
+      net="pg2_3220_ID"
+      connectsTo={["R23.pin1", "U7.EN_NOT"]}
+      schX={-0.25}
+      schY={1.35}
+      anchorSide="right"
+    />
+    <trace from="R24.pin1" to="U7.FLT_NOT" />
+    <trace from="R24.pin1" to="R34.pin2" />
+    <trace
+      from="R34.pin1"
+      to="net.pg2_VCONN_FAULT_N"
+      schDisplayLabel="pg2_VCONN_FAULT#"
+    />
+
+    {/* U7 input, gate, current-limit, and local ground rails. */}
+    <netlabel
+      net="V5_COM"
+      connectsTo={["U7.IN1", "U7.IN2", "U7.IN3", "C10.pin1"]}
+      schX={4.65}
+      schY={3.0}
+      anchorSide="bottom"
+    />
+    <netlabel
+      net="TPS25910_GATE1"
+      connectsTo={["U7.GATE", "C11.pin1"]}
+      inline
+    />
+    <trace from="U7.ILIM" to="R26.pin1" />
+
+    <trace from="U7.GND1" to="U7.GND2" />
+    <trace from="U7.GND2" to="U7.GND3" />
+    <trace from="U7.GND3" to="R26.pin2" />
+    <trace from="R26.pin2" to="C11.pin2" />
+    <trace from="C11.pin2" to="C10.pin2" />
+    <netlabel
+      net="GND"
+      connectsTo="R26.pin2"
+      schX={5.05}
+      schY={-2.65}
+      anchorSide="top"
+    />
+
+    <trace from="U7.GND4" to="U7.GND5" />
+    <trace from="U7.GND5" to="U7.GND6" />
+    <trace from="U7.PWPD" to="R26.pin2" />
+    <netlabel
+      net="GND"
+      connectsTo="U7.GND5"
+      schX={1.25}
+      schY={-2.65}
+      anchorSide="top"
     />
   </subcircuit>
 );
