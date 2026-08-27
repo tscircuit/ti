@@ -121,7 +121,7 @@ import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/Com
 import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
 import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
-import { WirelessConnectivity_Antenna_TIDC_WL1837MODCOM8I } from "./lib/subcircuits/WirelessConnectivity_Antenna_TIDC_WL1837MODCOM8I.circuit.tsx";
+import { WirelessAntenna_W3006_TIDCWL1837MODCOM8I } from "./lib/subcircuits/WirelessAntenna_W3006_TIDCWL1837MODCOM8I.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
 
@@ -185,7 +185,7 @@ export {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
-  WirelessConnectivity_Antenna_TIDC_WL1837MODCOM8I,
+  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
 };
@@ -312,7 +312,7 @@ export const TiSubcircuitComponents = {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
-  WirelessConnectivity_Antenna_TIDC_WL1837MODCOM8I,
+  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
 } as const;

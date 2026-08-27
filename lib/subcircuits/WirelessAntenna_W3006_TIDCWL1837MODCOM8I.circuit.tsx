@@ -8,7 +8,7 @@ import "tscircuit";
  * matching TI's schematic and BOM. C7/L2 are the published no-use options.
  * @see https://www.ti.com/tool/TIDC-WL1837MODCOM8I
  */
-export const WirelessConnectivity_Antenna_TIDC_WL1837MODCOM8I = (
+export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
   props: SubcircuitProps,
 ) => (
   <subcircuit routingDisabled {...props}>
@@ -102,4 +102,4 @@ export const WirelessConnectivity_Antenna_TIDC_WL1837MODCOM8I = (
   </subcircuit>
 );
 
-export default WirelessConnectivity_Antenna_TIDC_WL1837MODCOM8I;
+export default WirelessAntenna_W3006_TIDCWL1837MODCOM8I;
