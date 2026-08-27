@@ -25,6 +25,7 @@ export const PREVIEW_EVALUATION_PLATFORM = {
   routingDisabled: true,
   partsEngineDisabled: true,
   drcChecksDisabled: true,
+  spiceDisabled: true,
 } as const;
 
 const NON_FATAL_PREVIEW_ERROR_TYPES = ["pcb_missing_footprint_error"] as const;
@@ -96,8 +97,8 @@ export async function evaluateGeneratedTsx(
     worker = await createCircuitWebWorker({
       webWorkerBlobUrl,
       // PCB component and pad generation is required by the ECAD exporters.
-      // Routing, external parts lookup, and DRC are unnecessary for the system
-      // preview and are intentionally skipped to keep evaluation responsive.
+      // Routing, external parts lookup, simulation, and DRC are unnecessary for
+      // the system preview and are skipped to keep evaluation responsive.
       platform: PREVIEW_EVALUATION_PLATFORM,
     });
 
