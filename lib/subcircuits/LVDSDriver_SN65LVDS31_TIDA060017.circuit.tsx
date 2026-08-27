@@ -69,7 +69,7 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
       ["R1", "net.IN1", -3.4, 1.35, false],
       ["R2", "U1.IN2", -3.4, -1.5, true],
       ["R3", "U1.IN3", 3.4, -1.5, true],
-      ["R4", "U1.IN4", 3.4, 0.9, true],
+      ["R4", "U1.IN4", 5.2, -1.5, true],
     ].map(([name, signalTarget, schX, schY, signalOnTop]) => (
       <resistor
         key={name}
