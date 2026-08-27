@@ -218,7 +218,7 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
         schX={-14.1}
         schY={2.1}
         schOrientation="vertical"
-        connections={{ pin1: "net.AVCC", pin2: "net.AVSS" }}
+        connections={{ pin2: "net.AVSS" }}
       />
       <capacitor
         name="C11"
@@ -241,7 +241,7 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
         schX={-14.1}
         schY={0.5}
         schOrientation="vertical"
-        connections={{ pin1: "net.PVCC", pin2: "net.PVSS" }}
+        connections={{ pin2: "net.PVSS" }}
       />
       <capacitor
         name="C13"
@@ -250,7 +250,7 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
         schX={-13.2}
         schY={0.5}
         schOrientation="vertical"
-        connections={{ pin1: "net.PVCC", pin2: "net.PVSS" }}
+        connections={{ pin1: "net.PVCC" }}
       />
 
       {/* The two physical DVCC bypass locations retained from the board. */}
@@ -317,7 +317,7 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
         schX={-11.6}
         schY={7.8}
         schOrientation="vertical"
-        connections={{ pin1: "net.DVCC", pin2: "net.RESET_SBWTDIO" }}
+        connections={{ pin2: "net.RESET_SBWTDIO" }}
       />
       <capacitor
         name="C5"
@@ -326,7 +326,7 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
         schX={-11.5}
         schY={6.6}
         schOrientation="vertical"
-        connections={{ pin1: "net.RESET_SBWTDIO", pin2: "net.GND" }}
+        connections={{ pin2: "net.GND" }}
       />
       <pushbutton
         name="SW2"
@@ -517,23 +517,36 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
         }}
       />
 
-      {/* Repository-standard labels are attached to actual connected pins. */}
-      <netlabel net="AVCC" connectsTo="C3.pin1" schX={-15.0} schY={2.6} />
-      <netlabel net="DVCC" connectsTo="R7.pin1" schX={-11.6} schY={8.7} />
-      <netlabel net="PVCC" connectsTo="C16.pin1" schX={-15.0} schY={1.0} />
-      <netlabel
-        net="PVSS"
-        connectsTo="C13.pin2"
-        schX={-13.2}
-        schY={-0.4}
-        anchorSide="top"
+      {/* Repository-standard labels are carried by connected traces. */}
+      <trace
+        name="C3_AVCC"
+        from="C3.pin1"
+        to="net.AVCC"
+        schDisplayLabel="AVCC"
       />
-      <netlabel
-        net="RESET_SBWTDIO"
-        connectsTo="C5.pin1"
-        schX={-10.6}
-        schY={6.9}
-        anchorSide="left"
+      <trace
+        name="R7_DVCC"
+        from="R7.pin1"
+        to="net.DVCC"
+        schDisplayLabel="DVCC"
+      />
+      <trace
+        name="C16_PVCC"
+        from="C16.pin1"
+        to="net.PVCC"
+        schDisplayLabel="PVCC"
+      />
+      <trace
+        name="C13_PVSS"
+        from="C13.pin2"
+        to="net.PVSS"
+        schDisplayLabel="PVSS"
+      />
+      <trace
+        name="C5_RESET_SBWTDIO"
+        from="C5.pin1"
+        to="net.RESET_SBWTDIO"
+        schDisplayLabel="RESET_SBWTDIO"
       />
     </schematicsheet>
 

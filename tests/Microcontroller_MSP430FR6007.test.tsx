@@ -103,6 +103,22 @@ const testConnectivity = async () => {
   const circuitJson = await renderMcu();
   const connectivityMap = getFullConnectivityMapFromCircuitJson(circuitJson);
 
+  for (const traceName of [
+    "C3_AVCC",
+    "R7_DVCC",
+    "C16_PVCC",
+    "C13_PVSS",
+    "C5_RESET_SBWTDIO",
+  ]) {
+    assert(
+      circuitJson.some(
+        (element) =>
+          element.type === "source_trace" && element.name === traceName,
+      ),
+      `Missing on-trace net label ${traceName}`,
+    );
+  }
+
   const sheets = circuitJson.filter(
     (element) => element.type === "schematic_sheet",
   );
