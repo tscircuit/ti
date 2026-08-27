@@ -39,7 +39,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       pinLabels={TPS25910RSA_PIN_LABELS}
       showPinAliases={false}
       schX={3.15}
-      schY={-0.3}
+      schY={0.03}
       schWidth={2}
       schHeight={1.8}
       schPinArrangement={{
@@ -95,18 +95,18 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <resistor
       name="R23"
       resistance="200kohm"
-      schX={0.4}
+      schX={0.35}
       schY={2.2}
       schRotation={90}
     />
     <resistor
       name="R24"
       resistance="10kohm"
-      schX={1.5}
+      schX={1.55}
       schY={2.2}
       schRotation={90}
     />
-    <resistor name="R34" resistance="0ohm" doNotPlace schX={1} schY={0.75} />
+    <resistor name="R34" resistance="0ohm" doNotPlace schX={1.15} schY={0.65} />
 
     <resistor
       name="R26"
@@ -132,7 +132,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
 
     {/* Type-C VBUS input rail, discharge resistor, and ESD clamp. */}
     <netlabel
-      net="TypeC_Vbus"
+      net="VBUS_IN"
       connectsTo={["R25.pin1", "D6.cathode", "Q1.drain"]}
       schX={-4.8}
       schY={2.3}
@@ -155,16 +155,16 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
 
     {/* Q1 gate and protected VBUS output follow the reference left-to-right. */}
     <netlabel
-      net="TPS25910_GATE1"
+      net="Q1_GATE"
       connectsTo="Q1.gate"
-      schX={-2.8}
+      schX={-2.55}
       schY={-1.1}
       anchorSide="right"
     />
     <netlabel
-      net="micABVBUS_OUT"
+      net="VBUS_OUT"
       connectsTo={["Q1.source", "U7.OUT1", "U7.OUT2", "U7.OUT3"]}
-      schX={0.55}
+      schX={0.7}
       schY={-0.3}
       anchorSide="right"
     />
@@ -178,19 +178,15 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       anchorSide="bottom"
     />
     <netlabel
-      net="pg2_3220_ID"
+      net="USB_ID"
       connectsTo={["R23.pin1", "U7.EN_NOT"]}
-      schX={-0.25}
-      schY={1.35}
+      schX={0}
+      schY={1.65}
       anchorSide="right"
     />
     <trace from="R24.pin1" to="U7.FLT_NOT" />
     <trace from="R24.pin1" to="R34.pin2" />
-    <trace
-      from="R34.pin1"
-      to="net.pg2_VCONN_FAULT_N"
-      schDisplayLabel="pg2_VCONN_FAULT#"
-    />
+    <trace from="R34.pin1" to="net.VCONN_FLT_N" schDisplayLabel="VCONN_FLT_N" />
 
     {/* U7 input, gate, current-limit, and local ground rails. */}
     <netlabel
@@ -201,9 +197,11 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       anchorSide="bottom"
     />
     <netlabel
-      net="TPS25910_GATE1"
+      net="Q1_GATE"
       connectsTo={["U7.GATE", "C11.pin1"]}
-      inline
+      schX={5.95}
+      schY={0.2}
+      anchorSide="right"
     />
     <trace from="U7.ILIM" to="R26.pin1" />
 
@@ -216,7 +214,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       net="GND"
       connectsTo="R26.pin2"
       schX={5.05}
-      schY={-2.65}
+      schY={-2.25}
       anchorSide="top"
     />
 
@@ -226,8 +224,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <netlabel
       net="GND"
       connectsTo="U7.GND5"
-      schX={1.25}
-      schY={-2.65}
+      schX={1.55}
+      schY={-1.9}
       anchorSide="top"
     />
   </subcircuit>
