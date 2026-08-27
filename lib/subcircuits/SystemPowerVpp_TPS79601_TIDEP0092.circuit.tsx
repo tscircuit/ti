@@ -149,6 +149,7 @@ export const SystemPowerVpp_TPS79601_TIDEP0092 = (props: SubcircuitProps) => (
       schY={0.28125}
       anchorSide="top"
     />
+    {/* TI physically ties GND and EP before the single GND power port. */}
     <trace from=".U11 > .GND" to=".U11 > .EP" />
   </subcircuit>
 );

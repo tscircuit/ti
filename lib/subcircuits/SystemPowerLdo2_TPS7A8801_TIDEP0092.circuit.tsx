@@ -373,6 +373,7 @@ export const SystemPowerLdo2_TPS7A8801_TIDEP0092 = (props: SubcircuitProps) => (
       schY={-3.575}
       anchorSide="left"
     />
+    {/* TI places one SS_CTRL label on the physical R120-to-R119 wire. */}
     <trace from=".R120 > .pin1" to=".R119 > .pin2" />
     <netlabel
       net="GND"

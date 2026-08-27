@@ -93,7 +93,7 @@ test("System power implementation never sets schSize", () => {
   }
 });
 
-test("TI off-sheet ports use native on-trace labels", () => {
+test("TI off-sheet ports use native on-trace labels across all applicable sheets", () => {
   const cases = [
     {
       sourceUrl: new URL(
