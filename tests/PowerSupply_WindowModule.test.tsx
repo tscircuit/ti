@@ -311,6 +311,9 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
 
   const u1Schematic = schematicComponentFor(circuitJson, "U1");
   expect(u1Schematic?.is_box_with_pins).toBe(false);
+  const u1Size = u1Schematic.size as { width: number; height: number };
+  expect(u1Size.width).toBeLessThanOrEqual(1.5);
+  expect(u1Size.height).toBeLessThanOrEqual(1);
   expect(
     circuitJson.some(
       (element) =>
