@@ -32,6 +32,10 @@ import {
   GENERATED_SYSTEM_MAIN_FILE_NAME,
   getGeneratedSystemEvaluationFsMap,
 } from "./rendering/generated-source-files";
+import {
+  SCHEMATIC_SVG_HEIGHT,
+  SCHEMATIC_SVG_WIDTH,
+} from "./rendering/schematic-page-size";
 import { SchematicEvaluationCoordinator } from "./schematic-evaluation-coordinator";
 
 interface Notice {
@@ -272,8 +276,8 @@ export function App() {
         },
         timeoutMs: 45_000,
         schematicOptions: {
-          width: 1400,
-          height: 900,
+          width: SCHEMATIC_SVG_WIDTH,
+          height: SCHEMATIC_SVG_HEIGHT,
           includeVersion: true,
         },
       });

@@ -113,6 +113,22 @@ project name before using it in filenames or archive entries.
 
 Because this evaluation intentionally disables PCB generation and routing, the
 CAD ZIPs are schematic-first projects. Each converter includes
+the main file. **Export files** downloads both required files, while Copy copies
+only the main TSX. The system diagram preserves the block positions from the
+editor and shows every Power and Data connection.
+
+Preview rendering runs the generated default export through `@tscircuit/eval`
+in a web worker with PCB generation, parts lookup, and PCB routing disabled.
+The resulting Circuit JSON is converted to schematic SVG and can be downloaded
+as a vector PDF or as editable KiCad and Altium project ZIPs. The project
+exporters run in lazy-loaded browser chunks and sanitize the project name before
+using it in archive entries.
+
+The PDF exporter embeds Liberation Sans, an open, Arial-compatible font, so
+Unicode symbols and schematic text measurements remain intact.
+
+Because this preview intentionally evaluates with PCB generation and routing
+disabled, the CAD ZIPs are schematic-first projects. Each converter includes
 its required empty/default PCB document; it is not a routed system-board layout.
 The direct `GeneratedSystem.circuit.json` download likewise reflects this
 schematic-only evaluation and retains the System Diagram `schematic_graphic`.
