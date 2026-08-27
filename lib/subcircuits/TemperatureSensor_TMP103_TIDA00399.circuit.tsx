@@ -51,11 +51,9 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
       schRotation={90}
       connections={{
         pin1: "UTMP.SDA",
-        pin2: ["UTMP.V_PLUS", "net.USB2ANY_3V3"],
+        pin2: ["UTMP.V_PLUS", "net.V3P3"],
       }}
     />
-    <schematictext text="DNP" schX={-2.15} schY={2} fontSize={0.2} />
-    <schematictext text="DNP" schX={0.55} schY={2} fontSize={0.2} />
   </subcircuit>
 );
 
