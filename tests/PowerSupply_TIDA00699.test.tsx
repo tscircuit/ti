@@ -148,10 +148,21 @@ test("Obstacle-detection example assigns TIDA-00699 to a named schematic sheet",
     name: "power_supply",
   });
   assert.ok(schematicSheet);
+  assert.equal(schematicSheet.sheet_size, "ansi_b");
+  assert.equal(schematicSheet.sheet_width, 431.8);
+  assert.equal(schematicSheet.sheet_height, 279.4);
   assert.equal(
     getSchematicPort(circuit, { componentName: "U3", pin: "pin12" })
       .schematic_sheet_id,
     schematicSheet.schematic_sheet_id,
+  );
+  assert.deepEqual(
+    circuit
+      .getCircuitJson()
+      .filter(
+        (element) => element.type === "schematic_element_outside_sheet_warning",
+      ),
+    [],
   );
 });
 
