@@ -3,10 +3,14 @@
 This repo contains hand-curated tscircuit TSX schematics for Texas Instruments
 devices, reusable TI reference subcircuits, and raw TI chip definitions.
 
+- [View component library](https://ti.tscircuit.app/#file=lib%2Fchips%2FBQ24072.circuit.tsx)
+- [View System Block Editor](https://tiblocks.tscircuit.com/)
+
 The published package is `@tsci/tscircuit.ti`. It provides ready-to-use
 subcircuit components and low-level chip components that can be imported into a
 local tscircuit project, placed on a board, and connected to from the
 surrounding circuit. 
+
 
 ## Installation
 
@@ -303,6 +307,7 @@ The package currently exports these subcircuit components:
 - `PowerSupply_LM5050_TIDA00992` ([TIDA-00992](https://www.ti.com/tool/TIDA-00992))
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `LogicBuffer_SN74LVC1G34` ([SN74LVC1G34 typical application](https://www.ti.com/lit/gpn/SN74LVC1G34))
 - `WirelessAntenna_W3006_TIDCWL1837MODCOM8I` ([TIDC-WL1837MODCOM8I](https://www.ti.com/tool/TIDC-WL1837MODCOM8I))
 - `InputOutputProtection_TPD2E009_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `BuckConverter_TPS62086_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
