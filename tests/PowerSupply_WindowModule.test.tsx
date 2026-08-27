@@ -314,13 +314,42 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
   const u1Size = u1Schematic.size as { width: number; height: number };
   expect(u1Size.width).toBeLessThanOrEqual(1.5);
   expect(u1Size.height).toBeLessThanOrEqual(1);
-  expect(
-    circuitJson.some(
+  const u1Path = circuitJson.find(
+    (element) =>
+      element.type === "schematic_path" &&
+      element.schematic_component_id === u1Schematic?.schematic_component_id,
+  );
+  expect(u1Path).toBeDefined();
+  const pathPoints = u1Path!.points as Array<{ x: number; y: number }>;
+  const expectStemOnEdge = (
+    pinNumber: number,
+    edge: [{ x: number; y: number }, { x: number; y: number }],
+  ) => {
+    const schematicPort = circuitJson.find(
       (element) =>
-        element.type === "schematic_path" &&
-        element.schematic_component_id === u1Schematic?.schematic_component_id,
-    ),
-  ).toBe(true);
+        element.type === "schematic_port" &&
+        element.schematic_component_id === u1Schematic.schematic_component_id &&
+        element.pin_number === pinNumber,
+    )!;
+    const center = schematicPort.center as { x: number; y: number };
+    const stem = circuitJson.find(
+      (element) =>
+        element.type === "schematic_line" &&
+        element.schematic_component_id === u1Schematic.schematic_component_id &&
+        element.x1 === center.x &&
+        element.y1 === center.y,
+    )!;
+    const [a, b] = edge;
+    const cross =
+      (Number(stem.x2) - a.x) * (b.y - a.y) -
+      (Number(stem.y2) - a.y) * (b.x - a.x);
+    expect(
+      Math.abs(cross),
+      `U1 pin ${pinNumber} stem touches body`,
+    ).toBeLessThan(0.002);
+  };
+  expectStemOnEdge(6, [pathPoints[0], pathPoints[1]]);
+  expectStemOnEdge(2, [pathPoints[1], pathPoints[2]]);
 
   const renderedNetLabels = circuitJson
     .filter((element) => element.type === "schematic_net_label")
