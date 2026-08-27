@@ -1,9 +1,21 @@
 import { describe, expect, test } from "bun:test";
 
 import { calculateSchematicPdfPageLayout } from "./export-pdf";
+import {
+  SCHEMATIC_SVG_HEIGHT,
+  SCHEMATIC_SVG_WIDTH,
+} from "./schematic-page-size";
 
 describe("schematic PDF page layout", () => {
-  test("stretches a schematic over an entire A4 landscape page", () => {
+  test("matches the schematic canvas to A4 landscape", () => {
+    expect(SCHEMATIC_SVG_HEIGHT).toBe(990);
+    expect(SCHEMATIC_SVG_WIDTH / SCHEMATIC_SVG_HEIGHT).toBeCloseTo(
+      297 / 210,
+      3,
+    );
+  });
+
+  test("uses an entire A4 landscape page", () => {
     const layout = calculateSchematicPdfPageLayout({
       pageWidthMm: 297,
       pageHeightMm: 210,

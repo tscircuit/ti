@@ -131,12 +131,12 @@ const normalizeSvgViewport = (
 ): void => {
   // circuit-to-svg currently emits width/height without a viewBox. svg2pdf's
   // width/height options resize its viewport but do not scale that SVG's user
-  // coordinate system, which clips the drawing. Supplying this viewBox and
-  // disabling aspect preservation stretches the viewport over the full page.
+  // coordinate system, which clips the drawing. Supplying this viewBox lets
+  // the A4-proportioned schematic scale uniformly over the full PDF page.
   if (!svg.hasAttribute("viewBox")) {
     svg.setAttribute("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
   }
-  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 };
 
 const validateFinitePositive = (name: string, value: number): void => {
@@ -145,7 +145,7 @@ const validateFinitePositive = (name: string, value: number): void => {
   }
 };
 
-/** Stretches one schematic over the full PDF page. */
+/** Uses the full PDF page as the schematic viewport. */
 export function calculateSchematicPdfPageLayout({
   pageWidthMm,
   pageHeightMm,
