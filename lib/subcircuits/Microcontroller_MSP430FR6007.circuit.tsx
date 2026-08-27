@@ -9,9 +9,26 @@ import {
 const ascendingSocketPins = Array.from({ length: 25 }, (_, index) => index + 1);
 const descendingSocketPins = [...ascendingSocketPins].reverse();
 
-const socketPinLabels = Object.fromEntries(
-  ascendingSocketPins.map((pin) => [`pin${pin}`, `${pin}`]),
-);
+/*
+ * Keep repeated supply pins as separate labeled stubs, as in Figure B-78.
+ * Applying the same small margin to both ends preserves exact IC-to-header
+ * alignment while preventing the schematic solver from spanning one rail
+ * across adjacent IC or socket pins.
+ */
+const leftRailPinSpacing = {
+  pin5: { marginBottom: "0.5mm" },
+  pin8: { marginBottom: "0.5mm" },
+} as const;
+
+const topRailPinSpacing = {
+  pin89: { marginRight: "0.5mm" },
+  pin97: { marginRight: "0.5mm" },
+} as const;
+
+const topSocketRailPinSpacing = {
+  pin14: { marginRight: "0.5mm" },
+  pin22: { marginRight: "0.5mm" },
+} as const;
 
 /**
  * Figure B-78 routes each IC1 side through one 25-position target-socket
@@ -30,6 +47,36 @@ const mcuToTargetSocketLinks = Array.from({ length: 100 }, (_, index) => {
     typeof pinDefinition === "string" ? pinDefinition : pinDefinition[0];
   return { mcuPin, connector, connectorPin, sourcePinLabel };
 });
+
+const targetSocketNetBreakouts = [
+  { connector: "J3", connectorPin: 5, net: "AVSS" },
+  { connector: "J3", connectorPin: 6, net: "LFXIN" },
+  { connector: "J3", connectorPin: 7, net: "LFXOUT" },
+  { connector: "J3", connectorPin: 8, net: "AVSS" },
+  { connector: "J3", connectorPin: 9, net: "HFXIN" },
+  { connector: "J3", connectorPin: 10, net: "HFXOUT" },
+  { connector: "J3", connectorPin: 11, net: "AVSS" },
+  { connector: "J3", connectorPin: 16, net: "BSL_TX" },
+  { connector: "J3", connectorPin: 17, net: "BSL_RX" },
+  { connector: "J3", connectorPin: 20, net: "TEST_SBWTCK" },
+  { connector: "J3", connectorPin: 21, net: "RESET_SBWTDIO" },
+  { connector: "J3", connectorPin: 22, net: "TDO" },
+  { connector: "J3", connectorPin: 23, net: "TDI" },
+  { connector: "J3", connectorPin: 24, net: "TMS" },
+  { connector: "J3", connectorPin: 25, net: "TCK" },
+  { connector: "J4", connectorPin: 1, net: "GND" },
+  { connector: "J4", connectorPin: 2, net: "DVCC" },
+  { connector: "J5", connectorPin: 1, net: "GND" },
+  { connector: "J5", connectorPin: 2, net: "DVCC" },
+  { connector: "J5", connectorPin: 25, net: "GND" },
+  { connector: "J6", connectorPin: 1, net: "DVCC" },
+  { connector: "J6", connectorPin: 12, net: "PVSS" },
+  { connector: "J6", connectorPin: 13, net: "PVCC" },
+  { connector: "J6", connectorPin: 14, net: "PVSS" },
+  { connector: "J6", connectorPin: 21, net: "AVSS" },
+  { connector: "J6", connectorPin: 24, net: "AVSS" },
+  { connector: "J6", connectorPin: 25, net: "AVCC" },
+] as const;
 
 /**
  * MSP430FR6007 minimum-system section extracted from TI's MSP-TS430PZ100E
@@ -61,16 +108,22 @@ const mcuToTargetSocketLinks = Array.from({ length: 100 }, (_, index) => {
  *   schY = (741 - y_px) * 0.0225 mm
  * Values below are rounded to 0.1 mm; the published figure supports only
  * approximate schematic centers, not exact PCB/CAD coordinates.
+ * Sheet 2 applies a uniform +6 mm rendered-X translation to those local
+ * centers so the extracted support section fits inside its drawing frame;
+ * all source-relative component offsets remain unchanged.
  * The native render uses one sheet for IC1 with J3-J6 and a second sheet for
  * the retained target-board minimum-system support circuitry.
  */
 export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
   <subcircuit
-    schMaxTraceDistance="40mm"
+    // Direct IC-to-socket links are 0.7 mm. The 0.8 mm limit keeps those
+    // intact while the spaced repeated rails terminate as on-trace names.
+    schMaxTraceDistance="0.8mm"
     // The extracted source is schematic-only. Native schematic autorouting
     // remains enabled; routingDisabled prevents a synthesized PCB routing.
     // Its checked-in snapshot is schematic-only because no exact CAD exists.
     routingDisabled
+    schLayout={{ layoutMode: "none" }}
     {...props}
   >
     <net name="GND" isGroundNet />
@@ -85,110 +138,74 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
       displayName="MCU and Target Socket"
       sheetIndex={1}
     >
-      <MSP430FR6007IPZ name="IC1" schX={0} schY={0} />
+      <MSP430FR6007IPZ
+        name="IC1"
+        schX={0}
+        schY={0}
+        schPinStyle={{ ...leftRailPinSpacing, ...topRailPinSpacing }}
+      />
 
       {/*
        * Four 25-position target-socket headers surrounding IC1 in Figure B-78.
        * The pin orders intentionally follow the source drawing on each side.
        */}
-      <connector
+      <pinheader
         name="J3"
         manufacturerPartNumber="TSW-125-07-G-S"
         footprint="pinrow25_p2.54_nopinlabels"
-        pinLabels={socketPinLabels}
+        pinCount={25}
+        gender="male"
+        pitch="2.54mm"
         schX={-7.2}
         schY={0}
-        schWidth="0.5mm"
-        schHeight="11mm"
-        schPinArrangement={{
-          rightSide: {
-            direction: "top-to-bottom",
-            pins: ascendingSocketPins,
-          },
-        }}
-        connections={{
-          pin5: "net.AVSS",
-          pin6: "net.LFXIN",
-          pin7: "net.LFXOUT",
-          pin8: "net.AVSS",
-          pin9: "net.HFXIN",
-          pin10: "net.HFXOUT",
-          pin11: "net.AVSS",
-          pin16: "net.BSL_TX",
-          pin17: "net.BSL_RX",
-          pin20: "net.TEST_SBWTCK",
-          pin21: "net.RESET_SBWTDIO",
-          pin22: "net.TDO",
-          pin23: "net.TDI",
-          pin24: "net.TMS",
-          pin25: "net.TCK",
-        }}
+        schFacingDirection="right"
+        schPinStyle={leftRailPinSpacing}
       />
-      <connector
+      <pinheader
         name="J4"
         manufacturerPartNumber="TSW-125-07-G-S"
         footprint="pinrow25_p2.54_nopinlabels"
-        pinLabels={socketPinLabels}
+        pinCount={25}
+        gender="male"
+        pitch="2.54mm"
         schX={0}
         schY={-7.2}
-        schWidth="11mm"
-        schHeight="0.5mm"
-        schPinArrangement={{
-          topSide: {
-            direction: "left-to-right",
-            pins: ascendingSocketPins,
-          },
-        }}
-        connections={{
-          pin1: "net.GND",
-          pin2: "net.DVCC",
-        }}
+        schFacingDirection="up"
       />
-      <connector
+      <pinheader
         name="J5"
         manufacturerPartNumber="TSW-125-07-G-S"
         footprint="pinrow25_p2.54_nopinlabels"
-        pinLabels={socketPinLabels}
+        pinCount={25}
+        gender="male"
+        pitch="2.54mm"
         schX={7.2}
         schY={0}
-        schWidth="0.5mm"
-        schHeight="11mm"
+        schFacingDirection="left"
         schPinArrangement={{
           leftSide: {
             direction: "top-to-bottom",
             pins: descendingSocketPins,
           },
         }}
-        connections={{
-          pin1: "net.GND",
-          pin2: "net.DVCC",
-          pin25: "net.GND",
-        }}
       />
-      <connector
+      <pinheader
         name="J6"
         manufacturerPartNumber="TSW-125-07-G-S"
         footprint="pinrow25_p2.54_nopinlabels"
-        pinLabels={socketPinLabels}
+        pinCount={25}
+        gender="male"
+        pitch="2.54mm"
         schX={0}
         schY={7.2}
-        schWidth="11mm"
-        schHeight="0.5mm"
+        schFacingDirection="down"
         schPinArrangement={{
           bottomSide: {
             direction: "left-to-right",
             pins: descendingSocketPins,
           },
         }}
-        connections={{
-          pin1: "net.DVCC",
-          pin12: "net.PVSS",
-          pin13: "net.PVCC",
-          pin14: "net.PVSS",
-          pin21: "net.AVSS",
-          pin24: "net.AVSS",
-          pin25: "net.AVCC",
-        }}
+        schPinStyle={topSocketRailPinSpacing}
       />
 
       {mcuToTargetSocketLinks.map(
@@ -203,6 +220,17 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           </Fragment>
         ),
       )}
+
+      {targetSocketNetBreakouts.map(({ connector, connectorPin, net }) => (
+        <Fragment key={`${connector}-pin${connectorPin}-${net}`}>
+          <trace
+            name={`${connector}_PIN${connectorPin}_${net}`}
+            from={`${connector}.pin${connectorPin}`}
+            to={`net.${net}`}
+            schDisplayLabel={net}
+          />
+        </Fragment>
+      ))}
     </schematicsheet>
 
     <schematicsheet
@@ -210,344 +238,346 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
       displayName="Minimum-System Support Circuitry"
       sheetIndex={2}
     >
-      {/* Target-board AVCC bypass network. */}
-      <capacitor
-        name="C3"
-        capacitance="1uF"
-        footprint="0805"
-        schX={-14.1}
-        schY={2.1}
-        schOrientation="vertical"
-        connections={{ pin2: "net.AVSS" }}
-      />
-      <capacitor
-        name="C11"
-        capacitance="0.1uF"
-        footprint="0805"
-        schX={-13.2}
-        schY={3.4}
-        schOrientation="vertical"
-        connections={{ pin1: "net.AVCC", pin2: "net.AVSS" }}
-      />
+      <group name="minimum_system_source_layout" schX={6}>
+        {/* Target-board AVCC bypass network. */}
+        <capacitor
+          name="C3"
+          capacitance="1uF"
+          footprint="0805"
+          schX={-14.1}
+          schY={2.1}
+          schOrientation="vertical"
+          connections={{ pin2: "net.AVSS" }}
+        />
+        <capacitor
+          name="C11"
+          capacitance="0.1uF"
+          footprint="0805"
+          schX={-13.2}
+          schY={3.4}
+          schOrientation="vertical"
+          connections={{ pin1: "net.AVCC", pin2: "net.AVSS" }}
+        />
 
-      {/*
-       * Target-board PVCC bypass network. Values follow Figure B-78; its
-       * printed BOM instead says C16=47uF and C13=1000pF, a source conflict.
-       */}
-      <capacitor
-        name="C16"
-        capacitance="1uF"
-        footprint="0805"
-        schX={-14.1}
-        schY={0.5}
-        schOrientation="vertical"
-        connections={{ pin2: "net.PVSS" }}
-      />
-      <capacitor
-        name="C13"
-        capacitance="0.1uF"
-        footprint="0805"
-        schX={-13.2}
-        schY={0.5}
-        schOrientation="vertical"
-        connections={{ pin1: "net.PVCC" }}
-      />
+        {/*
+         * Target-board PVCC bypass network. Values follow Figure B-78; its
+         * printed BOM instead says C16=47uF and C13=1000pF, a source conflict.
+         */}
+        <capacitor
+          name="C16"
+          capacitance="1uF"
+          footprint="0805"
+          schX={-14.1}
+          schY={0.5}
+          schOrientation="vertical"
+          connections={{ pin2: "net.PVSS" }}
+        />
+        <capacitor
+          name="C13"
+          capacitance="0.1uF"
+          footprint="0805"
+          schX={-13.2}
+          schY={0.5}
+          schOrientation="vertical"
+          connections={{ pin1: "net.PVCC" }}
+        />
 
-      {/* The two physical DVCC bypass locations retained from the board. */}
-      <capacitor
-        name="C4"
-        capacitance="0.1uF"
-        footprint="0805"
-        schX={-4.0}
-        schY={-6.3}
-        schOrientation="vertical"
-        connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
-      />
+        {/* The two physical DVCC bypass locations retained from the board. */}
+        <capacitor
+          name="C4"
+          capacitance="0.1uF"
+          footprint="0805"
+          schX={-4.0}
+          schY={-6.3}
+          schOrientation="vertical"
+          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
+        />
 
-      {/* Source star-ground links: PVSS--R11--GND--R12--AVSS. */}
-      <resistor
-        name="R11"
-        resistance="0"
-        footprint="0805"
-        schX={-19.0}
-        schY={-5.5}
-        connections={{ pin1: "net.PVSS", pin2: "net.GND" }}
-      />
-      <resistor
-        name="R12"
-        resistance="0"
-        footprint="0805"
-        schX={-19.0}
-        schY={-6.5}
-        connections={{ pin1: "net.GND", pin2: "net.AVSS" }}
-      />
-      <capacitor
-        name="C10"
-        capacitance="0.1uF"
-        footprint="0805"
-        schX={-3.0}
-        schY={-6.3}
-        schOrientation="vertical"
-        connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
-      />
-      <capacitor
-        name="C7"
-        capacitance="1uF"
-        footprint="0805"
-        schX={6.4}
-        schY={-6.2}
-        schOrientation="vertical"
-        connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
-      />
-      <capacitor
-        name="C6"
-        capacitance="0.1uF"
-        footprint="0805"
-        schX={7.4}
-        schY={-6.2}
-        schOrientation="vertical"
-        connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
-      />
+        {/* Source star-ground links: PVSS--R11--GND--R12--AVSS. */}
+        <resistor
+          name="R11"
+          resistance="0"
+          footprint="0805"
+          schX={-19.0}
+          schY={-5.5}
+          connections={{ pin1: "net.PVSS", pin2: "net.GND" }}
+        />
+        <resistor
+          name="R12"
+          resistance="0"
+          footprint="0805"
+          schX={-19.0}
+          schY={-6.5}
+          connections={{ pin1: "net.GND", pin2: "net.AVSS" }}
+        />
+        <capacitor
+          name="C10"
+          capacitance="0.1uF"
+          footprint="0805"
+          schX={-3.0}
+          schY={-6.3}
+          schOrientation="vertical"
+          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
+        />
+        <capacitor
+          name="C7"
+          capacitance="1uF"
+          footprint="0805"
+          schX={6.4}
+          schY={-6.2}
+          schOrientation="vertical"
+          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
+        />
+        <capacitor
+          name="C6"
+          capacitance="0.1uF"
+          footprint="0805"
+          schX={7.4}
+          schY={-6.2}
+          schOrientation="vertical"
+          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
+        />
 
-      {/* Reset pull-up, filter, and pushbutton from Figure B-78. */}
-      <resistor
-        name="R7"
-        resistance="47k"
-        footprint="0805"
-        schX={-11.6}
-        schY={7.8}
-        schOrientation="vertical"
-        connections={{ pin2: "net.RESET_SBWTDIO" }}
-      />
-      <capacitor
-        name="C5"
-        capacitance="1100pF"
-        footprint="0805"
-        schX={-11.5}
-        schY={6.6}
-        schOrientation="vertical"
-        connections={{ pin2: "net.GND" }}
-      />
-      <pushbutton
-        name="SW2"
-        displayName="RESET"
-        manufacturerPartNumber="EVQ-11L05R"
-        footprint="smdpushbutton"
-        schX={-12.6}
-        schY={7.5}
-        connections={{
-          pin1: "net.RESET_SBWTDIO",
-          pin2: "net.GND",
-          pin3: "net.RESET_SBWTDIO",
-          pin4: "net.GND",
-        }}
-      />
+        {/* Reset pull-up, filter, and pushbutton from Figure B-78. */}
+        <resistor
+          name="R7"
+          resistance="47k"
+          footprint="0805"
+          schX={-11.6}
+          schY={7.8}
+          schOrientation="vertical"
+          connections={{ pin2: "net.RESET_SBWTDIO" }}
+        />
+        <capacitor
+          name="C5"
+          capacitance="1100pF"
+          footprint="0805"
+          schX={-11.5}
+          schY={6.6}
+          schOrientation="vertical"
+          connections={{ pin2: "net.GND" }}
+        />
+        <pushbutton
+          name="SW2"
+          displayName="RESET"
+          manufacturerPartNumber="EVQ-11L05R"
+          footprint="smdpushbutton"
+          schX={-12.6}
+          schY={7.5}
+          connections={{
+            pin1: "net.RESET_SBWTDIO",
+            pin2: "net.GND",
+            pin3: "net.RESET_SBWTDIO",
+            pin4: "net.GND",
+          }}
+        />
 
-      {/* Optional low-frequency crystal population from the socket board. */}
-      <crystal
-        name="Q1"
-        manufacturerPartNumber="MS3V-T1R"
-        frequency="32.768kHz"
-        loadCapacitance="12.5pF"
-        pinVariant="two_pin"
-        doNotPlace
-        schX={-11.0}
-        schY={2.7}
-        connections={{ pin1: "net.LFXOUT", pin2: "net.LFXIN" }}
-      />
-      <capacitor
-        name="C1"
-        capacitance="12pF"
-        footprint="0805"
-        doNotPlace
-        schX={-12.3}
-        schY={3.2}
-        schOrientation="vertical"
-        connections={{ pin1: "net.LFXOUT", pin2: "net.AVSS" }}
-      />
-      <capacitor
-        name="C2"
-        capacitance="12pF"
-        footprint="0805"
-        doNotPlace
-        schX={-12.3}
-        schY={2.2}
-        schOrientation="vertical"
-        connections={{ pin1: "net.LFXIN", pin2: "net.AVSS" }}
-      />
-      <resistor
-        name="R5"
-        resistance="0"
-        footprint="0603"
-        doNotPlace
-        schX={-9.5}
-        schY={3.2}
-        connections={{ pin1: "net.LFXOUT", pin2: "net.LFXOUT_ext" }}
-      />
-      <resistor
-        name="R6"
-        resistance="0"
-        footprint="0603"
-        doNotPlace
-        schX={-9.5}
-        schY={2.2}
-        connections={{ pin1: "net.LFXIN", pin2: "net.LFXIN_ext" }}
-      />
+        {/* Optional low-frequency crystal population from the socket board. */}
+        <crystal
+          name="Q1"
+          manufacturerPartNumber="MS3V-T1R"
+          frequency="32.768kHz"
+          loadCapacitance="12.5pF"
+          pinVariant="two_pin"
+          doNotPlace
+          schX={-11.0}
+          schY={2.7}
+          connections={{ pin1: "net.LFXOUT", pin2: "net.LFXIN" }}
+        />
+        <capacitor
+          name="C1"
+          capacitance="12pF"
+          footprint="0805"
+          doNotPlace
+          schX={-12.3}
+          schY={3.2}
+          schOrientation="vertical"
+          connections={{ pin1: "net.LFXOUT", pin2: "net.AVSS" }}
+        />
+        <capacitor
+          name="C2"
+          capacitance="12pF"
+          footprint="0805"
+          doNotPlace
+          schX={-12.3}
+          schY={2.2}
+          schOrientation="vertical"
+          connections={{ pin1: "net.LFXIN", pin2: "net.AVSS" }}
+        />
+        <resistor
+          name="R5"
+          resistance="0"
+          footprint="0603"
+          doNotPlace
+          schX={-9.5}
+          schY={3.2}
+          connections={{ pin1: "net.LFXOUT", pin2: "net.LFXOUT_ext" }}
+        />
+        <resistor
+          name="R6"
+          resistance="0"
+          footprint="0603"
+          doNotPlace
+          schX={-9.5}
+          schY={2.2}
+          connections={{ pin1: "net.LFXIN", pin2: "net.LFXIN_ext" }}
+        />
 
-      {/* Optional HFXT population; all five parts are DNP in the source BOM. */}
-      <crystal
-        name="Q2"
-        manufacturerPartNumber="MS3V-T1R"
-        frequency="32.768kHz"
-        loadCapacitance="12.5pF"
-        pinVariant="two_pin"
-        doNotPlace
-        schX={-11.0}
-        schY={-0.4}
-        connections={{ pin1: "net.HFXOUT", pin2: "net.HFXIN" }}
-      />
-      <capacitor
-        name="C8"
-        capacitance="22pF"
-        footprint="0805"
-        doNotPlace
-        schX={-12.3}
-        schY={0.1}
-        schOrientation="vertical"
-        connections={{ pin1: "net.HFXOUT", pin2: "net.AVSS" }}
-      />
-      <capacitor
-        name="C9"
-        capacitance="22pF"
-        footprint="0805"
-        doNotPlace
-        schX={-12.3}
-        schY={-0.9}
-        schOrientation="vertical"
-        connections={{ pin1: "net.HFXIN", pin2: "net.AVSS" }}
-      />
-      <resistor
-        name="R9"
-        resistance="0"
-        footprint="0603"
-        doNotPlace
-        schX={-9.5}
-        schY={0.1}
-        connections={{ pin1: "net.HFXOUT", pin2: "net.HFXOUT_ext" }}
-      />
-      <resistor
-        name="R8"
-        resistance="0"
-        footprint="0603"
-        doNotPlace
-        schX={-9.5}
-        schY={-0.9}
-        connections={{ pin1: "net.HFXIN", pin2: "net.HFXIN_ext" }}
-      />
+        {/* Optional HFXT population; all five parts are DNP in the source BOM. */}
+        <crystal
+          name="Q2"
+          manufacturerPartNumber="MS3V-T1R"
+          frequency="32.768kHz"
+          loadCapacitance="12.5pF"
+          pinVariant="two_pin"
+          doNotPlace
+          schX={-11.0}
+          schY={-0.4}
+          connections={{ pin1: "net.HFXOUT", pin2: "net.HFXIN" }}
+        />
+        <capacitor
+          name="C8"
+          capacitance="22pF"
+          footprint="0805"
+          doNotPlace
+          schX={-12.3}
+          schY={0.1}
+          schOrientation="vertical"
+          connections={{ pin1: "net.HFXOUT", pin2: "net.AVSS" }}
+        />
+        <capacitor
+          name="C9"
+          capacitance="22pF"
+          footprint="0805"
+          doNotPlace
+          schX={-12.3}
+          schY={-0.9}
+          schOrientation="vertical"
+          connections={{ pin1: "net.HFXIN", pin2: "net.AVSS" }}
+        />
+        <resistor
+          name="R9"
+          resistance="0"
+          footprint="0603"
+          doNotPlace
+          schX={-9.5}
+          schY={0.1}
+          connections={{ pin1: "net.HFXOUT", pin2: "net.HFXOUT_ext" }}
+        />
+        <resistor
+          name="R8"
+          resistance="0"
+          footprint="0603"
+          doNotPlace
+          schX={-9.5}
+          schY={-0.9}
+          connections={{ pin1: "net.HFXIN", pin2: "net.HFXIN_ext" }}
+        />
 
-      {/* UART BSL paths retained on the source JTAG header. */}
-      <resistor
-        name="R19"
-        resistance="0"
-        footprint="0805"
-        schX={-20.3}
-        schY={10.5}
-        connections={{ pin1: "net.BSL_RX", pin2: "net.JTAG_BSL_RX" }}
-      />
-      <resistor
-        name="R20"
-        resistance="0"
-        footprint="0805"
-        schX={-20.3}
-        schY={9.9}
-        connections={{ pin1: "net.BSL_TX", pin2: "net.JTAG_BSL_TX" }}
-      />
+        {/* UART BSL paths retained on the source JTAG header. */}
+        <resistor
+          name="R19"
+          resistance="0"
+          footprint="0805"
+          schX={-20.3}
+          schY={10.5}
+          connections={{ pin1: "net.BSL_RX", pin2: "net.JTAG_BSL_RX" }}
+        />
+        <resistor
+          name="R20"
+          resistance="0"
+          footprint="0805"
+          schX={-20.3}
+          schY={9.9}
+          connections={{ pin1: "net.BSL_TX", pin2: "net.JTAG_BSL_TX" }}
+        />
 
-      {/*
-       * 14-pin MSP JTAG connector resolved to the board's documented four-wire
-       * configuration (JP5-JP10 at pins 2-3). The physical selector headers and
-       * shunts are board UI, so the extracted module preserves their selected
-       * connectivity without importing those configuration-only components.
-       */}
-      <connector
-        name="JTAG"
-        manufacturerPartNumber="SBH11-PBPC-D07-ST-BK"
-        footprint="pinrow14_p2.54_nopinlabels_rows2"
-        pinLabels={{
-          pin1: "TDO_TDI",
-          pin2: "VCC_TOOL",
-          pin3: "TDI",
-          pin4: "VCC_TARGET",
-          pin5: "TMS",
-          pin6: "NC_6",
-          pin7: "TCK",
-          pin8: "TEST",
-          pin9: "GND",
-          pin10: "NC_10",
-          pin11: "RST",
-          pin12: "BSL_TX",
-          pin13: "NC_13",
-          pin14: "BSL_RX",
-        }}
-        noConnect={["NC_6", "NC_10", "NC_13"]}
-        schX={-17.7}
-        schY={9.7}
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: [14, 12, 10, 8, 6, 4, 2],
-          },
-          rightSide: {
-            direction: "top-to-bottom",
-            pins: [13, 11, 9, 7, 5, 3, 1],
-          },
-        }}
-        connections={{
-          pin1: "net.TDO",
-          pin2: "net.DVCC",
-          pin3: "net.TDI",
-          pin4: "net.DVCC",
-          pin5: "net.TMS",
-          pin7: "net.TCK",
-          pin8: "net.TEST_SBWTCK",
-          pin9: "net.GND",
-          pin11: "net.RESET_SBWTDIO",
-          pin12: "net.JTAG_BSL_TX",
-          pin14: "net.JTAG_BSL_RX",
-        }}
-      />
+        {/*
+         * 14-pin MSP JTAG connector resolved to the board's documented four-wire
+         * configuration (JP5-JP10 at pins 2-3). The physical selector headers and
+         * shunts are board UI, so the extracted module preserves their selected
+         * connectivity without importing those configuration-only components.
+         */}
+        <connector
+          name="JTAG"
+          manufacturerPartNumber="SBH11-PBPC-D07-ST-BK"
+          footprint="pinrow14_p2.54_nopinlabels_rows2"
+          pinLabels={{
+            pin1: "TDO_TDI",
+            pin2: "VCC_TOOL",
+            pin3: "TDI",
+            pin4: "VCC_TARGET",
+            pin5: "TMS",
+            pin6: "NC_6",
+            pin7: "TCK",
+            pin8: "TEST",
+            pin9: "GND",
+            pin10: "NC_10",
+            pin11: "RST",
+            pin12: "BSL_TX",
+            pin13: "NC_13",
+            pin14: "BSL_RX",
+          }}
+          noConnect={["NC_6", "NC_10", "NC_13"]}
+          schX={-17.7}
+          schY={9.7}
+          schPinArrangement={{
+            leftSide: {
+              direction: "top-to-bottom",
+              pins: [14, 12, 10, 8, 6, 4, 2],
+            },
+            rightSide: {
+              direction: "top-to-bottom",
+              pins: [13, 11, 9, 7, 5, 3, 1],
+            },
+          }}
+          connections={{
+            pin1: "net.TDO",
+            pin2: "net.DVCC",
+            pin3: "net.TDI",
+            pin4: "net.DVCC",
+            pin5: "net.TMS",
+            pin7: "net.TCK",
+            pin8: "net.TEST_SBWTCK",
+            pin9: "net.GND",
+            pin11: "net.RESET_SBWTDIO",
+            pin12: "net.JTAG_BSL_TX",
+            pin14: "net.JTAG_BSL_RX",
+          }}
+        />
 
-      {/* Repository-standard labels are carried by connected traces. */}
-      <trace
-        name="C3_AVCC"
-        from="C3.pin1"
-        to="net.AVCC"
-        schDisplayLabel="AVCC"
-      />
-      <trace
-        name="R7_DVCC"
-        from="R7.pin1"
-        to="net.DVCC"
-        schDisplayLabel="DVCC"
-      />
-      <trace
-        name="C16_PVCC"
-        from="C16.pin1"
-        to="net.PVCC"
-        schDisplayLabel="PVCC"
-      />
-      <trace
-        name="C13_PVSS"
-        from="C13.pin2"
-        to="net.PVSS"
-        schDisplayLabel="PVSS"
-      />
-      <trace
-        name="C5_RESET_SBWTDIO"
-        from="C5.pin1"
-        to="net.RESET_SBWTDIO"
-        schDisplayLabel="RESET_SBWTDIO"
-      />
+        {/* Repository-standard labels are carried by connected traces. */}
+        <trace
+          name="C3_AVCC"
+          from="C3.pin1"
+          to="net.AVCC"
+          schDisplayLabel="AVCC"
+        />
+        <trace
+          name="R7_DVCC"
+          from="R7.pin1"
+          to="net.DVCC"
+          schDisplayLabel="DVCC"
+        />
+        <trace
+          name="C16_PVCC"
+          from="C16.pin1"
+          to="net.PVCC"
+          schDisplayLabel="PVCC"
+        />
+        <trace
+          name="C13_PVSS"
+          from="C13.pin2"
+          to="net.PVSS"
+          schDisplayLabel="PVSS"
+        />
+        <trace
+          name="C5_RESET_SBWTDIO"
+          from="C5.pin1"
+          to="net.RESET_SBWTDIO"
+          schDisplayLabel="RESET_SBWTDIO"
+        />
+      </group>
     </schematicsheet>
 
     <port name="AVCC" direction="left" connectsTo="net.AVCC" />

@@ -86,6 +86,28 @@ const findSchematicCenter = (
   componentName: string,
 ) => findSchematicComponent(circuitJson, componentName).center;
 
+const findSchematicPortCenter = (
+  circuitJson: AnyCircuitElement[],
+  componentName: string,
+  pinNumber: number,
+) => {
+  const sourcePort = findSourcePort(circuitJson, componentName, pinNumber);
+  const schematicPort = circuitJson.find(
+    (element) =>
+      element.type === "schematic_port" &&
+      element.source_port_id === sourcePort.source_port_id,
+  );
+
+  assert(
+    schematicPort?.type === "schematic_port",
+    `Missing schematic port ${componentName}.pin${pinNumber}`,
+  );
+  return schematicPort.center;
+};
+
+const coordinateKey = ({ x, y }: { x: number; y: number }) =>
+  `${x.toFixed(9)},${y.toFixed(9)}`;
+
 const testPinMap = () => {
   assert(
     Object.keys(MSP430FR6007IPZ_PIN_LABELS).length === 100,
@@ -116,6 +138,44 @@ const testConnectivity = async () => {
           element.type === "source_trace" && element.name === traceName,
       ),
       `Missing on-trace net label ${traceName}`,
+    );
+  }
+
+  for (const traceName of [
+    "J3_PIN5_AVSS",
+    "J3_PIN6_LFXIN",
+    "J3_PIN7_LFXOUT",
+    "J3_PIN8_AVSS",
+    "J3_PIN9_HFXIN",
+    "J3_PIN10_HFXOUT",
+    "J3_PIN11_AVSS",
+    "J3_PIN16_BSL_TX",
+    "J3_PIN17_BSL_RX",
+    "J3_PIN20_TEST_SBWTCK",
+    "J3_PIN21_RESET_SBWTDIO",
+    "J3_PIN22_TDO",
+    "J3_PIN23_TDI",
+    "J3_PIN24_TMS",
+    "J3_PIN25_TCK",
+    "J4_PIN1_GND",
+    "J4_PIN2_DVCC",
+    "J5_PIN1_GND",
+    "J5_PIN2_DVCC",
+    "J5_PIN25_GND",
+    "J6_PIN1_DVCC",
+    "J6_PIN12_PVSS",
+    "J6_PIN13_PVCC",
+    "J6_PIN14_PVSS",
+    "J6_PIN21_AVSS",
+    "J6_PIN24_AVSS",
+    "J6_PIN25_AVCC",
+  ]) {
+    assert(
+      circuitJson.some(
+        (element) =>
+          element.type === "source_trace" && element.name === traceName,
+      ),
+      `Missing target-socket on-trace net name ${traceName}`,
     );
   }
 
@@ -167,6 +227,13 @@ const testConnectivity = async () => {
   assert(findSchematicCenter(circuitJson, "J5").x > icCenter.x, "J5 right");
   assert(findSchematicCenter(circuitJson, "J6").y > icCenter.y, "J6 above");
 
+  const socketCenters = Object.fromEntries(
+    ["J3", "J4", "J5", "J6"].map((name) => [
+      name,
+      findSchematicCenter(circuitJson, name),
+    ]),
+  );
+
   const netKey = (componentName: string, pinNumber: number) =>
     connectivityMap.getNetConnectedToId(
       findSourcePort(circuitJson, componentName, pinNumber).source_port_id,
@@ -191,12 +258,123 @@ const testConnectivity = async () => {
     }
   };
 
+  const connectorNames = ["J3", "J4", "J5", "J6"] as const;
+  const socketPortEndpointsByPosition = new Map<
+    string,
+    Array<{ componentName: string; pinNumber: number }>
+  >();
+
   for (let mcuPin = 1; mcuPin <= 100; mcuPin += 1) {
-    const connectorNames = ["J3", "J4", "J5", "J6"] as const;
     const connectorName = connectorNames[Math.floor((mcuPin - 1) / 25)];
     const connectorPin = ((mcuPin - 1) % 25) + 1;
     assertSameNet(["IC1", mcuPin], [connectorName, connectorPin]);
+
+    const mcuPortCenter = findSchematicPortCenter(circuitJson, "IC1", mcuPin);
+    const socketPortCenter = findSchematicPortCenter(
+      circuitJson,
+      connectorName,
+      connectorPin,
+    );
+    const socketCenter = socketCenters[connectorName];
+    assert(socketCenter, `Missing ${connectorName} center`);
+
+    for (const endpoint of [
+      { componentName: "IC1", pinNumber: mcuPin, center: mcuPortCenter },
+      {
+        componentName: connectorName,
+        pinNumber: connectorPin,
+        center: socketPortCenter,
+      },
+    ]) {
+      const key = coordinateKey(endpoint.center);
+      const endpointsAtPosition = socketPortEndpointsByPosition.get(key) ?? [];
+      endpointsAtPosition.push(endpoint);
+      socketPortEndpointsByPosition.set(key, endpointsAtPosition);
+    }
+
+    if (connectorName === "J3" || connectorName === "J5") {
+      assert(
+        Math.abs(socketPortCenter.y - mcuPortCenter.y) < 1e-9,
+        `${connectorName}.pin${connectorPin} is not aligned with IC1.pin${mcuPin}`,
+      );
+      assert(
+        Math.abs(socketPortCenter.x - icCenter.x) <
+          Math.abs(socketCenter.x - icCenter.x),
+        `${connectorName}.pin${connectorPin} faces away from IC1`,
+      );
+    } else {
+      assert(
+        Math.abs(socketPortCenter.x - mcuPortCenter.x) < 1e-9,
+        `${connectorName}.pin${connectorPin} is not aligned with IC1.pin${mcuPin}`,
+      );
+      assert(
+        Math.abs(socketPortCenter.y - icCenter.y) <
+          Math.abs(socketCenter.y - icCenter.y),
+        `${connectorName}.pin${connectorPin} faces away from IC1`,
+      );
+    }
   }
+
+  let directSocketTraceCount = 0;
+  for (const trace of circuitJson) {
+    if (
+      trace.type !== "schematic_trace" ||
+      trace.schematic_sheet_id !== socketSheet.schematic_sheet_id
+    ) {
+      continue;
+    }
+
+    const touchedEndpoints = new Map<
+      string,
+      { componentName: string; pinNumber: number }
+    >();
+    for (const edge of trace.edges) {
+      for (const point of [edge.from, edge.to]) {
+        for (const endpoint of socketPortEndpointsByPosition.get(
+          coordinateKey(point),
+        ) ?? []) {
+          touchedEndpoints.set(
+            `${endpoint.componentName}.pin${endpoint.pinNumber}`,
+            endpoint,
+          );
+        }
+      }
+    }
+
+    if (touchedEndpoints.size < 2) continue;
+    assert(
+      touchedEndpoints.size === 2,
+      `${trace.schematic_trace_id} joins more than one socket pair`,
+    );
+
+    const endpoints = [...touchedEndpoints.values()];
+    const mcuEndpoint = endpoints.find(
+      (endpoint) => endpoint.componentName === "IC1",
+    );
+    const connectorEndpoint = endpoints.find((endpoint) =>
+      connectorNames.includes(
+        endpoint.componentName as (typeof connectorNames)[number],
+      ),
+    );
+    assert(
+      mcuEndpoint && connectorEndpoint,
+      `${trace.schematic_trace_id} connects two pins on the same component`,
+    );
+
+    const expectedConnector =
+      connectorNames[Math.floor((mcuEndpoint.pinNumber - 1) / 25)];
+    const expectedConnectorPin = ((mcuEndpoint.pinNumber - 1) % 25) + 1;
+    assert(
+      connectorEndpoint.componentName === expectedConnector &&
+        connectorEndpoint.pinNumber === expectedConnectorPin,
+      `${trace.schematic_trace_id} does not preserve the IC1-to-socket pin map`,
+    );
+    directSocketTraceCount += 1;
+  }
+  assert(
+    directSocketTraceCount === 100,
+    `Expected 100 direct IC1-to-socket traces, got ${directSocketTraceCount}`,
+  );
 
   assertSameNet(["IC1", 100], ["C3", 1], ["C11", 1]);
   assertSameNet(["IC1", 88], ["C16", 1], ["C13", 1]);
