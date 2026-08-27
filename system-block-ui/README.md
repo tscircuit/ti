@@ -130,6 +130,11 @@ Diagram `schematic_graphic`. The SVG-only System Diagram overview is omitted
 from the KiCad and Altium archives because those native converters do not
 support `schematic_graphic`; all editable detail sheets are retained.
 
+The Consumer Wireless Module's seven packaged chips include exact copper pad
+geometry and LCSC supplier IDs imported from JLCPCB. Generic passives and other
+components still require an explicit package selection before their pads can be
+included.
+
 `circuit-json-to-altium` is temporarily pinned to the official repository's
 exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has
 not published its first npm release yet. The pin should become an exact npm
