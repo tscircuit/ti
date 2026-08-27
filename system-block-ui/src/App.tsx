@@ -311,7 +311,7 @@ export function App() {
         })),
       );
       notify(
-        `${rendered.sheets.length} schematic sheet${rendered.sheets.length === 1 ? "" : "s"} rendered with PCB and routing disabled.`,
+        `${rendered.sheets.length} schematic sheet${rendered.sheets.length === 1 ? "" : "s"} rendered with PCB components enabled; routing and DRC disabled.`,
         "success",
       );
     } catch (error) {

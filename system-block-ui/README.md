@@ -103,21 +103,23 @@ only the main TSX. The system diagram preserves the block positions from the
 editor and shows every Power and Data connection.
 
 Preview rendering runs the generated default export through `@tscircuit/eval`
-in a web worker with PCB generation, parts lookup, and PCB routing disabled.
-The resulting Circuit JSON is converted to schematic SVG and can be downloaded
-as a vector PDF or as editable KiCad and Altium project ZIPs. The project
-exporters run in lazy-loaded browser chunks and sanitize the project name before
-using it in archive entries.
+in a web worker with PCB generation enabled. Parts lookup, PCB routing, and all
+DRC phases (including placement checks) are disabled so evaluation still avoids
+the expensive physical-design work. The resulting footprint-bearing Circuit
+JSON is converted to schematic SVG and can be downloaded as a vector PDF or as
+editable KiCad and Altium project ZIPs. The project exporters run in lazy-loaded
+browser chunks and sanitize the project name before using it in archive entries.
 
 The PDF exporter embeds Liberation Sans, an open, Arial-compatible font, so
 Unicode symbols and schematic text measurements remain intact.
 
-Because this preview intentionally evaluates with PCB generation and routing
-disabled, the CAD ZIPs are schematic-first projects. Each converter includes
-its required empty/default PCB document; it is not a routed system-board layout.
-The SVG-only System Diagram overview is omitted from these archives because the
-native KiCad and Altium converters do not support `schematic_graphic`; all
-editable detail sheets are retained.
+The CAD ZIPs include PCB components and pad geometry for source components that
+specify a footprint. Components whose subcircuits have not selected a physical
+package are retained as footprint placeholders so schematic preview and export
+remain available. The board is neither placed nor routed. The SVG-only System
+Diagram overview is omitted from these archives because the native KiCad and
+Altium converters do not support `schematic_graphic`; all editable detail sheets
+are retained.
 
 `circuit-json-to-altium` is temporarily pinned to the official repository's
 exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has
