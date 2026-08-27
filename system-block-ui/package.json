@@ -20,6 +20,7 @@
     "@tscircuit/core": "0.0.1785",
     "@tscircuit/eval": "0.0.1294",
     "@tscircuit/props": "0.0.640",
+    "@tscircuit/ti": "github:tscircuit/ti#63f4f01cf28400c4ced9423d9058252485fb987d",
     "@xyflow/react": "12.11.5",
     "circuit-json": "0.0.479",
     "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#0dc762f2a8dc811ef4919d6f79a312c910bdcac0",
