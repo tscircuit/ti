@@ -9,7 +9,6 @@ const bidirectionalTvsSymbol = (
     <port
       name="pin2"
       pinNumber={2}
-      aliases={["cathode"]}
       schX={0}
       schY={1.2}
       direction="up"
@@ -17,10 +16,10 @@ const bidirectionalTvsSymbol = (
     />
     <schematicpath
       points={[
-        { x: -0.34, y: 0.52 },
-        { x: 0.34, y: 0.52 },
-        { x: 0, y: 0 },
-        { x: -0.34, y: 0.52 },
+        { x: -0.4, y: 0.4 },
+        { x: 0.4, y: 0.4 },
+        { x: 0, y: 0.04 },
+        { x: -0.4, y: 0.4 },
       ]}
       strokeWidth={0.025}
       strokeColor="#840000"
@@ -29,10 +28,10 @@ const bidirectionalTvsSymbol = (
     />
     <schematicpath
       points={[
-        { x: -0.34, y: -0.52 },
-        { x: 0.34, y: -0.52 },
-        { x: 0, y: 0 },
-        { x: -0.34, y: -0.52 },
+        { x: 0.4, y: -0.4 },
+        { x: 0, y: -0.04 },
+        { x: -0.4, y: -0.4 },
+        { x: 0.4, y: -0.4 },
       ]}
       strokeWidth={0.025}
       strokeColor="#840000"
@@ -41,18 +40,17 @@ const bidirectionalTvsSymbol = (
     />
     <schematicpath
       points={[
-        { x: -0.52, y: -0.3 },
-        { x: -0.3, y: 0 },
-        { x: 0, y: 0 },
+        { x: -0.4, y: -0.2 },
+        { x: -0.22, y: 0.04 },
+        { x: 0.28, y: 0.04 },
       ]}
       strokeWidth={0.035}
       strokeColor="#840000"
     />
     <schematicpath
       points={[
-        { x: 0, y: 0 },
-        { x: 0.3, y: 0 },
-        { x: 0.52, y: 0.3 },
+        { x: 0.22, y: -0.04 },
+        { x: 0.4, y: 0.2 },
       ]}
       strokeWidth={0.035}
       strokeColor="#840000"
@@ -60,7 +58,6 @@ const bidirectionalTvsSymbol = (
     <port
       name="pin1"
       pinNumber={1}
-      aliases={["anode"]}
       schX={0}
       schY={-1.2}
       direction="down"
@@ -74,6 +71,173 @@ const bidirectionalTvsSymbol = (
       anchor="left"
     />
   </symbol>
+);
+
+const singlePinTerminalSymbol = (facing: "left" | "right") => {
+  const terminalX = facing === "right" ? 0.65 : -0.65;
+  const bodyEdgeX = facing === "right" ? 0.3 : -0.3;
+
+  return (
+    <symbol>
+      <schematicrect
+        schX={0}
+        schY={0}
+        width={0.6}
+        height={0.6}
+        strokeWidth={0.02}
+        color="#840000"
+      />
+      <schematiccircle
+        center={{ x: 0, y: 0 }}
+        radius={0.19}
+        strokeWidth={0.02}
+        color="#840000"
+      />
+      <schematicline
+        x1={-0.13}
+        y1={0}
+        x2={0.13}
+        y2={0}
+        strokeWidth={0.02}
+        color="#840000"
+      />
+      <schematicline
+        x1={0}
+        y1={-0.13}
+        x2={0}
+        y2={0.13}
+        strokeWidth={0.02}
+        color="#840000"
+      />
+      <schematicline
+        x1={bodyEdgeX}
+        y1={0}
+        x2={terminalX}
+        y2={0}
+        strokeWidth={0.02}
+        color="#840000"
+      />
+      <port
+        name="pin1"
+        pinNumber={1}
+        schX={terminalX}
+        schY={0}
+        direction={facing}
+        schStemLength={0}
+      />
+      <schematictext
+        text="{NAME}"
+        schX={-0.28}
+        schY={0.37}
+        fontSize={0.18}
+        anchor="bottom_left"
+      />
+    </symbol>
+  );
+};
+
+const twoPinHeaderSymbol = (
+  <symbol>
+    <schematicrect
+      schX={0}
+      schY={0}
+      width={0.62}
+      height={0.72}
+      strokeWidth={0.02}
+      color="#840000"
+    />
+    <schematiccircle
+      center={{ x: 0, y: 0.18 }}
+      radius={0.08}
+      strokeWidth={0.02}
+      color="#840000"
+      isFilled
+      fillColor="#840000"
+    />
+    <schematicrect
+      schX={0}
+      schY={-0.18}
+      width={0.16}
+      height={0.16}
+      strokeWidth={0.02}
+      color="#840000"
+      isFilled
+      fillColor="#840000"
+    />
+    <schematicline
+      x1={0.31}
+      y1={0.18}
+      x2={0.65}
+      y2={0.18}
+      strokeWidth={0.02}
+      color="#840000"
+    />
+    <schematicline
+      x1={0.31}
+      y1={-0.18}
+      x2={0.65}
+      y2={-0.18}
+      strokeWidth={0.02}
+      color="#840000"
+    />
+    <port
+      name="pin1"
+      pinNumber={1}
+      schX={0.65}
+      schY={0.18}
+      direction="right"
+      schStemLength={0}
+    />
+    <port
+      name="pin2"
+      pinNumber={2}
+      schX={0.65}
+      schY={-0.18}
+      direction="right"
+      schStemLength={0}
+    />
+    <schematictext
+      text="{NAME}"
+      schX={-0.28}
+      schY={0.43}
+      fontSize={0.18}
+      anchor="bottom_left"
+    />
+  </symbol>
+);
+
+const terminalFootprint = () => (
+  <footprint insertionDirection="from_above">
+    <platedhole
+      portHints={["pin1"]}
+      pcbX="0mm"
+      pcbY="0mm"
+      shape="circle"
+      holeDiameter="3.6mm"
+      outerDiameter="5.1mm"
+    />
+  </footprint>
+);
+
+const twoPinHeaderFootprint = (
+  <footprint insertionDirection="from_above">
+    <platedhole
+      portHints={["pin1"]}
+      pcbX="0mm"
+      pcbY="1.27mm"
+      shape="circle"
+      holeDiameter="1mm"
+      outerDiameter="1.8mm"
+    />
+    <platedhole
+      portHints={["pin2"]}
+      pcbX="0mm"
+      pcbY="-1.27mm"
+      shape="circle"
+      holeDiameter="1mm"
+      outerDiameter="1.8mm"
+    />
+  </footprint>
 );
 
 /** TIDA-00992 automotive reverse-polarity protection reference schematic. */
@@ -316,6 +480,107 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     />
     <schematictext schX={3.38} schY={-2.98} text="60V" fontSize={0.22} />
 
+    <connector
+      name="J1"
+      pinCount={1}
+      manufacturerPartNumber="7693"
+      symbol={singlePinTerminalSymbol("right")}
+      footprint={terminalFootprint()}
+      schX={-8.85}
+      schY={4.1}
+      pcbX={-16.8}
+      pcbY={11}
+    />
+    <connector
+      name="J2"
+      pinCount={1}
+      manufacturerPartNumber="7693"
+      symbol={singlePinTerminalSymbol("left")}
+      footprint={terminalFootprint()}
+      schX={8.7}
+      schY={4.1}
+      pcbX={16.8}
+      pcbY={11}
+    />
+    <connector
+      name="J3"
+      pinCount={1}
+      manufacturerPartNumber="7693"
+      symbol={singlePinTerminalSymbol("right")}
+      footprint={terminalFootprint()}
+      schX={-8.85}
+      schY={0.5}
+      pcbX={-16.8}
+      pcbY={-11}
+    />
+    <connector
+      name="J4"
+      pinCount={1}
+      manufacturerPartNumber="7693"
+      symbol={singlePinTerminalSymbol("left")}
+      footprint={terminalFootprint()}
+      schX={8.7}
+      schY={0}
+      pcbX={16.8}
+      pcbY={-11}
+    />
+    <connector
+      name="J5"
+      pinCount={2}
+      manufacturerPartNumber="HTSW-102-07-G-S"
+      symbol={twoPinHeaderSymbol}
+      footprint={twoPinHeaderFootprint}
+      schX={-6.1}
+      schY={-3.15}
+      pcbX={-2.05}
+      pcbY={-5.81}
+    />
+
+    <testpoint
+      name="TP1"
+      manufacturerPartNumber="5000"
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="1.8mm"
+      schX={0.75}
+      schY={3.4}
+      pcbX={5.85}
+      pcbY={-5.81}
+    />
+    <testpoint
+      name="TP2"
+      manufacturerPartNumber="5000"
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="1.8mm"
+      schX={4.85}
+      schY={3.4}
+      pcbX={-7}
+      pcbY={4.5}
+    />
+    <testpoint
+      name="TP3"
+      manufacturerPartNumber="5004"
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="1.8mm"
+      schX={0.2}
+      schY={2.65}
+      pcbX={10.34}
+      pcbY={-0.68}
+    />
+    <testpoint
+      name="TP4"
+      manufacturerPartNumber="5004"
+      footprintVariant="through_hole"
+      holeDiameter="1mm"
+      padDiameter="1.8mm"
+      schX={-2.25}
+      schY={-2.65}
+      pcbX={-11}
+      pcbY={-4.57}
+    />
+
     <capacitor
       name="C1"
       capacitance="0.1uF"
@@ -478,9 +743,10 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     <trace
       name="VBATT_RAIL"
       path={[
+        ".J1 > .pin1",
         ".Q1 > .pin1",
         ".C1 > .pin1",
-        ".D1 > .cathode",
+        ".D1 > .pin2",
         ".U1 > .IN",
         ".D2 > .cathode",
         "net.VBATT",
@@ -490,6 +756,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     <trace
       name="V_OUT_RAIL"
       path={[
+        ".J2 > .pin1",
         ".Q1 > .pin5",
         ".U1 > .OUT",
         ".R1 > .pin2",
@@ -503,7 +770,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     <trace from=".C1 > .pin2" to=".C2 > .pin1" />
     <trace
       name="INPUT_GROUND"
-      path={[".C2 > .pin2", ".D1 > .anode", "net.GND"]}
+      path={[".J3 > .pin1", ".C2 > .pin2", ".D1 > .pin1", "net.GND"]}
       schDisplayLabel="GND"
     />
 
@@ -511,15 +778,28 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     <trace from=".U1 > .VS" to=".C3 > .pin1" routingPhaseIndex={0} />
     <trace from=".C3 > .pin1" to=".R1 > .pin1" maxLength="14mm" />
     <trace from=".U1 > .GATE" to=".Q1 > .pin4" />
+    <trace from=".TP1 > .pin1" to=".U1 > .VS" />
+    <trace from=".TP2 > .pin1" to=".U1 > .GATE" />
+    <trace from=".TP3 > .pin1" to=".U1 > .OFF" />
 
     {/* Switched controller-ground network. */}
     <trace path={[".D2 > .anode", ".U1 > .GND", ".D4 > .anode"]} />
     <trace from=".D4 > .cathode" to=".Q2 > .D" />
 
     {/* Functional enable input and Q2 gate clamp. */}
-    <trace from=".R3 > .pin1" to="net.ENABLE" schDisplayLabel="ENABLE" />
     <trace
-      path={[".R3 > .pin2", ".Q2 > .G", ".R4 > .pin1", ".D5 > .cathode"]}
+      path={[".J5 > .pin1", ".R3 > .pin1", "net.ENABLE"]}
+      schDisplayLabel="ENABLE"
+    />
+    <trace from=".J5 > .pin2" to="net.V_OUT" schDisplayLabel="V_OUT" />
+    <trace
+      path={[
+        ".TP4 > .pin1",
+        ".R3 > .pin2",
+        ".Q2 > .G",
+        ".R4 > .pin1",
+        ".D5 > .cathode",
+      ]}
     />
     <trace
       path={[
@@ -527,6 +807,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
         ".D5 > .anode",
         ".Q2 > .S",
         ".C4 > .pin2",
+        ".J4 > .pin1",
         "net.GND",
       ]}
       schDisplayLabel="GND"
