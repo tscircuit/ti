@@ -32,7 +32,7 @@ const TPS25910RSA_PIN_LABELS = {
 export const InputPowerProtection_TPS25910_TIDA00890 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled schMaxTraceDistance="2mm" {...props}>
     <chip
       name="U7"
       manufacturerPartNumber="TPS25910RSA"
@@ -63,23 +63,19 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
         bottomSide: { direction: "left-to-right", pins: ["PWPD"] },
       }}
       connections={{
-        EN_NOT: "net.ID_3220",
-        FLT_NOT: "net.FLT_INT",
-        OUT1: "net.MICRO_AB_VBUS_OUT",
-        OUT2: "net.MICRO_AB_VBUS_OUT",
-        OUT3: "net.MICRO_AB_VBUS_OUT",
-        GND1: "net.GND",
-        GND2: "net.GND",
+        OUT1: "U7.OUT2",
+        OUT2: "U7.OUT3",
+        GND1: "U7.GND2",
+        GND2: "U7.GND3",
         GND3: "net.GND",
-        GND4: "net.GND",
-        GND5: "net.GND",
-        GND6: "net.GND",
-        PWPD: "net.GND",
-        IN1: "net.V5_COM",
-        IN2: "net.V5_COM",
+        GND4: "U7.GND5",
+        GND5: "U7.GND6",
+        GND6: ["U7.PWPD", "net.GND"],
+        IN1: "U7.IN2",
+        IN2: "U7.IN3",
         IN3: "net.V5_COM",
-        GATE: "net.TPS25910_GATE1",
-        ILIM: "net.TPS25910_ILIM",
+        GATE: ["C11.pin1", "net.TPS25910_GATE1"],
+        ILIM: "R26.pin1",
       }}
     />
 
@@ -91,11 +87,11 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
-      schX={-2.65}
+      schX={-2.5}
       schY={0}
       connections={{
-        drain: "net.TYPEC_VBUS",
-        source: "net.MICRO_AB_VBUS_OUT",
+        drain: ["D6.cathode", "net.TYPEC_VBUS"],
+        source: ["U7.OUT3", "net.MICRO_AB_VBUS_OUT"],
         gate: "net.TPS25910_GATE1",
       }}
     />
@@ -103,70 +99,72 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <resistor
       name="R25"
       resistance="1Mohm"
-      schX={-6.1}
+      schX={-6.4}
       schY={0.4}
       schRotation={90}
-      connections={{ pin1: "net.TYPEC_VBUS", pin2: "net.GND" }}
+      connections={{ pin1: "D6.cathode", pin2: "D6.anode" }}
     />
     <diode
       name="D6"
       manufacturerPartNumber="ESD5Z6.0T1G"
       variant="zener"
-      schX={-5.35}
+      schX={-5.2}
       schY={0.4}
       schRotation={90}
-      connections={{ anode: "net.GND", cathode: "net.TYPEC_VBUS" }}
+      connections={{ anode: "net.GND" }}
     />
 
     <resistor
       name="R23"
       resistance="200kohm"
-      schX={0.6}
-      schY={3}
+      schX={0.55}
+      schY={1.65}
       schRotation={90}
-      connections={{ pin1: "net.V5_COM", pin2: "net.ID_3220" }}
+      connections={{ pin1: "U7.EN_NOT", pin2: "R24.pin2" }}
     />
     <resistor
       name="R24"
       resistance="10kohm"
-      schX={1.8}
-      schY={3}
+      schX={1.55}
+      schY={1.65}
       schRotation={90}
-      connections={{ pin1: "net.V5_COM", pin2: "net.FLT_INT" }}
+      connections={{ pin1: "U7.FLT_NOT", pin2: "net.V5_COM" }}
     />
     <resistor
       name="R34"
       resistance="0ohm"
       doNotPlace
-      schX={-0.6}
-      schY={1.15}
-      connections={{ pin1: "net.VCONN_FAULT_NOT", pin2: "net.FLT_INT" }}
+      schX={0.35}
+      schY={0.55}
+      connections={{
+        pin1: "net.VCONN_FAULT_NOT",
+        pin2: "R24.pin1",
+      }}
     />
-    <schematictext text="DNP" schX={-0.6} schY={1.65} fontSize={0.18} />
 
     <resistor
       name="R26"
       resistance="47kohm"
-      schX={5.4}
-      schY={-1.6}
+      schX={4.9}
+      schY={-1.65}
       schRotation={90}
-      connections={{ pin1: "net.TPS25910_ILIM", pin2: "net.GND" }}
+      connections={{ pin2: "C11.pin2" }}
     />
     <capacitor
       name="C11"
       capacitance="47nF"
-      schX={6.8}
-      schY={-1.6}
+      schX={6.15}
+      schY={-1.65}
       schOrientation="vertical"
-      connections={{ pin1: "net.TPS25910_GATE1", pin2: "net.GND" }}
+      connections={{ pin2: ["C10.pin2", "net.GND"] }}
     />
     <capacitor
       name="C10"
       capacitance="47uF"
-      schX={8.2}
-      schY={-1.6}
+      schX={7.4}
+      schY={-1.65}
       schOrientation="vertical"
-      connections={{ pin1: "net.V5_COM", pin2: "net.GND" }}
+      connections={{ pin1: "net.V5_COM" }}
     />
   </subcircuit>
 );
