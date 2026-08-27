@@ -11,7 +11,7 @@ import "tscircuit";
 export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit routingDisabled schMaxTraceDistance={2.6} {...props}>
     <net name="GND" isGroundNet />
     <resistor
       name="C5"
@@ -20,7 +20,7 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       schY={-0.2}
       connections={{ pin1: "net.RF_ANT1" }}
     />
-    <capacitor name="C13" capacitance="1pF" schX={0.4} schY={-0.2} />
+    <capacitor name="C13" capacitance="1pF" schX={0} schY={-0.2} />
 
     <inductor
       name="L2"
@@ -35,7 +35,7 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       name="L1"
       manufacturerPartNumber="LQP15MN1N3B02"
       inductance="1.3nH"
-      schX={1.4}
+      schX={1}
       schY={-0.95}
       schRotation={90}
     />
@@ -44,16 +44,16 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       name="C7"
       resistance="0ohm"
       doNotPlace
-      schX={-2.5}
+      schX={-3.75}
       schY={-0.75}
       schRotation={90}
     />
-    <schematictext text="NU" schX={-3.25} schY={-0.85} fontSize={0.18} />
+    <schematictext text="NU" schX={-4.5} schY={-0.85} fontSize={0.18} />
     <connector
       name="J5"
       pinCount={3}
       manufacturerPartNumber="U.FL-R-SMT-1(10)"
-      schX={-1.35}
+      schX={-2.65}
       schY={-2.3}
       schWidth={0.8}
       schHeight={0.75}
@@ -71,7 +71,7 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       pinLabels={{ pin1: "FEED", pin2: "NC" }}
       showPinAliases={false}
       noConnect={["NC"]}
-      schX={3}
+      schX={2.6}
       schY={-0.2}
       schWidth={1.2}
       schHeight={0.4}
@@ -85,26 +85,26 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       from=".C5 > .pin2"
       to=".C13 > .pin1"
       schematicRouteHints={[
-        { x: -2, y: 0 },
-        { x: -0.5, y: 0 },
+        { x: -2, y: -0.2 },
+        { x: -0.5, y: -0.2 },
       ]}
     />
-    <trace from=".C5 > .pin2" to=".C7 > .pin2" />
+    <trace from=".C5 > .pin1" to=".C7 > .pin2" />
     <trace
       from=".C5 > .pin2"
       to=".L2 > .pin2"
-      schematicRouteHints={[{ x: -0.6, y: 0 }]}
+      schematicRouteHints={[{ x: -0.6, y: -0.2 }]}
     />
     <trace from=".C13 > .pin2" to=".ANT1 > .FEED" />
     <trace
       from=".C13 > .pin2"
       to=".L1 > .pin2"
-      schematicRouteHints={[{ x: 1.4, y: 0 }]}
+      schematicRouteHints={[{ x: 1, y: 0 }]}
     />
     <trace
       from=".C7 > .pin1"
       to=".J5 > .pin1"
-      schematicRouteHints={[{ x: -2.5, y: -2.3 }]}
+      schematicRouteHints={[{ x: -3.75, y: -2.3 }]}
     />
     <netlabel
       net="GND"
@@ -116,7 +116,7 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
     <netlabel
       net="GND"
       connection="L1.pin1"
-      schX={1.4}
+      schX={1}
       schY={-2}
       anchorSide="top"
     />
@@ -124,14 +124,14 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       from=".J5 > .pin2"
       to=".J5 > .pin3"
       schematicRouteHints={[
-        { x: -2.05, y: -2.05 },
-        { x: -2.05, y: -2.55 },
+        { x: -3.45, y: -2.05 },
+        { x: -3.45, y: -2.55 },
       ]}
     />
     <netlabel
       net="GND"
       connection="J5.pin3"
-      schX={-2.05}
+      schX={-3.45}
       schY={-3.5}
       anchorSide="top"
     />
