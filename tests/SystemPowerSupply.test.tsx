@@ -138,6 +138,24 @@ function assertVerticalPin1BelowPin2(
   }
 }
 
+function assertVerticalPin1AbovePin2(
+  circuit: TestCircuit,
+  componentNames: string[],
+) {
+  for (const componentName of componentNames) {
+    const pin1 = getSchematicPort(circuit, { componentName, pin: "pin1" });
+    const pin2 = getSchematicPort(circuit, { componentName, pin: "pin2" });
+    assert.ok(
+      Math.abs(pin1.center.x - pin2.center.x) < 1e-9,
+      `${componentName} must remain vertical`,
+    );
+    assert.ok(
+      pin1.center.y > pin2.center.y,
+      `${componentName} must have the requested pin order`,
+    );
+  }
+}
+
 function assertHorizontalPin1RightOfPin2(
   circuit: TestCircuit,
   componentNames: string[],
@@ -753,13 +771,13 @@ test("TIDEP-0092 sequencer and VPP sections preserve control connectivity", asyn
   });
   assertVerticalPin1BelowPin2(sequencer, [
     "R138",
-    "R150",
     "R142",
     "R148",
     "R145",
     "R139",
     "R149",
   ]);
+  assertVerticalPin1AbovePin2(sequencer, ["R150"]);
 
   const vpp = await renderModule(SystemPowerVpp_TPS79601_TIDEP0092);
   assertComponentNames(vpp, [

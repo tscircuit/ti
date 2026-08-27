@@ -57,7 +57,7 @@ export const SystemPowerPmicSequencer_TIDEP0092 = (props: SubcircuitProps) => (
       manufacturerPartNumber="ERJ-2RKF4991X"
       schX={refX(270.254275)}
       schY={refY(651.115539)}
-      schRotation={VERTICAL_ROTATED_180_DEGREES}
+      schOrientation="vertical"
       schSectionName={PMIC_ENABLE_PULLUPS_SECTION_NAME}
     />
     <resistor
