@@ -57,9 +57,13 @@ describe("schematic PDF text normalization", () => {
   test("maps the SVG dominant baseline to the attribute svg2pdf reads", () => {
     const attributes = new Map([
       ["dominant-baseline", "central"],
+      ["font-size", "12px"],
       ["style", "font-size:12px"],
     ]);
     const textElement = {
+      classList: {
+        contains: (name: string) => name === "sch-net-label-text",
+      },
       getAttribute: (name: string) => attributes.get(name) ?? null,
       hasAttribute: (name: string) => attributes.has(name),
       setAttribute: (name: string, value: string) =>
@@ -73,6 +77,8 @@ describe("schematic PDF text normalization", () => {
 
     expect(attributes.get("alignment-baseline")).toBe("central");
     expect(attributes.get("font-family")).toBe("LiberationSans");
+    expect(attributes.get("font-size")).toBe("10.2px");
+    expect(attributes.get("dy")).toBe("0.08em");
     expect(attributes.get("style")).toContain("font-family:LiberationSans");
   });
 });
