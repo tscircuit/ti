@@ -10,16 +10,16 @@ const bidirectionalTvsSymbol = (
       name="pin2"
       pinNumber={2}
       schX={0}
-      schY={1.2}
+      schY={0.72}
       direction="up"
-      schStemLength={0.68}
+      schStemLength={0.36}
     />
     <schematicpath
       points={[
-        { x: -0.4, y: 0.4 },
-        { x: 0.4, y: 0.4 },
+        { x: -0.24, y: 0.24 },
+        { x: 0.24, y: 0.24 },
         { x: 0, y: 0.04 },
-        { x: -0.4, y: 0.4 },
+        { x: -0.24, y: 0.24 },
       ]}
       strokeWidth={0.025}
       strokeColor="#840000"
@@ -28,10 +28,10 @@ const bidirectionalTvsSymbol = (
     />
     <schematicpath
       points={[
-        { x: 0.4, y: -0.4 },
+        { x: 0.24, y: -0.24 },
         { x: 0, y: -0.04 },
-        { x: -0.4, y: -0.4 },
-        { x: 0.4, y: -0.4 },
+        { x: -0.24, y: -0.24 },
+        { x: 0.24, y: -0.24 },
       ]}
       strokeWidth={0.025}
       strokeColor="#840000"
@@ -40,17 +40,17 @@ const bidirectionalTvsSymbol = (
     />
     <schematicpath
       points={[
-        { x: -0.4, y: -0.2 },
-        { x: -0.22, y: 0.04 },
-        { x: 0.28, y: 0.04 },
+        { x: -0.24, y: -0.12 },
+        { x: -0.13, y: 0.04 },
+        { x: 0.17, y: 0.04 },
       ]}
       strokeWidth={0.035}
       strokeColor="#840000"
     />
     <schematicpath
       points={[
-        { x: 0.22, y: -0.04 },
-        { x: 0.4, y: 0.2 },
+        { x: 0.13, y: -0.04 },
+        { x: 0.24, y: 0.12 },
       ]}
       strokeWidth={0.035}
       strokeColor="#840000"
@@ -59,15 +59,15 @@ const bidirectionalTvsSymbol = (
       name="pin1"
       pinNumber={1}
       schX={0}
-      schY={-1.2}
+      schY={-0.72}
       direction="down"
-      schStemLength={0.68}
+      schStemLength={0.36}
     />
     <schematictext
       text="{NAME}"
       schX={0.12}
-      schY={-0.78}
-      fontSize={0.22}
+      schY={-0.5}
+      fontSize={0.18}
       anchor="left"
     />
   </symbol>
@@ -530,7 +530,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
       manufacturerPartNumber="HTSW-102-07-G-S"
       symbol={twoPinHeaderSymbol}
       footprint={twoPinHeaderFootprint}
-      schX={-6.1}
+      schX={-8}
       schY={-3.15}
       pcbX={-2.05}
       pcbY={-5.81}
@@ -538,6 +538,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
 
     <testpoint
       name="TP1"
+      symbolName="testpoint_up"
       manufacturerPartNumber="5000"
       footprintVariant="through_hole"
       holeDiameter="1mm"
@@ -549,6 +550,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     />
     <testpoint
       name="TP2"
+      symbolName="testpoint_up"
       manufacturerPartNumber="5000"
       footprintVariant="through_hole"
       holeDiameter="1mm"
@@ -560,6 +562,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     />
     <testpoint
       name="TP3"
+      symbolName="testpoint_up"
       manufacturerPartNumber="5004"
       footprintVariant="through_hole"
       holeDiameter="1mm"
@@ -571,6 +574,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     />
     <testpoint
       name="TP4"
+      symbolName="testpoint_up"
       manufacturerPartNumber="5004"
       footprintVariant="through_hole"
       holeDiameter="1mm"
@@ -638,7 +642,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
       footprint="smc"
       manufacturerPartNumber="1.5SMC33CA-E3/57T"
       schX={-5.55}
-      schY={2.25}
+      schY={1.93}
       pcbX={-9}
       pcbY={0}
       schOrientation="vertical"
@@ -649,10 +653,23 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
       footprint="sod323"
       manufacturerPartNumber="BAS 170W E6327"
       schX={-2.45}
-      schY={-0.05}
+      schY={0.25}
       pcbX={-8.5}
       pcbY={-4.5}
       schOrientation="neg_top"
+    />
+    <led
+      name="D3"
+      color="green"
+      schDisplayValue="Green"
+      footprint="0603"
+      manufacturerPartNumber="LNJ337W83RA"
+      schX={-0.33}
+      schY={-0.24}
+      pcbX={8}
+      pcbY={-4}
+      pcbRotation={90}
+      schOrientation="pos_top"
     />
     <diode
       name="D4"
@@ -715,7 +732,19 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
       schY={1.75}
       pcbX={8.8}
       pcbY={3}
-      schOrientation="vertical"
+      schRotation={90}
+    />
+    <resistor
+      name="R2"
+      resistance="10kohm"
+      footprint="0402"
+      manufacturerPartNumber="CRCW040210K0FKED"
+      schX={-0.88}
+      schY={0.97}
+      pcbX={10}
+      pcbY={-4}
+      pcbRotation={270}
+      schRotation={90}
     />
     <resistor
       name="R3"
@@ -736,82 +765,71 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
       schY={-3.6}
       pcbX={-5.5}
       pcbY={-8}
-      schOrientation="vertical"
+      schRotation={90}
     />
 
-    {/* Input and output rails exposed at the functional-block boundaries. */}
-    <trace
-      name="VBATT_RAIL"
-      path={[
-        ".J1 > .pin1",
-        ".Q1 > .pin1",
-        ".C1 > .pin1",
-        ".D1 > .pin2",
-        ".U1 > .IN",
-        ".D2 > .cathode",
-        "net.VBATT",
-      ]}
-      schDisplayLabel="VBATT"
+    <schematictext
+      schX={-8}
+      schY={-1.9}
+      text="Open = Diable LM5050-Q1"
+      fontSize={0.22}
+      anchor="center_left"
     />
-    <trace
-      name="V_OUT_RAIL"
-      path={[
-        ".J2 > .pin1",
-        ".Q1 > .pin5",
-        ".U1 > .OUT",
-        ".R1 > .pin2",
-        ".C4 > .pin1",
-        "net.V_OUT",
-      ]}
-      schDisplayLabel="V_OUT"
+    <schematictext
+      schX={-6.1}
+      schY={-2.18}
+      text="Close = Enable LM5050-Q1"
+      fontSize={0.22}
+      anchor="center_left"
     />
+
+    {/* Input and output rails from the reference schematic. */}
+    <trace from=".J1 > .pin1" to=".C1 > .pin1" />
+    <trace from=".C1 > .pin1" to=".D1 > .pin2" />
+    <trace from=".D1 > .pin2" to=".D2 > .cathode" />
+    <trace from=".D2 > .cathode" to=".R2 > .pin2" />
+    <trace from=".D2 > .cathode" to=".U1 > .IN" />
+    <trace from=".U1 > .IN" to=".Q1 > .pin1" />
+
+    <trace from=".Q1 > .pin5" to=".J2 > .pin1" />
+    <trace from=".Q1 > .pin5" to=".U1 > .OUT" />
+    <trace from=".U1 > .OUT" to=".R1 > .pin1" />
+    <trace from=".R1 > .pin1" to=".C4 > .pin1" />
+    <trace from=".C4 > .pin1" to="net.V_OUT" schDisplayLabel="V_OUT" />
 
     {/* Input transient protection and series capacitors. */}
-    <trace from=".C1 > .pin2" to=".C2 > .pin1" />
-    <trace
-      name="INPUT_GROUND"
-      path={[".J3 > .pin1", ".C2 > .pin2", ".D1 > .pin1", "net.GND"]}
-      schDisplayLabel="GND"
-    />
+    <trace from=".C1 > .pin2" to=".C2 > .pin2" />
+    <trace from=".J3 > .pin1" to=".C2 > .pin1" />
+    <trace from=".C2 > .pin1" to=".D1 > .pin1" />
+    <trace from=".D1 > .pin1" to="net.GND" schDisplayLabel="GND" />
 
     {/* VS bypass and MOSFET gate drive. */}
     <trace from=".U1 > .VS" to=".C3 > .pin1" routingPhaseIndex={0} />
-    <trace from=".C3 > .pin1" to=".R1 > .pin1" maxLength="14mm" />
+    <trace from=".C3 > .pin1" to=".R1 > .pin2" maxLength="14mm" />
     <trace from=".U1 > .GATE" to=".Q1 > .pin4" />
     <trace from=".TP1 > .pin1" to=".U1 > .VS" />
     <trace from=".TP2 > .pin1" to=".U1 > .GATE" />
     <trace from=".TP3 > .pin1" to=".U1 > .OFF" />
 
     {/* Switched controller-ground network. */}
-    <trace path={[".D2 > .anode", ".U1 > .GND", ".D4 > .anode"]} />
+    <trace from=".R2 > .pin1" to=".D3 > .anode" />
+    <trace from=".D2 > .anode" to=".D3 > .cathode" />
+    <trace from=".D3 > .cathode" to=".U1 > .GND" />
+    <trace from=".U1 > .GND" to=".D4 > .anode" />
     <trace from=".D4 > .cathode" to=".Q2 > .D" />
 
     {/* Functional enable input and Q2 gate clamp. */}
-    <trace
-      path={[".J5 > .pin1", ".R3 > .pin1", "net.ENABLE"]}
-      schDisplayLabel="ENABLE"
-    />
+    <trace from=".J5 > .pin1" to=".R3 > .pin1" />
     <trace from=".J5 > .pin2" to="net.V_OUT" schDisplayLabel="V_OUT" />
-    <trace
-      path={[
-        ".TP4 > .pin1",
-        ".R3 > .pin2",
-        ".Q2 > .G",
-        ".R4 > .pin1",
-        ".D5 > .cathode",
-      ]}
-    />
-    <trace
-      path={[
-        ".R4 > .pin2",
-        ".D5 > .anode",
-        ".Q2 > .S",
-        ".C4 > .pin2",
-        ".J4 > .pin1",
-        "net.GND",
-      ]}
-      schDisplayLabel="GND"
-    />
+    <trace from=".TP4 > .pin1" to=".R3 > .pin2" />
+    <trace from=".R3 > .pin2" to=".Q2 > .G" />
+    <trace from=".Q2 > .G" to=".R4 > .pin2" />
+    <trace from=".Q2 > .G" to=".D5 > .cathode" />
+    <trace from=".R4 > .pin1" to=".D5 > .anode" />
+    <trace from=".D5 > .anode" to=".Q2 > .S" />
+    <trace from=".Q2 > .S" to=".C4 > .pin2" />
+    <trace from=".C4 > .pin2" to=".J4 > .pin1" />
+    <trace from=".C4 > .pin2" to="net.GND" schDisplayLabel="GND" />
     <trace
       from=".C3 > .pin2"
       to="net.GND"
