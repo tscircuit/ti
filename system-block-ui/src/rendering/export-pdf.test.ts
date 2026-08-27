@@ -1,6 +1,25 @@
 import { describe, expect, test } from "bun:test";
 
-import { calculateSchematicPdfPageLayout } from "./export-pdf";
+import {
+  calculateSchematicPdfPageLayout,
+  copyDominantBaselinesForSvg2Pdf,
+} from "./export-pdf";
+
+const baselineElement = (
+  initialAttributes: Readonly<Record<string, string>>,
+) => {
+  const attributes = new Map(Object.entries(initialAttributes));
+  return {
+    attributes,
+    element: {
+      getAttribute: (name: string) => attributes.get(name) ?? null,
+      hasAttribute: (name: string) => attributes.has(name),
+      setAttribute: (name: string, value: string) => {
+        attributes.set(name, value);
+      },
+    },
+  };
+};
 
 describe("schematic PDF page layout", () => {
   test("stretches a schematic over an entire A4 landscape page", () => {
@@ -35,5 +54,29 @@ describe("schematic PDF page layout", () => {
         pageHeightMm: Number.NaN,
       }),
     ).toThrow("pageHeightMm must be a positive finite number");
+  });
+});
+
+describe("SVG text baseline compatibility", () => {
+  test("copies dominant-baseline for svg2pdf without overriding explicit alignment", () => {
+    const centered = baselineElement({ "dominant-baseline": "central" });
+    const explicitlyAligned = baselineElement({
+      "dominant-baseline": "central",
+      "alignment-baseline": "hanging",
+    });
+
+    copyDominantBaselinesForSvg2Pdf([
+      centered.element,
+      explicitlyAligned.element,
+    ]);
+
+    expect(Object.fromEntries(centered.attributes)).toEqual({
+      "dominant-baseline": "central",
+      "alignment-baseline": "central",
+    });
+    expect(Object.fromEntries(explicitlyAligned.attributes)).toEqual({
+      "dominant-baseline": "central",
+      "alignment-baseline": "hanging",
+    });
   });
 });

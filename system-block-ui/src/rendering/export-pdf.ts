@@ -49,6 +49,23 @@ interface PreparedSheet {
   element: Element;
 }
 
+type SvgTextBaselineElement = Pick<
+  Element,
+  "getAttribute" | "hasAttribute" | "setAttribute"
+>;
+
+export const copyDominantBaselinesForSvg2Pdf = (
+  elements: Iterable<SvgTextBaselineElement>,
+): void => {
+  for (const element of elements) {
+    if (element.hasAttribute("alignment-baseline")) continue;
+    const dominantBaseline = element.getAttribute("dominant-baseline");
+    if (dominantBaseline) {
+      element.setAttribute("alignment-baseline", dominantBaseline);
+    }
+  }
+};
+
 const parseSvg = (svg: string): Element => {
   if (typeof DOMParser === "undefined") {
     throw new Error("PDF export requires a browser DOMParser");
@@ -175,6 +192,7 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
       throw new TypeError(`Schematic sheet ${index + 1} has no SVG content`);
     }
     const element = parseSvg(sheet.svg);
+    copyDominantBaselinesForSvg2Pdf(element.querySelectorAll("text, tspan"));
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
     return { element };
