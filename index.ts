@@ -22,6 +22,7 @@ import {
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
   ISOW7841,
   LM25122Q1,
   LM53603Q1,
@@ -37,6 +38,7 @@ import {
   MSPM33C3x,
   MSPM0G3507,
   OPT3001,
+  PGA300ARHHR,
   SN65HVD1473,
   SQ4850EY,
   TAS2505,
@@ -85,6 +87,8 @@ import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
+import { InstrumentationAmplifier_INA350 } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
+import { PressureTransmitter_PGA300 } from "./lib/subcircuits/PressureTransmitter_PGA300.circuit.tsx";
 import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
 import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.circuit.tsx";
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
@@ -129,10 +133,13 @@ import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/Com
 import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
 import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
+import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/TemperatureSensor_TMP103_TIDA00399.circuit.tsx";
+import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
+export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
   BatteryManagement_BQ24072,
@@ -153,6 +160,8 @@ export {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  InstrumentationAmplifier_INA350,
+  PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,
@@ -195,6 +204,8 @@ export {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
+  TemperatureSensor_TMP103_TIDA00399,
+  LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
 };
@@ -223,6 +234,7 @@ export const TiChipComponents = {
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
   ISOW7841,
   LM25122Q1,
   LM53603Q1,
@@ -238,6 +250,7 @@ export const TiChipComponents = {
   MSPM33C3x,
   MSPM0G3507,
   OPT3001,
+  PGA300ARHHR,
   SN65HVD1473,
   SQ4850EY,
   TAS2505,
@@ -288,6 +301,8 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  InstrumentationAmplifier_INA350,
+  PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,
@@ -329,6 +344,8 @@ export const TiSubcircuitComponents = {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
+  TemperatureSensor_TMP103_TIDA00399,
+  LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
 } as const;
