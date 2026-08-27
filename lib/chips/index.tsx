@@ -20,6 +20,7 @@ export { HDC2080 } from "./HDC2080.circuit.tsx";
 export { HDC3020 } from "./HDC3020.circuit.tsx";
 export { HDC3022 } from "./HDC3022.circuit.tsx";
 export { INA237 } from "./INA237.circuit.tsx";
+export { INA350 } from "./INA350.circuit.tsx";
 export { ISOW7841 } from "./ISOW7841.circuit.tsx";
 export {
   LM74202Q1,
@@ -81,6 +82,8 @@ export { HDC3020DEFR } from "./HDC3020DEFR.circuit.tsx";
 export { HDC3022DEJR } from "./HDC3022DEJR.circuit.tsx";
 export { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1.circuit.tsx";
 export { INA240A1QDRQ1 } from "./INA240A1QDRQ1.circuit.tsx";
+export { INA350ABSIDSGR } from "./INA350ABSIDSGR.circuit.tsx";
+export { INA350CDSIDSGR } from "./INA350CDSIDSGR.circuit.tsx";
 export { ISOW7841DWR } from "./ISOW7841DWR.circuit.tsx";
 export { LMV7275IDCKRQ1 } from "./LMV7275IDCKRQ1.circuit.tsx";
 export {
