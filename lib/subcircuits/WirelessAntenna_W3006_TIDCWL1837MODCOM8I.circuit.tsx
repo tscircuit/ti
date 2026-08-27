@@ -49,20 +49,18 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       schRotation={90}
     />
     <schematictext text="NU" schX={-3.25} schY={-0.85} fontSize={0.18} />
-    <chip
+    <connector
       name="J5"
+      pinCount={3}
       manufacturerPartNumber="U.FL-R-SMT-1(10)"
-      pinLabels={{ pin1: "RF", pin2: "GND1", pin3: "GND2" }}
-      showPinAliases={false}
-      schX={-2.5}
+      schX={-1.35}
       schY={-2.3}
-      schWidth={0.4}
-      schHeight={0.8}
+      schWidth={0.8}
+      schHeight={0.75}
       schPinArrangement={{
-        topSide: { direction: "left-to-right", pins: ["RF"] },
-        bottomSide: {
-          direction: "left-to-right",
-          pins: ["GND1", "GND2"],
+        leftSide: {
+          direction: "top-to-bottom",
+          pins: ["pin2", "pin1", "pin3"],
         },
       }}
     />
@@ -103,7 +101,11 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       to=".L1 > .pin2"
       schematicRouteHints={[{ x: 1.4, y: 0 }]}
     />
-    <trace from=".C7 > .pin1" to=".J5 > .RF" />
+    <trace
+      from=".C7 > .pin1"
+      to=".J5 > .pin1"
+      schematicRouteHints={[{ x: -2.5, y: -2.3 }]}
+    />
     <netlabel
       net="GND"
       connection="L2.pin1"
@@ -118,11 +120,18 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       schY={-2}
       anchorSide="top"
     />
-    <trace from=".J5 > .GND1" to=".J5 > .GND2" />
+    <trace
+      from=".J5 > .pin2"
+      to=".J5 > .pin3"
+      schematicRouteHints={[
+        { x: -2.05, y: -2.05 },
+        { x: -2.05, y: -2.55 },
+      ]}
+    />
     <netlabel
       net="GND"
-      connection="J5.GND2"
-      schX={-2.35}
+      connection="J5.pin3"
+      schX={-2.05}
       schY={-3.5}
       anchorSide="top"
     />
