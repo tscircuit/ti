@@ -81,7 +81,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       resistance="1Mohm"
       schX={-6.2}
       schY={0.87}
-      schRotation={90}
+      schRotation={270}
     />
     <diode
       name="D6"
@@ -111,21 +111,21 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <resistor
       name="R26"
       resistance="47kohm"
-      schX={5.05}
+      schX={5.45}
       schY={-0.97}
       schRotation={270}
     />
     <capacitor
       name="C11"
       capacitance="47nF"
-      schX={6.1}
+      schX={6.45}
       schY={-0.17}
       schOrientation="vertical"
     />
     <capacitor
       name="C10"
       capacitance="47uF"
-      schX={7.1}
+      schX={7.75}
       schY={0.4}
       schOrientation="vertical"
     />
@@ -197,7 +197,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <netlabel
       net="GND"
       connectsTo="R26.pin2"
-      schX={5.05}
+      schX={5.45}
       schY={-1.65}
       anchorSide="top"
     />
