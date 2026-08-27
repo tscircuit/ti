@@ -14,13 +14,13 @@ const TMP103_PIN_LABELS = {
  * @see https://www.ti.com/tool/TIDA-00399
  */
 export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <chip
       name="UTMP"
       manufacturerPartNumber="TMP103AYFF"
       pinLabels={TMP103_PIN_LABELS}
       showPinAliases={false}
-      schX={0}
+      schX={1.2}
       schY={0}
       schWidth={1.4}
       schHeight={0.6}
@@ -29,9 +29,6 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
         rightSide: { direction: "top-to-bottom", pins: ["V_PLUS", "GND"] },
       }}
       connections={{
-        SCL: "net.SCL",
-        SDA: "net.SDA",
-        V_PLUS: "net.USB2ANY_3V3",
         GND: "net.GND",
       }}
     />
@@ -43,19 +40,22 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
       schX={-1.4}
       schY={2}
       schRotation={90}
-      connections={{ pin1: "net.SCL", pin2: "net.USB2ANY_3V3" }}
+      connections={{ pin1: "UTMP.SCL", pin2: "RPU2.pin2" }}
     />
     <resistor
       name="RPU2"
       resistance="10kohm"
       doNotPlace
-      schX={1.4}
+      schX={-0.2}
       schY={2}
       schRotation={90}
-      connections={{ pin1: "net.SDA", pin2: "net.USB2ANY_3V3" }}
+      connections={{
+        pin1: "UTMP.SDA",
+        pin2: ["UTMP.V_PLUS", "net.USB2ANY_3V3"],
+      }}
     />
     <schematictext text="DNP" schX={-2.15} schY={2} fontSize={0.2} />
-    <schematictext text="DNP" schX={2.15} schY={2} fontSize={0.2} />
+    <schematictext text="DNP" schX={0.55} schY={2} fontSize={0.2} />
   </subcircuit>
 );
 
