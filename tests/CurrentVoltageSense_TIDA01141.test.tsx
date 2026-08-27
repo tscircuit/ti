@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
-import { TIDA01141_CurrentVoltageSense } from "../index.ts";
+import { CurrentVoltageSense_TIDA01141 } from "../index.ts";
 
 type TestCircuit = InstanceType<typeof Circuit>;
 
@@ -74,7 +74,7 @@ test("TIDA-01141 matches the TI current and voltage sensing sheet", async () => 
   circuit.pcbDisabled = true;
   circuit.add(
     <board width={30} height={25}>
-      <TIDA01141_CurrentVoltageSense name="S1" />
+      <CurrentVoltageSense_TIDA01141 name="S1" />
     </board>,
   );
   await circuit.renderUntilSettled();

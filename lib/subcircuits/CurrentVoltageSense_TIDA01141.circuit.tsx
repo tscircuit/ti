@@ -1,23 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 
-type GroundProps = {
-  from: string;
-  schX: number;
-  schY: number;
-  anchorSide?: "left" | "top" | "right" | "bottom";
-};
-
-const Ground = ({ from, schX, schY, anchorSide = "top" }: GroundProps) => (
-  <netlabel
-    net="SGND"
-    connectsTo={from}
-    schX={schX}
-    schY={schY}
-    anchorSide={anchorSide}
-  />
-);
-
 /**
  * TIDA-01141 bi-directional high-side current and voltage sensing circuit.
  * Component values and connectivity follow TI's native Altium design and the
@@ -26,12 +9,8 @@ const Ground = ({ from, schX, schY, anchorSide = "top" }: GroundProps) => (
  * independent nets remain visually distinct without manual trace hints.
  * @see https://www.ti.com/lit/pdf/TIDRP25
  */
-export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
-  <subcircuit
-    {...props}
-    schMaxTraceDistance="4mm"
-    schTraceAutoLabelEnabled={false}
-  >
+export const CurrentVoltageSense_TIDA01141 = (props: SubcircuitProps) => (
+  <subcircuit {...props} schMaxTraceDistance="4mm">
     <net name="SGND" isGroundNet />
     <net name="LV_AUX_3_3V" isPowerNet />
     <net name="IBAT_HS_POS" />
@@ -50,6 +29,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-12.7}
       schY={1.3}
       schRotation={-90}
+      connections={{ pin1: "net.LV_AUX_3_3V", pin2: "net.SGND" }}
     />
     <capacitor
       name="C5"
@@ -58,6 +38,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-11.5}
       schY={1.3}
       schRotation={-90}
+      connections={{ pin1: "net.LV_AUX_3_3V", pin2: "net.SGND" }}
     />
     <resistor
       name="R7"
@@ -65,7 +46,10 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       footprint="0603"
       schX={-8}
       schY={2}
-      connections={{ pin2: ["C7.pin1", "U1.pin2"] }}
+      connections={{
+        pin1: "net.IBAT_HS_POS",
+        pin2: ["C7.pin1", "U1.pin2"],
+      }}
     />
     <resistor
       name="R9"
@@ -73,7 +57,10 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       footprint="0603"
       schX={-8}
       schY={1.1}
-      connections={{ pin2: ["C7.pin2", "U1.pin3"] }}
+      connections={{
+        pin1: "net.IBAT_HS_NEG",
+        pin2: ["C7.pin2", "U1.pin3"],
+      }}
     />
     <capacitor
       name="C7"
@@ -113,6 +100,14 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
         pin1: { marginTop: 0.75 },
         pin4: { marginTop: 0.3 },
       }}
+      connections={{
+        pin1: "net.SGND",
+        pin4: "net.SGND",
+        pin5: "net.LV_AUX_3_3V",
+        pin6: "net.VREF",
+        pin7: "net.VREF",
+        pin8: "net.IBAT_HS",
+      }}
     />
     <capacitor
       name="C9"
@@ -121,51 +116,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-7}
       schY={0.2}
       schRotation={-90}
-    />
-
-    <netlabel
-      net="LV_AUX_3_3V"
-      connectsTo={["C6.pin1", "C5.pin1", "U1.pin5"]}
-      schX={-12.1}
-      schY={2.45}
-      anchorSide="bottom"
-    />
-    <trace from="C6.pin2" to="C5.pin2" />
-    <Ground from="C6.pin2" schX={-12.1} schY={0} />
-
-    <netlabel
-      net="IBAT_HS_POS"
-      connectsTo="R7.pin1"
-      schX={-8.8}
-      schY={2}
-      anchorSide="right"
-    />
-    <netlabel
-      net="IBAT_HS_NEG"
-      connectsTo="R9.pin1"
-      schX={-8.8}
-      schY={1.1}
-      anchorSide="right"
-    />
-
-    <trace path={["C9.pin1", "U1.pin6", "U1.pin7"]} />
-    <netlabel
-      net="VREF"
-      connectsTo="C9.pin1"
-      schX={-7.7}
-      schY={0.5}
-      anchorSide="right"
-    />
-    <Ground from="C9.pin2" schX={-7} schY={-0.75} />
-
-    <trace from="U1.pin1" to="U1.pin4" />
-    <Ground from="U1.pin4" schX={-2.6} schY={-0.25} />
-    <netlabel
-      net="IBAT_HS"
-      connectsTo="U1.pin8"
-      schX={-1.75}
-      schY={2}
-      anchorSide="left"
+      connections={{ pin1: "net.VREF", pin2: "net.SGND" }}
     />
 
     {/* LM393 current-window comparator */}
@@ -176,6 +127,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-0.1}
       schY={1.3}
       connections={{
+        pin1: "net.IBAT_HS",
         pin2: ["C8.pin1", "R10.pin1", "R11.pin2", "U2B.pin2"],
       }}
     />
@@ -186,6 +138,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={1.15}
       schY={1}
       schRotation={-90}
+      connections={{ pin2: "net.SGND" }}
     />
     <resistor
       name="R10"
@@ -194,6 +147,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={2.05}
       schY={1}
       schRotation={-90}
+      connections={{ pin2: "net.SGND" }}
     />
     <resistor
       name="R11"
@@ -246,7 +200,10 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={2.4}
       schY={2.56}
       schRotation={-90}
-      connections={{ pin1: "U2A.pin2" }}
+      connections={{
+        pin1: ["U2A.pin2", "net.LTV"],
+        pin2: "net.SGND",
+      }}
     />
     <resistor
       name="R12"
@@ -261,37 +218,11 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       footprint="0603"
       schX={7}
       schY={4.55}
-    />
-
-    <netlabel
-      net="IBAT_HS"
-      connectsTo="R5.pin1"
-      schX={-1}
-      schY={1.3}
-      anchorSide="right"
-    />
-    <trace from="C8.pin2" to="R10.pin2" />
-    <Ground from="C8.pin2" schX={0.75} schY={0.05} />
-
-    <Ground from="C3.pin2" schX={2.4} schY={2.1} />
-    <netlabel
-      net="LTV"
-      connectsTo="C3.pin1"
-      schX={1.7}
-      schY={2.86}
-      anchorSide="right"
+      connections={{ pin1: "net.LV_AUX_3_3V", pin2: "net.SGND" }}
     />
     <trace from="R12.pin2" to="U2A.pin4" />
-
-    <netlabel
-      net="LV_AUX_3_3V"
-      connectsTo={["U2A.pin5", "C1.pin1"]}
-      schX={4.8}
-      schY={4.55}
-      anchorSide="bottom"
-    />
-    <Ground from="C1.pin2" schX={7.8} schY={4.25} />
-    <Ground from="U2A.pin3" schX={4.8} schY={1.95} />
+    <trace from="U2A.pin5" to="net.LV_AUX_3_3V" />
+    <trace from="U2A.pin3" to="net.SGND" />
 
     <schematicsymbol
       name="U2B"
@@ -315,6 +246,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={2.4}
       schY={-0.55}
       schRotation={-90}
+      connections={{ pin1: "net.HTV", pin2: "net.SGND" }}
     />
     <resistor
       name="R13"
@@ -323,6 +255,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={3.5}
       schY={0.15}
       connections={{
+        pin1: "net.HTV",
         pin2: ["U2B.pin1", "R14.pin1"],
       }}
     />
@@ -339,27 +272,11 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       footprint="0603"
       schX={7}
       schY={1.8}
+      connections={{ pin1: "net.LV_AUX_3_3V", pin2: "net.SGND" }}
     />
-
-    <netlabel
-      net="HTV"
-      connectsTo={["C10.pin1", "R13.pin1"]}
-      schX={1.7}
-      schY={0.15}
-      anchorSide="right"
-    />
-    <Ground from="C10.pin2" schX={2.4} schY={-1.2} />
     <trace from="R14.pin2" to="U2B.pin4" />
-
-    <netlabel
-      net="LV_AUX_3_3V"
-      connectsTo={["U2B.pin5", "C4.pin1"]}
-      schX={4.8}
-      schY={1.8}
-      anchorSide="bottom"
-    />
-    <Ground from="C4.pin2" schX={7.8} schY={2.15} />
-    <Ground from="U2B.pin3" schX={4.8} schY={-1.4} />
+    <trace from="U2B.pin5" to="net.LV_AUX_3_3V" />
+    <trace from="U2B.pin3" to="net.SGND" />
 
     <resistor
       name="R15"
@@ -368,21 +285,13 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={8.5}
       schY={2.7}
       schRotation={-90}
+      connections={{
+        pin1: "net.LV_AUX_3_3V",
+        pin2: "net.IBAT_ALERT",
+      }}
     />
-    <netlabel
-      net="LV_AUX_3_3V"
-      connectsTo="R15.pin1"
-      schX={8.5}
-      schY={3.35}
-      anchorSide="bottom"
-    />
-    <netlabel
-      net="IBAT_ALERT"
-      connectsTo={["U2A.pin4", "U2B.pin4", "R15.pin2"]}
-      schX={9.8}
-      schY={1.3}
-      anchorSide="left"
-    />
+    <trace from="U2A.pin4" to="net.IBAT_ALERT" />
+    <trace from="U2B.pin4" to="net.IBAT_ALERT" />
 
     {/* Precision reference and voltage thresholds */}
     <resistor
@@ -392,6 +301,10 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-3.8}
       schY={-3.5}
       schRotation={-90}
+      connections={{
+        pin1: "net.LV_AUX_3_3V",
+        pin2: ["U3_SYMBOL.pin2", "net.VREF"],
+      }}
     />
     <chip
       name="U3"
@@ -412,22 +325,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
         pin2: ".U3 > .pin1",
       }}
     />
-    <netlabel
-      net="LV_AUX_3_3V"
-      connectsTo="R1.pin1"
-      schX={-3.8}
-      schY={-2.75}
-      anchorSide="bottom"
-    />
-    <trace from="R1.pin2" to="U3_SYMBOL.pin2" />
-    <netlabel
-      net="VREF"
-      connectsTo="R1.pin2"
-      schX={-3.1}
-      schY={-4.45}
-      anchorSide="left"
-    />
-    <Ground from="U3_SYMBOL.pin1" schX={-3.8} schY={-6.1} />
+    <trace from="U3_SYMBOL.pin1" to="net.SGND" />
 
     <resistor
       name="R2"
@@ -436,6 +334,10 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-0.6}
       schY={-3.5}
       schRotation={-90}
+      connections={{
+        pin1: "net.LV_AUX_3_3V",
+        pin2: ["R3.pin1", "net.HTV"],
+      }}
     />
     <resistor
       name="R3"
@@ -444,6 +346,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-0.6}
       schY={-4.8}
       schRotation={-90}
+      connections={{ pin2: ["R4.pin1", "net.LTV"] }}
     />
     <resistor
       name="R4"
@@ -452,31 +355,8 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={-0.6}
       schY={-6.1}
       schRotation={-90}
+      connections={{ pin2: "net.SGND" }}
     />
-    <netlabel
-      net="LV_AUX_3_3V"
-      connectsTo="R2.pin1"
-      schX={-0.6}
-      schY={-2.75}
-      anchorSide="bottom"
-    />
-    <trace from="R2.pin2" to="R3.pin1" />
-    <netlabel
-      net="HTV"
-      connectsTo="R2.pin2"
-      schX={0.2}
-      schY={-4.15}
-      anchorSide="left"
-    />
-    <trace from="R3.pin2" to="R4.pin1" />
-    <netlabel
-      net="LTV"
-      connectsTo="R3.pin2"
-      schX={0.2}
-      schY={-5.45}
-      anchorSide="left"
-    />
-    <Ground from="R4.pin2" schX={-0.6} schY={-7.2} />
 
     {/* Six-pin interface connector, matching TIDA-01141 sheet 2 */}
     <pinheader
@@ -487,44 +367,16 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={5.25}
       schY={-5.45}
       schFacingDirection="left"
-    />
-    <Ground from="J1.pin1" schX={3.45} schY={-4.95} anchorSide="right" />
-    <netlabel
-      net="IBAT_HS_POS"
-      connectsTo="J1.pin2"
-      schX={3.75}
-      schY={-5.15}
-      anchorSide="right"
-    />
-    <netlabel
-      net="IBAT_HS_NEG"
-      connectsTo="J1.pin3"
-      schX={3.75}
-      schY={-5.35}
-      anchorSide="right"
-    />
-    <netlabel
-      net="LV_AUX_3_3V"
-      connectsTo="J1.pin4"
-      schX={3.75}
-      schY={-5.55}
-      anchorSide="right"
-    />
-    <netlabel
-      net="IBAT_HS"
-      connectsTo="J1.pin5"
-      schX={3.75}
-      schY={-5.75}
-      anchorSide="right"
-    />
-    <netlabel
-      net="IBAT_ALERT"
-      connectsTo="J1.pin6"
-      schX={3.75}
-      schY={-5.95}
-      anchorSide="right"
+      connections={{
+        pin1: "net.SGND",
+        pin2: "net.IBAT_HS_POS",
+        pin3: "net.IBAT_HS_NEG",
+        pin4: "net.LV_AUX_3_3V",
+        pin5: "net.IBAT_HS",
+        pin6: "net.IBAT_ALERT",
+      }}
     />
   </subcircuit>
 );
 
-export default TIDA01141_CurrentVoltageSense;
+export default CurrentVoltageSense_TIDA01141;

@@ -237,7 +237,7 @@ The package currently exports these subcircuit components:
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
-- `TIDA01141_CurrentVoltageSense` — TIDA-01141 isolated current and voltage sensing reproduced from TI's native TIDRP25 schematic
+- `CurrentVoltageSense_TIDA01141` — TIDA-01141 isolated current and voltage sensing reproduced from TI's native TIDRP25 schematic
 
 ## Exported Chips
 
