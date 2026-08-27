@@ -8,8 +8,7 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const DEFAULT_FILE_NAME = "system-schematic.pdf";
 const DEFAULT_ORIENTATION = "landscape";
 const PDF_FONT_FAMILY = "LiberationSans";
-const PDF_NET_LABEL_FONT_SCALE = 0.85;
-const PDF_NET_LABEL_BASELINE_SHIFT = "0.08em";
+const PDF_TEXT_ANCHOR_GAP_EM = 0.12;
 const EMBEDDED_PDF_FONTS = [
   {
     fileName: "LiberationSans-Regular.ttf",
@@ -162,30 +161,29 @@ export const normalizeSvgTextForPdf = (svg: Element): void => {
   for (const textElement of svg.querySelectorAll("text, tspan")) {
     textElement.setAttribute("font-family", PDF_FONT_FAMILY);
 
-    // jsPDF centers using a generic line-height box rather than the embedded
-    // font's actual cap height. Leave explicit breathing room inside the net
-    // label outline instead of letting uppercase glyphs touch its top edge.
-    if (textElement.classList.contains("sch-net-label-text")) {
-      const fontSize = parsePositiveNumber(
-        textElement.getAttribute("font-size"),
-      );
-      if (fontSize) {
-        textElement.setAttribute(
-          "font-size",
-          `${fontSize * PDF_NET_LABEL_FONT_SCALE}px`,
-        );
-      }
-      if (!textElement.hasAttribute("dy")) {
-        textElement.setAttribute("dy", PDF_NET_LABEL_BASELINE_SHIFT);
-      }
-    }
-
     // svg2pdf reads alignment-baseline but not dominant-baseline. Copying the
     // SVG baseline keeps labels vertically centered instead of treating their
     // center coordinate as an alphabetic baseline and pushing text upward.
     const dominantBaseline = textElement.getAttribute("dominant-baseline");
     if (dominantBaseline && !textElement.hasAttribute("alignment-baseline")) {
       textElement.setAttribute("alignment-baseline", dominantBaseline);
+    }
+
+    // svg2pdf's baseline calculation lands closer to an anchor than browsers
+    // do. Move text away from top/bottom anchors without changing its width,
+    // and optically center middle-aligned text (including boxed net labels).
+    if (!textElement.hasAttribute("dy")) {
+      const shiftEm =
+        dominantBaseline === "hanging"
+          ? PDF_TEXT_ANCHOR_GAP_EM
+          : dominantBaseline === "ideographic"
+            ? -PDF_TEXT_ANCHOR_GAP_EM
+            : dominantBaseline === "central" || dominantBaseline === "middle"
+              ? PDF_TEXT_ANCHOR_GAP_EM
+              : undefined;
+      if (shiftEm !== undefined) {
+        textElement.setAttribute("dy", `${shiftEm}em`);
+      }
     }
 
     // Inline CSS overrides SVG presentation attributes. Appending the family

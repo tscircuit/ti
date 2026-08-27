@@ -54,31 +54,61 @@ describe("schematic PDF page layout", () => {
 });
 
 describe("schematic PDF text normalization", () => {
-  test("maps the SVG dominant baseline to the attribute svg2pdf reads", () => {
-    const attributes = new Map([
+  const createTextElement = (entries: [string, string][]) => {
+    const attributes = new Map(entries);
+    return {
+      attributes,
+      element: {
+        getAttribute: (name: string) => attributes.get(name) ?? null,
+        hasAttribute: (name: string) => attributes.has(name),
+        setAttribute: (name: string, value: string) =>
+          attributes.set(name, value),
+      },
+    };
+  };
+
+  test("maps baselines and preserves the original text width", () => {
+    const centered = createTextElement([
       ["dominant-baseline", "central"],
       ["font-size", "12px"],
       ["style", "font-size:12px"],
     ]);
-    const textElement = {
-      classList: {
-        contains: (name: string) => name === "sch-net-label-text",
-      },
-      getAttribute: (name: string) => attributes.get(name) ?? null,
-      hasAttribute: (name: string) => attributes.has(name),
-      setAttribute: (name: string, value: string) =>
-        attributes.set(name, value),
-    };
     const svg = {
-      querySelectorAll: () => [textElement],
+      querySelectorAll: () => [centered.element],
     } as unknown as Element;
 
     normalizeSvgTextForPdf(svg);
 
-    expect(attributes.get("alignment-baseline")).toBe("central");
-    expect(attributes.get("font-family")).toBe("LiberationSans");
-    expect(attributes.get("font-size")).toBe("10.2px");
-    expect(attributes.get("dy")).toBe("0.08em");
-    expect(attributes.get("style")).toContain("font-family:LiberationSans");
+    expect(centered.attributes.get("alignment-baseline")).toBe("central");
+    expect(centered.attributes.get("font-family")).toBe("LiberationSans");
+    expect(centered.attributes.get("font-size")).toBe("12px");
+    expect(centered.attributes.get("dy")).toBe("0.12em");
+    expect(centered.attributes.get("style")).toContain(
+      "font-family:LiberationSans",
+    );
+  });
+
+  test("moves text away from top and bottom anchors", () => {
+    const belowAnchor = createTextElement([["dominant-baseline", "hanging"]]);
+    const aboveAnchor = createTextElement([
+      ["dominant-baseline", "ideographic"],
+    ]);
+    const explicitOffset = createTextElement([
+      ["dominant-baseline", "hanging"],
+      ["dy", "1em"],
+    ]);
+    const svg = {
+      querySelectorAll: () => [
+        belowAnchor.element,
+        aboveAnchor.element,
+        explicitOffset.element,
+      ],
+    } as unknown as Element;
+
+    normalizeSvgTextForPdf(svg);
+
+    expect(belowAnchor.attributes.get("dy")).toBe("0.12em");
+    expect(aboveAnchor.attributes.get("dy")).toBe("-0.12em");
+    expect(explicitOffset.attributes.get("dy")).toBe("1em");
   });
 });
