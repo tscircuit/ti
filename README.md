@@ -44,6 +44,13 @@ example stays intentionally small: it composes and electrically connects the
 reusable reference subcircuits for the power supply, communication interface,
 light driver, MCU, position feedback, and motor driver blocks.
 
+The [`ConsumerWirelessModule.circuit.tsx`](examples/ConsumerWirelessModule.circuit.tsx)
+example assembles the seven reviewed references behind TI's Consumer wireless
+module diagram. Its protected 5 V input feeds a 3.3 V buck rail, which powers
+the LVDS interface, logic buffer, and temperature sensor; the logic signal then
+flows through the LVDS driver and two-channel I/O protection. The antenna feed,
+I2C bus, and protected differential pair remain explicit parent-level ports.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
@@ -53,6 +60,10 @@ curated semantic catalog resolves compatible voltage rails and protocols into
 exact tscircuit selectors. The app generates example-style TSX and can evaluate
 it with PCB and routing work disabled to produce a schematic preview and
 downloadable PDF.
+
+The default editor graph is the same seven-block Consumer wireless module, so
+its high-level Power, GPIO, and LVDS edges generate the same reviewed internal
+selectors as the complete example.
 
 [Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
 
@@ -357,13 +368,19 @@ chip is listed individually below, including whether it supports a
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
+| `SN65LVDS31D` | `-` | `SN65LVDS31D` |
+| `SN74LVC1G34DBVR` | `-` | `SN74LVC1G34DBVR` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
 | `TAS2505` | `-` | `TAS2505` |
+| `TMP103AYFF` | `-` | `TMP103AYFF` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
+| `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
+| `TPS25910RSA` | `-` | `TPS25910RSA` |
+| `TPS62086RLTR` | `-` | `TPS62086RLTR` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
@@ -375,6 +392,7 @@ chip is listed individually below, including whether it supports a
 | `TPSM82823` | `-` | `TPSM82823` |
 | `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
 | `TXS0102` | `vssop_8` | `TXS0102DCUR` |
+| `W3006` | `-` | `W3006` |
 
 Rows with `-` are direct chip exports and do not currently expose a
 `footprintVariant` prop. For the wrapper exports, the underlying component
