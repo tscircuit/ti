@@ -14,6 +14,20 @@ import { prepareCircuitJsonForEcadExport } from "./prepare-circuit-json-for-ecad
 
 const ZIP_MIME_TYPE = "application/zip";
 
+const hideKicadIntersheetReferences = (projectOutput: string): string => {
+  const project = JSON.parse(projectOutput) as {
+    schematic?: { drawing?: Record<string, unknown> };
+  };
+  const schematic = (project.schematic ??= {});
+  const drawing = (schematic.drawing ??= {});
+
+  // KiCad adds a ${INTERSHEET_REFS} field to global labels. Without this
+  // project setting, unresolved references appear as "?" beside the label.
+  drawing.intersheets_ref_show = false;
+
+  return `${JSON.stringify(project, null, 2)}\n`;
+};
+
 export type KicadProjectZipOptions = ProjectZipOptions;
 
 export const getKicadProjectZipFileName = (
@@ -51,7 +65,9 @@ export async function createKicadProjectZipBlob(
 
   const files: Record<string, Uint8Array> = {
     [pcbFileName]: strToU8(pcbConverter.getOutputString()),
-    [`${projectName}.kicad_pro`]: strToU8(projectConverter.getOutputString()),
+    [`${projectName}.kicad_pro`]: strToU8(
+      hideKicadIntersheetReferences(projectConverter.getOutputString()),
+    ),
   };
   for (const schematicFile of schematicFiles) {
     files[schematicFile.filename] = strToU8(schematicFile.content);

@@ -183,10 +183,11 @@ describe("ECAD project ZIP exports", () => {
     expect(
       strFromU8(archive["demo-board.kicad_sch"] ?? new Uint8Array()),
     ).toStartWith("(kicad_sch");
-    expect(
-      JSON.parse(strFromU8(archive["demo-board.kicad_pro"] ?? new Uint8Array()))
-        .head.project_name,
-    ).toBe("demo-board");
+    const project = JSON.parse(
+      strFromU8(archive["demo-board.kicad_pro"] ?? new Uint8Array()),
+    );
+    expect(project.head.project_name).toBe("demo-board");
+    expect(project.schematic.drawing.intersheets_ref_show).toBe(false);
     expect(getKicadProjectZipFileName({ projectName: "demo board" })).toBe(
       "demo-board.kicad-project.zip",
     );
