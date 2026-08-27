@@ -161,6 +161,16 @@ const normalizeSvgViewport = (
 export const normalizeSvgTextForPdf = (svg: Element): void => {
   for (const textElement of svg.querySelectorAll("text, tspan")) {
     textElement.setAttribute("font-family", PDF_FONT_FAMILY);
+    const classes = textElement.getAttribute("class")?.split(/\s+/) ?? [];
+
+    // circuit-to-svg adds a background-colored outline around reference
+    // designators. svg2pdf paints that halo over the fill, making R/C labels
+    // invisible even though their text remains in the PDF content stream.
+    if (classes.includes("sch-component-name")) {
+      textElement.setAttribute("stroke", "none");
+      textElement.removeAttribute("stroke-width");
+      textElement.removeAttribute("paint-order");
+    }
 
     // svg2pdf reads alignment-baseline but not dominant-baseline. Copying the
     // SVG baseline keeps labels vertically centered instead of treating their
@@ -175,10 +185,7 @@ export const normalizeSvgTextForPdf = (svg: Element): void => {
     // and optically center middle-aligned text. Boxed net labels need a smaller
     // correction so their underscores stay clear of the bottom outline.
     if (!textElement.hasAttribute("dy")) {
-      const isNetLabel = textElement
-        .getAttribute("class")
-        ?.split(/\s+/)
-        .includes("sch-net-label-text");
+      const isNetLabel = classes.includes("sch-net-label-text");
       const shiftEm =
         dominantBaseline === "hanging"
           ? PDF_TEXT_ANCHOR_GAP_EM

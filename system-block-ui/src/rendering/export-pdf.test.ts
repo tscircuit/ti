@@ -63,6 +63,7 @@ describe("schematic PDF text normalization", () => {
         hasAttribute: (name: string) => attributes.has(name),
         setAttribute: (name: string, value: string) =>
           attributes.set(name, value),
+        removeAttribute: (name: string) => attributes.delete(name),
       },
     };
   };
@@ -114,5 +115,25 @@ describe("schematic PDF text normalization", () => {
     expect(aboveAnchor.attributes.get("dy")).toBe("-0.12em");
     expect(explicitOffset.attributes.get("dy")).toBe("1em");
     expect(centered.attributes.get("dy")).toBe("0.12em");
+  });
+
+  test("removes the svg2pdf-incompatible reference designator halo", () => {
+    const reference = createTextElement([
+      ["class", "sch-component-name sch-component-text"],
+      ["stroke", "rgb(245, 241, 237)"],
+      ["stroke-width", "0.5px"],
+      ["paint-order", "stroke"],
+      ["fill", "rgb(15, 15, 15)"],
+    ]);
+    const svg = {
+      querySelectorAll: () => [reference.element],
+    } as unknown as Element;
+
+    normalizeSvgTextForPdf(svg);
+
+    expect(reference.attributes.get("stroke")).toBe("none");
+    expect(reference.attributes.has("stroke-width")).toBe(false);
+    expect(reference.attributes.has("paint-order")).toBe(false);
+    expect(reference.attributes.get("fill")).toBe("rgb(15, 15, 15)");
   });
 });
