@@ -131,9 +131,12 @@ filesystem. The nested package pins `@tscircuit/eval` 0.0.1294 and
 `schematicgraphic` element directly; no host-side Circuit JSON compatibility
 step is required.
 
-The preview needs network access because `@tsci/tscircuit.ti` imports are loaded
-from the tscircuit registry. They represent the published package, whereas the
-palette is discovered from the local checkout.
+For preview evaluation, the selected subcircuits and their relative source
+dependencies are loaded from the local checkout into a minimal virtual
+`@tsci/tscircuit.ti` package. This keeps Render working for newly added blocks
+before the repository package is published. Exported TSX intentionally retains
+the public package import, so using an exported design elsewhere still requires
+a package release containing those subcircuits.
 
 ## Adding another semantic adapter
 

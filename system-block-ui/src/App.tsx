@@ -264,12 +264,30 @@ export function App() {
     setIsRendering(true);
     setPreviewError(undefined);
     try {
-      const { evaluateGeneratedTsx } = await import(
-        "./rendering/evaluate-schematic"
-      );
+      const [
+        { evaluateGeneratedTsx },
+        { createLocalTiPackageEvaluationFsMap },
+      ] = await Promise.all([
+        import("./rendering/evaluate-schematic"),
+        import("./rendering/local-ti-package-files"),
+      ]);
+      const selectedDefinitions = snapshot.blocks.map((block) => {
+        const definition = catalog.find(
+          (candidate) => candidate.id === block.definitionId,
+        );
+        if (!definition) {
+          throw new Error(
+            `Cannot render unknown subcircuit ${block.definitionId}.`,
+          );
+        }
+        return definition;
+      });
       const rendered = await evaluateGeneratedTsx(generatedArtifacts.tsx, {
         mainComponentPath: GENERATED_SYSTEM_MAIN_FILE_NAME,
-        fsMap: getGeneratedSystemEvaluationFsMap(generatedArtifacts),
+        fsMap: {
+          ...getGeneratedSystemEvaluationFsMap(generatedArtifacts),
+          ...createLocalTiPackageEvaluationFsMap(selectedDefinitions),
+        },
         timeoutMs: 45_000,
         schematicOptions: {
           width: 1400,
@@ -300,7 +318,7 @@ export function App() {
     } finally {
       if (coordinator.isCurrent(request)) setIsRendering(false);
     }
-  }, [generatedArtifacts, notify]);
+  }, [catalog, generatedArtifacts, notify, snapshot.blocks]);
 
   const resetDesign = useCallback(async () => {
     invalidateSchematic();
