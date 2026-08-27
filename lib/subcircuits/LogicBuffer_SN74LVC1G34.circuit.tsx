@@ -12,7 +12,7 @@ const SN74LVC1G34_PIN_LABELS = {
  * SN74LVC1G34 datasheet Figure 8-1 "Buffer Function" application.
  * @see https://www.ti.com/lit/gpn/SN74LVC1G34
  */
-export const LogicControl_SN74LVC1G34 = (props: SubcircuitProps) => (
+export const LogicBuffer_SN74LVC1G34 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
     <chip
       name="U1"
@@ -45,4 +45,4 @@ export const LogicControl_SN74LVC1G34 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default LogicControl_SN74LVC1G34;
+export default LogicBuffer_SN74LVC1G34;
