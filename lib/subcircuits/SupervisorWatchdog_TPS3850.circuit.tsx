@@ -21,13 +21,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
     <net name="GND" isPowerNet isGroundNet />
     <net name="V3_3" isPowerNet />
 
-    <schematicbox
-      name="TPS3850_SUPERVISOR_WATCHDOG_SECTION"
-      schX={sx(23.368)}
-      schY={sy(19.812)}
-      width={19.812}
-      height={7.62}
-    />
     <schematictext
       text="3.3-V Voltage Supervision and Watchdog"
       schX={sx(23.368)}

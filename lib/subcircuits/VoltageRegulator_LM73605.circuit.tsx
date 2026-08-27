@@ -42,13 +42,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
     <net name="AGND" isPowerNet isGroundNet />
     <net name="V3_3" isPowerNet />
 
-    <schematicbox
-      name="LM73605_REGULATOR_SECTION"
-      schX={sx(23.495)}
-      schY={sy(7.112)}
-      width={30.48}
-      height={9.652}
-    />
     <schematictext
       text="3.3-V System Supply"
       schX={sx(23.495)}

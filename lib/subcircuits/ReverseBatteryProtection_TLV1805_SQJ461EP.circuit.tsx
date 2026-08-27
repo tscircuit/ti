@@ -26,13 +26,6 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
   <subcircuit schMaxTraceDistance="30mm" routingDisabled {...props}>
     <net name="GND" isPowerNet isGroundNet />
 
-    <schematicbox
-      name="REVERSE_BATTERY_SECTION"
-      schX={sx(21.716)}
-      schY={sy(19.812)}
-      width={39.116}
-      height={8.89}
-    />
     <schematictext
       text="Reverse Battery Protection and System EMI Input Filter"
       schX={sx(21.716)}
