@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import { svg2pdf } from "svg2pdf.js";
 import { downloadBlob } from "./download-blob";
+import { normalizeTextBaselinesForSvg2Pdf } from "./normalize-text-baselines-for-svg2pdf";
 
 export { downloadBlob } from "./download-blob";
 
@@ -48,29 +49,6 @@ export interface SchematicPdfPageLayout {
 interface PreparedSheet {
   element: Element;
 }
-
-type SvgTextBaselineElement = Pick<
-  Element,
-  "getAttribute" | "hasAttribute" | "setAttribute"
->;
-
-export const normalizeTextBaselinesForSvg2Pdf = (
-  elements: Iterable<SvgTextBaselineElement>,
-): void => {
-  for (const element of elements) {
-    if (element.hasAttribute("alignment-baseline")) continue;
-    const dominantBaseline = element.getAttribute("dominant-baseline");
-    if (dominantBaseline) {
-      element.setAttribute("alignment-baseline", dominantBaseline);
-      // jsPDF's middle baseline renders Helvetica slightly above the SVG
-      // central baseline. Apply the measured em-relative correction while
-      // preserving any explicit author positioning.
-      if (dominantBaseline === "central" && !element.hasAttribute("dy")) {
-        element.setAttribute("dy", "0.175em");
-      }
-    }
-  }
-};
 
 const parseSvg = (svg: string): Element => {
   if (typeof DOMParser === "undefined") {
