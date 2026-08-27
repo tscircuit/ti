@@ -147,7 +147,6 @@ export const PositionFeedback_DRV5013_TIDA01389 = (props: SubcircuitProps) => (
     height="8mm"
     minTraceWidth="0.254mm"
     schMaxTraceDistance="1mm"
-    routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />

@@ -63,7 +63,6 @@ export {
   TCAN1042HGV,
   TCAN1042HGVDRBQ1,
 } from "./TCAN1042HGVDRBQ1.circuit.tsx";
-export { TPD2E007DCKR } from "./TPD2E007DCKR.circuit.tsx";
 export { TLC59116 } from "./TLC59116.circuit.tsx";
 export { TLV316, TLV316QDBVTQ1 } from "./TLV316QDBVTQ1.circuit.tsx";
 export { TLV755P } from "./TLV755P.circuit.tsx";

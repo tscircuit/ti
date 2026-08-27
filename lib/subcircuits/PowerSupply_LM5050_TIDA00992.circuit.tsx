@@ -78,13 +78,7 @@ const bidirectionalTvsSymbol = (
 
 /** TIDA-00992 automotive reverse-polarity protection reference schematic. */
 export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
-  <subcircuit
-    width="42mm"
-    height="30mm"
-    schMaxTraceDistance="6mm"
-    routingDisabled
-    {...props}
-  >
+  <subcircuit width="42mm" height="30mm" schMaxTraceDistance="6mm" {...props}>
     <net name="GND" isGroundNet />
     <net name="VBATT" isPowerNet />
     <net name="V_OUT" />
@@ -351,7 +345,7 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
       capacitance="0.1uF"
       footprint="0603"
       manufacturerPartNumber="GRM188R72A104KA35J"
-      maxDecouplingTraceLength="2mm"
+      maxDecouplingTraceLength="6mm"
       schX={-3.2}
       schY={0.75}
       pcbX={2.915}
@@ -514,10 +508,8 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     />
 
     {/* VS bypass and MOSFET gate drive. */}
-    <trace
-      path={[".U1 > .VS", ".C3 > .pin1", ".R1 > .pin1"]}
-      routingPhaseIndex={0}
-    />
+    <trace from=".U1 > .VS" to=".C3 > .pin1" routingPhaseIndex={0} />
+    <trace from=".C3 > .pin1" to=".R1 > .pin1" maxLength="14mm" />
     <trace from=".U1 > .GATE" to=".Q1 > .pin4" />
 
     {/* Switched controller-ground network. */}

@@ -48,7 +48,6 @@ export const Microcontroller_MSPM0L1306Q1_TIDA020065 = (
     height="25mm"
     minTraceWidth="0.2mm"
     schMaxTraceDistance="0mm"
-    routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />

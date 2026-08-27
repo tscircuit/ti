@@ -99,7 +99,6 @@ export const LightDriver_TIDA01330 = (props: SubcircuitProps) => (
     height="10mm"
     minTraceWidth="0.12mm"
     schMaxTraceDistance="5mm"
-    routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />

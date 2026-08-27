@@ -36,9 +36,9 @@ audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
 The [`SeatPositionModule.circuit.tsx`](examples/SeatPositionModule.circuit.tsx)
-example stays intentionally small: it imports and places the six reusable
-reference subcircuits for the power supply, communication interface, light
-driver, MCU, position feedback, and motor driver blocks.
+example stays intentionally small: it composes and electrically connects the
+reusable reference subcircuits for the power supply, communication interface,
+light driver, MCU, position feedback, and motor driver blocks.
 
 ## System Block Builder
 
@@ -348,7 +348,6 @@ chip is listed individually below, including whether it supports a
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
-| `TPD2E007DCKR` | `-` | `TPD2E007DCKR` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
 | `TAS2505` | `-` | `TAS2505` |

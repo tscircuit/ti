@@ -36,9 +36,10 @@ const NetTie = ({
     layer={layer}
     footprint={
       <footprint>
+        {/* Preserve the two Kelvin nets; the 0.1 mm gap is solder-bridged. */}
         <smtpad
           portHints={["pin1"]}
-          pcbX="-0.1905mm"
+          pcbX="-0.2405mm"
           pcbY="0mm"
           width="0.381mm"
           height="0.3048mm"
@@ -46,7 +47,7 @@ const NetTie = ({
         />
         <smtpad
           portHints={["pin2"]}
-          pcbX="0.1905mm"
+          pcbX="0.2405mm"
           pcbY="0mm"
           width="0.381mm"
           height="0.3048mm"
@@ -139,7 +140,6 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
     height="58mm"
     minTraceWidth="0.12mm"
     schMaxTraceDistance="4mm"
-    routingDisabled
     {...props}
   >
     <net name="GND" isGroundNet />
@@ -610,7 +610,17 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
     <trace from=".C1 > .pin2" to="net.GND" schDisplayLabel="GND" />
     <trace from=".Q2 > .drain" to="net.PVDD" schDisplayLabel="PVDD" />
     <trace from=".Q2 > .gate" to="net.GH_A" schDisplayLabel="GH_A" />
-    <trace from=".Q2 > .source" to=".Q4 > .drain" />
+    <trace
+      from=".Q2 > .source"
+      to=".Q4 > .drain"
+      pcbPathRelativeTo=".Q2 > .source"
+      pcbPath={[
+        ".Q2 > .source",
+        { x: -2, y: 1 },
+        { x: -2, y: 7 },
+        ".Q4 > .drain",
+      ]}
+    />
     <trace
       name="MOT_A_Q2"
       from=".Q2 > .source"
