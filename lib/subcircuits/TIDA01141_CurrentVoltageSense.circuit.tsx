@@ -250,7 +250,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       name="R12"
       resistance={3320000}
       footprint="0603"
-      schX={4.8}
+      schX={5.8}
       schY={2.3}
     />
     <capacitor name="C1" capacitance="1uF" footprint="0603" schX={6} schY={4} />
@@ -315,7 +315,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       name="R14"
       resistance={3320000}
       footprint="0603"
-      schX={4.8}
+      schX={5.8}
       schY={-0.95}
     />
     <capacitor
