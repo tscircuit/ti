@@ -27,6 +27,15 @@ const sourceToSchematic = (x: number, y: number): Point => ({
 const HALL_ENCODER_CENTER = sourceToSchematic(185, 215);
 const CONNECTOR_CENTER = sourceToSchematic(160, 525);
 
+/**
+ * The native tscircuit text extents are slightly larger than Altium's. Keep
+ * the source lower edges (and their title spacing) fixed, then extend only the
+ * outer sides and top by source-grid clearance so no native label touches a
+ * dashed section boundary. Component centers remain unchanged.
+ */
+const SECTION_SIDE_CLEARANCE = 10;
+const SECTION_TOP_CLEARANCE = 20;
+
 const inChild = (x: number, y: number, childCenter: Point): Point => {
   const transformed = sourceToSchematic(x, y);
   return {
@@ -63,10 +72,10 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
 
       <schematicbox
         name="HALL_ENCODER_SECTION"
-        schX={0}
-        schY={0}
-        width={290 * SOURCE_SCALE}
-        height={270 * SOURCE_SCALE}
+        {...asSchematicPosition(inHallEncoder(185, 225))}
+        width={(290 + 2 * SECTION_SIDE_CLEARANCE) * SOURCE_SCALE}
+        height={(270 + SECTION_TOP_CLEARANCE) * SOURCE_SCALE}
+        strokeStyle="dashed"
       />
       <schematictext
         {...asSchematicPosition(inHallEncoder(190, 60))}
@@ -178,21 +187,23 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
 export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
   const j1 = inConnector(150, 475);
   const j2 = inConnector(190, 475);
+  const j4 = inConnector(200, 610);
   const r9 = inConnector(100, 530);
 
   return (
     <group schMaxTraceDistance="10mm" routingDisabled {...props}>
       <net name="GND" isGroundNet />
       <net name="VCC" isPowerNet />
+      <net name="V_BAT" isPowerNet />
       <net name="HALL_1" />
       <net name="HALL_2" />
 
       <schematicbox
         name="POSITION_FEEDBACK_CONNECTOR_SECTION"
-        schX={0}
-        schY={0}
-        width={240 * SOURCE_SCALE}
-        height={230 * SOURCE_SCALE}
+        {...asSchematicPosition(inConnector(160, 535))}
+        width={(240 + 2 * SECTION_SIDE_CLEARANCE) * SOURCE_SCALE}
+        height={(230 + SECTION_TOP_CLEARANCE) * SOURCE_SCALE}
+        strokeStyle="dashed"
       />
       <schematictext
         {...asSchematicPosition(inConnector(160, 390))}
@@ -218,6 +229,18 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
         schY={j2.y}
         schFacingDirection="right"
       />
+      <pinheader
+        name="J4"
+        pinCount={2}
+        gender="female"
+        pitch="3.81mm"
+        schX={j4.x}
+        schY={j4.y}
+        schFacingDirection="left"
+        schPinArrangement={{
+          leftSide: { direction: "bottom-to-top", pins: [1, 2] },
+        }}
+      />
 
       <resistor
         name="R9"
@@ -237,8 +260,21 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
       <trace from="J2.pin1" to="net.GND" />
       <trace from="J2.pin6" to="net.HALL_1" />
       <trace from="J2.pin7" to="net.HALL_2" />
+      <netlabel
+        net="GND"
+        connectsTo="J4.pin1"
+        {...asSchematicPosition(inConnector(130, 600))}
+        anchorSide="right"
+      />
+      <netlabel
+        net="V_BAT"
+        connectsTo="J4.pin2"
+        {...asSchematicPosition(inConnector(130, 610))}
+        anchorSide="right"
+      />
 
       <port name="VCC" direction="left" connectsTo="net.VCC" />
+      <port name="V_BAT" direction="left" connectsTo="net.V_BAT" />
       <port name="GND" direction="left" connectsTo="net.GND" />
       <port name="HALL_1" direction="right" connectsTo="net.HALL_1" />
       <port name="HALL_2" direction="right" connectsTo="net.HALL_2" />
@@ -259,6 +295,7 @@ export const PositionFeedback_DRV5013 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
     <net name="GND" isGroundNet />
     <net name="VCC" isPowerNet />
+    <net name="V_BAT" isPowerNet />
     <net name="HALL_1" />
     <net name="HALL_2" />
     <HallEncoder_DRV5013
@@ -278,12 +315,14 @@ export const PositionFeedback_DRV5013 = (props: SubcircuitProps) => (
       schY={CONNECTOR_CENTER.y}
       connections={{
         VCC: "net.VCC",
+        V_BAT: "net.V_BAT",
         GND: "net.GND",
         HALL_1: "net.HALL_1",
         HALL_2: "net.HALL_2",
       }}
     />
     <port name="VCC" direction="left" connectsTo="net.VCC" />
+    <port name="V_BAT" direction="left" connectsTo="net.V_BAT" />
     <port name="GND" direction="left" connectsTo="net.GND" />
     <port name="HALL_1" direction="right" connectsTo="net.HALL_1" />
     <port name="HALL_2" direction="right" connectsTo="net.HALL_2" />

@@ -334,9 +334,9 @@ motor-driver circuitry.
 
 The TIDA-01389 BOM identifies U5/U6 as `DRV5013ADQDBZRQ1`, C13/C14 as
 `GRM155R61H104ME14D`, R14/R15 as `CRCW040210K0JNED`, R9 as
-`CRCW06030000Z0EA`, and J1/J2 as `SSQ-110-01-T-S`. Following repository
-convention, passive and connector MPNs are documented here instead of being
-rendered as schematic component values.
+`CRCW06030000Z0EA`, J1/J2 as `SSQ-110-01-T-S`, and J4 as Wurth Elektronik
+`691214310002`. Following repository convention, passive and connector MPNs
+are documented here instead of being rendered as schematic component values.
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.

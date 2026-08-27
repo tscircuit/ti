@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, test } from "bun:test";
 import type {
   AnyCircuitElement,
+  SchematicBox,
   SchematicComponent,
   SchematicPort,
   SourcePort,
@@ -19,10 +20,12 @@ const fromSource = (x: number, y: number) => ({
 
 let circuitJson: AnyCircuitElement[];
 type SourceComponent = Extract<AnyCircuitElement, { type: "source_component" }>;
+type SourceNet = Extract<AnyCircuitElement, { type: "source_net" }>;
 let sourceComponents: SourceComponent[];
 let sourcePorts: SourcePort[];
 let schematicComponents: SchematicComponent[];
 let schematicPorts: SchematicPort[];
+let schematicBoxes: SchematicBox[];
 
 beforeAll(async () => {
   const circuit = new Circuit();
@@ -42,6 +45,9 @@ beforeAll(async () => {
   );
   schematicPorts = circuitJson.filter(
     (element): element is SchematicPort => element.type === "schematic_port",
+  );
+  schematicBoxes = circuitJson.filter(
+    (element): element is SchematicBox => element.type === "schematic_box",
   );
 });
 
@@ -108,6 +114,7 @@ describe("TIDA-01389 position feedback extraction", () => {
       R15: { xy: [270, 170] },
       J1: { xy: [150, 475] },
       J2: { xy: [190, 475] },
+      J4: { xy: [200, 610] },
       R9: { xy: [100, 530] },
     } as const;
 
@@ -163,6 +170,19 @@ describe("TIDA-01389 position feedback extraction", () => {
     expect(schematicPort("J2", 1).center.x).toBeGreaterThan(
       schematicComponent("J2").center.x,
     );
+    expect(schematicPort("J4", 1).center.x).toBeLessThan(
+      schematicComponent("J4").center.x,
+    );
+    expect(schematicPort("J4", 2).center.y).toBeGreaterThan(
+      schematicPort("J4", 1).center.y,
+    );
+  });
+
+  test("renders both source sections with dashed clearance boundaries", () => {
+    expect(schematicBoxes).toHaveLength(2);
+    for (const box of schematicBoxes) {
+      expect(box.is_dashed).toBeTrue();
+    }
   });
 
   test("connects both Hall outputs and both supply rails end to end", () => {
@@ -178,6 +198,24 @@ describe("TIDA-01389 position feedback extraction", () => {
         ["U6", 2],
         ["R14", 1],
         ["J2", 6],
+      ]),
+    ).toBeTrue();
+    expect(
+      areConnected([
+        ["J4", 1],
+        ["J2", 1],
+      ]),
+    ).toBeTrue();
+
+    const vBatNet = circuitJson.find(
+      (element): element is SourceNet =>
+        element.type === "source_net" && element.name === "V_BAT",
+    );
+    expect(vBatNet).toBeDefined();
+    expect(
+      connectivity.areAllIdsConnected([
+        port("J4", 2).source_port_id,
+        vBatNet!.source_net_id,
       ]),
     ).toBeTrue();
     expect(
