@@ -156,9 +156,17 @@ const normalizeSvgViewport = (
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 };
 
-const applyPdfFontFamily = (svg: Element): void => {
+export const normalizeSvgTextForPdf = (svg: Element): void => {
   for (const textElement of svg.querySelectorAll("text, tspan")) {
     textElement.setAttribute("font-family", PDF_FONT_FAMILY);
+
+    // svg2pdf reads alignment-baseline but not dominant-baseline. Copying the
+    // SVG baseline keeps labels vertically centered instead of treating their
+    // center coordinate as an alphabetic baseline and pushing text upward.
+    const dominantBaseline = textElement.getAttribute("dominant-baseline");
+    if (dominantBaseline && !textElement.hasAttribute("alignment-baseline")) {
+      textElement.setAttribute("alignment-baseline", dominantBaseline);
+    }
 
     // Inline CSS overrides SVG presentation attributes. Appending the family
     // keeps text that circuit-to-svg emits with style="font-family: ..." on
@@ -247,7 +255,7 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
     const element = parseSvg(sheet.svg);
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
-    applyPdfFontFamily(element);
+    normalizeSvgTextForPdf(element);
     return { element };
   });
 };

@@ -1,6 +1,9 @@
 import { describe, expect, test } from "bun:test";
 
-import { calculateSchematicPdfPageLayout } from "./export-pdf";
+import {
+  calculateSchematicPdfPageLayout,
+  normalizeSvgTextForPdf,
+} from "./export-pdf";
 import {
   SCHEMATIC_SVG_HEIGHT,
   SCHEMATIC_SVG_WIDTH,
@@ -47,5 +50,29 @@ describe("schematic PDF page layout", () => {
         pageHeightMm: Number.NaN,
       }),
     ).toThrow("pageHeightMm must be a positive finite number");
+  });
+});
+
+describe("schematic PDF text normalization", () => {
+  test("maps the SVG dominant baseline to the attribute svg2pdf reads", () => {
+    const attributes = new Map([
+      ["dominant-baseline", "central"],
+      ["style", "font-size:12px"],
+    ]);
+    const textElement = {
+      getAttribute: (name: string) => attributes.get(name) ?? null,
+      hasAttribute: (name: string) => attributes.has(name),
+      setAttribute: (name: string, value: string) =>
+        attributes.set(name, value),
+    };
+    const svg = {
+      querySelectorAll: () => [textElement],
+    } as unknown as Element;
+
+    normalizeSvgTextForPdf(svg);
+
+    expect(attributes.get("alignment-baseline")).toBe("central");
+    expect(attributes.get("font-family")).toBe("LiberationSans");
+    expect(attributes.get("style")).toContain("font-family:LiberationSans");
   });
 });
