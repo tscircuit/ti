@@ -148,34 +148,14 @@ export const SystemPowerPmicSequencer_TIDEP0092 = (props: SubcircuitProps) => (
       schY={refY(600.753011)}
       anchorSide="bottom"
     />
-    <netlabel
-      net="PMIC_NRST"
-      connection="R150.pin2"
-      schX={refX(216.294258)}
-      schY={refY(708.672714)}
-      anchorSide="left"
+    <trace
+      from=".R150 > .pin2"
+      to="net.PMIC_NRST"
+      schDisplayLabel="PMIC_NRST"
     />
-    <netlabel
-      net="PMIC_EN1"
-      connection="R142.pin1"
-      schX={refX(356.590037)}
-      schY={refY(708.672714)}
-      anchorSide="left"
-    />
-    <netlabel
-      net="PMIC_EN2"
-      connection="R148.pin1"
-      schX={refX(439.328476)}
-      schY={refY(708.672714)}
-      anchorSide="left"
-    />
-    <netlabel
-      net="PMIC_EN3"
-      connection="R145.pin1"
-      schX={refX(529.261561)}
-      schY={refY(708.672714)}
-      anchorSide="left"
-    />
+    <trace from=".R142 > .pin1" to="net.PMIC_EN1" schDisplayLabel="PMIC_EN1" />
+    <trace from=".R148 > .pin1" to="net.PMIC_EN2" schDisplayLabel="PMIC_EN2" />
+    <trace from=".R145 > .pin1" to="net.PMIC_EN3" schDisplayLabel="PMIC_EN3" />
 
     <netlabel
       net="PMICOUT_3V3"
@@ -185,13 +165,7 @@ export const SystemPowerPmicSequencer_TIDEP0092 = (props: SubcircuitProps) => (
       anchorSide="right"
     />
     <trace from=".R141 > .pin2" to=".R138 > .pin2" />
-    <netlabel
-      net="PGOOD"
-      connection="R141.pin2"
-      schX={refX(827.890699)}
-      schY={refY(593.558364)}
-      anchorSide="left"
-    />
+    <trace from=".R138 > .pin2" to="net.PGOOD" schDisplayLabel="PGOOD" />
     <netlabel
       net="GND"
       connection="R138.pin1"

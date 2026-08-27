@@ -93,6 +93,102 @@ test("System power implementation never sets schSize", () => {
   }
 });
 
+test("TI off-sheet ports use native on-trace labels", () => {
+  const cases = [
+    {
+      sourceUrl: new URL(
+        "../lib/subcircuits/SystemPowerPmicBuck_LP87524B_TIDEP0092.circuit.tsx",
+        import.meta.url,
+      ),
+      traces: [
+        [".U8 > .CLKIN", "net.PMIC_CLK", "PMIC_CLK"],
+        [".R146 > .pin1", "net.AR_SCL", "AR_SCL"],
+        [".R144 > .pin2", "net.AR_SDA", "AR_SDA"],
+        [".U8 > .NRST", "net.PMIC_NRST", "PMIC_NRST"],
+        [".U8 > .EN1", "net.PMIC_EN1", "PMIC_EN1"],
+        [".U8 > .EN2", "net.PMIC_EN2", "PMIC_EN2"],
+        [".U8 > .EN3", "net.PMIC_EN3", "PMIC_EN3"],
+      ],
+      formerNetLabelConnections: [
+        "U8.CLKIN",
+        "R146.pin1",
+        "R144.pin2",
+        "U8.NRST",
+        "U8.EN1",
+        "U8.EN2",
+        "U8.EN3",
+      ],
+    },
+    {
+      sourceUrl: new URL(
+        "../lib/subcircuits/SystemPowerPmicSequencer_TIDEP0092.circuit.tsx",
+        import.meta.url,
+      ),
+      traces: [
+        [".R150 > .pin2", "net.PMIC_NRST", "PMIC_NRST"],
+        [".R142 > .pin1", "net.PMIC_EN1", "PMIC_EN1"],
+        [".R148 > .pin1", "net.PMIC_EN2", "PMIC_EN2"],
+        [".R145 > .pin1", "net.PMIC_EN3", "PMIC_EN3"],
+        [".R138 > .pin2", "net.PGOOD", "PGOOD"],
+      ],
+      formerNetLabelConnections: [
+        "R150.pin2",
+        "R142.pin1",
+        "R148.pin1",
+        "R145.pin1",
+        "R141.pin2",
+      ],
+    },
+    {
+      sourceUrl: new URL(
+        "../lib/subcircuits/SystemPowerLdo1_TPS7A8101_TIDEP0092.circuit.tsx",
+        import.meta.url,
+      ),
+      traces: [[".R84 > .pin2", "net.LDO_01_EN", "LDO_01_EN"]],
+      formerNetLabelConnections: ["R84.pin2"],
+    },
+    {
+      sourceUrl: new URL(
+        "../lib/subcircuits/SystemPowerLdo2_TPS7A8801_TIDEP0092.circuit.tsx",
+        import.meta.url,
+      ),
+      traces: [[".R46 > .pin2", "net.LDO_02_EN", "LDO_02_EN"]],
+      formerNetLabelConnections: ["R46.pin2"],
+    },
+  ] as const;
+
+  for (const testCase of cases) {
+    const source = readFileSync(testCase.sourceUrl, "utf8");
+    const traceBlocks = [...source.matchAll(/<trace\b([\s\S]*?)\/>/g)].map(
+      (match) => match[1],
+    );
+    const netLabelBlocks = [
+      ...source.matchAll(/<netlabel\b([\s\S]*?)\/>/g),
+    ].map((match) => match[1]);
+
+    for (const [from, to, label] of testCase.traces) {
+      assert.ok(
+        traceBlocks.some(
+          (trace) =>
+            trace.includes(`from="${from}"`) &&
+            trace.includes(`to="${to}"`) &&
+            trace.includes(`schDisplayLabel="${label}"`),
+        ),
+        `${testCase.sourceUrl.pathname} must render ${label} on its trace`,
+      );
+    }
+
+    for (const connection of testCase.formerNetLabelConnections) {
+      assert.ok(
+        netLabelBlocks.every(
+          (netLabel) => !netLabel.includes(`connection="${connection}"`),
+        ),
+        `${testCase.sourceUrl.pathname} must not use a standalone net label at ${connection}`,
+      );
+    }
+  }
+});
+
 function getPort(circuit: TestCircuit, componentName: string, pin: string) {
   const component = circuit.db.source_component.getWhere({
     name: componentName,

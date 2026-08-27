@@ -191,13 +191,7 @@ export const SystemPowerLdo1_TPS7A8101_TIDEP0092 = (props: SubcircuitProps) => (
       anchorSide="bottom"
     />
     <trace from=".R84 > .pin2" to=".R83 > .pin1" />
-    <netlabel
-      net="LDO_01_EN"
-      connection="R84.pin2"
-      schX={-0.375}
-      schY={-4.5}
-      anchorSide="left"
-    />
+    <trace from=".R84 > .pin2" to="net.LDO_01_EN" schDisplayLabel="LDO_01_EN" />
     <netlabel
       net="GND"
       connection="R83.pin2"

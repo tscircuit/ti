@@ -408,57 +408,15 @@ export const SystemPowerPmicBuck_LP87524B_TIDEP0092 = (
       anchorSide="top"
     />
 
-    <netlabel
-      net="PMIC_CLK"
-      connection="U8.CLKIN"
-      schX={refX(572.429495)}
-      schY={refY(205.047435)}
-      anchorSide="right"
-    />
+    <trace from=".U8 > .CLKIN" to="net.PMIC_CLK" schDisplayLabel="PMIC_CLK" />
     <trace from=".U8 > .SCL" to=".R146 > .pin2" />
-    <netlabel
-      net="AR_SCL"
-      connection="R146.pin1"
-      schX={refX(572.429495)}
-      schY={refY(219.436729)}
-      anchorSide="right"
-    />
+    <trace from=".R146 > .pin1" to="net.AR_SCL" schDisplayLabel="AR_SCL" />
     <trace from=".U8 > .SDA" to=".R144 > .pin1" />
-    <netlabel
-      net="AR_SDA"
-      connection="R144.pin2"
-      schX={refX(961.671537)}
-      schY={refY(233.826022)}
-      anchorSide="left"
-    />
-    <netlabel
-      net="PMIC_NRST"
-      connection="U8.NRST"
-      schX={refX(572.429495)}
-      schY={refY(233.826022)}
-      anchorSide="right"
-    />
-    <netlabel
-      net="PMIC_EN1"
-      connection="U8.EN1"
-      schX={refX(665.959759)}
-      schY={refY(392.108253)}
-      anchorSide="right"
-    />
-    <netlabel
-      net="PMIC_EN2"
-      connection="U8.EN2"
-      schX={refX(665.959759)}
-      schY={refY(406.497546)}
-      anchorSide="right"
-    />
-    <netlabel
-      net="PMIC_EN3"
-      connection="U8.EN3"
-      schX={refX(665.959759)}
-      schY={refY(420.88684)}
-      anchorSide="right"
-    />
+    <trace from=".R144 > .pin2" to="net.AR_SDA" schDisplayLabel="AR_SDA" />
+    <trace from=".U8 > .NRST" to="net.PMIC_NRST" schDisplayLabel="PMIC_NRST" />
+    <trace from=".U8 > .EN1" to="net.PMIC_EN1" schDisplayLabel="PMIC_EN1" />
+    <trace from=".U8 > .EN2" to="net.PMIC_EN2" schDisplayLabel="PMIC_EN2" />
+    <trace from=".U8 > .EN3" to="net.PMIC_EN3" schDisplayLabel="PMIC_EN3" />
 
     <trace from=".U8 > .PGOOD" to=".R143 > .pin1" />
     <trace from=".U8 > .NINT" to=".R147 > .pin1" />
