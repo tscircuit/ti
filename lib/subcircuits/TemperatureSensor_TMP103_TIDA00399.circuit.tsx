@@ -1,0 +1,62 @@
+import type { SubcircuitProps } from "@tscircuit/props";
+import "tscircuit";
+
+const TMP103_PIN_LABELS = {
+  pin1: ["SDA"],
+  pin2: ["SCL"],
+  pin3: ["GND"],
+  pin4: ["V_PLUS", "VCC"],
+} as const;
+
+/**
+ * TMP103 temperature-sensing subcircuit from TI TIDA-00399, sheet 8.
+ * RPU1 and RPU2 are the reference design's optional (DNP) I2C pull-ups.
+ * @see https://www.ti.com/tool/TIDA-00399
+ */
+export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
+  <subcircuit {...props}>
+    <chip
+      name="UTMP"
+      manufacturerPartNumber="TMP103AYFF"
+      pinLabels={TMP103_PIN_LABELS}
+      showPinAliases={false}
+      schX={0}
+      schY={0}
+      schWidth={1.4}
+      schHeight={0.6}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: ["SCL", "SDA"] },
+        rightSide: { direction: "top-to-bottom", pins: ["V_PLUS", "GND"] },
+      }}
+      connections={{
+        SCL: "net.SCL",
+        SDA: "net.SDA",
+        V_PLUS: "net.USB2ANY_3V3",
+        GND: "net.GND",
+      }}
+    />
+
+    <resistor
+      name="RPU1"
+      resistance="10kohm"
+      doNotPlace
+      schX={-1.4}
+      schY={2}
+      schRotation={90}
+      connections={{ pin1: "net.SCL", pin2: "net.USB2ANY_3V3" }}
+    />
+    <resistor
+      name="RPU2"
+      resistance="10kohm"
+      doNotPlace
+      schX={1.4}
+      schY={2}
+      schRotation={90}
+      connections={{ pin1: "net.SDA", pin2: "net.USB2ANY_3V3" }}
+    />
+    <schematictext text="DNP" schX={-2.15} schY={2} fontSize={0.2} />
+    <schematictext text="DNP" schX={2.15} schY={2} fontSize={0.2} />
+  </subcircuit>
+);
+
+export default TemperatureSensor_TMP103_TIDA00399;
