@@ -19,7 +19,12 @@ const TPS62086_PIN_LABELS = {
  * @see https://www.ti.com/tool/TIDA-00399
  */
 export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit
+    routingDisabled
+    {...props}
+    schTraceAutoLabelEnabled={false}
+    schMaxTraceDistance={100}
+  >
     <chip
       name="U3P3"
       manufacturerPartNumber="TPS62086RLTR"
@@ -27,7 +32,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       showPinAliases={false}
       schX={0}
       schY={0}
-      schWidth={1.8}
+      schWidth={1.77}
       schHeight={1.4}
       schPinArrangement={{
         leftSide: { direction: "top-to-bottom", pins: ["VIN", "EN"] },
@@ -36,24 +41,14 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
           pins: ["SW", "VOS", "FB", "PG", "GND"],
         },
       }}
-      connections={{
-        VIN: "net.VIN_DC_DC",
-        EN: "net.EN_3P3",
-        SW: "L3P3.pin1",
-        VOS: "net.V3P3_AON",
-        FB: "net.V3P3_AON",
-        PG: "net.V3P3_PG",
-        GND: "net.GND",
-      }}
     />
 
     <capacitor
       name="C1_3P3"
       capacitance="10uF"
-      schX={-3}
+      schX={-2.05}
       schY={-0.2}
       schOrientation="vertical"
-      connections={{ pin1: "net.VIN_DC_DC", pin2: "net.GND" }}
     />
     <inductor
       name="L3P3"
@@ -61,33 +56,84 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       inductance="470nH"
       schX={2.5}
       schY={0.5}
-      connections={{ pin2: "net.V3P3_AON" }}
     />
     <resistor
       name="R3_3P3"
       resistance="100kohm"
-      schX={4.1}
-      schY={-0.35}
-      schRotation={90}
-      connections={{ pin1: "net.V3P3_AON", pin2: "net.V3P3_PG" }}
+      schX={3.4}
+      schY={-0.05}
+      schRotation={270}
     />
     <capacitor
       name="C2_3P3"
       capacitance="22uF"
-      schX={5.4}
+      schX={4.5}
       schY={-0.2}
       schOrientation="vertical"
-      connections={{ pin1: "net.V3P3_AON", pin2: "net.GND" }}
     />
     <resistor
       name="R3P3_BYP"
       resistance="0ohm"
       doNotPlace
-      schX={1.2}
-      schY={2.6}
-      connections={{ pin1: "net.VIN_DC_DC", pin2: "net.V3P3_AON" }}
+      schX={1.5}
+      schY={1.55}
     />
-    <schematictext text="DNP" schX={1.2} schY={3.1} fontSize={0.18} />
+
+    {/* Input rail and local input bypass. */}
+    <trace from="U3P3.VIN" to="C1_3P3.pin1" />
+    <trace from="U3P3.VIN" to="R3P3_BYP.pin1" />
+    <netlabel
+      net="VIN_DC_DC"
+      connectsTo="U3P3.VIN"
+      schX={-3.2}
+      schY={0.35}
+      anchorSide="right"
+    />
+    <netlabel
+      net="EN_3P3"
+      connectsTo="U3P3.EN"
+      schX={-3.2}
+      schY={-0.35}
+      anchorSide="right"
+    />
+
+    {/* Buck switch node, feedback, output capacitor, and bypass option. */}
+    <trace from="U3P3.SW" to="L3P3.pin1" />
+    <trace from="L3P3.pin2" to="U3P3.VOS" />
+    <trace from="U3P3.VOS" to="U3P3.FB" />
+    <trace from="L3P3.pin2" to="R3_3P3.pin1" />
+    <trace from="L3P3.pin2" to="C2_3P3.pin1" schDisplayLabel="V3P3_AON" />
+    <trace from="R3P3_BYP.pin2" to="L3P3.pin2" />
+    <netlabel net="V3P3_AON" connectsTo="R3P3_BYP.pin2" inline />
+
+    {/* Power-good pull-up and exported status rail. */}
+    <trace
+      path={["U3P3.PG", "R3_3P3.pin2", "net.V3P3_PG"]}
+      schDisplayLabel="V3P3_PG"
+    />
+
+    {/* Keep ground returns local, as on the TI reference sheet. */}
+    <netlabel
+      net="GND"
+      connectsTo="C1_3P3.pin2"
+      schX={-2.05}
+      schY={-1.25}
+      anchorSide="top"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="U3P3.GND"
+      schX={1.1}
+      schY={-1.25}
+      anchorSide="top"
+    />
+    <netlabel
+      net="GND"
+      connectsTo="C2_3P3.pin2"
+      schX={4.5}
+      schY={-1.25}
+      anchorSide="top"
+    />
   </subcircuit>
 );
 
