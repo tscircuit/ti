@@ -20,8 +20,10 @@ const Ground = ({ from, schX, schY, anchorSide = "top" }: GroundProps) => (
 
 /**
  * TIDA-01141 bi-directional high-side current and voltage sensing circuit.
- * Component values, connectivity, and placement follow TI's native Altium
- * design and the published TIDRP25 reference schematic (sheet 2 of 3).
+ * Component values and connectivity follow TI's native Altium design and the
+ * published TIDRP25 reference schematic (sheet 2 of 3). The comparator
+ * feedback placement is adapted to the released symbol's fixed input order so
+ * independent nets remain visually distinct without manual trace hints.
  * @see https://www.ti.com/lit/pdf/TIDRP25
  */
 export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
@@ -198,7 +200,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       resistance={10000}
       footprint="0603"
       schX={3.35}
-      schY={2.6}
+      schY={2.2}
       schRotation={-90}
       connections={{ pin1: ["U2A.pin1", "R12.pin1"] }}
     />
@@ -244,16 +246,22 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       schX={2.4}
       schY={2.56}
       schRotation={-90}
-      connections={{ pin1: ["U2A.pin2", "net.LTV"] }}
+      connections={{ pin1: "U2A.pin2" }}
     />
     <resistor
       name="R12"
       resistance={3320000}
       footprint="0603"
-      schX={5.8}
-      schY={2.3}
+      schX={5.9}
+      schY={3.85}
     />
-    <capacitor name="C1" capacitance="1uF" footprint="0603" schX={6} schY={4} />
+    <capacitor
+      name="C1"
+      capacitance="1uF"
+      footprint="0603"
+      schX={7}
+      schY={4.55}
+    />
 
     <netlabel
       net="IBAT_HS"
@@ -266,16 +274,23 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
     <Ground from="C8.pin2" schX={0.75} schY={0.05} />
 
     <Ground from="C3.pin2" schX={2.4} schY={2.1} />
+    <netlabel
+      net="LTV"
+      connectsTo="C3.pin1"
+      schX={1.7}
+      schY={2.86}
+      anchorSide="right"
+    />
     <trace from="R12.pin2" to="U2A.pin4" />
 
     <netlabel
       net="LV_AUX_3_3V"
       connectsTo={["U2A.pin5", "C1.pin1"]}
       schX={4.8}
-      schY={4}
+      schY={4.55}
       anchorSide="bottom"
     />
-    <Ground from="C1.pin2" schX={6.7} schY={3.7} />
+    <Ground from="C1.pin2" schX={7.8} schY={4.25} />
     <Ground from="U2A.pin3" schX={4.8} schY={1.95} />
 
     <schematicsymbol
@@ -298,7 +313,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       capacitance="1000pF"
       footprint="0603"
       schX={2.4}
-      schY={-0.75}
+      schY={-0.55}
       schRotation={-90}
     />
     <resistor
@@ -306,7 +321,7 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       resistance={10000}
       footprint="0603"
       schX={3.5}
-      schY={-0.17}
+      schY={0.15}
       connections={{
         pin2: ["U2B.pin1", "R14.pin1"],
       }}
@@ -315,56 +330,56 @@ export const TIDA01141_CurrentVoltageSense = (props: SubcircuitProps) => (
       name="R14"
       resistance={3320000}
       footprint="0603"
-      schX={5.8}
-      schY={-0.95}
+      schX={5.9}
+      schY={0.55}
     />
     <capacitor
       name="C4"
       capacitance="0.1uF"
       footprint="0603"
-      schX={6}
-      schY={0.7}
+      schX={7}
+      schY={1.8}
     />
 
     <netlabel
       net="HTV"
       connectsTo={["C10.pin1", "R13.pin1"]}
       schX={1.7}
-      schY={-0.17}
+      schY={0.15}
       anchorSide="right"
     />
-    <Ground from="C10.pin2" schX={2.4} schY={-1.4} />
+    <Ground from="C10.pin2" schX={2.4} schY={-1.2} />
     <trace from="R14.pin2" to="U2B.pin4" />
 
     <netlabel
       net="LV_AUX_3_3V"
       connectsTo={["U2B.pin5", "C4.pin1"]}
       schX={4.8}
-      schY={0.7}
+      schY={1.8}
       anchorSide="bottom"
     />
-    <Ground from="C4.pin2" schX={6.7} schY={0.15} />
+    <Ground from="C4.pin2" schX={7.8} schY={2.15} />
     <Ground from="U2B.pin3" schX={4.8} schY={-1.4} />
 
     <resistor
       name="R15"
       resistance={3320}
       footprint="0603"
-      schX={7.4}
+      schX={8.5}
       schY={2.7}
       schRotation={-90}
     />
     <netlabel
       net="LV_AUX_3_3V"
       connectsTo="R15.pin1"
-      schX={7.4}
-      schY={3.55}
+      schX={8.5}
+      schY={3.35}
       anchorSide="bottom"
     />
     <netlabel
       net="IBAT_ALERT"
       connectsTo={["U2A.pin4", "U2B.pin4", "R15.pin2"]}
-      schX={8.6}
+      schX={9.8}
       schY={1.3}
       anchorSide="left"
     />
