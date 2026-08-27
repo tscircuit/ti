@@ -19,7 +19,7 @@ export const PressureSensor_2SMPP03_TIDA010266 = (
       <SMPP2_03
         name="U7"
         schSectionName={props.schSectionName}
-        schX={0}
+        schX={1.5}
         schY={0}
         connections={{
           VOUT_POS: "net.BRIDGE_POS",
@@ -33,48 +33,52 @@ export const PressureSensor_2SMPP03_TIDA010266 = (
         resistance="2.49k"
         tolerance="0.1%"
         footprint="0603"
-        schX={3.8}
-        schY={-2.4}
+        schX={5.3}
+        schY={-1.6}
         schOrientation="vertical"
         connections={{ pin1: "net.IBIAS_FB", pin2: "net.GND" }}
+      />
+      <port
+        name="SENSOR_DRIVE"
+        schX={originX - 0.5}
+        schY={originY + 0.45}
+        direction="left"
+        connectsTo="net.SENSOR_DRIVE"
+      />
+      <trace
+        path={[".SENSOR_DRIVE", ".U7 > .ICC", ".U7 > .N_SUB"]}
+        schDisplayLabel=" "
       />
       <TIDA010266InlineNetPorts
         originX={originX}
         originY={originY}
         ports={[
           {
-            name: "SENSOR_DRIVE",
-            connectsTo: [".U7 > .ICC", ".U7 > .N_SUB"],
-            schX: -3,
-            schY: 1,
-            direction: "left",
-          },
-          {
             name: "BRIDGE_POS",
             connectsTo: ".U7 > .VOUT_POS",
-            schX: 3,
-            schY: 1,
+            schX: 7.2,
+            schY: 0.45,
             direction: "right",
           },
           {
             name: "BRIDGE_NEG",
             connectsTo: ".U7 > .VOUT_NEG",
-            schX: 3,
+            schX: 7.2,
             schY: 0,
             direction: "right",
           },
           {
             name: "IBIAS_FB",
             connectsTo: [".U7 > .GND", ".R22 > .pin1"],
-            schX: 3,
-            schY: -1.4,
+            schX: 7.2,
+            schY: -0.45,
             direction: "right",
           },
           {
             name: "GND",
             connectsTo: ".R22 > .pin2",
-            schX: 3.8,
-            schY: -3.5,
+            schX: 5.3,
+            schY: -2.8,
             direction: "down",
           },
         ]}

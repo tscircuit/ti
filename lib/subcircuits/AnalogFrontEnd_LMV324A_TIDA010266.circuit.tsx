@@ -3,13 +3,21 @@ import { LMV324AIPWR } from "../chips/LMV324AIPWR.circuit.tsx";
 import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
 import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
 
+export type AnalogFrontEnd_LMV324A_TIDA010266Props =
+  TIDA010266SectionedSubcircuitProps & {
+    inputReferenceSectionName?: string;
+    pressureSectionName?: string;
+  };
+
 /**
  * TIDA-010266 U2 quad-amplifier functions: 1.25 V reference buffer,
  * two-stage oscillometric band-pass filter, and sensor current-bias loop.
  */
-export const AnalogFrontEnd_LMV324A_TIDA010266 = (
-  props: TIDA010266SectionedSubcircuitProps,
-) => {
+export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
+  inputReferenceSectionName,
+  pressureSectionName,
+  ...props
+}: AnalogFrontEnd_LMV324A_TIDA010266Props) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
 
@@ -21,9 +29,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = (
     >
       <LMV324AIPWR
         name="U2"
-        schSectionName={props.schSectionName}
-        schX={0}
-        schY={0}
+        noSchematicRepresentation
         connections={{
           V_POS: "net.V3_3",
           V_NEG: "net.GND",
@@ -37,22 +43,84 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = (
         }}
       />
 
+      {/* U2 is one physical quad op-amp with four schematic units. */}
+      <schematicsymbol
+        name="U2A"
+        displayName="U2A"
+        chipRef=".U2"
+        symbolName="opamp_no_power_right"
+        schSectionName={inputReferenceSectionName ?? props.schSectionName}
+        schX={-3}
+        schY={15}
+        connections={{
+          inp1: ".U2 > .IN_POS_A",
+          inp2: ".U2 > .IN_NEG_A",
+          out: ".U2 > .OUT_A",
+        }}
+      />
+      <schematicsymbol
+        name="U2B"
+        displayName="U2B"
+        chipRef=".U2"
+        symbolName="opamp_no_power_right"
+        schSectionName={props.schSectionName}
+        schX={0}
+        schY={0}
+        connections={{
+          inp1: ".U2 > .IN_POS_B",
+          inp2: ".U2 > .IN_NEG_B",
+          out: ".U2 > .OUT_B",
+        }}
+      />
+      <schematicsymbol
+        name="U2C"
+        displayName="U2C"
+        chipRef=".U2"
+        symbolName="opamp_no_power_right"
+        schSectionName={props.schSectionName}
+        schX={8}
+        schY={0}
+        connections={{
+          inp1: ".U2 > .IN_POS_C",
+          inp2: ".U2 > .IN_NEG_C",
+          out: ".U2 > .OUT_C",
+        }}
+      />
+      <schematicsymbol
+        name="U2D"
+        displayName="U2D"
+        chipRef=".U2"
+        symbolName="opamp_with_power_right"
+        schSectionName={pressureSectionName ?? props.schSectionName}
+        schX={-19}
+        schY={-16.5}
+        connections={{
+          inp1: ".U2 > .IN_POS_D",
+          inp2: ".U2 > .IN_NEG_D",
+          out: ".U2 > .OUT_D",
+          "V+": ".U2 > .V_POS",
+          "V-": ".U2 > .V_NEG",
+        }}
+      />
+
       <resistor
         name="R4"
-        schSectionName={props.schSectionName}
+        schSectionName={inputReferenceSectionName ?? props.schSectionName}
         resistance="10k"
         footprint="0603"
-        schX={-6}
-        schY={4.1}
+        schX={-7}
+        schY={15.8}
+        schOrientation="vertical"
         connections={{ pin1: "net.VREF_2_5", pin2: "net.VREF_DIV" }}
       />
       <resistor
         name="R6"
-        schSectionName={props.schSectionName}
+        schSectionName={inputReferenceSectionName ?? props.schSectionName}
         resistance="10k"
         footprint="0603"
-        schX={-6}
-        schY={3.1}
+        schX={-7}
+        schY={14.2}
+        schOrientation="vertical"
         connections={{ pin1: "net.VREF_DIV", pin2: "net.GND" }}
       />
 
@@ -136,24 +204,32 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = (
 
       <resistor
         name="R18"
-        schSectionName={props.schSectionName}
+        schSectionName={pressureSectionName ?? props.schSectionName}
         resistance="45.3k"
         footprint="0603"
-        schX={-5.5}
-        schY={-3.1}
+        schX={-23}
+        schY={-15.8}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_2_5", pin2: "net.IBIAS_SET" }}
       />
       <resistor
         name="R21"
-        schSectionName={props.schSectionName}
+        schSectionName={pressureSectionName ?? props.schSectionName}
         resistance="4.99k"
         footprint="0603"
-        schX={-5.5}
-        schY={-4.5}
+        schX={-23}
+        schY={-18.2}
         schOrientation="vertical"
         connections={{ pin1: "net.IBIAS_SET", pin2: "net.GND" }}
       />
+      <port
+        name="SENSOR_DRIVE"
+        schX={originX - 18.5}
+        schY={originY - 16.5}
+        direction="right"
+        connectsTo="net.SENSOR_DRIVE"
+      />
+      <trace from=".U2 > .OUT_D" to=".SENSOR_DRIVE" schDisplayLabel=" " />
       <TIDA010266InlineNetPorts
         originX={originX}
         originY={originY}
@@ -263,24 +339,17 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = (
             direction: "right",
           },
           {
-            name: "SENSOR_DRIVE",
-            connectsTo: ".U2 > .OUT_D",
-            schX: 3,
-            schY: -2,
-            direction: "right",
-          },
-          {
             name: "IBIAS_FB",
             connectsTo: ".U2 > .IN_NEG_D",
-            schX: 1,
-            schY: -3,
+            schX: -19.6,
+            schY: -16.4,
             direction: "left",
           },
           {
             name: "IBIAS_SET",
             connectsTo: [".U2 > .IN_POS_D", ".R18 > .pin2", ".R21 > .pin1"],
-            schX: -4.5,
-            schY: -4,
+            schX: -19.6,
+            schY: -16.7,
             direction: "left",
           },
         ]}

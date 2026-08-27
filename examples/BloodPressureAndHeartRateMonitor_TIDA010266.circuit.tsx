@@ -121,6 +121,8 @@ export default () => (
     <AnalogFrontEnd_LMV324A_TIDA010266
       name="analog_front_end"
       schSectionName="ina_filter"
+      inputReferenceSectionName="input_reference"
+      pressureSectionName="pressure_sensor"
       schX={-7}
       schY={2}
     />
@@ -209,6 +211,7 @@ export default () => (
     <trace
       from=".analog_front_end > .SENSOR_DRIVE"
       to=".pressure_sensor > .SENSOR_DRIVE"
+      schDisplayLabel=" "
     />
     <trace
       from=".pressure_sensor > .IBIAS_FB"

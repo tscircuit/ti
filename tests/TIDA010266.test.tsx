@@ -186,6 +186,8 @@ test("TIDA-010266 example contains the complete released BOM and net topology", 
 
   const designators = circuit.db.source_component
     .list()
+    // SchematicSymbol projections U2A-U2D share the one physical U2 package.
+    .filter((component) => !/^U2[A-D]$/.test(component.name))
     .map((component) => component.name)
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   assert.deepEqual(designators, [
@@ -196,6 +198,37 @@ test("TIDA-010266 example contains the complete released BOM and net topology", 
     ...Array.from({ length: 7 }, (_, index) => `TP${index + 1}`),
     ...Array.from({ length: 7 }, (_, index) => `U${index + 1}`),
   ]);
+
+  const getSchematicComponent = (name: string) => {
+    const source = circuit.db.source_component.getWhere({ name });
+    assert.ok(source, name);
+    const schematic = circuit.db.schematic_component.getWhere({
+      source_component_id: source.source_component_id,
+    });
+    assert.ok(schematic, `${name} schematic representation`);
+    return schematic;
+  };
+  const pressureLayout = ["R18", "U2D", "U7", "R22"].map(getSchematicComponent);
+  assert.ok(
+    pressureLayout.every(
+      (component, index) =>
+        index === 0 || pressureLayout[index - 1]!.center.x < component.center.x,
+    ),
+    "pressure stage should run left-to-right from its bias divider to R22",
+  );
+  const u7Schematic = getSchematicComponent("U7");
+  assert.deepEqual(u7Schematic.size, { width: 3.2, height: 1.8 });
+  for (const name of ["R18", "R21", "R22"]) {
+    const component = getSchematicComponent(name);
+    const ports = circuit.db.schematic_port.list({
+      schematic_component_id: component.schematic_component_id,
+    });
+    assert.equal(ports.length, 2, name);
+    assert.ok(
+      Math.abs(ports[0]!.center.x - ports[1]!.center.x) < 1e-6,
+      `${name} should be vertical`,
+    );
+  }
 
   const expectedResistors: Record<string, number> = {
     R1: 27,

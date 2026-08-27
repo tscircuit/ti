@@ -25,8 +25,8 @@ export const SMPP2_03 = (props: ChipProps<typeof pinLabels>) => {
       pinLabels={pinLabels}
       pinAttributes={pinAttributes}
       datasheetUrl="https://components.omron.com/eu-en/products/sensors/2SMPP-03"
-      schWidth="3.8mm"
-      schHeight="3.6mm"
+      schWidth="3.2mm"
+      schHeight="1.8mm"
       schPinArrangement={{
         leftSide: { direction: "top-to-bottom", pins: ["ICC", "N_SUB", "NC"] },
         rightSide: {
@@ -35,10 +35,10 @@ export const SMPP2_03 = (props: ChipProps<typeof pinLabels>) => {
         },
       }}
       schPinStyle={{
-        N_SUB: { marginTop: 0.55 },
-        NC: { marginTop: 0.55 },
-        VOUT_NEG: { marginTop: 0.55 },
-        GND: { marginTop: 0.55 },
+        N_SUB: { marginTop: 0.15 },
+        NC: { marginTop: 0.15 },
+        VOUT_NEG: { marginTop: 0.15 },
+        GND: { marginTop: 0.15 },
       }}
       supplierPartNumbers={{
         jlcpcb: ["C3243672"],
