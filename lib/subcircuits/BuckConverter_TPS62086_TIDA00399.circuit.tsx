@@ -19,12 +19,7 @@ const TPS62086_PIN_LABELS = {
  * @see https://www.ti.com/tool/TIDA-00399
  */
 export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
-  <subcircuit
-    routingDisabled
-    {...props}
-    schTraceAutoLabelEnabled={false}
-    schMaxTraceDistance={100}
-  >
+  <subcircuit routingDisabled {...props} schTraceAutoLabelEnabled={false}>
     <chip
       name="U3P3"
       manufacturerPartNumber="TPS62086RLTR"
@@ -54,20 +49,20 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       name="L3P3"
       manufacturerPartNumber="XFL4015-471MEC"
       inductance="470nH"
-      schX={2.5}
+      schX={2.35}
       schY={0.5}
     />
     <resistor
       name="R3_3P3"
       resistance="100kohm"
-      schX={3.4}
+      schX={3.5}
       schY={-0.05}
       schRotation={270}
     />
     <capacitor
       name="C2_3P3"
       capacitance="22uF"
-      schX={4.5}
+      schX={4.85}
       schY={-0.2}
       schOrientation="vertical"
     />
@@ -75,13 +70,13 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       name="R3P3_BYP"
       resistance="0ohm"
       doNotPlace
-      schX={1.5}
+      schX={0.3}
       schY={1.55}
     />
 
     {/* Input rail and local input bypass. */}
     <trace from="U3P3.VIN" to="C1_3P3.pin1" />
-    <trace from="U3P3.VIN" to="R3P3_BYP.pin1" />
+    <trace from="C1_3P3.pin1" to="R3P3_BYP.pin1" />
     <netlabel
       net="VIN_DC_DC"
       connectsTo="U3P3.VIN"
@@ -107,9 +102,13 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <netlabel net="V3P3_AON" connectsTo="R3P3_BYP.pin2" inline />
 
     {/* Power-good pull-up and exported status rail. */}
-    <trace
-      path={["U3P3.PG", "R3_3P3.pin2", "net.V3P3_PG"]}
-      schDisplayLabel="V3P3_PG"
+    <trace from="U3P3.PG" to="R3_3P3.pin2" />
+    <netlabel
+      net="V3P3_PG"
+      connectsTo="R3_3P3.pin2"
+      schX={6.2}
+      schY={-0.55}
+      anchorSide="left"
     />
 
     {/* Keep ground returns local, as on the TI reference sheet. */}
@@ -130,7 +129,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <netlabel
       net="GND"
       connectsTo="C2_3P3.pin2"
-      schX={4.5}
+      schX={4.85}
       schY={-1.25}
       anchorSide="top"
     />
