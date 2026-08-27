@@ -769,18 +769,18 @@ export const PowerSupply_LM5050_TIDA00992 = (props: SubcircuitProps) => (
     />
 
     <schematictext
-      schX={-8}
-      schY={-1.9}
+      schX={-7.4}
+      schY={-1.88}
       text="Open = Diable LM5050-Q1"
       fontSize={0.22}
-      anchor="center_left"
+      anchor="center_right"
     />
     <schematictext
-      schX={-6.1}
-      schY={-2.18}
+      schX={-7.4}
+      schY={-2.16}
       text="Close = Enable LM5050-Q1"
       fontSize={0.22}
-      anchor="center_left"
+      anchor="center_right"
     />
 
     {/* Input and output rails from the reference schematic. */}
