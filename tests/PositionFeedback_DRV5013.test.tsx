@@ -185,6 +185,38 @@ describe("TIDA-01389 position feedback extraction", () => {
     }
   });
 
+  test("renders supply names inline on physical traces", () => {
+    for (const [name, label] of [
+      ["U6_GND", "GND"],
+      ["U5_GND", "GND"],
+      ["J4_GND", "GND"],
+      ["J4_VBAT", "V_BAT"],
+    ] as const) {
+      const sourceTrace = circuitJson.find(
+        (element) => element.type === "source_trace" && element.name === name,
+      );
+      expect(sourceTrace).toBeDefined();
+      if (!sourceTrace || sourceTrace.type !== "source_trace") continue;
+
+      expect(sourceTrace.connected_source_port_ids).toHaveLength(2);
+      expect(
+        circuitJson.some(
+          (element) =>
+            element.type === "schematic_text" &&
+            element.text === label &&
+            element.source_trace_id === sourceTrace.source_trace_id,
+        ),
+      ).toBeTrue();
+    }
+
+    const standaloneSupplyLabels = circuitJson.filter(
+      (element) =>
+        element.type === "schematic_net_label" &&
+        (element.text === "GND" || element.text === "V_BAT"),
+    );
+    expect(standaloneSupplyLabels).toEqual([]);
+  });
+
   test("connects both Hall outputs and both supply rails end to end", () => {
     const connectivity =
       getSourcePortConnectivityMapFromCircuitJson(circuitJson);

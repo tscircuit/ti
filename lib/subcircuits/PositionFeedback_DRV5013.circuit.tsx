@@ -49,6 +49,92 @@ const inHallEncoder = (x: number, y: number) =>
 const inConnector = (x: number, y: number) => inChild(x, y, CONNECTOR_CENTER);
 const asSchematicPosition = ({ x, y }: Point) => ({ schX: x, schY: y });
 
+type HallSensorChannelProps = SubcircuitProps & {
+  sensorName: "U5" | "U6";
+  capacitorName: "C13" | "C14";
+  pullupName: "R14" | "R15";
+  sensorCenter: Point;
+  capacitorCenter: Point;
+  pullupCenter: Point;
+  supplyRouteY: number;
+  outputNetName: "HALL_1" | "HALL_2";
+};
+
+/**
+ * A local schematic scope keeps each two-pin ground wire physically routed
+ * while its GND port still joins the shared parent ground electrically.
+ */
+const HallSensorChannel = ({
+  sensorName,
+  capacitorName,
+  pullupName,
+  sensorCenter,
+  capacitorCenter,
+  pullupCenter,
+  supplyRouteY,
+  outputNetName,
+  ...props
+}: HallSensorChannelProps) => (
+  <subcircuit schMaxTraceDistance="12mm" routingDisabled {...props}>
+    <net name="GND" isGroundNet={false} />
+    <net name="VCC" isPowerNet />
+    <net name={outputNetName} />
+
+    <DRV5013ADQDBZRQ1
+      name={sensorName}
+      schX={sensorCenter.x}
+      schY={sensorCenter.y}
+    />
+    <capacitor
+      name={capacitorName}
+      capacitance="0.1uF"
+      footprint="0402"
+      schX={capacitorCenter.x}
+      schY={capacitorCenter.y}
+      schOrientation="vertical"
+    />
+    <resistor
+      name={pullupName}
+      resistance="10kohm"
+      footprint="0402"
+      schX={pullupCenter.x}
+      schY={pullupCenter.y}
+      schRotation="90deg"
+    />
+
+    <trace
+      name={`${sensorName}_VCC`}
+      from={`${capacitorName}.pin1`}
+      to={`${sensorName}.VCC`}
+      schematicRouteHints={[
+        inHallEncoder(60, supplyRouteY),
+        inHallEncoder(100, supplyRouteY),
+      ]}
+    />
+    <trace from={`${capacitorName}.pin1`} to="net.VCC" />
+    <trace
+      name={`${sensorName}_GND`}
+      path={[`${capacitorName}.pin2`, `${sensorName}.GND`, "net.GND"]}
+      schDisplayLabel="GND"
+    />
+    <trace
+      name={`${outputNetName}_PULLUP_NODE`}
+      from={`${sensorName}.OUT`}
+      to={`${pullupName}.pin1`}
+      schematicRouteHints={[
+        inHallEncoder(260, supplyRouteY),
+        inHallEncoder(270, supplyRouteY),
+      ]}
+    />
+    <trace from={`${pullupName}.pin1`} to={`net.${outputNetName}`} />
+    <trace from={`${pullupName}.pin2`} to="net.VCC" />
+
+    <port name="VCC" direction="left" connectsTo="net.VCC" />
+    <port name="GND" direction="left" connectsTo="net.GND" />
+    <port name="HALL" direction="right" connectsTo={`net.${outputNetName}`} />
+  </subcircuit>
+);
+
 /**
  * The two-channel Hall encoder box from TIDA-01389. U6 generates HALL_1 and
  * U5 generates HALL_2. TIDA-01389 is used because the Window Module Position
@@ -64,7 +150,7 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
   const r15 = inHallEncoder(270, 170);
 
   return (
-    <group schMaxTraceDistance="12mm" routingDisabled {...props}>
+    <subcircuit schMaxTraceDistance="12mm" routingDisabled {...props}>
       <net name="GND" isGroundNet />
       <net name="VCC" isPowerNet />
       <net name="HALL_1" />
@@ -83,103 +169,44 @@ export const HallEncoder_DRV5013 = (props: SubcircuitProps) => {
         fontSize={0.3}
       />
 
-      <DRV5013ADQDBZRQ1 name="U6" schX={u6.x} schY={u6.y} />
-      <DRV5013ADQDBZRQ1 name="U5" schX={u5.x} schY={u5.y} />
+      <HallSensorChannel
+        name="hall1"
+        schX={0}
+        schY={0}
+        sensorName="U6"
+        capacitorName="C13"
+        pullupName="R14"
+        sensorCenter={u6}
+        capacitorCenter={c13}
+        pullupCenter={r14}
+        supplyRouteY={290}
+        outputNetName="HALL_1"
+      />
+      <HallSensorChannel
+        name="hall2"
+        schX={0}
+        schY={0}
+        sensorName="U5"
+        capacitorName="C14"
+        pullupName="R15"
+        sensorCenter={u5}
+        capacitorCenter={c14}
+        pullupCenter={r15}
+        supplyRouteY={150}
+        outputNetName="HALL_2"
+      />
+      <trace from=".hall1 > .VCC" to="net.VCC" />
+      <trace from=".hall1 > .GND" to="net.GND" />
+      <trace from=".hall1 > .HALL" to="net.HALL_1" />
+      <trace from=".hall2 > .VCC" to="net.VCC" />
+      <trace from=".hall2 > .GND" to="net.GND" />
+      <trace from=".hall2 > .HALL" to="net.HALL_2" />
 
-      <capacitor
-        name="C13"
-        capacitance="0.1uF"
-        footprint="0402"
-        schX={c13.x}
-        schY={c13.y}
-        schOrientation="vertical"
-      />
-      <capacitor
-        name="C14"
-        capacitance="0.1uF"
-        footprint="0402"
-        schX={c14.x}
-        schY={c14.y}
-        schOrientation="vertical"
-      />
-      <resistor
-        name="R14"
-        resistance="10kohm"
-        footprint="0402"
-        schX={r14.x}
-        schY={r14.y}
-        schRotation="90deg"
-      />
-      <resistor
-        name="R15"
-        resistance="10kohm"
-        footprint="0402"
-        schX={r15.x}
-        schY={r15.y}
-        schRotation="90deg"
-      />
-
-      <trace
-        name="U6_VCC"
-        from="C13.pin1"
-        to="U6.VCC"
-        schematicRouteHints={[inHallEncoder(60, 290), inHallEncoder(100, 290)]}
-      />
-      <trace from="C13.pin1" to="net.VCC" />
-      <netlabel
-        net="GND"
-        connectsTo="C13.pin2"
-        {...asSchematicPosition(inHallEncoder(60, 260))}
-        anchorSide="top"
-      />
-      <netlabel
-        net="GND"
-        connectsTo="U6.GND"
-        {...asSchematicPosition(inHallEncoder(260, 260))}
-        anchorSide="top"
-      />
-      <trace
-        name="HALL_1_PULLUP_NODE"
-        from="U6.OUT"
-        to="R14.pin1"
-        schematicRouteHints={[inHallEncoder(260, 290), inHallEncoder(270, 290)]}
-      />
-      <trace from="R14.pin1" to="net.HALL_1" />
-      <trace from="R14.pin2" to="net.VCC" />
-
-      <trace
-        name="U5_VCC"
-        from="C14.pin1"
-        to="U5.VCC"
-        schematicRouteHints={[inHallEncoder(60, 150), inHallEncoder(100, 150)]}
-      />
-      <trace from="C14.pin1" to="net.VCC" />
-      <netlabel
-        net="GND"
-        connectsTo="C14.pin2"
-        {...asSchematicPosition(inHallEncoder(60, 120))}
-        anchorSide="top"
-      />
-      <netlabel
-        net="GND"
-        connectsTo="U5.GND"
-        {...asSchematicPosition(inHallEncoder(260, 120))}
-        anchorSide="top"
-      />
-      <trace
-        name="HALL_2_PULLUP_NODE"
-        from="U5.OUT"
-        to="R15.pin1"
-        schematicRouteHints={[inHallEncoder(260, 150), inHallEncoder(270, 150)]}
-      />
-      <trace from="R15.pin1" to="net.HALL_2" />
-      <trace from="R15.pin2" to="net.VCC" />
-
-      <port name="VCC" direction="left" connectsTo="net.VCC" />
-      <port name="GND" direction="left" connectsTo="net.GND" />
+      <port name="HALL_VCC" direction="left" connectsTo="net.VCC" />
+      <port name="HALL_GND" direction="left" connectsTo="net.GND" />
       <port name="HALL_1" direction="right" connectsTo="net.HALL_1" />
       <port name="HALL_2" direction="right" connectsTo="net.HALL_2" />
-    </group>
+    </subcircuit>
   );
 };
 
@@ -191,10 +218,10 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
   const r9 = inConnector(100, 530);
 
   return (
-    <group schMaxTraceDistance="10mm" routingDisabled {...props}>
-      <net name="GND" isGroundNet />
+    <subcircuit schMaxTraceDistance="10mm" routingDisabled {...props}>
+      <net name="GND" isGroundNet={false} />
       <net name="VCC" isPowerNet />
-      <net name="V_BAT" isPowerNet />
+      <net name="V_BAT" isPowerNet={false} />
       <net name="HALL_1" />
       <net name="HALL_2" />
 
@@ -257,39 +284,42 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
         schematicRouteHints={[inConnector(120, 530), inConnector(120, 520)]}
       />
       <trace from="R9.pin2" to="net.VCC" />
-      <trace from="J2.pin1" to="net.GND" />
       <trace from="J2.pin6" to="net.HALL_1" />
       <trace from="J2.pin7" to="net.HALL_2" />
-      <netlabel
-        net="GND"
-        connectsTo="J4.pin1"
-        {...asSchematicPosition(inConnector(130, 600))}
-        anchorSide="right"
+      <trace
+        name="J4_GND"
+        path={["J4.pin1", "J2.pin1", "net.GND"]}
+        schDisplayLabel="GND"
+        schematicRouteHints={[inConnector(130, 600)]}
       />
-      <netlabel
-        net="V_BAT"
-        connectsTo="J4.pin2"
-        {...asSchematicPosition(inConnector(130, 610))}
-        anchorSide="right"
+      <trace
+        name="J4_VBAT"
+        path={["J4.pin2", ".V_BAT", "net.V_BAT"]}
+        schDisplayLabel="V_BAT"
+        schematicRouteHints={[inConnector(130, 610)]}
       />
 
       <port name="VCC" direction="left" connectsTo="net.VCC" />
-      <port name="V_BAT" direction="left" connectsTo="net.V_BAT" />
+      <port
+        name="V_BAT"
+        direction="right"
+        connectsTo="net.V_BAT"
+        {...asSchematicPosition(inConnector(130, 610))}
+      />
       <port name="GND" direction="left" connectsTo="net.GND" />
       <port name="HALL_1" direction="right" connectsTo="net.HALL_1" />
       <port name="HALL_2" direction="right" connectsTo="net.HALL_2" />
-    </group>
+    </subcircuit>
   );
 };
 
 /**
  * Complete TIDA-01389 two-channel Hall position-feedback subsystem.
  *
- * The Hall encoder and shared I/O connector remain separate native groups
- * inside one subcircuit. Native trace-to-net connections preserve their source
- * boundaries, while the shared parent connectivity lets tests assert the
- * complete signal path. DRV8703 and H-bridge circuitry are intentionally
- * excluded and remain the separate scope of PR #116.
+ * Local schematic subcircuit scopes let the native solver place GND and V_BAT
+ * text inline on their physical traces. Explicit parent traces preserve the
+ * shared end-to-end nets across those scopes. DRV8703 and H-bridge circuitry
+ * are intentionally excluded and remain the separate scope of PR #116.
  */
 export const PositionFeedback_DRV5013 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
@@ -302,25 +332,21 @@ export const PositionFeedback_DRV5013 = (props: SubcircuitProps) => (
       name="hallEncoder"
       schX={HALL_ENCODER_CENTER.x}
       schY={HALL_ENCODER_CENTER.y}
-      connections={{
-        VCC: "net.VCC",
-        GND: "net.GND",
-        HALL_1: "net.HALL_1",
-        HALL_2: "net.HALL_2",
-      }}
     />
     <PositionFeedbackConnector_TIDA01389
       name="connector"
       schX={CONNECTOR_CENTER.x}
       schY={CONNECTOR_CENTER.y}
-      connections={{
-        VCC: "net.VCC",
-        V_BAT: "net.V_BAT",
-        GND: "net.GND",
-        HALL_1: "net.HALL_1",
-        HALL_2: "net.HALL_2",
-      }}
     />
+    <trace from=".hallEncoder > .HALL_VCC" to="net.VCC" />
+    <trace from=".hallEncoder > .HALL_GND" to="net.GND" />
+    <trace from=".hallEncoder > .HALL_1" to="net.HALL_1" />
+    <trace from=".hallEncoder > .HALL_2" to="net.HALL_2" />
+    <trace from=".connector > .VCC" to="net.VCC" />
+    <trace from=".connector > .V_BAT" to="net.V_BAT" />
+    <trace from=".connector > .GND" to="net.GND" />
+    <trace from=".connector > .HALL_1" to="net.HALL_1" />
+    <trace from=".connector > .HALL_2" to="net.HALL_2" />
     <port name="VCC" direction="left" connectsTo="net.VCC" />
     <port name="V_BAT" direction="left" connectsTo="net.V_BAT" />
     <port name="GND" direction="left" connectsTo="net.GND" />
