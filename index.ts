@@ -132,6 +132,7 @@ import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/Electroc
 import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
 import { InputOutputProtection_TPD2E009_TIDA00399 } from "./lib/subcircuits/InputOutputProtection_TPD2E009_TIDA00399.circuit.tsx";
+import { BuckConverter_TPS62086_TIDA00399 } from "./lib/subcircuits/BuckConverter_TPS62086_TIDA00399.circuit.tsx";
 import { InputPowerProtection_TPS25910_TIDA00890 } from "./lib/subcircuits/InputPowerProtection_TPS25910_TIDA00890.circuit.tsx";
 import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/TemperatureSensor_TMP103_TIDA00399.circuit.tsx";
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
@@ -204,6 +205,7 @@ export {
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
   InputOutputProtection_TPD2E009_TIDA00399,
+  BuckConverter_TPS62086_TIDA00399,
   InputPowerProtection_TPS25910_TIDA00890,
   TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
@@ -344,6 +346,7 @@ export const TiSubcircuitComponents = {
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
   InputOutputProtection_TPD2E009_TIDA00399,
+  BuckConverter_TPS62086_TIDA00399,
   InputPowerProtection_TPS25910_TIDA00890,
   TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
