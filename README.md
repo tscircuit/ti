@@ -35,6 +35,23 @@ example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
+The [`SeatPositionModule.circuit.tsx`](examples/SeatPositionModule.circuit.tsx)
+example stays intentionally small: it composes and electrically connects the
+reusable reference subcircuits for the power supply, communication interface,
+light driver, MCU, position feedback, and motor driver blocks.
+
+## System Block Builder
+
+The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
+React Flow canvas for dragging these subcircuits into a system diagram.
+Connections stay at a readable system level—such as Power or Data—while a
+curated semantic catalog resolves compatible voltage rails and protocols into
+exact tscircuit selectors. The app generates example-style TSX and can evaluate
+it with PCB and routing work disabled to produce a schematic preview and
+downloadable PDF.
+
+[Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
+
 ## Raw Chip Usage
 
 When you need the bare chip package instead of a full reference design, import
@@ -94,6 +111,61 @@ components. For example, `".INA237 .U1 .VS"` selects the `VS` pin on the
 internal `U1` chip inside the placed `INA237` subcircuit.
 
 ## Exported Subcircuits
+
+### INA350 instrumentation amplifier
+
+`InstrumentationAmplifier_INA350` contains **only `INA350CDSIDSGR` and a 100 nF
+bypass capacitor**: the U5/C13 amplifier stage in
+[TI TIDA-010266, Figure 4-1](https://www.ti.com/lit/ug/tiduf53/tiduf53.pdf#page=17).
+It contains no pin headers, connectors, or gain-selection jumper. The
+[import example](examples/InstrumentationAmplifier_INA350.circuit.tsx) also uses
+only named parent nets, with no header. J10 in TI's schematic is an optional
+parent-board gain jumper, not part of this module.
+
+The CDS variant provides gains **30/50 V/V**. `gain="external"` (default) exposes
+GS for the parent: low selects 30, high or unconnected selects 50. `gain={30}`
+or `gain={50}` straps GS internally to GND or VS. REF is **not grounded**; drive
+it from a low-impedance source such as the buffered 1.25 V reference in TIDA-010266.
+`shutdown="external"` (default) exposes SHDN; high or unconnected enables the
+amplifier, while low disables it. `shutdown="enabled"` ties SHDN to VS. Do not
+populate a pull-down on SHDN if the amplifier must remain enabled.
+
+```tsx
+import { InstrumentationAmplifier_INA350 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="12mm" height="10mm" routingDisabled>
+    <InstrumentationAmplifier_INA350 name="Amp" gain="external" />
+    <trace from=".Amp .U1 > .VS" to="net.V3_3" />
+    <trace from=".Amp .U1 > .V_NEG" to="net.GND" />
+    <trace from=".Amp .U1 > .IN_POS" to="net.INA_IN_POS" />
+    <trace from=".Amp .U1 > .IN_NEG" to="net.INA_IN_NEG" />
+    <trace from=".Amp .U1 > .OUT" to="net.INA_OUT" />
+    <trace from=".Amp .U1 > .REF" to="net.VREF_1_25" />
+    <trace from=".Amp .U1 > .GS" to="net.INA_GS" />
+  </board>
+)
+```
+
+The supply, reference generator, sensor, ADC/filter, and optional controls belong
+to the parent circuit. Named nets do not generate voltages or add physical
+terminals: the example disables routing until the parent supplies real endpoints.
+Connect an optional MCU shutdown signal to `.Amp .U1 > .SHDN`. REF, GS, and SHDN
+remain separate from ground unless explicitly wired otherwise by the parent or
+selected props. V- and the exposed pad are grounded, and C1 bypasses VS to GND.
+
+Supply VS with 1.8-5.5 V. Inputs need a DC bias-current return path and must meet
+the [INA350 datasheet's common-mode/output-swing limits](https://www.ti.com/lit/ds/symlink/ina350.pdf).
+The module uses 0.1 mm traces. Fixed gain 50 uses a bottom-layer strap and two vias
+to keep the SHDN escape clear; use at least two copper layers. Verify the completed
+parent board's routing and fabrication clearances. It has no analog simulation model and is not a validated
+medical-device design.
+
+`INA350` defaults to the raw `INA350CDSIDSGR` chip with
+`footprintVariant="wson_8_ep_2x2"`. The exact `INA350ABSIDSGR` export is also
+available for designs requiring gains 10/20. Both share the DSG0008A footprint
+and pinout, but their gain settings are not interchangeable. No supplier SKU or
+3D model is assumed.
 
 ### DRV8210 PWM motor driver
 
@@ -190,16 +262,20 @@ The package currently exports these subcircuit components:
 - `MotorDriver_DRV8210`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
+- `MotorDriver_DRV8305_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
 - `EnvironmentalSensor_HDC2080`
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
+- `InstrumentationAmplifier_INA350`
+- `PressureTransmitter_PGA300`
 - `IsolatedRS485_ISOW7841`
 - `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSPM0L1306Q1_TIDA020065` ([TIDA-020065](https://www.ti.com/tool/TIDA-020065))
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
 - `OutputUserInterface_LEDMatrix_LP5892_Q1`
@@ -222,8 +298,15 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
 - `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
+- `LightDriver_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
+- `PositionFeedback_DRV5013_TIDA01389` ([TIDA-01389](https://www.ti.com/tool/TIDA-01389))
+- `PowerSupply_LM5050_TIDA00992` ([TIDA-00992](https://www.ti.com/tool/TIDA-00992))
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `BuckConverter_TPS62086_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
+- `InputPowerProtection_TPS25910_TIDA00890` ([TIDA-00890](https://www.ti.com/tool/TIDA-00890))
+- `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
+- `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
 
 ## Exported Chips
@@ -242,23 +325,30 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `CSD19532Q5B` | `-` | `CSD19532Q5B` |
 | `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
+| `DRV5013Q1` | `-` | `DRV5013ADQDBZRQ1` |
 | `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
+| `DRV83053Q1` | `-` | `DRV83053QPHPQ1` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
+| `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
 | `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
+| `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
+| `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
+| `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
