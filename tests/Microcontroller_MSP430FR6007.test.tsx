@@ -63,7 +63,7 @@ const findSubcircuitPort = (circuitJson: AnyCircuitElement[], name: string) => {
   return port;
 };
 
-const findSchematicCenter = (
+const findSchematicComponent = (
   circuitJson: AnyCircuitElement[],
   componentName: string,
 ) => {
@@ -78,8 +78,13 @@ const findSchematicCenter = (
     schematicComponent?.type === "schematic_component",
     `Missing schematic component ${componentName}`,
   );
-  return schematicComponent.center;
+  return schematicComponent;
 };
+
+const findSchematicCenter = (
+  circuitJson: AnyCircuitElement[],
+  componentName: string,
+) => findSchematicComponent(circuitJson, componentName).center;
 
 const testPinMap = () => {
   assert(
@@ -97,6 +102,39 @@ const testPinMap = () => {
 const testConnectivity = async () => {
   const circuitJson = await renderMcu();
   const connectivityMap = getFullConnectivityMapFromCircuitJson(circuitJson);
+
+  const sheets = circuitJson.filter(
+    (element) => element.type === "schematic_sheet",
+  );
+  assert(sheets.length === 2, "Expected exactly two schematic sheets");
+  const socketSheet = sheets.find(
+    (sheet) =>
+      sheet.type === "schematic_sheet" && sheet.name === "mcu_target_socket",
+  );
+  const supportSheet = sheets.find(
+    (sheet) =>
+      sheet.type === "schematic_sheet" && sheet.name === "minimum_system",
+  );
+  assert(socketSheet?.type === "schematic_sheet", "Missing MCU socket sheet");
+  assert(
+    supportSheet?.type === "schematic_sheet",
+    "Missing minimum-system support sheet",
+  );
+
+  for (const componentName of ["IC1", "J3", "J4", "J5", "J6"]) {
+    assert(
+      findSchematicComponent(circuitJson, componentName).schematic_sheet_id ===
+        socketSheet.schematic_sheet_id,
+      `${componentName} is not on the MCU socket sheet`,
+    );
+  }
+  for (const componentName of ["JTAG", "R7", "C5", "Q1", "Q2", "C3"]) {
+    assert(
+      findSchematicComponent(circuitJson, componentName).schematic_sheet_id ===
+        supportSheet.schematic_sheet_id,
+      `${componentName} is not on the minimum-system support sheet`,
+    );
+  }
 
   for (const connectorName of ["J3", "J4", "J5", "J6"]) {
     const connector = findSourceComponent(circuitJson, connectorName);
