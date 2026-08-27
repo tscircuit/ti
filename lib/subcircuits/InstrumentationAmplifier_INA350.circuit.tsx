@@ -1,11 +1,20 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { INA350CDSIDSGR } from "../chips/INA350CDSIDSGR.circuit.tsx";
+import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
 
 export type InstrumentationAmplifier_INA350Props = SubcircuitProps & {
+  /** Native schematic-section membership for the physical U/C components. */
+  schSectionName?: string;
   /** CDS gains: GS low = 30, high/open = 50. External exposes GS to the parent. */
   gain?: 30 | 50 | "external";
   /** External exposes SHDN; high/open enables the amplifier, low disables it. */
   shutdown?: "external" | "enabled";
+  /** Override the internal reference designator when composing a reference board. */
+  chipName?: string;
+  /** Override the bypass-capacitor reference designator. */
+  bypassCapacitorName?: string;
+  /** Expose TIDA-style module ports and render their signal names inline. */
+  inlineNetLabels?: boolean;
 };
 
 /**
@@ -18,11 +27,16 @@ export type InstrumentationAmplifier_INA350Props = SubcircuitProps & {
 export const InstrumentationAmplifier_INA350 = ({
   gain = "external",
   shutdown = "external",
+  chipName = "U1",
+  bypassCapacitorName = "C1",
+  inlineNetLabels = false,
   ...props
 }: InstrumentationAmplifier_INA350Props) => {
   if (gain !== "external" && gain !== 30 && gain !== 50) {
     throw new Error(`INA350CDS supports gains 30/50, not ${gain}`);
   }
+  const originX = typeof props.schX === "number" ? props.schX : 0;
+  const originY = typeof props.schY === "number" ? props.schY : 0;
   return (
     <subcircuit
       width={7}
@@ -30,9 +44,16 @@ export const InstrumentationAmplifier_INA350 = ({
       minTraceWidth={0.1}
       nominalTraceWidth={0.1}
       {...props}
+      {...(inlineNetLabels
+        ? {
+            schTraceAutoLabelEnabled: false,
+            schMaxTraceDistance: "1000mm",
+          }
+        : {})}
     >
       <INA350CDSIDSGR
-        name="U1"
+        name={chipName}
+        schSectionName={props.schSectionName}
         pcbX={0}
         pcbY={0}
         schX={0}
@@ -144,25 +165,27 @@ export const InstrumentationAmplifier_INA350 = ({
       <trace
         name="INPUT_NEGATIVE"
         schDisplayLabel="IN_NEG"
-        from=".U1 > .IN_NEG"
+        from={`.${chipName} > .IN_NEG`}
         to="net.IN_NEG"
       />
       <trace
         name="INPUT_POSITIVE"
         schDisplayLabel="IN_POS"
-        from=".U1 > .IN_POS"
+        from={`.${chipName} > .IN_POS`}
         to="net.IN_POS"
       />
       <trace
         name="OUTPUT"
         schDisplayLabel="OUT"
-        from=".U1 > .OUT"
+        from={`.${chipName} > .OUT`}
         to="net.OUT"
       />
 
       <capacitor
-        name="C1"
+        name={bypassCapacitorName}
+        schSectionName={props.schSectionName}
         capacitance="0.1uF"
+        maxVoltageRating="25V"
         footprint="0402"
         pcbX={2.4}
         pcbY={-0.26}
@@ -176,41 +199,43 @@ export const InstrumentationAmplifier_INA350 = ({
         schX={-1}
         schY={3.1}
         anchorSide="bottom"
-        connectsTo=".U1 > .V_POS"
+        connectsTo={`.${chipName} > .V_POS`}
+        inline={inlineNetLabels}
       />
       <netlabel
         net="VS"
         schX={1.5}
         schY={3.7}
         anchorSide="bottom"
-        connectsTo=".C1 > .pin1"
+        connectsTo={`.${bypassCapacitorName} > .pin1`}
+        inline={inlineNetLabels}
       />
       <trace
         name="ENABLE"
         schDisplayLabel={shutdown === "external" ? "SHDN" : undefined}
-        from=".U1 > .SHDN"
-        to={shutdown === "external" ? "net.SHDN" : ".U1 > .V_POS"}
+        from={`.${chipName} > .SHDN`}
+        to={shutdown === "external" ? "net.SHDN" : `.${chipName} > .V_POS`}
       />
       <trace
         name="GAIN_SELECT"
         schDisplayLabel={gain === "external" ? "GS" : undefined}
-        from=".U1 > .GS"
+        from={`.${chipName} > .GS`}
         to={
           gain === "external"
             ? "net.GS"
             : gain === 50
-              ? ".U1 > .V_POS"
+              ? `.${chipName} > .V_POS`
               : "net.GND"
         }
         // Keep the high-gain strap off the top-layer SHDN escape route.
-        pcbPathRelativeTo=".U1 > .GS"
+        pcbPathRelativeTo={`.${chipName} > .GS`}
         pcbPath={
           gain === 50
             ? [
-                ".U1 > .GS",
+                `.${chipName} > .GS`,
                 { x: -1.7, y: 0.75, via: true, toLayer: "bottom" },
                 { x: 1.7, y: 0.25, via: true, toLayer: "top" },
-                ".U1 > .V_POS",
+                `.${chipName} > .V_POS`,
               ]
             : undefined
         }
@@ -220,17 +245,95 @@ export const InstrumentationAmplifier_INA350 = ({
         schX={1.5}
         schY={2.45}
         anchorSide="top"
-        connectsTo=".C1 > .pin2"
+        connectsTo={`.${bypassCapacitorName} > .pin2`}
+        inline={inlineNetLabels}
       />
 
-      <trace name="THERMAL_PAD" from=".U1 > .EP" to=".U1 > .V_NEG" />
+      <trace
+        name="THERMAL_PAD"
+        from={`.${chipName} > .EP`}
+        to={`.${chipName} > .V_NEG`}
+      />
       <trace
         name="REFERENCE"
         schDisplayLabel="REF"
-        from=".U1 > .REF"
+        from={`.${chipName} > .REF`}
         to="net.REF"
       />
-      <trace name="GROUND" from=".U1 > .V_NEG" to="net.GND" />
+      <trace name="GROUND" from={`.${chipName} > .V_NEG`} to="net.GND" />
+      {inlineNetLabels && (
+        <TIDA010266InlineNetPorts
+          originX={originX}
+          originY={originY}
+          ports={[
+            {
+              name: "IN_NEG",
+              connectsTo: `.${chipName} > .IN_NEG`,
+              schX: -3,
+              schY: 1,
+              direction: "left",
+            },
+            {
+              name: "IN_POS",
+              connectsTo: `.${chipName} > .IN_POS`,
+              schX: -3,
+              schY: -1,
+              direction: "left",
+            },
+            {
+              name: "OUT",
+              connectsTo: `.${chipName} > .OUT`,
+              schX: 3,
+              schY: 0,
+              direction: "right",
+            },
+            {
+              name: "V_POS",
+              net: "VS",
+              connectsTo: [
+                `.${chipName} > .V_POS`,
+                `.${bypassCapacitorName} > .pin1`,
+              ],
+              schX: -1,
+              schY: 3.7,
+              direction: "up",
+            },
+            {
+              name: "V_NEG",
+              net: "GND",
+              connectsTo: [
+                `.${chipName} > .V_NEG`,
+                `.${chipName} > .EP`,
+                `.${bypassCapacitorName} > .pin2`,
+              ],
+              schX: -1,
+              schY: -3,
+              direction: "down",
+            },
+            {
+              name: "REF",
+              connectsTo: `.${chipName} > .REF`,
+              schX: 1.5,
+              schY: -2.2,
+              direction: "down",
+            },
+            {
+              name: "GS",
+              connectsTo: `.${chipName} > .GS`,
+              schX: -0.35,
+              schY: 3,
+              direction: "up",
+            },
+            {
+              name: "SHDN",
+              connectsTo: `.${chipName} > .SHDN`,
+              schX: -1.65,
+              schY: 3,
+              direction: "up",
+            },
+          ]}
+        />
+      )}
       <schematictext
         text={
           gain === "external"

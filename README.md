@@ -35,6 +35,34 @@ example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
+The
+[`BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx`](examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx)
+example reproduces TI's TIDA-010266 blood-pressure and heart-rate monitor from
+the released schematic and BOM. It preserves reference designators U1-U7,
+R1-R23, C1-C18, J1-J10, TP1-TP7, and S1, including the DNP shutdown resistor
+and both selectable instrumentation-amplifier paths. The example composes these
+reusable modules:
+
+- `PowerManagement_TPS7A2433_TIDA010266`
+- `VoltageReference_ATL431LI_TIDA010266`
+- `InstrumentationAmplifier_INA350`
+- `IntegratedInstrumentationAmplifier_MSPM0_TIDA010266`
+- `AnalogFrontEnd_LMV324A_TIDA010266`
+- `PressureSensor_2SMPP03_TIDA010266`
+- `ADCFilter_TIDA010266`
+- `Microcontroller_MSPM0L1306_TIDA010266`
+- `ProgrammingInterface_MSPM0_TIDA010266`
+- `MotorDriver_DRV8210_TIDA010266`
+- `BloodPressureMonitorInterfaces_TIDA010266`
+
+The newly modeled bare parts are available under the readable names
+`TPS7A24`, `ATL431LI`, `LMV324A`, and `SMPP2_03`. Exact-package exports for the
+TI devices remain available as `TPS7A2433DBVR`, `ATL431LIBIDBZR`, and
+`LMV324AIPWR`; `SMPP2_03` directly models Omron's `2SMPP03` package.
+The example is schematic-first (`routingDisabled`): place and route the PCB only
+after selecting the mechanical outline and validating medical-device safety
+requirements for the intended product.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a

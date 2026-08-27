@@ -12,10 +12,22 @@ const pinLabels = {
   pin9: ["EP", "PAD"],
 } as const;
 
+const pinAttributes = {
+  pin1: { requiresPower: true },
+  pin4: { requiresGround: true },
+  pin8: {
+    requiresPower: true,
+    shouldHaveDecouplingCapacitor: true,
+    recommendedDecouplingCapacitorCapacitance: "0.1uF",
+  },
+  pin9: { requiresGround: true },
+} as const;
+
 export const DRV8210DSGR = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
       pinLabels={pinLabels}
+      pinAttributes={pinAttributes}
       supplierPartNumbers={{
         jlcpcb: ["C3681199"],
       }}
