@@ -70,10 +70,10 @@ export const Microcontroller_MSPM0L1306Q1_TIDA020065 = (
         rightSide: { direction: "top-to-bottom", pins: [5, 33] },
       }}
       schPinStyle={{
-        pin4: { marginTop: 0.4 },
+        pin4: { marginTop: 0.3 },
         pin32: { marginBottom: 0.2 },
         pin3: { marginBottom: 0.2 },
-        pin5: { marginTop: 6.2 },
+        pin5: { marginTop: 6.3 },
       }}
       showPinAliases
     />
