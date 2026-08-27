@@ -75,34 +75,14 @@ export const PinchDetectionPower_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="U5.GND_3" to="C14.pin2" />
 
     <trace from="U4.VIN" to="net.PWR" />
-    <netlabel
-      net="GND"
-      connectsTo="C11.pin2"
-      anchorSide="top"
-      {...p(690, 430)}
-    />
-    <netlabel
-      net="GND"
-      connectsTo="C13.pin2"
-      anchorSide="top"
-      {...p(690, 270)}
-    />
+    <trace from="C11.pin2" to="net.GND" />
+    <trace from="C13.pin2" to="net.GND" />
     {/* Source V3.3 is normalized to V3_3 because native net identifiers reject
         periods. The component, value, placement, and electrical net are exact. */}
     <trace from="U4.VOUT" to="net.V3_3" />
-    <netlabel
-      net="GND"
-      connectsTo="C12.pin2"
-      anchorSide="top"
-      {...p(900, 420)}
-    />
+    <trace from="C12.pin2" to="net.GND" />
     <trace from="U5.VOUT" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="C14.pin2"
-      anchorSide="top"
-      {...p(900, 260)}
-    />
+    <trace from="C14.pin2" to="net.GND" />
 
     <port name="PWR" direction="left" connectsTo="U4.VIN" />
     <port name="V3_3" direction="right" connectsTo="U4.VOUT" />

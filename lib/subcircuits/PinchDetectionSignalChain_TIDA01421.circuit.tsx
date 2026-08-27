@@ -147,14 +147,9 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="R7.pin1" to="net.V_MINUS" />
     <trace from="U2.VS" to="net.V5" />
     <trace from="U2.REF1" to="net.V5" />
-    <netlabel net="GND" connectsTo="U2.GND" anchorSide="top" {...p(610, 870)} />
+    <trace from="U2.GND" to="net.GND" />
     <trace from="C3.pin1" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="C3.pin2"
-      anchorSide="top"
-      {...p(520, 990)}
-    />
+    <trace from="C3.pin2" to="net.GND" />
 
     {/* ADCMOTOR is the source design's scaled DC-current interface. */}
     <resistor
@@ -182,12 +177,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="R20.pin2" to="C10.pin1" />
     <trace from="R20.pin1" to="C10.pin2" />
     <trace from="R12.pin2" to="net.ADCMOTOR" />
-    <netlabel
-      net="GND"
-      connectsTo="C10.pin2"
-      anchorSide="top"
-      {...p(750, 630)}
-    />
+    <trace from="C10.pin2" to="net.GND" />
 
     {/* TLV2316-Q1 active band-pass filter and DC-bias rejection stages. */}
     <capacitor
@@ -311,41 +301,16 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="C5.pin2" to="C6.pin2" />
 
     <trace from="R11.pin2" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="R17.pin1"
-      anchorSide="top"
-      {...p(670, 770)}
-    />
+    <trace from="R17.pin1" to="net.GND" />
     <trace from="R11.pin1" to="net.BIAS" />
     <trace from="R10.pin1" to="net.BIAS" />
     <trace from="U3A.V_PLUS" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="U3A.V_MINUS"
-      anchorSide="top"
-      {...p(790, 870)}
-    />
+    <trace from="U3A.V_MINUS" to="net.GND" />
     <trace from="U3B.V_PLUS" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="U3B.V_MINUS"
-      anchorSide="top"
-      {...p(1080, 860)}
-    />
+    <trace from="U3B.V_MINUS" to="net.GND" />
     <trace from="C5.pin1" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="C5.pin2"
-      anchorSide="top"
-      {...p(860, 990)}
-    />
-    <netlabel
-      net="GND"
-      connectsTo="C9.pin2"
-      anchorSide="top"
-      {...p(980, 850)}
-    />
+    <trace from="C5.pin2" to="net.GND" />
+    <trace from="C9.pin2" to="net.GND" />
 
     {/* LMV7275-Q1 inverting comparator, hysteresis, and open-drain pull-up. */}
     <LMV7275IDCKRQ1 name="U1" {...p(1280, 910)} />
@@ -402,34 +367,14 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="C2.pin2" to="U1.V_MINUS" />
 
     <trace from="C2.pin1" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="C2.pin2"
-      anchorSide="top"
-      {...p(1280, 1000)}
-    />
+    <trace from="C2.pin2" to="net.GND" />
     <trace from="U1.V_PLUS" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="U1.V_MINUS"
-      anchorSide="top"
-      {...p(1300, 850)}
-    />
+    <trace from="U1.V_MINUS" to="net.GND" />
     <trace from="R15.pin2" to="net.V5" />
-    <netlabel
-      net="GND"
-      connectsTo="R18.pin1"
-      anchorSide="top"
-      {...p(1200, 760)}
-    />
+    <trace from="R18.pin1" to="net.GND" />
     <trace from="R4.pin2" to="net.V3_3" />
     <trace from="U1.OUT" to="net.TIMER" />
-    <netlabel
-      net="GND"
-      connectsTo="C15.pin2"
-      anchorSide="top"
-      {...p(1460, 840)}
-    />
+    <trace from="C15.pin2" to="net.GND" />
 
     <port name="V_PLUS" direction="left" connectsTo="J1.V_PLUS" />
     <port name="V_MINUS" direction="left" connectsTo="J1.V_MINUS" />

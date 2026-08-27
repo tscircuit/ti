@@ -236,6 +236,31 @@ test("preserves the local power nets and renders without circuit errors", () => 
     ["U5", 5],
     ["C14", 1],
   ]);
+  expectOneNet(powerJson, [
+    ["U4", 3],
+    ["U4", 4],
+    ["U5", 3],
+    ["U5", 4],
+    ["C11", 2],
+    ["C12", 2],
+    ["C13", 2],
+    ["C14", 2],
+  ]);
+  expectOneNet(signalJson, [
+    ["U2", 2],
+    ["C3", 2],
+    ["C10", 2],
+    ["R17", 1],
+    ["U3", 4],
+    ["U3A", 4],
+    ["U3B", 4],
+    ["C5", 2],
+    ["C9", 2],
+    ["U1", 2],
+    ["C2", 2],
+    ["R18", 1],
+    ["C15", 2],
+  ]);
 
   const circuitErrors = [...signalJson, ...powerJson].filter((element) =>
     element.type.endsWith("_error"),
