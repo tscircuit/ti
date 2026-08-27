@@ -28,7 +28,7 @@ const SN65LVDS31_PIN_LABELS = {
  * @see https://www.ti.com/tool/TIDA-060017
  */
 export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <chip
       name="U1"
       manufacturerPartNumber="SN65LVDS31D"
@@ -55,25 +55,22 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
         ENABLE: "net.ENABLE",
         OUT2_N: "net.DIFF2_N",
         OUT2_P: "net.DIFF2_P",
-        IN2: "net.IN2",
         GND: "net.GND",
-        IN3: "net.IN3",
         OUT3_P: "net.DIFF3_P",
         OUT3_N: "net.DIFF3_N",
         ENABLE_NOT: "net.ENABLE_NOT",
         OUT4_N: "net.DIFF4_N",
         OUT4_P: "net.DIFF4_P",
-        IN4: "net.IN4",
         VCC: "net.VCC1_3V3",
       }}
     />
 
     {[
       ["R1", "net.IN1", -3.4, 1.35, false],
-      ["R2", "net.IN2", -3.4, -1.5, true],
-      ["R3", "net.IN3", 3.4, -1.5, true],
-      ["R4", "net.IN4", 3.4, 0.9, true],
-    ].map(([name, signal, schX, schY, signalOnTop]) => (
+      ["R2", "U1.IN2", -3.4, -1.5, true],
+      ["R3", "U1.IN3", 3.4, -1.5, true],
+      ["R4", "U1.IN4", 3.4, 0.9, true],
+    ].map(([name, signalTarget, schX, schY, signalOnTop]) => (
       <resistor
         key={name}
         name={name as string}
@@ -83,8 +80,8 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
         schRotation={90}
         connections={
           signalOnTop
-            ? { pin1: "net.GND", pin2: signal as string }
-            : { pin1: signal as string, pin2: "net.GND" }
+            ? { pin1: "net.GND", pin2: signalTarget as string }
+            : { pin1: signalTarget as string, pin2: "net.GND" }
         }
       />
     ))}
