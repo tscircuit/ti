@@ -149,13 +149,7 @@ export const SystemPowerVpp_TPS79601_TIDEP0092 = (props: SubcircuitProps) => (
       schY={0.28125}
       anchorSide="top"
     />
-    <netlabel
-      net="GND"
-      connection="U11.EP"
-      schX={0.5625}
-      schY={0.28125}
-      anchorSide="top"
-    />
+    <trace from=".U11 > .GND" to=".U11 > .EP" />
   </subcircuit>
 );
 

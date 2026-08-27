@@ -136,7 +136,7 @@ test("TI off-sheet ports use native on-trace labels", () => {
         "R142.pin1",
         "R148.pin1",
         "R145.pin1",
-        "R141.pin2",
+        "R138.pin2",
       ],
     },
     {
@@ -154,6 +154,17 @@ test("TI off-sheet ports use native on-trace labels", () => {
       ),
       traces: [[".R46 > .pin2", "net.LDO_02_EN", "LDO_02_EN"]],
       formerNetLabelConnections: ["R46.pin2"],
+    },
+    {
+      sourceUrl: new URL(
+        "../lib/subcircuits/SystemPowerReference_LM4060_Datasheet.circuit.tsx",
+        import.meta.url,
+      ),
+      traces: [
+        [".V5_IN", ".R1 > .pin1", "V_S = 5V"],
+        [".U1 > .CATHODE", ".VREF_3V3", "V_R = 3.3V"],
+      ],
+      formerNetLabelConnections: ["R1.pin1", "U1.CATHODE"],
     },
   ] as const;
 
@@ -186,6 +197,57 @@ test("TI off-sheet ports use native on-trace labels", () => {
         `${testCase.sourceUrl.pathname} must not use a standalone net label at ${connection}`,
       );
     }
+  }
+});
+
+test("TI labels never replace physical source wires", () => {
+  const cases = [
+    {
+      sourceUrl: new URL(
+        "../lib/subcircuits/SystemPowerVpp_TPS79601_TIDEP0092.circuit.tsx",
+        import.meta.url,
+      ),
+      from: ".U11 > .GND",
+      to: ".U11 > .EP",
+      duplicateNetLabelConnection: "U11.EP",
+    },
+    {
+      sourceUrl: new URL(
+        "../lib/subcircuits/SystemPowerLdo2_TPS7A8801_TIDEP0092.circuit.tsx",
+        import.meta.url,
+      ),
+      from: ".R120 > .pin1",
+      to: ".R119 > .pin2",
+      duplicateNetLabelConnection: "R119.pin2",
+    },
+  ] as const;
+
+  for (const testCase of cases) {
+    const source = readFileSync(testCase.sourceUrl, "utf8");
+    const traceBlocks = [...source.matchAll(/<trace\b([\s\S]*?)\/>/g)].map(
+      (match) => match[1],
+    );
+    const netLabelBlocks = [
+      ...source.matchAll(/<netlabel\b([\s\S]*?)\/>/g),
+    ].map((match) => match[1]);
+
+    assert.ok(
+      traceBlocks.some(
+        (trace) =>
+          trace.includes(`from="${testCase.from}"`) &&
+          trace.includes(`to="${testCase.to}"`),
+      ),
+      `${testCase.sourceUrl.pathname} must retain the TI physical wire`,
+    );
+    assert.ok(
+      netLabelBlocks.every(
+        (netLabel) =>
+          !netLabel.includes(
+            `connection="${testCase.duplicateNetLabelConnection}"`,
+          ),
+      ),
+      `${testCase.sourceUrl.pathname} must not join a physical wire with duplicate labels`,
+    );
   }
 });
 
