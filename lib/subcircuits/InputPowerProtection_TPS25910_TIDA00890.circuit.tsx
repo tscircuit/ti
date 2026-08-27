@@ -29,7 +29,9 @@ const TPS25910RSA_PIN_LABELS = {
  * bulk capacitor exactly as shown in TI's reference.
  * @see https://www.ti.com/tool/TIDA-00890
  */
-export const InputPowerProtection_TIDA00890 = (props: SubcircuitProps) => (
+export const InputPowerProtection_TPS25910_TIDA00890 = (
+  props: SubcircuitProps,
+) => (
   <subcircuit {...props}>
     <chip
       name="U7"
@@ -169,4 +171,4 @@ export const InputPowerProtection_TIDA00890 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default InputPowerProtection_TIDA00890;
+export default InputPowerProtection_TPS25910_TIDA00890;
