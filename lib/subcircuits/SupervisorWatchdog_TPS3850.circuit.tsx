@@ -28,24 +28,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       fontSize={0.3}
     />
 
-    <TPS3850H33QDRCRQ1
-      name="U3"
-      schX={sx(22.606)}
-      schY={sy(19.05)}
-      connections={{
-        VDD: "net.V3_3",
-        CWD: "net.CWD",
-        SET0: "net.V3_3",
-        CRST: "net.CRST",
-        GND: "net.GND",
-        SET1: "net.SET1",
-        WDI: "net.WDI",
-        nWDO: "net.WDO",
-        nRESET: "net.RESET_3V3",
-        SENSE: "net.V3_3",
-        PAD: "net.GND",
-      }}
-    />
+    <TPS3850H33QDRCRQ1 name="U3" schX={sx(22.606)} schY={sy(19.05)} />
     <capacitor
       name="C11"
       capacitance="0.1uF"
@@ -55,7 +38,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(17.78)}
       schY={sy(22.225)}
       schRotation={270}
-      connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
     />
     <capacitor
       name="C13"
@@ -66,7 +48,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(19.558)}
       schY={sy(17.399)}
       schRotation={270}
-      connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
     />
     <pinheader
       name="J1"
@@ -79,7 +60,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schY={sy(19.05)}
       schFacingDirection="right"
       pinLabels={["V3_3", "SET1", "GND"]}
-      connections={{ pin1: "net.V3_3", pin2: "net.SET1", pin3: "net.GND" }}
     />
     <capacitor
       name="C12"
@@ -91,7 +71,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(14.224)}
       schY={sy(19.685)}
       schRotation={270}
-      connections={{ pin1: "net.CWD", pin2: "net.GND" }}
     />
     <resistor
       name="R21"
@@ -101,7 +80,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(14.986)}
       schY={sy(17.018)}
       schRotation={90}
-      connections={{ pin1: "net.CRST", pin2: "net.V3_3" }}
     />
 
     <resistor
@@ -113,7 +91,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(25.4)}
       schY={sy(22.098)}
       schRotation={90}
-      connections={{ pin1: "net.WDO", pin2: "net.V3_3" }}
     />
     <resistor
       name="R16"
@@ -124,7 +101,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(26.416)}
       schY={sy(22.86)}
       schRotation={270}
-      connections={{ pin1: "net.V3_3", pin2: "net.WDO_LED_A" }}
     />
     <led
       name="D9"
@@ -135,7 +111,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(26.5303)}
       schY={sy(21.336)}
       schRotation={90}
-      connections={{ pin1: "net.WDO", pin2: "net.WDO_LED_A" }}
     />
     <resistor
       name="R6"
@@ -146,7 +121,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(27.686)}
       schY={sy(22.098)}
       schRotation={90}
-      connections={{ pin1: "net.RESET_3V3", pin2: "net.V3_3" }}
     />
     <resistor
       name="R15"
@@ -157,7 +131,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(28.702)}
       schY={sy(22.86)}
       schRotation={270}
-      connections={{ pin1: "net.V3_3", pin2: "net.RESET_LED_A" }}
     />
     <led
       name="D8"
@@ -168,7 +141,6 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schX={sx(28.8163)}
       schY={sy(21.336)}
       schRotation={90}
-      connections={{ pin1: "net.RESET_3V3", pin2: "net.RESET_LED_A" }}
     />
 
     <testpoint
@@ -178,6 +150,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
       schX={sx(30.988)}
       schY={sy(20.6756)}
+      schRotation={90}
     />
     <testpoint
       name="TP1"
@@ -186,7 +159,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
       schX={sx(31.75)}
       schY={sy(19.9136)}
-      connections={{ pin1: "net.WDI" }}
+      schRotation={90}
     />
     <testpoint
       name="TP8"
@@ -195,10 +168,71 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
       schX={sx(32.512)}
       schY={sy(19.4056)}
-      connections={{ pin1: "net.WDO" }}
+      schRotation={90}
     />
 
-    <trace from=".U3 > .pin9" to=".TP6 > .pin1" />
+    <trace
+      name="V3_3"
+      schDisplayLabel="+3.3V"
+      path={[
+        ".U3 > .pin1",
+        ".U3 > .pin3",
+        ".U3 > .pin10",
+        ".C11 > .pin1",
+        ".C13 > .pin1",
+        ".J1 > .pin1",
+        ".R21 > .pin2",
+        ".R5 > .pin2",
+        ".R16 > .pin1",
+        ".R6 > .pin2",
+        ".R15 > .pin1",
+        "net.V3_3",
+      ]}
+    />
+    <trace
+      name="CWD"
+      schDisplayLabel="CWD"
+      path={[".U3 > .pin2", ".C12 > .pin1"]}
+    />
+    <trace
+      name="SET1"
+      schDisplayLabel="SET1"
+      path={[".U3 > .pin6", ".J1 > .pin2"]}
+    />
+    <trace
+      name="CRST"
+      schDisplayLabel="CRST"
+      path={[".U3 > .pin4", ".R21 > .pin1"]}
+    />
+    <trace
+      name="WDI"
+      schDisplayLabel="WDI"
+      path={[".U3 > .pin7", ".TP1 > .pin1"]}
+    />
+    <trace
+      name="WDO"
+      schDisplayLabel="WDO"
+      path={[".U3 > .pin8", ".R5 > .pin1", ".D9 > .pin1", ".TP8 > .pin1"]}
+    />
+    <trace path={[".R16 > .pin2", ".D9 > .pin2"]} />
+    <trace
+      name="RESET_3V3"
+      schDisplayLabel="3.3RESET"
+      path={[".U3 > .pin9", ".R6 > .pin1", ".D8 > .pin1", ".TP6 > .pin1"]}
+    />
+    <trace path={[".R15 > .pin2", ".D8 > .pin2"]} />
+    <trace
+      name="GND"
+      path={[
+        ".U3 > .pin5",
+        ".U3 > .pin11",
+        ".C11 > .pin2",
+        ".C13 > .pin2",
+        ".J1 > .pin3",
+        ".C12 > .pin2",
+        "net.GND",
+      ]}
+    />
 
     <port name="V3_3" direction="left" connectsTo="U3.VDD" />
     <port name="GND" direction="left" connectsTo="U3.GND" />

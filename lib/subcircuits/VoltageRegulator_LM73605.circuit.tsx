@@ -16,7 +16,6 @@ const NetTie = () => (
       internallyConnectedPins={[[1, 2]]}
       schX={sx(22.86)}
       schY={sy(3.048)}
-      connections={{ pin1: "net.GND", pin2: "net.AGND" }}
     />
     <schematictext
       text="Net-Tie"
@@ -58,7 +57,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(9.398)}
       schY={sy(9.3599)}
       schRotation={270}
-      connections={{ pin1: "net.VIN1", pin2: "net.GND" }}
     />
     <capacitor
       name="CI1"
@@ -69,7 +67,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(10.922)}
       schY={sy(9.271)}
       schRotation={90}
-      connections={{ pin1: "net.GND", pin2: "net.VIN1" }}
     />
     <capacitor
       name="CI2"
@@ -80,7 +77,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(11.938)}
       schY={sy(9.271)}
       schRotation={90}
-      connections={{ pin1: "net.GND", pin2: "net.VIN1" }}
     />
     <capacitor
       name="CI3"
@@ -91,7 +87,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(12.954)}
       schY={sy(9.271)}
       schRotation={270}
-      connections={{ pin1: "net.VIN1", pin2: "net.GND" }}
     />
     <capacitor
       name="CI4"
@@ -102,47 +97,9 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(13.97)}
       schY={sy(9.271)}
       schRotation={270}
-      connections={{ pin1: "net.VIN1", pin2: "net.GND" }}
     />
 
-    <LM73605QRNPRQ1
-      name="U2"
-      schX={sx(19.812)}
-      schY={sy(7.62)}
-      connections={{
-        VIN_20: "net.VIN1",
-        VIN_21: "net.VIN1",
-        VIN_22: "net.VIN1",
-        EN: "net.VIN1",
-        VCC: "net.VCC",
-        RT: "net.RT",
-        SYNC_MODE: "net.GND",
-        NC_12: "net.GND",
-        NC_13: "net.GND",
-        NC_14: "net.GND",
-        NC_15: "net.GND",
-        NC_27: "net.GND",
-        NC_28: "net.GND",
-        NC_29: "net.GND",
-        NC_30: "net.GND",
-        CBOOT: "net.CBOOT_NET",
-        SW_1: "net.SW",
-        SW_2: "net.SW",
-        SW_3: "net.SW",
-        SW_4: "net.SW",
-        SW_5: "net.SW",
-        PGOOD: "net.PGOOD_NET",
-        BIAS: "net.BIAS",
-        FB: "net.FB1",
-        SS_TRK: "net.SS_TRK",
-        AGND: "net.AGND",
-        PGND_23: "net.GND",
-        PGND_24: "net.GND",
-        PGND_25: "net.GND",
-        PGND_26: "net.GND",
-        DAP: "net.GND",
-      }}
-    />
+    <LM73605QRNPRQ1 name="U2" schX={sx(19.812)} schY={sy(7.62)} />
 
     <capacitor
       name="CB"
@@ -153,7 +110,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(22.606)}
       schY={sy(10.16)}
       schOrientation="horizontal"
-      connections={{ pin1: "net.CBOOT_NET", pin2: "net.SW" }}
     />
     <inductor
       name="L1"
@@ -163,7 +119,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(24.892)}
       schY={sy(10.4775)}
       schOrientation="horizontal"
-      connections={{ pin1: "net.SW", pin2: "net.V3_3" }}
     />
     <capacitor
       name="CO"
@@ -174,7 +129,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(26.289)}
       schY={sy(9.525)}
       schRotation={90}
-      connections={{ pin1: "net.GND", pin2: "net.V3_3" }}
     />
     {[
       ["CO1", 27.813],
@@ -193,7 +147,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
         schX={sx(Number(x))}
         schY={sy(9.525)}
         schRotation={270}
-        connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
       />
     ))}
 
@@ -206,7 +159,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(14.224)}
       schY={sy(6.731)}
       schRotation={270}
-      connections={{ pin1: "net.VCC", pin2: "net.GND" }}
     />
     <resistor
       name="RT"
@@ -217,7 +169,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(15.748)}
       schY={sy(7.112)}
       schRotation={270}
-      connections={{ pin1: "net.RT", pin2: "net.GND" }}
     />
     <capacitor
       name="CSS"
@@ -228,7 +179,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(23.622)}
       schY={sy(6.096)}
       schRotation={270}
-      connections={{ pin2: "net.AGND" }}
     />
     <resistor
       name="RPG"
@@ -239,7 +189,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(24.13)}
       schY={sy(8.128)}
       schOrientation="horizontal"
-      connections={{ pin1: "net.PGOOD_NET", pin2: "net.V3_3" }}
     />
     <capacitor
       name="CFF"
@@ -250,7 +199,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(25.908)}
       schY={sy(6.223)}
       schRotation={270}
-      connections={{ pin1: "net.V3_3", pin2: "net.FB1" }}
     />
     <resistor
       name="RFBT"
@@ -261,7 +209,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(27.178)}
       schY={sy(6.096)}
       schRotation={90}
-      connections={{ pin1: "net.FB1", pin2: "net.V3_3" }}
     />
     <resistor
       name="RFBB"
@@ -272,7 +219,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(27.178)}
       schY={sy(4.318)}
       schRotation={90}
-      connections={{ pin1: "net.AGND", pin2: "net.FB1" }}
     />
     <resistor
       name="R20"
@@ -283,7 +229,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(28.956)}
       schY={sy(4.572)}
       schRotation={90}
-      connections={{ pin1: "net.V_CTRL1", pin2: "net.FB1" }}
     />
     <capacitor
       name="Cbias1"
@@ -294,7 +239,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(32.512)}
       schY={sy(4.953)}
       schRotation={270}
-      connections={{ pin1: "net.BIAS", pin2: "net.GND" }}
     />
     <resistor
       name="Rbias1"
@@ -305,7 +249,6 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       schX={sx(33.401)}
       schY={sy(6.096)}
       schOrientation="horizontal"
-      connections={{ pin1: "net.BIAS", pin2: "net.V3_3" }}
     />
 
     <NetTie />
@@ -316,7 +259,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
       schX={sx(30.48)}
       schY={sy(3.4036)}
-      connections={{ pin1: "net.V_CTRL1" }}
+      schRotation={90}
     />
     <testpoint
       name="TP18"
@@ -325,7 +268,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
       schX={sx(36.83)}
       schY={sy(10.5156)}
-      connections={{ pin1: "net.V3_3" }}
+      schRotation={90}
     />
     <testpoint
       name="TP19"
@@ -334,7 +277,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
       schX={sx(36.83)}
       schY={sy(8.9916)}
-      connections={{ pin1: "net.GND" }}
+      schRotation={90}
     />
     <testpoint
       name="P3"
@@ -351,11 +294,147 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       footprint="kicad:TestPoint/TestPoint_Plated_Hole_D3.0mm"
       schX={sx(37.592)}
       schY={sy(8.636)}
-      connections={{ pin1: "net.GND" }}
     />
 
-    <trace from=".P3 > .pin1" to=".TP18 > .pin1" />
-    <trace from=".U2 > .pin10" to=".CSS > .pin1" />
+    <trace
+      name="VIN1"
+      schDisplayLabel="VIN1"
+      path={[
+        ".Cbulk1 > .pin1",
+        ".CI1 > .pin2",
+        ".CI2 > .pin2",
+        ".CI3 > .pin1",
+        ".CI4 > .pin1",
+        ".U2 > .pin18",
+        ".U2 > .pin20",
+        ".U2 > .pin21",
+        ".U2 > .pin22",
+        "net.VIN1",
+      ]}
+    />
+    <trace
+      name="SW"
+      schDisplayLabel="SW"
+      path={[
+        ".U2 > .pin1",
+        ".U2 > .pin2",
+        ".U2 > .pin3",
+        ".U2 > .pin4",
+        ".U2 > .pin5",
+        ".CB > .pin2",
+        ".L1 > .pin1",
+      ]}
+    />
+    <trace path={[".U2 > .pin6", ".CB > .pin1"]} />
+    <trace
+      name="VCC"
+      schDisplayLabel="VCC"
+      path={[".U2 > .pin7", ".CVCC > .pin1"]}
+    />
+    <trace
+      name="BIAS"
+      schDisplayLabel="BIAS"
+      path={[".U2 > .pin8", ".Cbias1 > .pin1", ".Rbias1 > .pin1"]}
+    />
+    <trace
+      name="RT"
+      schDisplayLabel="RT"
+      path={[".U2 > .pin9", ".RT > .pin1"]}
+    />
+    <trace
+      name="SS_TRK"
+      schDisplayLabel="SS/TRK"
+      path={[".U2 > .pin10", ".CSS > .pin1"]}
+    />
+    <trace
+      name="FB1"
+      schDisplayLabel="FB1"
+      path={[
+        ".U2 > .pin11",
+        ".CFF > .pin2",
+        ".RFBT > .pin1",
+        ".RFBB > .pin2",
+        ".R20 > .pin2",
+      ]}
+    />
+    <trace
+      name="PGOOD_NET"
+      schDisplayLabel="PGOOD"
+      path={[".U2 > .pin16", ".RPG > .pin1"]}
+    />
+    <trace
+      name="V3_3"
+      schDisplayLabel="+3.3V"
+      path={[
+        ".L1 > .pin2",
+        ".CO > .pin2",
+        ".CO1 > .pin1",
+        ".CO2 > .pin1",
+        ".CO3 > .pin1",
+        ".CO4 > .pin1",
+        ".CO5 > .pin1",
+        ".RPG > .pin2",
+        ".CFF > .pin1",
+        ".RFBT > .pin2",
+        ".Rbias1 > .pin2",
+        ".TP18 > .pin1",
+        ".P3 > .pin1",
+        "net.V3_3",
+      ]}
+    />
+    <trace
+      name="V_CTRL1"
+      schDisplayLabel="V_CTRL1"
+      path={[".R20 > .pin1", ".TP5 > .pin1"]}
+    />
+    <trace
+      name="AGND"
+      schDisplayLabel="AGND"
+      path={[
+        ".U2 > .pin19",
+        ".CSS > .pin2",
+        ".RFBB > .pin1",
+        ".NTGND1 > .pin2",
+        "net.AGND",
+      ]}
+    />
+    <trace
+      name="GND"
+      path={[
+        ".Cbulk1 > .pin2",
+        ".CI1 > .pin1",
+        ".CI2 > .pin1",
+        ".CI3 > .pin2",
+        ".CI4 > .pin2",
+        ".U2 > .pin12",
+        ".U2 > .pin13",
+        ".U2 > .pin14",
+        ".U2 > .pin15",
+        ".U2 > .pin17",
+        ".U2 > .pin23",
+        ".U2 > .pin24",
+        ".U2 > .pin25",
+        ".U2 > .pin26",
+        ".U2 > .pin27",
+        ".U2 > .pin28",
+        ".U2 > .pin29",
+        ".U2 > .pin30",
+        ".U2 > .pin31",
+        ".CO > .pin1",
+        ".CO1 > .pin2",
+        ".CO2 > .pin2",
+        ".CO3 > .pin2",
+        ".CO4 > .pin2",
+        ".CO5 > .pin2",
+        ".CVCC > .pin2",
+        ".RT > .pin2",
+        ".Cbias1 > .pin2",
+        ".NTGND1 > .pin1",
+        ".TP19 > .pin1",
+        ".P4 > .pin1",
+        "net.GND",
+      ]}
+    />
 
     <port name="VIN1" direction="left" connectsTo="Cbulk1.pin1" />
     <port name="V3_3" direction="right" connectsTo="P3.pin1" />

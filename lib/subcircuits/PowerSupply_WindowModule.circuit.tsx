@@ -20,43 +20,59 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
     <net name="GND" isPowerNet isGroundNet />
     <net name="V3_3" isPowerNet />
 
-    <ReverseBatteryProtection_TLV1805_SQJ461EP
-      name="reverseBattery"
-      schY={7}
-      connections={{
-        VBATT: "net.VBATT",
-        GND: "net.GND",
-        VIN1: "net.VIN1",
-      }}
-    />
-    <VoltageRegulator_LM73605
-      name="regulator"
-      schX={-4}
-      schY={-8}
-      connections={{
-        VIN1: "net.VIN1",
-        V3_3: "net.V3_3",
-        GND: "net.GND",
-        V_CTRL1: "net.V_CTRL1",
-      }}
-    />
-    <SupervisorWatchdog_TPS3850
-      name="supervisorWatchdog"
-      schX={23}
-      schY={-8}
-      connections={{
-        V3_3: "net.V3_3",
-        GND: "net.GND",
-        WDI: "net.WDI",
-        WDO: "net.WDO",
-        RESET_3V3: "net.RESET_3V3",
-      }}
-    />
+    <ReverseBatteryProtection_TLV1805_SQJ461EP name="reverseBattery" schY={7} />
+    <VoltageRegulator_LM73605 name="regulator" schX={-4} schY={-8} />
+    <SupervisorWatchdog_TPS3850 name="supervisorWatchdog" schX={23} schY={-8} />
 
-    <trace from=".reverseBattery > .VIN1" to=".regulator > .VIN1" />
-    <trace from=".regulator > .V3_3" to=".supervisorWatchdog > .V3_3" />
-    <trace from=".reverseBattery > .GND" to=".regulator > .GND" />
-    <trace from=".regulator > .GND" to=".supervisorWatchdog > .GND" />
+    <trace
+      name="VBATT"
+      schDisplayLabel="VBATT"
+      from=".reverseBattery > .VBATT"
+      to="net.VBATT"
+    />
+    <trace
+      name="VIN1"
+      schDisplayLabel="VIN1"
+      path={[".reverseBattery > .VIN1", ".regulator > .VIN1", "net.VIN1"]}
+    />
+    <trace
+      name="V3_3"
+      schDisplayLabel="+3.3V"
+      path={[".regulator > .V3_3", ".supervisorWatchdog > .V3_3", "net.V3_3"]}
+    />
+    <trace
+      name="GND"
+      path={[
+        ".reverseBattery > .GND",
+        ".regulator > .GND",
+        ".supervisorWatchdog > .GND",
+        "net.GND",
+      ]}
+    />
+    <trace
+      name="V_CTRL1"
+      schDisplayLabel="V_CTRL1"
+      from=".regulator > .V_CTRL1"
+      to="net.V_CTRL1"
+    />
+    <trace
+      name="WDI"
+      schDisplayLabel="WDI"
+      from=".supervisorWatchdog > .WDI"
+      to="net.WDI"
+    />
+    <trace
+      name="WDO"
+      schDisplayLabel="WDO"
+      from=".supervisorWatchdog > .WDO"
+      to="net.WDO"
+    />
+    <trace
+      name="RESET_3V3"
+      schDisplayLabel="3.3RESET"
+      from=".supervisorWatchdog > .RESET_3V3"
+      to="net.RESET_3V3"
+    />
 
     <port name="VBATT" direction="left" connectsTo="reverseBattery.VBATT" />
     <port name="GND" direction="left" connectsTo="reverseBattery.GND" />

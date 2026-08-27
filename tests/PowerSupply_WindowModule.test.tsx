@@ -44,6 +44,20 @@ const component = (circuitJson: CircuitElement[], name: string) => {
   return matches[0];
 };
 
+const schematicComponentFor = (
+  circuitJson: CircuitElement[],
+  componentName: string,
+) => {
+  const sourceComponent = component(circuitJson, componentName);
+  const match = circuitJson.find(
+    (element) =>
+      element.type === "schematic_component" &&
+      element.source_component_id === sourceComponent.source_component_id,
+  );
+  expect(match, `schematic component ${componentName}`).toBeDefined();
+  return match!;
+};
+
 const port = (
   circuitJson: CircuitElement[],
   componentName: string,
@@ -117,18 +131,31 @@ const assertSubcircuitPortNet = (
   expect(sourceNet, `${subcircuitName} net ${netName}`).toBeDefined();
   const groupPortId = String(groupPort.source_port_id);
   const sourceNetId = String(sourceNet!.source_net_id);
-  const match = circuitJson.find(
+  const portTraces = circuitJson.filter(
     (element) =>
       element.type === "source_trace" &&
       Array.isArray(element.connected_source_port_ids) &&
+      element.connected_source_port_ids.includes(groupPortId),
+  );
+  const netTraces = circuitJson.filter(
+    (element) =>
+      element.type === "source_trace" &&
       Array.isArray(element.connected_source_net_ids) &&
-      element.connected_source_port_ids.includes(groupPortId) &&
       element.connected_source_net_ids.includes(sourceNetId),
   );
+  const sharedPortId = portTraces.some((portTrace) => {
+    const portSourceIds = portTrace.connected_source_port_ids as string[];
+    return netTraces.some((netTrace) => {
+      const netSourceIds = netTrace.connected_source_port_ids as string[];
+      return portSourceIds.some((sourcePortId) =>
+        netSourceIds.includes(sourcePortId),
+      );
+    });
+  });
   expect(
-    match,
+    sharedPortId,
     `${subcircuitName}.${portName} to local ${netName}`,
-  ).toBeDefined();
+  ).toBe(true);
 };
 
 const assertNet = (
@@ -143,13 +170,22 @@ const assertNet = (
       element.name === netName &&
       element.subcircuit_id === firstPort.subcircuit_id,
   );
-  expect(sourceNet, `source net ${netName}`).toBeDefined();
+  const namedTrace = circuitJson.find(
+    (element) =>
+      element.type === "source_trace" &&
+      element.name === netName &&
+      element.subcircuit_id === firstPort.subcircuit_id,
+  );
+  const expectedConnectivityKey =
+    sourceNet?.subcircuit_connectivity_map_key ??
+    namedTrace?.subcircuit_connectivity_map_key ??
+    firstPort.subcircuit_connectivity_map_key;
 
   for (const endpoint of endpoints) {
     expect(
       port(circuitJson, ...endpoint).subcircuit_connectivity_map_key,
       `${endpoint[0]}.${endpoint[1]} on ${netName}`,
-    ).toBe(sourceNet!.subcircuit_connectivity_map_key);
+    ).toBe(expectedConnectivityKey);
   }
 };
 
@@ -158,6 +194,15 @@ const expectNoCircuitErrors = (circuitJson: CircuitElement[]) => {
     String(element.type).endsWith("_error"),
   );
   expect(errors).toEqual([]);
+  expect(
+    circuitJson.filter(
+      (element) =>
+        (element.type === "schematic_net_label" ||
+          element.type === "schematic_text") &&
+        element.text === "\u200B",
+    ),
+    "zero-width placeholder labels",
+  ).toEqual([]);
 };
 
 test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async () => {
@@ -254,6 +299,51 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
   expect(component(circuitJson, "U1").manufacturer_part_number).toBe(
     "TLV1805QDBVRQ1",
   );
+
+  const q1Projection = component(circuitJson, "Q1_SCHEMATIC");
+  const q1Schematic = schematicComponentFor(circuitJson, "Q1_SCHEMATIC");
+  expect(q1Schematic.source_component_id).toBe(
+    q1Projection.source_component_id,
+  );
+  expect(q1Schematic?.symbol_name).toBe(
+    "p_channel_e_mosfet_transistor_gate_top_drain_left",
+  );
+
+  const u1Schematic = schematicComponentFor(circuitJson, "U1");
+  expect(u1Schematic?.is_box_with_pins).toBe(false);
+  expect(
+    circuitJson.some(
+      (element) =>
+        element.type === "schematic_path" &&
+        element.schematic_component_id === u1Schematic?.schematic_component_id,
+    ),
+  ).toBe(true);
+
+  const renderedNetLabels = circuitJson
+    .filter((element) => element.type === "schematic_net_label")
+    .map((element) => element.text);
+  expect(renderedNetLabels).toContain("P_Gate");
+  expect(renderedNetLabels).toContain("LOAD_SENS_PCH");
+  expect(renderedNetLabels).not.toContain("D2_A");
+
+  const expectedNativeSymbols = {
+    D1: "avalanche_diode_down",
+    D2: "led_down",
+    D3: "schottky_diode_down",
+    D4: "schottky_diode_up",
+    D5: "zener_diode_vert",
+    R1: "boxresistor_left",
+    R3: "boxresistor_up",
+    R4: "boxresistor_up",
+    R14: "boxresistor_up",
+  } as const;
+  for (const [componentName, symbolName] of Object.entries(
+    expectedNativeSymbols,
+  )) {
+    expect(schematicComponentFor(circuitJson, componentName).symbol_name).toBe(
+      symbolName,
+    );
+  }
 });
 
 test("regulator child preserves the TIDA-050008 sheet-2 netlist", async () => {

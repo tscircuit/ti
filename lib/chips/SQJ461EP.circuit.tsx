@@ -14,19 +14,41 @@ export const SQJ461EP_PIN_LABELS = {
  * The released Altium symbol exposes pins 1-3 (source), 4 (gate), and a
  * single combined drain terminal numbered 5, exactly as reproduced here.
  */
-export const SQJ461EP = (props: ChipProps<typeof SQJ461EP_PIN_LABELS>) => (
-  <chip
-    manufacturerPartNumber="SQJ461EP"
-    footprint="kicad:Package_SO/PowerPAK_SO-8L_Single"
-    internallyConnectedPins={[[1, 2, 3]]}
-    pinLabels={SQJ461EP_PIN_LABELS}
-    schPinArrangement={{
-      leftSide: { direction: "top-to-bottom", pins: [5] },
-      rightSide: { direction: "top-to-bottom", pins: [1, 2, 3] },
-      topSide: { direction: "left-to-right", pins: [4] },
-    }}
-    {...props}
-  />
+export const SQJ461EP = ({
+  name,
+  schX,
+  schY,
+  schRotation,
+  ...props
+}: ChipProps<typeof SQJ461EP_PIN_LABELS>) => (
+  <>
+    <chip
+      name={name}
+      manufacturerPartNumber="SQJ461EP"
+      footprint="kicad:Package_SO/PowerPAK_SO-8L_Single"
+      internallyConnectedPins={[[1, 2, 3]]}
+      pinLabels={SQJ461EP_PIN_LABELS}
+      noSchematicRepresentation
+      schX={schX}
+      schY={schY}
+      schRotation={schRotation}
+      {...props}
+    />
+    <schematicsymbol
+      name={`${name}_SCHEMATIC`}
+      displayName={`${name} SQJ461EP`}
+      chipRef={`.${name}`}
+      symbolName="p_channel_e_mosfet_transistor_gate_top_drain_left"
+      schX={schX}
+      schY={schY}
+      schRotation={schRotation}
+      connections={{
+        drain: `.${name} > .pin5`,
+        source: `.${name} > .pin1`,
+        gate: `.${name} > .pin4`,
+      }}
+    />
+  </>
 );
 
 export default SQJ461EP;
