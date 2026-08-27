@@ -185,12 +185,12 @@ describe("schematic PDF sheet overlay", () => {
     });
 
     expect(calls).toEqual([
-      { text: "Power supply", x: 4, y: 6, options: undefined },
-      { text: "1/6", x: 293, y: 6, options: { align: "right" } },
+      { text: "Power supply", x: 16, y: 16, options: undefined },
+      { text: "1/6", x: 281, y: 16, options: { align: "right" } },
     ]);
     expect(backdrops).toEqual([
-      [3, 1.5, 14, 5.5, "F"],
-      [289, 1.5, 5, 5.5, "F"],
+      [15, 11.5, 14, 5.5, "F"],
+      [277, 11.5, 5, 5.5, "F"],
     ]);
   });
 
@@ -214,7 +214,7 @@ describe("schematic PDF sheet overlay", () => {
       title: "A very long schematic sheet name",
       pageNumber: 10,
       pageCount: 12,
-      pageWidthMm: 25,
+      pageWidthMm: 49,
     });
 
     expect(calls).toEqual(["A ver...", "10/12"]);
