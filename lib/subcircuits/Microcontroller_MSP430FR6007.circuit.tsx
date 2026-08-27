@@ -78,6 +78,82 @@ const targetSocketNetBreakouts = [
   { connector: "J6", connectorPin: 25, net: "AVCC" },
 ] as const;
 
+const supportNetTraces: ReadonlyArray<{
+  component: string;
+  pin: number;
+  net: string;
+  name?: string;
+}> = [
+  { component: "C3", pin: 1, net: "AVCC", name: "C3_AVCC" },
+  { component: "C3", pin: 2, net: "AVSS" },
+  { component: "C11", pin: 1, net: "AVCC" },
+  { component: "C11", pin: 2, net: "AVSS" },
+  { component: "C16", pin: 1, net: "PVCC", name: "C16_PVCC" },
+  { component: "C16", pin: 2, net: "PVSS" },
+  { component: "C13", pin: 1, net: "PVCC" },
+  { component: "C13", pin: 2, net: "PVSS", name: "C13_PVSS" },
+  { component: "C4", pin: 1, net: "DVCC" },
+  { component: "C4", pin: 2, net: "GND" },
+  { component: "R11", pin: 1, net: "PVSS" },
+  { component: "R11", pin: 2, net: "GND" },
+  { component: "R12", pin: 1, net: "GND" },
+  { component: "R12", pin: 2, net: "AVSS" },
+  { component: "C10", pin: 1, net: "DVCC" },
+  { component: "C10", pin: 2, net: "GND" },
+  { component: "C7", pin: 1, net: "DVCC" },
+  { component: "C7", pin: 2, net: "GND" },
+  { component: "C6", pin: 1, net: "DVCC" },
+  { component: "C6", pin: 2, net: "GND" },
+  { component: "R7", pin: 1, net: "DVCC", name: "R7_DVCC" },
+  { component: "R7", pin: 2, net: "RESET_SBWTDIO" },
+  {
+    component: "C5",
+    pin: 1,
+    net: "RESET_SBWTDIO",
+    name: "C5_RESET_SBWTDIO",
+  },
+  { component: "C5", pin: 2, net: "GND" },
+  { component: "SW2", pin: 1, net: "RESET_SBWTDIO" },
+  { component: "SW2", pin: 2, net: "GND" },
+  { component: "SW2", pin: 3, net: "RESET_SBWTDIO" },
+  { component: "SW2", pin: 4, net: "GND" },
+  { component: "Q1", pin: 1, net: "LFXOUT" },
+  { component: "Q1", pin: 2, net: "LFXIN" },
+  { component: "C1", pin: 1, net: "LFXOUT" },
+  { component: "C1", pin: 2, net: "AVSS" },
+  { component: "C2", pin: 1, net: "LFXIN" },
+  { component: "C2", pin: 2, net: "AVSS" },
+  { component: "R5", pin: 1, net: "LFXOUT" },
+  { component: "R5", pin: 2, net: "LFXOUT_ext" },
+  { component: "R6", pin: 1, net: "LFXIN" },
+  { component: "R6", pin: 2, net: "LFXIN_ext" },
+  { component: "Q2", pin: 1, net: "HFXOUT" },
+  { component: "Q2", pin: 2, net: "HFXIN" },
+  { component: "C8", pin: 1, net: "HFXOUT" },
+  { component: "C8", pin: 2, net: "AVSS" },
+  { component: "C9", pin: 1, net: "HFXIN" },
+  { component: "C9", pin: 2, net: "AVSS" },
+  { component: "R9", pin: 1, net: "HFXOUT" },
+  { component: "R9", pin: 2, net: "HFXOUT_ext" },
+  { component: "R8", pin: 1, net: "HFXIN" },
+  { component: "R8", pin: 2, net: "HFXIN_ext" },
+  { component: "R19", pin: 1, net: "BSL_RX" },
+  { component: "R19", pin: 2, net: "JTAG_BSL_RX" },
+  { component: "R20", pin: 1, net: "BSL_TX" },
+  { component: "R20", pin: 2, net: "JTAG_BSL_TX" },
+  { component: "JTAG", pin: 1, net: "TDO" },
+  { component: "JTAG", pin: 2, net: "DVCC" },
+  { component: "JTAG", pin: 3, net: "TDI" },
+  { component: "JTAG", pin: 4, net: "DVCC" },
+  { component: "JTAG", pin: 5, net: "TMS" },
+  { component: "JTAG", pin: 7, net: "TCK" },
+  { component: "JTAG", pin: 8, net: "TEST_SBWTCK" },
+  { component: "JTAG", pin: 9, net: "GND" },
+  { component: "JTAG", pin: 11, net: "RESET_SBWTDIO" },
+  { component: "JTAG", pin: 12, net: "JTAG_BSL_TX" },
+  { component: "JTAG", pin: 14, net: "JTAG_BSL_RX" },
+];
+
 /**
  * MSP430FR6007 minimum-system section extracted from TI's MSP-TS430PZ100E
  * target socket module. The board supports this exact MCU but supplies it as
@@ -247,7 +323,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-14.1}
           schY={2.1}
           schOrientation="vertical"
-          connections={{ pin2: "net.AVSS" }}
         />
         <capacitor
           name="C11"
@@ -256,7 +331,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-13.2}
           schY={3.4}
           schOrientation="vertical"
-          connections={{ pin1: "net.AVCC", pin2: "net.AVSS" }}
         />
 
         {/*
@@ -270,7 +344,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-14.1}
           schY={0.5}
           schOrientation="vertical"
-          connections={{ pin2: "net.PVSS" }}
         />
         <capacitor
           name="C13"
@@ -279,7 +352,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-13.2}
           schY={0.5}
           schOrientation="vertical"
-          connections={{ pin1: "net.PVCC" }}
         />
 
         {/* The two physical DVCC bypass locations retained from the board. */}
@@ -290,7 +362,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-4.0}
           schY={-6.3}
           schOrientation="vertical"
-          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
         />
 
         {/* Source star-ground links: PVSS--R11--GND--R12--AVSS. */}
@@ -300,7 +371,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           footprint="0805"
           schX={-19.0}
           schY={-5.5}
-          connections={{ pin1: "net.PVSS", pin2: "net.GND" }}
         />
         <resistor
           name="R12"
@@ -308,7 +378,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           footprint="0805"
           schX={-19.0}
           schY={-6.5}
-          connections={{ pin1: "net.GND", pin2: "net.AVSS" }}
         />
         <capacitor
           name="C10"
@@ -317,7 +386,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-3.0}
           schY={-6.3}
           schOrientation="vertical"
-          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
         />
         <capacitor
           name="C7"
@@ -326,7 +394,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={6.4}
           schY={-6.2}
           schOrientation="vertical"
-          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
         />
         <capacitor
           name="C6"
@@ -335,7 +402,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={7.4}
           schY={-6.2}
           schOrientation="vertical"
-          connections={{ pin1: "net.DVCC", pin2: "net.GND" }}
         />
 
         {/* Reset pull-up, filter, and pushbutton from Figure B-78. */}
@@ -346,7 +412,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-11.6}
           schY={7.8}
           schOrientation="vertical"
-          connections={{ pin2: "net.RESET_SBWTDIO" }}
         />
         <capacitor
           name="C5"
@@ -355,7 +420,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-11.5}
           schY={6.6}
           schOrientation="vertical"
-          connections={{ pin2: "net.GND" }}
         />
         <pushbutton
           name="SW2"
@@ -364,12 +428,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           footprint="smdpushbutton"
           schX={-12.6}
           schY={7.5}
-          connections={{
-            pin1: "net.RESET_SBWTDIO",
-            pin2: "net.GND",
-            pin3: "net.RESET_SBWTDIO",
-            pin4: "net.GND",
-          }}
         />
 
         {/* Optional low-frequency crystal population from the socket board. */}
@@ -382,7 +440,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           doNotPlace
           schX={-11.0}
           schY={2.7}
-          connections={{ pin1: "net.LFXOUT", pin2: "net.LFXIN" }}
         />
         <capacitor
           name="C1"
@@ -392,7 +449,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-12.3}
           schY={3.2}
           schOrientation="vertical"
-          connections={{ pin1: "net.LFXOUT", pin2: "net.AVSS" }}
         />
         <capacitor
           name="C2"
@@ -402,7 +458,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-12.3}
           schY={2.2}
           schOrientation="vertical"
-          connections={{ pin1: "net.LFXIN", pin2: "net.AVSS" }}
         />
         <resistor
           name="R5"
@@ -411,7 +466,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           doNotPlace
           schX={-9.5}
           schY={3.2}
-          connections={{ pin1: "net.LFXOUT", pin2: "net.LFXOUT_ext" }}
         />
         <resistor
           name="R6"
@@ -420,7 +474,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           doNotPlace
           schX={-9.5}
           schY={2.2}
-          connections={{ pin1: "net.LFXIN", pin2: "net.LFXIN_ext" }}
         />
 
         {/* Optional HFXT population; all five parts are DNP in the source BOM. */}
@@ -433,7 +486,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           doNotPlace
           schX={-11.0}
           schY={-0.4}
-          connections={{ pin1: "net.HFXOUT", pin2: "net.HFXIN" }}
         />
         <capacitor
           name="C8"
@@ -443,7 +495,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-12.3}
           schY={0.1}
           schOrientation="vertical"
-          connections={{ pin1: "net.HFXOUT", pin2: "net.AVSS" }}
         />
         <capacitor
           name="C9"
@@ -453,7 +504,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           schX={-12.3}
           schY={-0.9}
           schOrientation="vertical"
-          connections={{ pin1: "net.HFXIN", pin2: "net.AVSS" }}
         />
         <resistor
           name="R9"
@@ -462,7 +512,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           doNotPlace
           schX={-9.5}
           schY={0.1}
-          connections={{ pin1: "net.HFXOUT", pin2: "net.HFXOUT_ext" }}
         />
         <resistor
           name="R8"
@@ -471,7 +520,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           doNotPlace
           schX={-9.5}
           schY={-0.9}
-          connections={{ pin1: "net.HFXIN", pin2: "net.HFXIN_ext" }}
         />
 
         {/* UART BSL paths retained on the source JTAG header. */}
@@ -481,7 +529,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           footprint="0805"
           schX={-20.3}
           schY={10.5}
-          connections={{ pin1: "net.BSL_RX", pin2: "net.JTAG_BSL_RX" }}
         />
         <resistor
           name="R20"
@@ -489,7 +536,6 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           footprint="0805"
           schX={-20.3}
           schY={9.9}
-          connections={{ pin1: "net.BSL_TX", pin2: "net.JTAG_BSL_TX" }}
         />
 
         {/*
@@ -531,52 +577,19 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
               pins: [13, 11, 9, 7, 5, 3, 1],
             },
           }}
-          connections={{
-            pin1: "net.TDO",
-            pin2: "net.DVCC",
-            pin3: "net.TDI",
-            pin4: "net.DVCC",
-            pin5: "net.TMS",
-            pin7: "net.TCK",
-            pin8: "net.TEST_SBWTCK",
-            pin9: "net.GND",
-            pin11: "net.RESET_SBWTDIO",
-            pin12: "net.JTAG_BSL_TX",
-            pin14: "net.JTAG_BSL_RX",
-          }}
         />
 
-        {/* Repository-standard labels are carried by connected traces. */}
-        <trace
-          name="C3_AVCC"
-          from="C3.pin1"
-          to="net.AVCC"
-          schDisplayLabel="AVCC"
-        />
-        <trace
-          name="R7_DVCC"
-          from="R7.pin1"
-          to="net.DVCC"
-          schDisplayLabel="DVCC"
-        />
-        <trace
-          name="C16_PVCC"
-          from="C16.pin1"
-          to="net.PVCC"
-          schDisplayLabel="PVCC"
-        />
-        <trace
-          name="C13_PVSS"
-          from="C13.pin2"
-          to="net.PVSS"
-          schDisplayLabel="PVSS"
-        />
-        <trace
-          name="C5_RESET_SBWTDIO"
-          from="C5.pin1"
-          to="net.RESET_SBWTDIO"
-          schDisplayLabel="RESET_SBWTDIO"
-        />
+        {/* Repository-standard net names are carried by native traces. */}
+        {supportNetTraces.map(({ component, pin, net, name }) => (
+          <Fragment key={`${component}-pin${pin}-${net}`}>
+            <trace
+              name={name ?? `${component}_PIN${pin}_${net}`}
+              from={`${component}.pin${pin}`}
+              to={`net.${net}`}
+              schDisplayLabel={net}
+            />
+          </Fragment>
+        ))}
       </group>
     </schematicsheet>
 

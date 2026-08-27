@@ -124,6 +124,23 @@ const testPinMap = () => {
 const testConnectivity = async () => {
   const circuitJson = await renderMcu();
   const connectivityMap = getFullConnectivityMapFromCircuitJson(circuitJson);
+  const sourcePortsById = new Map(
+    circuitJson
+      .filter((element) => element.type === "source_port")
+      .map((port) => [port.source_port_id, port]),
+  );
+
+  for (const trace of circuitJson) {
+    if (trace.type !== "source_trace") continue;
+
+    const touchesComponent = trace.connected_source_port_ids.some(
+      (portId) => sourcePortsById.get(portId)?.source_component_id !== null,
+    );
+    assert(
+      !touchesComponent || Boolean(trace.name),
+      `${trace.source_trace_id} touches a component but has no native trace name`,
+    );
+  }
 
   for (const traceName of [
     "C3_AVCC",
@@ -137,7 +154,7 @@ const testConnectivity = async () => {
         (element) =>
           element.type === "source_trace" && element.name === traceName,
       ),
-      `Missing on-trace net label ${traceName}`,
+      `Missing native on-trace name ${traceName}`,
     );
   }
 
