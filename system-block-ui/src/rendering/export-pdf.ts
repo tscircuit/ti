@@ -9,6 +9,7 @@ const DEFAULT_FILE_NAME = "system-schematic.pdf";
 const DEFAULT_ORIENTATION = "landscape";
 const PDF_FONT_FAMILY = "LiberationSans";
 const PDF_TEXT_ANCHOR_GAP_EM = 0.12;
+const PDF_NET_LABEL_BASELINE_SHIFT_EM = 0.06;
 const EMBEDDED_PDF_FONTS = [
   {
     fileName: "LiberationSans-Regular.ttf",
@@ -171,15 +172,22 @@ export const normalizeSvgTextForPdf = (svg: Element): void => {
 
     // svg2pdf's baseline calculation lands closer to an anchor than browsers
     // do. Move text away from top/bottom anchors without changing its width,
-    // and optically center middle-aligned text (including boxed net labels).
+    // and optically center middle-aligned text. Boxed net labels need a smaller
+    // correction so their underscores stay clear of the bottom outline.
     if (!textElement.hasAttribute("dy")) {
+      const isNetLabel = textElement
+        .getAttribute("class")
+        ?.split(/\s+/)
+        .includes("sch-net-label-text");
       const shiftEm =
         dominantBaseline === "hanging"
           ? PDF_TEXT_ANCHOR_GAP_EM
           : dominantBaseline === "ideographic"
             ? -PDF_TEXT_ANCHOR_GAP_EM
             : dominantBaseline === "central" || dominantBaseline === "middle"
-              ? PDF_TEXT_ANCHOR_GAP_EM
+              ? isNetLabel
+                ? PDF_NET_LABEL_BASELINE_SHIFT_EM
+                : PDF_TEXT_ANCHOR_GAP_EM
               : undefined;
       if (shiftEm !== undefined) {
         textElement.setAttribute("dy", `${shiftEm}em`);

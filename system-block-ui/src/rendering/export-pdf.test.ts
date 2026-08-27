@@ -69,6 +69,7 @@ describe("schematic PDF text normalization", () => {
 
   test("maps baselines and preserves the original text width", () => {
     const centered = createTextElement([
+      ["class", "net-label-text sch-net-label-text"],
       ["dominant-baseline", "central"],
       ["font-size", "12px"],
       ["style", "font-size:12px"],
@@ -82,7 +83,7 @@ describe("schematic PDF text normalization", () => {
     expect(centered.attributes.get("alignment-baseline")).toBe("central");
     expect(centered.attributes.get("font-family")).toBe("LiberationSans");
     expect(centered.attributes.get("font-size")).toBe("12px");
-    expect(centered.attributes.get("dy")).toBe("0.12em");
+    expect(centered.attributes.get("dy")).toBe("0.06em");
     expect(centered.attributes.get("style")).toContain(
       "font-family:LiberationSans",
     );
@@ -97,11 +98,13 @@ describe("schematic PDF text normalization", () => {
       ["dominant-baseline", "hanging"],
       ["dy", "1em"],
     ]);
+    const centered = createTextElement([["dominant-baseline", "middle"]]);
     const svg = {
       querySelectorAll: () => [
         belowAnchor.element,
         aboveAnchor.element,
         explicitOffset.element,
+        centered.element,
       ],
     } as unknown as Element;
 
@@ -110,5 +113,6 @@ describe("schematic PDF text normalization", () => {
     expect(belowAnchor.attributes.get("dy")).toBe("0.12em");
     expect(aboveAnchor.attributes.get("dy")).toBe("-0.12em");
     expect(explicitOffset.attributes.get("dy")).toBe("1em");
+    expect(centered.attributes.get("dy")).toBe("0.12em");
   });
 });
