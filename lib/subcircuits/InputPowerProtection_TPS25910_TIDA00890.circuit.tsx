@@ -69,18 +69,18 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       manufacturerPartNumber="CSD17313Q2"
       channelType="n"
       mosfetMode="enhancement"
-      symbolDrainSide="left"
-      symbolSourceSide="right"
-      symbolGateSide="bottom"
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="left"
       schX={-1.4}
-      schY={-0.3}
+      schY={0.82}
     />
 
     <resistor
       name="R25"
       resistance="1Mohm"
       schX={-6.2}
-      schY={-0.25}
+      schY={0.87}
       schRotation={90}
     />
     <diode
@@ -88,7 +88,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       manufacturerPartNumber="ESD5Z6.0T1G"
       variant="zener"
       schX={-4.6}
-      schY={-0.25}
+      schY={0.87}
       schRotation={90}
     />
 
@@ -96,14 +96,14 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       name="R23"
       resistance="200kohm"
       schX={0.35}
-      schY={2.2}
+      schY={2.5}
       schRotation={90}
     />
     <resistor
       name="R24"
       resistance="10kohm"
       schX={1.55}
-      schY={2.2}
+      schY={2.5}
       schRotation={90}
     />
     <resistor name="R34" resistance="0ohm" doNotPlace schX={1.15} schY={0.65} />
@@ -157,17 +157,13 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <netlabel
       net="Q1_GATE"
       connectsTo="Q1.gate"
-      schX={-2.55}
-      schY={-1.1}
+      schX={-2.8}
+      schY={0.82}
       anchorSide="right"
     />
-    <netlabel
-      net="VBUS_OUT"
-      connectsTo={["Q1.source", "U7.OUT1", "U7.OUT2", "U7.OUT3"]}
-      schX={0.7}
-      schY={-0.3}
-      anchorSide="right"
-    />
+    <trace from="Q1.source" to="U7.OUT3" />
+    <trace from="U7.OUT1" to="U7.OUT2" />
+    <trace from="U7.OUT2" to="U7.OUT3" />
 
     {/* Pull-ups and logic nets use TI's displayed names. */}
     <netlabel
@@ -181,12 +177,12 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       net="USB_ID"
       connectsTo={["R23.pin1", "U7.EN_NOT"]}
       schX={0}
-      schY={1.65}
+      schY={1.95}
       anchorSide="right"
     />
     <trace from="R24.pin1" to="U7.FLT_NOT" />
     <trace from="R24.pin1" to="R34.pin2" />
-    <trace from="R34.pin1" to="net.VCONN_FLT_N" schDisplayLabel="VCONN_FLT_N" />
+    <trace from="R34.pin1" to="net.VCONN_FLT" schDisplayLabel="VCONN_FLT" />
 
     {/* U7 input, gate, current-limit, and local ground rails. */}
     <netlabel
