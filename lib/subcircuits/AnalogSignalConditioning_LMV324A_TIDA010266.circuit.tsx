@@ -61,7 +61,7 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
   </symbol>
 );
 
-export type AnalogFrontEnd_LMV324A_TIDA010266Props =
+export type AnalogSignalConditioning_LMV324A_TIDA010266Props =
   TIDA010266SectionedSubcircuitProps & {
     inputReferenceSectionName?: string;
     pressureSectionName?: string;
@@ -77,7 +77,7 @@ export type AnalogFrontEnd_LMV324A_TIDA010266Props =
  * TIDA-010266 U2 quad-amplifier functions: 1.25 V reference buffer,
  * two-stage oscillometric band-pass filter, and sensor current-bias loop.
  */
-export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
+export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
   inputReferenceSectionName,
   pressureSectionName,
   inputReferenceSheetName,
@@ -87,7 +87,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
   pressureSchXOffset = 0,
   pressureSchYOffset = 0,
   ...props
-}: AnalogFrontEnd_LMV324A_TIDA010266Props) => {
+}: AnalogSignalConditioning_LMV324A_TIDA010266Props) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
   const inputSheetName = inputReferenceSheetName ?? props.schSheetName;
@@ -624,4 +624,4 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
   );
 };
 
-export default AnalogFrontEnd_LMV324A_TIDA010266;
+export default AnalogSignalConditioning_LMV324A_TIDA010266;
