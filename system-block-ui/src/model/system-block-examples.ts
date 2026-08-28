@@ -136,6 +136,7 @@ const createRearviewMirrorDesign = (
       id: "power_supply",
       name: "power_supply",
       definitionId: componentId(catalog, "PowerSupply_LM74202_TPS7E81_Q1"),
+      schX: -3.6,
       position: { x: 40, y: 165 },
     },
     {

@@ -106,6 +106,16 @@ const prepareBlocks = (
         `${definition.title} cannot be safely instantiated by generated TSX. ${definition.warning ?? ""}`.trim(),
       );
     }
+    for (const [coordinate, value] of [
+      ["schX", block.schX],
+      ["schY", block.schY],
+    ] as const) {
+      if (value !== undefined && !Number.isFinite(value)) {
+        throw new Error(
+          `Block ${block.id} has an invalid ${coordinate} coordinate.`,
+        );
+      }
+    }
     const instanceName = sanitizeInstanceName(block.name ?? block.id);
     return {
       block,
@@ -260,6 +270,12 @@ const renderGeneratedSource = ({
       `    <${item.definition.componentName}`,
       `      name=${quote(item.instanceName)}`,
       `      schSheetName=${quote(item.sheetName)}`,
+      ...(item.block.schX === undefined
+        ? []
+        : [`      schX={${item.block.schX}}`]),
+      ...(item.block.schY === undefined
+        ? []
+        : [`      schY={${item.block.schY}}`]),
       "    />",
     );
   }

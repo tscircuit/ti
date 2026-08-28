@@ -498,6 +498,9 @@ describe("catalog and TSX generation", () => {
     ]) {
       expect(artifacts.tsx).toContain(componentName);
     }
+    expect(artifacts.tsx).toContain(
+      '<PowerSupply_LM74202_TPS7E81_Q1\n      name="power_supply"\n      schSheetName="power_supply"\n      schX={-3.6}',
+    );
     expect(artifacts.tsx).toContain('to=".light_sensor .U5Sensor .U5 > .SDA"');
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="data_power_monitor" data-kind="data"',
