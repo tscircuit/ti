@@ -75,7 +75,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         footprint="pinrow6"
         schX={10}
         schY={1.5}
-        schWidth="0.8mm"
+        schWidth="1.2mm"
         schHeight="1.2mm"
         schPinArrangement={{
           leftSide: {
@@ -107,7 +107,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         footprint="pinrow10"
         schX={10}
         schY={-5.8}
-        schWidth="0.8mm"
+        schWidth="1.2mm"
         schHeight="2.2mm"
         schPinArrangement={{
           leftSide: {
