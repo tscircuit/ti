@@ -184,11 +184,13 @@ const supportNetTraces: ReadonlyArray<{
  *   schY = (741 - y_px) * 0.0225 mm
  * Values below are rounded to 0.1 mm; the published figure supports only
  * approximate schematic centers, not exact PCB/CAD coordinates.
- * Sheet 2 applies a uniform +6 mm rendered-X translation to those local
- * centers so the extracted support section fits inside its drawing frame;
- * all source-relative component offsets remain unchanged.
- * The native render uses one sheet for IC1 with J3-J6 and a second sheet for
- * the retained target-board minimum-system support circuitry.
+ * The one-sheet drawing applies a uniform +6.4 mm rendered-X translation to
+ * every local center so the complete extract fits inside the native frame;
+ * all source-relative component offsets remain unchanged except C10, whose
+ * native symbol needs 0.4 mm additional left clearance to preserve the
+ * verified IC1.pin26-to-J4.pin1 route.
+ * The native render keeps IC1, J3-J6, and the retained target-board
+ * minimum-system support circuitry together on one sheet, as in Figure B-78.
  */
 export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
   <subcircuit
@@ -210,386 +212,383 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
     <net name="PVCC" isPowerNet />
 
     <schematicsheet
-      name="mcu_target_socket"
-      displayName="MCU and Target Socket"
+      name="msp430fr6007_target_board"
+      displayName="MSP430FR6007 Target Board"
       sheetIndex={1}
     >
-      <MSP430FR6007IPZ
-        name="IC1"
-        schX={0}
-        schY={0}
-        schPinStyle={{ ...leftRailPinSpacing, ...topRailPinSpacing }}
-      />
-
-      {/*
-       * Four 25-position target-socket headers surrounding IC1 in Figure B-78.
-       * The pin orders intentionally follow the source drawing on each side.
-       */}
-      <pinheader
-        name="J3"
-        manufacturerPartNumber="TSW-125-07-G-S"
-        footprint="pinrow25_p2.54_nopinlabels"
-        pinCount={25}
-        gender="male"
-        pitch="2.54mm"
-        schX={-7.2}
-        schY={0}
-        schFacingDirection="right"
-        schPinStyle={leftRailPinSpacing}
-      />
-      <pinheader
-        name="J4"
-        manufacturerPartNumber="TSW-125-07-G-S"
-        footprint="pinrow25_p2.54_nopinlabels"
-        pinCount={25}
-        gender="male"
-        pitch="2.54mm"
-        schX={0}
-        schY={-7.2}
-        schFacingDirection="up"
-      />
-      <pinheader
-        name="J5"
-        manufacturerPartNumber="TSW-125-07-G-S"
-        footprint="pinrow25_p2.54_nopinlabels"
-        pinCount={25}
-        gender="male"
-        pitch="2.54mm"
-        schX={7.2}
-        schY={0}
-        schFacingDirection="left"
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: descendingSocketPins,
-          },
-        }}
-      />
-      <pinheader
-        name="J6"
-        manufacturerPartNumber="TSW-125-07-G-S"
-        footprint="pinrow25_p2.54_nopinlabels"
-        pinCount={25}
-        gender="male"
-        pitch="2.54mm"
-        schX={0}
-        schY={7.2}
-        schFacingDirection="down"
-        schPinArrangement={{
-          bottomSide: {
-            direction: "left-to-right",
-            pins: descendingSocketPins,
-          },
-        }}
-        schPinStyle={topSocketRailPinSpacing}
-      />
-
-      {mcuToTargetSocketLinks.map(
-        ({ mcuPin, connector, connectorPin, sourcePinLabel }) => (
-          <Fragment key={`IC1-${mcuPin}-${connector}-${connectorPin}`}>
-            <trace
-              name={`IC1_PIN${mcuPin}_${connector}_PIN${connectorPin}`}
-              from={`IC1.pin${mcuPin}`}
-              to={`${connector}.pin${connectorPin}`}
-              schDisplayLabel={sourcePinLabel}
-            />
-          </Fragment>
-        ),
-      )}
-
-      {targetSocketNetBreakouts.map(({ connector, connectorPin, net }) => (
-        <Fragment key={`${connector}-pin${connectorPin}-${net}`}>
-          <trace
-            name={`${connector}_PIN${connectorPin}_${net}`}
-            from={`${connector}.pin${connectorPin}`}
-            to={`net.${net}`}
-            schDisplayLabel={net}
-          />
-        </Fragment>
-      ))}
-    </schematicsheet>
-
-    <schematicsheet
-      name="minimum_system"
-      displayName="Minimum-System Support Circuitry"
-      sheetIndex={2}
-    >
-      <group name="minimum_system_source_layout" schX={6}>
-        {/* Target-board AVCC bypass network. */}
-        <capacitor
-          name="C3"
-          capacitance="1uF"
-          footprint="0805"
-          schX={-14.1}
-          schY={2.1}
-          schOrientation="vertical"
-        />
-        <capacitor
-          name="C11"
-          capacitance="0.1uF"
-          footprint="0805"
-          schX={-13.2}
-          schY={3.4}
-          schOrientation="vertical"
+      <group name="figure_b78_one_sheet_layout" schX={6.4}>
+        <MSP430FR6007IPZ
+          name="IC1"
+          schX={0}
+          schY={0}
+          schPinStyle={{ ...leftRailPinSpacing, ...topRailPinSpacing }}
         />
 
         {/*
-         * Target-board PVCC bypass network. Values follow Figure B-78; its
-         * printed BOM instead says C16=47uF and C13=1000pF, a source conflict.
+         * Four 25-position target-socket headers surrounding IC1 in Figure B-78.
+         * The pin orders intentionally follow the source drawing on each side.
          */}
-        <capacitor
-          name="C16"
-          capacitance="1uF"
-          footprint="0805"
-          schX={-14.1}
-          schY={0.5}
-          schOrientation="vertical"
+        <pinheader
+          name="J3"
+          manufacturerPartNumber="TSW-125-07-G-S"
+          footprint="pinrow25_p2.54_nopinlabels"
+          pinCount={25}
+          gender="male"
+          pitch="2.54mm"
+          schX={-7.2}
+          schY={0}
+          schFacingDirection="right"
+          schPinStyle={leftRailPinSpacing}
         />
-        <capacitor
-          name="C13"
-          capacitance="0.1uF"
-          footprint="0805"
-          schX={-13.2}
-          schY={0.5}
-          schOrientation="vertical"
+        <pinheader
+          name="J4"
+          manufacturerPartNumber="TSW-125-07-G-S"
+          footprint="pinrow25_p2.54_nopinlabels"
+          pinCount={25}
+          gender="male"
+          pitch="2.54mm"
+          schX={0}
+          schY={-7.2}
+          schFacingDirection="up"
         />
-
-        {/* The two physical DVCC bypass locations retained from the board. */}
-        <capacitor
-          name="C4"
-          capacitance="0.1uF"
-          footprint="0805"
-          schX={-4.0}
-          schY={-6.3}
-          schOrientation="vertical"
-        />
-
-        {/* Source star-ground links: PVSS--R11--GND--R12--AVSS. */}
-        <resistor
-          name="R11"
-          resistance="0"
-          footprint="0805"
-          schX={-19.0}
-          schY={-5.5}
-        />
-        <resistor
-          name="R12"
-          resistance="0"
-          footprint="0805"
-          schX={-19.0}
-          schY={-6.5}
-        />
-        <capacitor
-          name="C10"
-          capacitance="0.1uF"
-          footprint="0805"
-          schX={-3.0}
-          schY={-6.3}
-          schOrientation="vertical"
-        />
-        <capacitor
-          name="C7"
-          capacitance="1uF"
-          footprint="0805"
-          schX={6.4}
-          schY={-6.2}
-          schOrientation="vertical"
-        />
-        <capacitor
-          name="C6"
-          capacitance="0.1uF"
-          footprint="0805"
-          schX={7.4}
-          schY={-6.2}
-          schOrientation="vertical"
-        />
-
-        {/* Reset pull-up, filter, and pushbutton from Figure B-78. */}
-        <resistor
-          name="R7"
-          resistance="47k"
-          footprint="0805"
-          schX={-11.6}
-          schY={7.8}
-          schOrientation="vertical"
-        />
-        <capacitor
-          name="C5"
-          capacitance="1100pF"
-          footprint="0805"
-          schX={-11.5}
-          schY={6.6}
-          schOrientation="vertical"
-        />
-        <pushbutton
-          name="SW2"
-          displayName="RESET"
-          manufacturerPartNumber="EVQ-11L05R"
-          footprint="smdpushbutton"
-          schX={-12.6}
-          schY={7.5}
-        />
-
-        {/* Optional low-frequency crystal population from the socket board. */}
-        <crystal
-          name="Q1"
-          manufacturerPartNumber="MS3V-T1R"
-          frequency="32.768kHz"
-          loadCapacitance="12.5pF"
-          pinVariant="two_pin"
-          doNotPlace
-          schX={-11.0}
-          schY={2.7}
-        />
-        <capacitor
-          name="C1"
-          capacitance="12pF"
-          footprint="0805"
-          doNotPlace
-          schX={-12.3}
-          schY={3.2}
-          schOrientation="vertical"
-        />
-        <capacitor
-          name="C2"
-          capacitance="12pF"
-          footprint="0805"
-          doNotPlace
-          schX={-12.3}
-          schY={2.2}
-          schOrientation="vertical"
-        />
-        <resistor
-          name="R5"
-          resistance="0"
-          footprint="0603"
-          doNotPlace
-          schX={-9.5}
-          schY={3.2}
-        />
-        <resistor
-          name="R6"
-          resistance="0"
-          footprint="0603"
-          doNotPlace
-          schX={-9.5}
-          schY={2.2}
-        />
-
-        {/* Optional HFXT population; all five parts are DNP in the source BOM. */}
-        <crystal
-          name="Q2"
-          manufacturerPartNumber="MS3V-T1R"
-          frequency="32.768kHz"
-          loadCapacitance="12.5pF"
-          pinVariant="two_pin"
-          doNotPlace
-          schX={-11.0}
-          schY={-0.4}
-        />
-        <capacitor
-          name="C8"
-          capacitance="22pF"
-          footprint="0805"
-          doNotPlace
-          schX={-12.3}
-          schY={0.1}
-          schOrientation="vertical"
-        />
-        <capacitor
-          name="C9"
-          capacitance="22pF"
-          footprint="0805"
-          doNotPlace
-          schX={-12.3}
-          schY={-0.9}
-          schOrientation="vertical"
-        />
-        <resistor
-          name="R9"
-          resistance="0"
-          footprint="0603"
-          doNotPlace
-          schX={-9.5}
-          schY={0.1}
-        />
-        <resistor
-          name="R8"
-          resistance="0"
-          footprint="0603"
-          doNotPlace
-          schX={-9.5}
-          schY={-0.9}
-        />
-
-        {/* UART BSL paths retained on the source JTAG header. */}
-        <resistor
-          name="R19"
-          resistance="0"
-          footprint="0805"
-          schX={-20.3}
-          schY={10.5}
-        />
-        <resistor
-          name="R20"
-          resistance="0"
-          footprint="0805"
-          schX={-20.3}
-          schY={9.9}
-        />
-
-        {/*
-         * 14-pin MSP JTAG connector resolved to the board's documented four-wire
-         * configuration (JP5-JP10 at pins 2-3). The physical selector headers and
-         * shunts are board UI, so the extracted module preserves their selected
-         * connectivity without importing those configuration-only components.
-         */}
-        <connector
-          name="JTAG"
-          manufacturerPartNumber="SBH11-PBPC-D07-ST-BK"
-          footprint="pinrow14_p2.54_nopinlabels_rows2"
-          pinLabels={{
-            pin1: "TDO_TDI",
-            pin2: "VCC_TOOL",
-            pin3: "TDI",
-            pin4: "VCC_TARGET",
-            pin5: "TMS",
-            pin6: "NC_6",
-            pin7: "TCK",
-            pin8: "TEST",
-            pin9: "GND",
-            pin10: "NC_10",
-            pin11: "RST",
-            pin12: "BSL_TX",
-            pin13: "NC_13",
-            pin14: "BSL_RX",
-          }}
-          noConnect={["NC_6", "NC_10", "NC_13"]}
-          schX={-17.7}
-          schY={9.7}
+        <pinheader
+          name="J5"
+          manufacturerPartNumber="TSW-125-07-G-S"
+          footprint="pinrow25_p2.54_nopinlabels"
+          pinCount={25}
+          gender="male"
+          pitch="2.54mm"
+          schX={7.2}
+          schY={0}
+          schFacingDirection="left"
           schPinArrangement={{
             leftSide: {
               direction: "top-to-bottom",
-              pins: [14, 12, 10, 8, 6, 4, 2],
-            },
-            rightSide: {
-              direction: "top-to-bottom",
-              pins: [13, 11, 9, 7, 5, 3, 1],
+              pins: descendingSocketPins,
             },
           }}
         />
+        <pinheader
+          name="J6"
+          manufacturerPartNumber="TSW-125-07-G-S"
+          footprint="pinrow25_p2.54_nopinlabels"
+          pinCount={25}
+          gender="male"
+          pitch="2.54mm"
+          schX={0}
+          schY={7.2}
+          schFacingDirection="down"
+          schPinArrangement={{
+            bottomSide: {
+              direction: "left-to-right",
+              pins: descendingSocketPins,
+            },
+          }}
+          schPinStyle={topSocketRailPinSpacing}
+        />
 
-        {/* Repository-standard net names are carried by native traces. */}
-        {supportNetTraces.map(({ component, pin, net, name }) => (
-          <Fragment key={`${component}-pin${pin}-${net}`}>
+        {mcuToTargetSocketLinks.map(
+          ({ mcuPin, connector, connectorPin, sourcePinLabel }) => (
+            <Fragment key={`IC1-${mcuPin}-${connector}-${connectorPin}`}>
+              <trace
+                name={`IC1_PIN${mcuPin}_${connector}_PIN${connectorPin}`}
+                from={`IC1.pin${mcuPin}`}
+                to={`${connector}.pin${connectorPin}`}
+                schDisplayLabel={sourcePinLabel}
+              />
+            </Fragment>
+          ),
+        )}
+
+        {targetSocketNetBreakouts.map(({ connector, connectorPin, net }) => (
+          <Fragment key={`${connector}-pin${connectorPin}-${net}`}>
             <trace
-              name={name ?? `${component}_PIN${pin}_${net}`}
-              from={`${component}.pin${pin}`}
+              name={`${connector}_PIN${connectorPin}_${net}`}
+              from={`${connector}.pin${connectorPin}`}
               to={`net.${net}`}
               schDisplayLabel={net}
             />
           </Fragment>
         ))}
+
+        <group name="minimum_system_source_layout">
+          {/* Target-board AVCC bypass network. */}
+          <capacitor
+            name="C3"
+            capacitance="1uF"
+            footprint="0805"
+            schX={-14.1}
+            schY={2.1}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C11"
+            capacitance="0.1uF"
+            footprint="0805"
+            schX={-13.2}
+            schY={3.4}
+            schOrientation="vertical"
+          />
+
+          {/*
+           * Target-board PVCC bypass network. Values follow Figure B-78; its
+           * printed BOM instead says C16=47uF and C13=1000pF, a source conflict.
+           */}
+          <capacitor
+            name="C16"
+            capacitance="1uF"
+            footprint="0805"
+            schX={-14.1}
+            schY={0.5}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C13"
+            capacitance="0.1uF"
+            footprint="0805"
+            schX={-13.2}
+            schY={0.5}
+            schOrientation="vertical"
+          />
+
+          {/* The two physical DVCC bypass locations retained from the board. */}
+          <capacitor
+            name="C4"
+            capacitance="0.1uF"
+            footprint="0805"
+            schX={-4.0}
+            schY={-6.3}
+            schOrientation="vertical"
+          />
+
+          {/* Source star-ground links: PVSS--R11--GND--R12--AVSS. */}
+          <resistor
+            name="R11"
+            resistance="0"
+            footprint="0805"
+            schX={-19.0}
+            schY={-5.5}
+          />
+          <resistor
+            name="R12"
+            resistance="0"
+            footprint="0805"
+            schX={-19.0}
+            schY={-6.5}
+          />
+          {/* Native-symbol clearance shift documented in coordinate provenance. */}
+          <capacitor
+            name="C10"
+            capacitance="0.1uF"
+            footprint="0805"
+            schX={-3.4}
+            schY={-6.3}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C7"
+            capacitance="1uF"
+            footprint="0805"
+            schX={6.4}
+            schY={-6.2}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C6"
+            capacitance="0.1uF"
+            footprint="0805"
+            schX={7.4}
+            schY={-6.2}
+            schOrientation="vertical"
+          />
+
+          {/* Reset pull-up, filter, and pushbutton from Figure B-78. */}
+          <resistor
+            name="R7"
+            resistance="47k"
+            footprint="0805"
+            schX={-11.6}
+            schY={7.8}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C5"
+            capacitance="1100pF"
+            footprint="0805"
+            schX={-11.5}
+            schY={6.6}
+            schOrientation="vertical"
+          />
+          <pushbutton
+            name="SW2"
+            displayName="RESET"
+            manufacturerPartNumber="EVQ-11L05R"
+            footprint="smdpushbutton"
+            schX={-12.6}
+            schY={7.5}
+          />
+
+          {/* Optional low-frequency crystal population from the socket board. */}
+          <crystal
+            name="Q1"
+            manufacturerPartNumber="MS3V-T1R"
+            frequency="32.768kHz"
+            loadCapacitance="12.5pF"
+            pinVariant="two_pin"
+            doNotPlace
+            schX={-11.0}
+            schY={2.7}
+          />
+          <capacitor
+            name="C1"
+            capacitance="12pF"
+            footprint="0805"
+            doNotPlace
+            schX={-12.3}
+            schY={3.2}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C2"
+            capacitance="12pF"
+            footprint="0805"
+            doNotPlace
+            schX={-12.3}
+            schY={2.2}
+            schOrientation="vertical"
+          />
+          <resistor
+            name="R5"
+            resistance="0"
+            footprint="0603"
+            doNotPlace
+            schX={-9.5}
+            schY={3.2}
+          />
+          <resistor
+            name="R6"
+            resistance="0"
+            footprint="0603"
+            doNotPlace
+            schX={-9.5}
+            schY={2.2}
+          />
+
+          {/* Optional HFXT population; all five parts are DNP in the source BOM. */}
+          <crystal
+            name="Q2"
+            manufacturerPartNumber="MS3V-T1R"
+            frequency="32.768kHz"
+            loadCapacitance="12.5pF"
+            pinVariant="two_pin"
+            doNotPlace
+            schX={-11.0}
+            schY={-0.4}
+          />
+          <capacitor
+            name="C8"
+            capacitance="22pF"
+            footprint="0805"
+            doNotPlace
+            schX={-12.3}
+            schY={0.1}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C9"
+            capacitance="22pF"
+            footprint="0805"
+            doNotPlace
+            schX={-12.3}
+            schY={-0.9}
+            schOrientation="vertical"
+          />
+          <resistor
+            name="R9"
+            resistance="0"
+            footprint="0603"
+            doNotPlace
+            schX={-9.5}
+            schY={0.1}
+          />
+          <resistor
+            name="R8"
+            resistance="0"
+            footprint="0603"
+            doNotPlace
+            schX={-9.5}
+            schY={-0.9}
+          />
+
+          {/* UART BSL paths retained on the source JTAG header. */}
+          <resistor
+            name="R19"
+            resistance="0"
+            footprint="0805"
+            schX={-20.3}
+            schY={10.5}
+          />
+          <resistor
+            name="R20"
+            resistance="0"
+            footprint="0805"
+            schX={-20.3}
+            schY={9.9}
+          />
+
+          {/*
+           * 14-pin MSP JTAG connector resolved to the board's documented four-wire
+           * configuration (JP5-JP10 at pins 2-3). The physical selector headers and
+           * shunts are board UI, so the extracted module preserves their selected
+           * connectivity without importing those configuration-only components.
+           */}
+          <connector
+            name="JTAG"
+            manufacturerPartNumber="SBH11-PBPC-D07-ST-BK"
+            footprint="pinrow14_p2.54_nopinlabels_rows2"
+            pinLabels={{
+              pin1: "TDO_TDI",
+              pin2: "VCC_TOOL",
+              pin3: "TDI",
+              pin4: "VCC_TARGET",
+              pin5: "TMS",
+              pin6: "NC_6",
+              pin7: "TCK",
+              pin8: "TEST",
+              pin9: "GND",
+              pin10: "NC_10",
+              pin11: "RST",
+              pin12: "BSL_TX",
+              pin13: "NC_13",
+              pin14: "BSL_RX",
+            }}
+            noConnect={["NC_6", "NC_10", "NC_13"]}
+            schX={-17.7}
+            schY={9.7}
+            schPinArrangement={{
+              leftSide: {
+                direction: "top-to-bottom",
+                pins: [14, 12, 10, 8, 6, 4, 2],
+              },
+              rightSide: {
+                direction: "top-to-bottom",
+                pins: [13, 11, 9, 7, 5, 3, 1],
+              },
+            }}
+          />
+
+          {/* Repository-standard net names are carried by native traces. */}
+          {supportNetTraces.map(({ component, pin, net, name }) => (
+            <Fragment key={`${component}-pin${pin}-${net}`}>
+              <trace
+                name={name ?? `${component}_PIN${pin}_${net}`}
+                from={`${component}.pin${pin}`}
+                to={`net.${net}`}
+                schDisplayLabel={net}
+              />
+            </Fragment>
+          ))}
+        </group>
       </group>
     </schematicsheet>
 

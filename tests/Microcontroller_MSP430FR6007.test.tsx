@@ -199,33 +199,23 @@ const testConnectivity = async () => {
   const sheets = circuitJson.filter(
     (element) => element.type === "schematic_sheet",
   );
-  assert(sheets.length === 2, "Expected exactly two schematic sheets");
-  const socketSheet = sheets.find(
+  assert(sheets.length === 1, "Expected exactly one schematic sheet");
+  const targetBoardSheet = sheets.find(
     (sheet) =>
-      sheet.type === "schematic_sheet" && sheet.name === "mcu_target_socket",
+      sheet.type === "schematic_sheet" &&
+      sheet.name === "msp430fr6007_target_board",
   );
-  const supportSheet = sheets.find(
-    (sheet) =>
-      sheet.type === "schematic_sheet" && sheet.name === "minimum_system",
-  );
-  assert(socketSheet?.type === "schematic_sheet", "Missing MCU socket sheet");
   assert(
-    supportSheet?.type === "schematic_sheet",
-    "Missing minimum-system support sheet",
+    targetBoardSheet?.type === "schematic_sheet",
+    "Missing MSP430FR6007 target-board sheet",
   );
 
-  for (const componentName of ["IC1", "J3", "J4", "J5", "J6"]) {
+  for (const component of circuitJson) {
+    if (component.type !== "schematic_component") continue;
+
     assert(
-      findSchematicComponent(circuitJson, componentName).schematic_sheet_id ===
-        socketSheet.schematic_sheet_id,
-      `${componentName} is not on the MCU socket sheet`,
-    );
-  }
-  for (const componentName of ["JTAG", "R7", "C5", "Q1", "Q2", "C3"]) {
-    assert(
-      findSchematicComponent(circuitJson, componentName).schematic_sheet_id ===
-        supportSheet.schematic_sheet_id,
-      `${componentName} is not on the minimum-system support sheet`,
+      component.schematic_sheet_id === targetBoardSheet.schematic_sheet_id,
+      `${component.schematic_component_id} is not on the common target-board sheet`,
     );
   }
 
@@ -336,7 +326,7 @@ const testConnectivity = async () => {
   for (const trace of circuitJson) {
     if (
       trace.type !== "schematic_trace" ||
-      trace.schematic_sheet_id !== socketSheet.schematic_sheet_id
+      trace.schematic_sheet_id !== targetBoardSheet.schematic_sheet_id
     ) {
       continue;
     }
