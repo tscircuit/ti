@@ -13,7 +13,7 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
     <subcircuit
       {...props}
       schTraceAutoLabelEnabled={false}
-      schMaxTraceDistance="1000mm"
+      schMaxTraceDistance="4mm"
     >
       <connector
         name="J2"
@@ -22,6 +22,18 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
         footprint="pinrow10_rows2_p1.27mm"
         schX={3.4}
         schY={0.8}
+        schWidth="2.2mm"
+        schHeight="2.4mm"
+        schPinArrangement={{
+          leftSide: {
+            pins: ["pin1", "pin3", "pin5", "pin7", "pin9"],
+            direction: "top-to-bottom",
+          },
+          rightSide: {
+            pins: ["pin2", "pin4", "pin6", "pin8", "pin10"],
+            direction: "top-to-bottom",
+          },
+        }}
         pinLabels={{
           pin1: ["V3_3"],
           pin2: ["SWDIO_HEADER"],

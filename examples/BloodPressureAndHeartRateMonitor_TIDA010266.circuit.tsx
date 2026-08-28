@@ -64,6 +64,17 @@ export default () => (
     <schematicsection name="adc_filter" displayName="" />
     <schematicsection name="motor_driver" displayName="" />
 
+    {/* Continue the native Programming/MCU divider to the sheet border. */}
+    <schematicline
+      x1={11.825}
+      y1={12.7}
+      x2={35.2}
+      y2={12.7}
+      strokeWidth={0.02}
+      color="#000000"
+      isDashed
+    />
+
     {/* Centered titles sit inside, rather than directly on, each top divider. */}
     <SectionTitle title="Input + Reference" schX={-15.8} schY={21.6} />
     <SectionTitle title="Connectors" schX={6} schY={21.6} />
