@@ -13,7 +13,7 @@ import { U_FL_R_SMT_1_10_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
 export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit schMaxTraceDistance={2.6} {...props}>
+  <subcircuit routingDisabled schMaxTraceDistance={2.6} {...props}>
     <net name="GND" isGroundNet />
     <resistor
       name="C5"

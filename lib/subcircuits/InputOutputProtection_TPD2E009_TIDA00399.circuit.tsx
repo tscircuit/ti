@@ -9,7 +9,7 @@ import { TPD2E009DRTR } from "../chips/TPD2E009DRTR.circuit.tsx";
 export const InputOutputProtection_TPD2E009_TIDA00399 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <TPD2E009DRTR
       name="UESD"
       schX={0}

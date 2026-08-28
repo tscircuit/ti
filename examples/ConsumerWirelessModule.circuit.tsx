@@ -11,7 +11,7 @@ import "tscircuit";
 
 /** Consumer wireless module assembled from the seven reusable TI blocks. */
 export default () => (
-  <board width="84mm" height="38mm" autorouter="beta_pipeline9">
+  <board width="84mm" height="38mm" routingDisabled>
     <schematicsheet
       name="input_power_protection"
       displayName="Input Power Protection"

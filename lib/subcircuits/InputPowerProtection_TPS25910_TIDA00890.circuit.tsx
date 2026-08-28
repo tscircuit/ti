@@ -17,7 +17,7 @@ import {
 export const InputPowerProtection_TPS25910_TIDA00890 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit schMaxTraceDistance="3.6mm" {...props}>
+  <subcircuit routingDisabled schMaxTraceDistance="3.6mm" {...props}>
     <breakoutpoint connection=".R34 > .pin1" pcbX={7.2} pcbY={4} />
 
     <TPS25910RSA name="U7" schX={3.15} schY={0.03} pcbX={0} pcbY={0} />

@@ -11,7 +11,7 @@ import { XFL4015_471MEC_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
  * @see https://www.ti.com/tool/TIDA-00399
  */
 export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
-  <subcircuit {...props} schTraceAutoLabelEnabled={false}>
+  <subcircuit routingDisabled {...props} schTraceAutoLabelEnabled={false}>
     <TPS62086RLTR name="U3P3" schX={0} schY={0} pcbX={0} pcbY={0} />
 
     <capacitor

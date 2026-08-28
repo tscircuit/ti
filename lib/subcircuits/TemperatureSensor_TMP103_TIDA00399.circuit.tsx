@@ -8,7 +8,7 @@ import { TMP103AYFF } from "../chips/TMP103AYFF.circuit.tsx";
  * @see https://www.ti.com/tool/TIDA-00399
  */
 export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <TMP103AYFF
       name="UTMP"
       schX={1.2}

@@ -10,7 +10,7 @@ import { SN65LVDS31D } from "../chips/SN65LVDS31D.circuit.tsx";
  * @see https://www.ti.com/tool/TIDA-060017
  */
 export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <breakoutpoint connection=".U1 > .OUT2_P" pcbX={8.2} pcbY={3} />
     <breakoutpoint connection=".U1 > .OUT2_N" pcbX={8.2} pcbY={2} />
     <breakoutpoint connection=".U1 > .OUT3_P" pcbX={8.2} pcbY={1} />

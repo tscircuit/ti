@@ -7,7 +7,7 @@ import { SN74LVC1G34DBVR } from "../chips/SN74LVC1G34DBVR.circuit.tsx";
  * @see https://www.ti.com/lit/gpn/SN74LVC1G34
  */
 export const LogicBuffer_SN74LVC1G34 = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
+  <subcircuit routingDisabled {...props}>
     <SN74LVC1G34DBVR
       name="U1"
       schX={0}
