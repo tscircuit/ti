@@ -146,3 +146,15 @@ export const W3006_FOOTPRINT = createRectPadFootprint([
   [1, -4.249928, 0, 1.999996, 3.1999936, "rect"],
   [2, 4.249928, 0, 1.999996, 3.1999936, "rect"],
 ]);
+
+/** Exact EasyEDA copper imported from JLCPCB C18221164. */
+export const XFL4015_471MEC_FOOTPRINT = createRectPadFootprint([
+  [1, 1.188974, 0, 1.1999976, 3.7999924, "rect"],
+  [2, -1.188974, 0, 1.1999976, 3.7999924, "rect"],
+]);
+
+/** Exact SOD-523 copper imported from JLCPCB C82323. */
+export const ESD5Z6_0T1G_FOOTPRINT = createRectPadFootprint([
+  [1, -0.7112, 0.0050038, 0.6096, 0.4826, "rect"],
+  [2, 0.7112, -0.0050038, 0.6096, 0.4826, "rect"],
+]);

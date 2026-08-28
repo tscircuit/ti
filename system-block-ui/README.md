@@ -131,9 +131,11 @@ from the KiCad and Altium archives because those native converters do not
 support `schematic_graphic`; all editable detail sheets are retained.
 
 The Consumer Wireless Module's seven packaged chips include exact copper pad
-geometry and LCSC supplier IDs imported from JLCPCB. Generic passives and other
-components still require an explicit package selection before their pads can be
-included.
+geometry and LCSC supplier IDs imported from JLCPCB. Its resistors and RF
+passives use 0402 packages; bulk capacitors step up through 0603, 0805, and 1210
+as their capacitance and rail voltage require. The 4 mm power inductor and
+SOD-523 protection diode also use exact JLCPCB-imported copper. Its MOSFET and
+U.FL connector still require explicit package selections.
 
 `circuit-json-to-altium` is temporarily pinned to the official repository's
 exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has

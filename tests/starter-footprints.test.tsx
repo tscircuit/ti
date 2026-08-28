@@ -24,6 +24,13 @@ const starterChips = [
   ["W3006", W3006, 2, "C5123155"],
 ] as const;
 
+const passiveComponentTypes = new Set([
+  "simple_resistor",
+  "simple_capacitor",
+  "simple_inductor",
+  "simple_diode",
+]);
+
 for (const [name, Chip, expectedPadCount, lcscPartNumber] of starterChips) {
   test(`${name} renders its imported JLCPCB footprint`, async () => {
     const circuit = new Circuit({
@@ -73,7 +80,7 @@ test("TMP103 ball numbers match the TI YFF pin assignment", async () => {
   assert.equal(pinNumber("GND"), 4);
 });
 
-test("the Consumer Wireless Module carries every chip footprint into PCB data", async () => {
+test("the Consumer Wireless Module carries chip and passive footprints into PCB data", async () => {
   const circuit = new Circuit({
     platform: {
       routingDisabled: true,
@@ -103,4 +110,38 @@ test("the Consumer Wireless Module carries every chip footprint into PCB data", 
       expectedPadCount,
     );
   }
+
+  const passiveComponents = circuit.db.source_component
+    .list()
+    .filter((component) => passiveComponentTypes.has(component.ftype));
+  assert.equal(passiveComponents.length, 27);
+
+  for (const sourceComponent of passiveComponents) {
+    const pcbComponent = circuit.db.pcb_component.getWhere({
+      source_component_id: sourceComponent.source_component_id,
+    });
+    assert.ok(
+      pcbComponent,
+      `${sourceComponent.name} did not produce a PCB component`,
+    );
+    assert.equal(
+      circuit.db.pcb_smtpad.list({
+        pcb_component_id: pcbComponent.pcb_component_id,
+      }).length,
+      2,
+      `${sourceComponent.name} should have a two-pad footprint`,
+    );
+  }
+
+  assert.equal(circuit.db.pcb_smtpad.list().length, 108);
+
+  const missingFootprints = circuit
+    .getCircuitJson()
+    .filter((element) => element.type === "pcb_missing_footprint_error");
+  assert.equal(missingFootprints.length, 2);
+  const missingFootprintMessages = missingFootprints
+    .map((error) => error.message)
+    .join("\n");
+  assert.match(missingFootprintMessages, /Q1/);
+  assert.match(missingFootprintMessages, /J5/);
 });
