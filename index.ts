@@ -1,5 +1,6 @@
 import {
   AM62L32,
+  AWR1843ARBGALPQ1,
   ATL431LI,
   BQ24072,
   BQ24073,
@@ -14,6 +15,7 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
   CSD19532Q5B,
   DAC101C081Q,
   DRV5013Q1,
@@ -21,6 +23,7 @@ import {
   DRV8833,
   DRV8876,
   DRV83053Q1,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
@@ -40,6 +43,7 @@ import {
   MSPM0L1306Q1,
   MSPM33C3x,
   MSPM0G3507,
+  MX25V1635FZNQ,
   OPT3001,
   PGA300ARHHR,
   SN65HVD1473,
@@ -159,6 +163,13 @@ import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/Temperatur
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
+import { RadarClock_FW4000044Q } from "./lib/subcircuits/RadarClock_FW4000044Q.circuit.tsx";
+import {
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing,
+} from "./lib/subcircuits/RadarFrontEndProcessing.circuit.tsx";
+import { RadarQspiFlash_MX25V1635FZNQ } from "./lib/subcircuits/RadarQspiFlash_MX25V1635FZNQ.circuit.tsx";
+import { RadarSoc_AWR1843ARBGALPQ1 } from "./lib/subcircuits/RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
 import { AnalogSignalConditioning_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogSignalConditioning_LMV324A_TIDA010266.circuit.tsx";
 import { Microcontroller_MSPM0L1306_TIDA010266 } from "./lib/subcircuits/Microcontroller_MSPM0L1306_TIDA010266.circuit.tsx";
 import { MotorDriver_DRV8210_TIDA010266 } from "./lib/subcircuits/MotorDriver_DRV8210_TIDA010266.circuit.tsx";
@@ -248,6 +259,11 @@ export {
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 };
 
 export const TiChipComponents = {
@@ -256,6 +272,7 @@ export const TiChipComponents = {
   SMPP2_03,
   TPS7A24,
   AM62L32,
+  AWR1843ARBGALPQ1,
   BQ24072,
   BQ24073,
   BQ24074,
@@ -269,6 +286,7 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
   CSD19532Q5B,
   DAC101C081Q,
   DRV5013Q1,
@@ -276,6 +294,7 @@ export const TiChipComponents = {
   DRV8833,
   DRV8876,
   DRV83053Q1,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
@@ -294,6 +313,7 @@ export const TiChipComponents = {
   MSPM0L1306Q1,
   MSPM33C3x,
   MSPM0G3507,
+  MX25V1635FZNQ,
   OPT3001,
   PGA300ARHHR,
   SN65HVD1473,
@@ -412,6 +432,10 @@ export const TiSubcircuitComponents = {
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RadarFrontEndProcessing,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

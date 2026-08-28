@@ -39,6 +39,10 @@ example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
+The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.circuit.tsx)
+example composes the TIDEP-01024 AWR1843AoP radar SoC, 40 MHz clock, and QSPI
+flash into the radar front-end and processing subsystem.
+
 The
 [`BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx`](examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx)
 example reproduces TI's TIDA-010266 blood-pressure and heart-rate monitor from
