@@ -3,35 +3,6 @@ import { TPS7A2433DBVR } from "../chips/TPS7A2433DBVR.circuit.tsx";
 import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
 import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
 
-const GroundGlyph = ({ x, y }: { x: number; y: number }) => (
-  <>
-    <schematicline
-      x1={x - 0.32}
-      y1={y}
-      x2={x + 0.32}
-      y2={y}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-    <schematicline
-      x1={x - 0.21}
-      y1={y - 0.12}
-      x2={x + 0.21}
-      y2={y - 0.12}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-    <schematicline
-      x1={x - 0.09}
-      y1={y - 0.24}
-      x2={x + 0.09}
-      y2={y - 0.24}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-  </>
-);
-
 /** TIDA-010266 U1/C1/C5 3.3 V input regulator stage. */
 export const PowerManagement_TPS7A2433_TIDA010266 = (
   props: TIDA010266SectionedSubcircuitProps,
@@ -81,9 +52,6 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
       <netlabel net="GND" connectsTo=".U1 > .GND" anchorSide="top" />
       <netlabel net="GND" connectsTo=".C5 > .pin2" anchorSide="top" />
       <netlabel net="GND" connectsTo=".C1 > .pin2" anchorSide="top" />
-      <GroundGlyph x={-3.2} y={-1.45} />
-      <GroundGlyph x={0} y={-2.15} />
-      <GroundGlyph x={3.2} y={-1.45} />
       <port
         name="GND"
         schX={originX}

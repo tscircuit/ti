@@ -9,35 +9,6 @@ const throughHoleTestPoint = {
   doNotPlace: true,
 };
 
-const InvertedGroundGlyph = ({ x, y }: { x: number; y: number }) => (
-  <>
-    <schematicline
-      x1={x - 0.09}
-      y1={y + 0.24}
-      x2={x + 0.09}
-      y2={y + 0.24}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-    <schematicline
-      x1={x - 0.21}
-      y1={y + 0.12}
-      x2={x + 0.21}
-      y2={y + 0.12}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-    <schematicline
-      x1={x - 0.32}
-      y1={y}
-      x2={x + 0.32}
-      y2={y}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-  </>
-);
-
 export type BloodPressureMonitorInterfaces_TIDA010266Props = SubcircuitProps & {
   schSectionName?: string;
   inputSectionName?: string;
@@ -232,7 +203,6 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
       />
       <trace from=".J10 > .INA_GS" to=".INA_GS_PORT" schDisplayLabel="INA_GS" />
       <netlabel net="GND" connectsTo=".J1 > .GND" anchorSide="bottom" />
-      <InvertedGroundGlyph x={-29.3} y={3.65} />
 
       <testpoint
         {...throughHoleTestPoint}

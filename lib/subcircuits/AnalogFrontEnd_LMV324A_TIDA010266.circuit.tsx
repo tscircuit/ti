@@ -59,9 +59,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           out: ".U2 > .OUT_A",
         }}
       />
-      {/* The released drawing flips the input order and shows the shared
-          package power pins on unit A. These primitives complete that IEC
-          presentation while U2 remains the sole electrical/PCB component. */}
+      {/* The released drawing flips the input order and loops the output back
+          to the inverting input. U2 remains the sole electrical/PCB package. */}
       <schematicline
         x1={-8.53}
         y1={15.22}
@@ -82,52 +81,6 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schX={-8.7}
         schY={15.42}
         fontSize={0.14}
-        color="#840000"
-      />
-      <schematicline
-        x1={-8.53}
-        y1={14.78}
-        x2={-8.53}
-        y2={14.15}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematicline
-        x1={-8.88}
-        y1={14.15}
-        x2={-8.18}
-        y2={14.15}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematicline
-        x1={-8.77}
-        y1={14.03}
-        x2={-8.29}
-        y2={14.03}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematicline
-        x1={-8.64}
-        y1={13.91}
-        x2={-8.42}
-        y2={13.91}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematictext
-        text="11"
-        schX={-8.72}
-        schY={14.62}
-        fontSize={0.14}
-        color="#840000"
-      />
-      <schematictext
-        text="GND"
-        schX={-8.53}
-        schY={13.7}
-        fontSize={0.18}
         color="#840000"
       />
       <schematicline
@@ -228,45 +181,6 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         fontSize={0.18}
         color="#840000"
       />
-      <schematicline
-        x1={-19.03}
-        y1={-16.72}
-        x2={-19.03}
-        y2={-17.3}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematicline
-        x1={-19.38}
-        y1={-17.3}
-        x2={-18.68}
-        y2={-17.3}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematicline
-        x1={-19.27}
-        y1={-17.42}
-        x2={-18.79}
-        y2={-17.42}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematicline
-        x1={-19.14}
-        y1={-17.54}
-        x2={-18.92}
-        y2={-17.54}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematictext
-        text="GND"
-        schX={-19.03}
-        schY={-17.78}
-        fontSize={0.18}
-        color="#840000"
-      />
 
       <resistor
         name="R4"
@@ -289,30 +203,6 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         connections={{ pin1: "net.VREF_DIV", pin2: "net.GND" }}
       />
       <netlabel net="GND" connectsTo=".R6 > .pin2" anchorSide="top" />
-      <schematicline
-        x1={-11.82}
-        y1={13.2}
-        x2={-11.18}
-        y2={13.2}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematicline
-        x1={-11.71}
-        y1={13.08}
-        x2={-11.29}
-        y2={13.08}
-        strokeWidth={0.035}
-        color="#840000"
-      />
-      <schematicline
-        x1={-11.59}
-        y1={12.96}
-        x2={-11.41}
-        y2={12.96}
-        strokeWidth={0.035}
-        color="#840000"
-      />
 
       <capacitor
         name="C11"

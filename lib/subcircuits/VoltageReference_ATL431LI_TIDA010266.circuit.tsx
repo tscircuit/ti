@@ -3,35 +3,6 @@ import { ATL431LIBIDBZR } from "../chips/ATL431LIBIDBZR.circuit.tsx";
 import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
 import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
 
-const GroundGlyph = ({ x, y }: { x: number; y: number }) => (
-  <>
-    <schematicline
-      x1={x - 0.32}
-      y1={y}
-      x2={x + 0.32}
-      y2={y}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-    <schematicline
-      x1={x - 0.21}
-      y1={y - 0.12}
-      x2={x + 0.21}
-      y2={y - 0.12}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-    <schematicline
-      x1={x - 0.09}
-      y1={y - 0.24}
-      x2={x + 0.09}
-      y2={y - 0.24}
-      strokeWidth={0.035}
-      color="#840000"
-    />
-  </>
-);
-
 /** TIDA-010266 U3/R3/C2/C3 precision 2.5 V shunt-reference stage. */
 export const VoltageReference_ATL431LI_TIDA010266 = (
   props: TIDA010266SectionedSubcircuitProps,
@@ -85,7 +56,6 @@ export const VoltageReference_ATL431LI_TIDA010266 = (
       ))}
       <netlabel net="VREF_2_5" connectsTo=".C3 > .pin1" inline />
       <netlabel net="GND" connectsTo=".U3 > .ANODE" anchorSide="top" />
-      <GroundGlyph x={0} y={-2.25} />
       <port
         name="GND"
         schX={originX}

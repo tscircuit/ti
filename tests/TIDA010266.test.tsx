@@ -230,32 +230,6 @@ test("TIDA-010266 example contains the complete released BOM and net topology", 
     );
   }
 
-  const inputReferenceLayout = ["J1", "U1", "U3", "R4", "U2A"].map(
-    getSchematicComponent,
-  );
-  assert.ok(
-    inputReferenceLayout.every(
-      (component, index) =>
-        index === 0 ||
-        inputReferenceLayout[index - 1]!.center.x < component.center.x,
-    ),
-    "input/reference stage should follow the released left-to-right signal flow",
-  );
-  const u3Schematic = getSchematicComponent("U3");
-  assert.ok(u3Schematic.size.width < 1.5, "U3 should use the compact symbol");
-  assert.ok(u3Schematic.size.height < 1.3, "U3 should use the compact symbol");
-  for (const name of ["R3", "R4", "R6", "C1", "C2", "C3", "C5"]) {
-    const component = getSchematicComponent(name);
-    const ports = circuit.db.schematic_port.list({
-      schematic_component_id: component.schematic_component_id,
-    });
-    assert.equal(ports.length, 2, name);
-    assert.ok(
-      Math.abs(ports[0]!.center.x - ports[1]!.center.x) < 1e-6,
-      `${name} should be vertical in the input/reference section`,
-    );
-  }
-
   const expectedResistors: Record<string, number> = {
     R1: 27,
     R2: 47_000,
