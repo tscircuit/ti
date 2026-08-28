@@ -1,4 +1,5 @@
 import { Circuit } from "@tscircuit/core";
+import { getSchematicElementBounds } from "@tscircuit/circuit-json-util";
 import type { AnyCircuitElement } from "circuit-json";
 import { getFullConnectivityMapFromCircuitJson } from "circuit-json-to-connectivity-map";
 import { MSP430FR6007IPZ_PIN_LABELS } from "../lib/chips/MSP430FR6007IPZ.circuit.tsx";
@@ -174,7 +175,7 @@ const testConnectivity = async () => {
     "J3_PIN17_BSL_RX",
     "J3_PIN19_P1_3",
     "J3_PIN20_TEST_SBWTCK",
-    "J3_PIN21_RESET_SBWTDIO",
+    "J3_PIN21_RESET",
     "J3_PIN22_TDO",
     "J3_PIN23_TDI",
     "J3_PIN24_TMS",
@@ -209,23 +210,17 @@ const testConnectivity = async () => {
   const sheets = circuitJson.filter(
     (element) => element.type === "schematic_sheet",
   );
-  assert(sheets.length === 1, "Expected exactly one schematic sheet");
-  const targetBoardSheet = sheets.find(
-    (sheet) =>
-      sheet.type === "schematic_sheet" &&
-      sheet.name === "msp430fr6007_target_board",
-  );
   assert(
-    targetBoardSheet?.type === "schematic_sheet",
-    "Missing MSP430FR6007 target-board sheet",
+    sheets.length === 0,
+    "The fixed-size schematic-sheet frame must remain removed",
   );
 
   for (const component of circuitJson) {
     if (component.type !== "schematic_component") continue;
 
     assert(
-      component.schematic_sheet_id === targetBoardSheet.schematic_sheet_id,
-      `${component.schematic_component_id} is not on the common target-board sheet`,
+      !component.schematic_sheet_id,
+      `${component.schematic_component_id} is unexpectedly assigned to a fixed sheet`,
     );
   }
 
@@ -284,6 +279,42 @@ const testConnectivity = async () => {
 
   for (const componentName of figureB78ComponentNames) {
     findSourceComponent(circuitJson, componentName);
+  }
+
+  const schematicBodiesAndLabels = circuitJson.filter(
+    (element) =>
+      element.type === "schematic_component" ||
+      element.type === "schematic_net_label",
+  );
+  for (
+    let firstIndex = 0;
+    firstIndex < schematicBodiesAndLabels.length;
+    firstIndex += 1
+  ) {
+    const first = schematicBodiesAndLabels[firstIndex];
+    const firstBounds = getSchematicElementBounds(first);
+    if (!firstBounds) continue;
+
+    for (
+      let secondIndex = firstIndex + 1;
+      secondIndex < schematicBodiesAndLabels.length;
+      secondIndex += 1
+    ) {
+      const second = schematicBodiesAndLabels[secondIndex];
+      const secondBounds = getSchematicElementBounds(second);
+      if (!secondBounds) continue;
+      const overlapX =
+        Math.min(firstBounds.maxX, secondBounds.maxX) -
+        Math.max(firstBounds.minX, secondBounds.minX);
+      const overlapY =
+        Math.min(firstBounds.maxY, secondBounds.maxY) -
+        Math.max(firstBounds.minY, secondBounds.minY);
+
+      assert(
+        overlapX <= 0.01 || overlapY <= 0.01,
+        `${first.type} overlaps ${second.type} in the expanded schematic layout`,
+      );
+    }
   }
 
   const r17 = findSourceComponent(circuitJson, "R17");
@@ -398,12 +429,7 @@ const testConnectivity = async () => {
   let directSocketTraceCount = 0;
   const directSocketMcuPins = new Set<number>();
   for (const trace of circuitJson) {
-    if (
-      trace.type !== "schematic_trace" ||
-      trace.schematic_sheet_id !== targetBoardSheet.schematic_sheet_id
-    ) {
-      continue;
-    }
+    if (trace.type !== "schematic_trace") continue;
 
     const touchedEndpoints = new Map<
       string,
