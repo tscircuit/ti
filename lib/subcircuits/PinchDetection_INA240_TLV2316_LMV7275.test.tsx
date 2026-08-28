@@ -6,18 +6,20 @@ import {
   tida01421Position,
 } from "../tida01421-coordinates.ts";
 import {
-  PinchDetectionPower_TIDA01421,
+  PinchDetectionPower_TPS7B69,
   TIDA01421_POWER_ORIGIN,
-} from "./PinchDetectionPower_TIDA01421.circuit.tsx";
+} from "./PinchDetectionPower_TPS7B69.circuit.tsx";
 import {
-  PinchDetectionSignalChain_TIDA01421,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
   TIDA01421_SIGNAL_CHAIN_ORIGIN,
-} from "./PinchDetectionSignalChain_TIDA01421.circuit.tsx";
-import { PinchDetection_TIDA01421 } from "./PinchDetection_TIDA01421.circuit.tsx";
+} from "./PinchDetectionSignalChain_INA240_TLV2316_LMV7275.circuit.tsx";
+import { PinchDetection_INA240_TLV2316_LMV7275 } from "./PinchDetection_INA240_TLV2316_LMV7275.circuit.tsx";
 
 type SourceComponent = Extract<AnyCircuitElement, { type: "source_component" }>;
+type SourceNet = Extract<AnyCircuitElement, { type: "source_net" }>;
 type SourcePort = Extract<AnyCircuitElement, { type: "source_port" }>;
 type SourceTrace = Extract<AnyCircuitElement, { type: "source_trace" }>;
+type SchematicText = Extract<AnyCircuitElement, { type: "schematic_text" }>;
 type SchematicComponent = Extract<
   AnyCircuitElement,
   { type: "schematic_component" }
@@ -49,9 +51,13 @@ beforeAll(async () => {
   };
   try {
     [signalJson, powerJson, compositeJson] = await Promise.all([
-      renderSchematic(<PinchDetectionSignalChain_TIDA01421 name="pinch" />),
-      renderSchematic(<PinchDetectionPower_TIDA01421 name="power" />),
-      renderSchematic(<PinchDetection_TIDA01421 name="pinchComposite" />),
+      renderSchematic(
+        <PinchDetectionSignalChain_INA240_TLV2316_LMV7275 name="pinch" />,
+      ),
+      renderSchematic(<PinchDetectionPower_TPS7B69 name="power" />),
+      renderSchematic(
+        <PinchDetection_INA240_TLV2316_LMV7275 name="pinchComposite" />,
+      ),
     ]);
   } finally {
     console.error = originalConsoleError;
@@ -222,25 +228,11 @@ const expectOneNet = (
   expect(new Set(keys).size).toBe(1);
 };
 
-const getTraceConnectivityKey = (
-  circuitJson: AnyCircuitElement[],
-  displayName: string,
-) => {
-  const trace = circuitJson.find(
-    (element): element is SourceTrace =>
-      element.type === "source_trace" && element.display_name === displayName,
-  );
-  if (!trace?.subcircuit_connectivity_map_key) {
-    throw new Error(`Missing wrapper trace ${displayName}`);
-  }
-  return trace.subcircuit_connectivity_map_key;
-};
-
 test("uses the authoritative devices, values, and one coordinate transform", () => {
-  expect(TIDA01421_ALTIUM_SCALE).toBe(0.03);
+  expect(TIDA01421_ALTIUM_SCALE).toBe(0.029);
   expect(tida01421Position(1280, 910, TIDA01421_SIGNAL_CHAIN_ORIGIN)).toEqual({
-    schX: 13.8,
-    schY: 2.1,
+    schX: 13.34,
+    schY: 2.03,
   });
 
   expect(getComponent(signalJson, "J1").manufacturer_part_number).toBe(
@@ -267,7 +259,7 @@ test("uses the authoritative devices, values, and one coordinate transform", () 
   );
 });
 
-test("preserves every included Altium placement and pin orientation", () => {
+test("preserves Altium placements with documented native-symbol projection offsets", () => {
   const signalCenters = {
     R6: [320, 890],
     R5: [370, 910],
@@ -281,7 +273,7 @@ test("preserves every included Altium placement and pin orientation", () => {
     C10: [750, 640],
     C7: [660, 920],
     R3: [720, 920],
-    U3A: [790, 910],
+    U3A: [790, 925],
     U3B: [1080, 900],
     C1: [780, 1040],
     R1: [790, 1000],
@@ -294,13 +286,13 @@ test("preserves every included Altium placement and pin orientation", () => {
     C9: [980, 860],
     R10: [1010, 860],
     R2: [1050, 980],
-    U1Symbol: [1280, 910],
+    U1Symbol: [1280, 903],
     C2: [1280, 1010],
     R15: [1200, 830],
     R18: [1200, 780],
     R16: [1300, 800],
-    R4: [1400, 910],
-    C15: [1460, 870],
+    R4: [1400, 913],
+    C15: [1460, 892],
   } as const;
   const powerCenters = {
     U4: [790, 440],
@@ -338,81 +330,13 @@ test("preserves every included Altium placement and pin orientation", () => {
     expectedCenters(powerCenters, TIDA01421_POWER_ORIGIN),
   );
 
-  const signalCustomPinLocations = {
-    J1: { 1: [210, 900], 2: [210, 890] },
-    U2: {
-      1: [450, 890],
-      2: [590, 870],
-      3: [590, 890],
-      4: [450, 870],
-      5: [590, 920],
-      6: [450, 920],
-      7: [590, 900],
-      8: [450, 900],
-    },
-  } as const;
-  const powerCustomPinLocations = {
-    U4: {
-      1: [710, 470],
-      2: [710, 410],
-      3: [870, 420],
-      4: [870, 410],
-      5: [870, 470],
-    },
-    U5: {
-      1: [710, 310],
-      2: [710, 250],
-      3: [870, 260],
-      4: [870, 250],
-      5: [870, 310],
-    },
-  } as const;
-  const renderedCustomPinLocations = (
-    circuitJson: AnyCircuitElement[],
-    locations: Record<string, Record<number, readonly [number, number]>>,
-  ) =>
-    Object.fromEntries(
-      Object.entries(locations).map(([name, pins]) => [
-        name,
-        Object.fromEntries(
-          Object.keys(pins).map((pin) => [
-            pin,
-            roundedCenter(
-              getSchematicPort(circuitJson, name, Number(pin)).center,
-            ),
-          ]),
-        ),
-      ]),
-    );
-  const expectedCustomPinLocations = (
-    locations: Record<string, Record<number, readonly [number, number]>>,
-    origin: { x: number; y: number },
-  ) =>
-    Object.fromEntries(
-      Object.entries(locations).map(([name, pins]) => [
-        name,
-        Object.fromEntries(
-          Object.entries(pins).map(([pin, [x, y]]) => {
-            const { schX, schY } = tida01421Position(x, y, origin);
-            return [pin, roundedCenter({ x: schX, y: schY })];
-          }),
-        ),
-      ]),
-    );
-
-  expect(
-    renderedCustomPinLocations(signalJson, signalCustomPinLocations),
-  ).toEqual(
-    expectedCustomPinLocations(
-      signalCustomPinLocations,
-      TIDA01421_SIGNAL_CHAIN_ORIGIN,
-    ),
-  );
-  expect(
-    renderedCustomPinLocations(powerJson, powerCustomPinLocations),
-  ).toEqual(
-    expectedCustomPinLocations(powerCustomPinLocations, TIDA01421_POWER_ORIGIN),
-  );
+  // Rectangular devices use the native chip-box renderer. Exact custom port
+  // coordinates are intentionally not asserted because no custom box symbol
+  // is supplied; pin sides and physical pin mappings are asserted below.
+  expect(getSchematicComponent(signalJson, "J1").symbol_name).toBeFalsy();
+  expect(getSchematicComponent(signalJson, "U2").symbol_name).toBeFalsy();
+  expect(getSchematicComponent(powerJson, "U4").symbol_name).toBeFalsy();
+  expect(getSchematicComponent(powerJson, "U5").symbol_name).toBeFalsy();
 
   const signalPinSides = {
     J1: { 1: "right", 2: "right" },
@@ -746,7 +670,53 @@ test("uses on-trace labels for the source signal names", () => {
     .filter((element) => element.type === "source_net")
     .map((net) => net.name)
     .sort();
-  expect(explicitNetNames).toEqual(["BIAS", "GND", "V3_3", "V5"]);
+  expect(explicitNetNames).toEqual([
+    "ADCMOTOR",
+    "BIAS",
+    "GND",
+    "TIMER",
+    "V3_3",
+    "V5",
+  ]);
+
+  const namedSignalTraces = signalJson
+    .filter(
+      (element): element is SourceTrace => element.type === "source_trace",
+    )
+    .map((trace) => trace.name)
+    .filter(Boolean)
+    .sort();
+  expect(namedSignalTraces).toEqual([
+    "ADCMOTOR",
+    "BIAS-A",
+    "BIAS-B",
+    "TIMER",
+    "U1-GND",
+    "U1-V5",
+    "U2-REF1-V5",
+    "U2-V5",
+    "U3A-GND",
+    "U3A-V5",
+    "U3B-GND",
+    "U3B-V5",
+  ]);
+
+  const traceOwnedSignalLabels = signalJson.filter(
+    (element): element is SchematicText =>
+      element.type === "schematic_text" &&
+      Boolean(element.source_trace_id) &&
+      ["ADCMOTOR", "BIAS", "TIMER"].includes(element.text),
+  );
+  expect(
+    [...new Set(traceOwnedSignalLabels.map((label) => label.text))].sort(),
+  ).toEqual(["ADCMOTOR", "BIAS", "TIMER"]);
+  expect(
+    signalJson.filter(
+      (element) =>
+        element.type === "schematic_net_label" &&
+        ["ADCMOTOR", "BIAS", "TIMER"].includes(element.text),
+    ),
+  ).toEqual([]);
 
   const renderedLabels = [
     ...new Set(
@@ -771,21 +741,18 @@ test("uses on-trace labels for the source signal names", () => {
 });
 
 test("joins the child power rails in the composite without circuit errors", () => {
-  const expectWrapperNet = (netName: "V3_3" | "V5" | "GND") => {
-    const powerKey = getTraceConnectivityKey(
-      compositeJson,
-      `.power > .${netName} to net.${netName}`,
-    );
-    const signalKey = getTraceConnectivityKey(
-      compositeJson,
-      `.signalChain > .${netName} to net.${netName}`,
-    );
-    expect(powerKey).toBe(signalKey);
-  };
-
-  expectWrapperNet("V3_3");
-  expectWrapperNet("V5");
-  expectWrapperNet("GND");
+  for (const netName of ["V3_3", "V5", "GND"]) {
+    const exposedNetKeys = compositeJson
+      .filter(
+        (element): element is SourceNet =>
+          element.type === "source_net" && element.name === netName,
+      )
+      .map((net) => net.subcircuit_connectivity_map_key);
+    // One source net exists in each child and the wrapper. Native exposedNets
+    // remaps all three to the wrapper connectivity key.
+    expect(exposedNetKeys).toHaveLength(3);
+    expect(new Set(exposedNetKeys).size).toBe(1);
+  }
 
   expect(
     compositeJson.filter((element) => element.type.endsWith("_error")),

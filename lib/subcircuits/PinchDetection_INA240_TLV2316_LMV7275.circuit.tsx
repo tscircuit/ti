@@ -2,13 +2,13 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { tida01421Position } from "../tida01421-coordinates.ts";
 import {
-  PinchDetectionPower_TIDA01421,
+  PinchDetectionPower_TPS7B69,
   TIDA01421_POWER_ORIGIN,
-} from "./PinchDetectionPower_TIDA01421.circuit.tsx";
+} from "./PinchDetectionPower_TPS7B69.circuit.tsx";
 import {
-  PinchDetectionSignalChain_TIDA01421,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
   TIDA01421_SIGNAL_CHAIN_ORIGIN,
-} from "./PinchDetectionSignalChain_TIDA01421.circuit.tsx";
+} from "./PinchDetectionSignalChain_INA240_TLV2316_LMV7275.circuit.tsx";
 
 const wrapperOrigin = { x: 820, y: 620 };
 
@@ -19,7 +19,9 @@ const wrapperOrigin = { x: 820, y: 620 };
  * wrapper joins their named power interfaces without importing the rest of the
  * development board.
  */
-export const PinchDetection_TIDA01421 = (props: SubcircuitProps) => (
+export const PinchDetection_INA240_TLV2316_LMV7275 = (
+  props: SubcircuitProps,
+) => (
   <subcircuit
     exposedNets={["PWR", "V_PLUS", "V_MINUS", "GND", "ADCMOTOR", "TIMER"]}
     schAutoLayoutEnabled={false}
@@ -34,7 +36,7 @@ export const PinchDetection_TIDA01421 = (props: SubcircuitProps) => (
     <net name="V_MINUS" />
     <net name="ADCMOTOR" />
     <net name="TIMER" />
-    <PinchDetectionSignalChain_TIDA01421
+    <PinchDetectionSignalChain_INA240_TLV2316_LMV7275
       name="signalChain"
       {...tida01421Position(
         TIDA01421_SIGNAL_CHAIN_ORIGIN.x,
@@ -42,7 +44,7 @@ export const PinchDetection_TIDA01421 = (props: SubcircuitProps) => (
         wrapperOrigin,
       )}
     />
-    <PinchDetectionPower_TIDA01421
+    <PinchDetectionPower_TPS7B69
       name="power"
       {...tida01421Position(
         TIDA01421_POWER_ORIGIN.x,
@@ -51,18 +53,9 @@ export const PinchDetection_TIDA01421 = (props: SubcircuitProps) => (
       )}
     />
 
-    <trace from=".power > .PWR" to="net.PWR" />
-    <trace from=".power > .V3_3" to="net.V3_3" />
-    <trace from=".signalChain > .V3_3" to="net.V3_3" />
-    <trace from=".power > .V5" to="net.V5" />
-    <trace from=".signalChain > .V5" to="net.V5" />
-    <trace from=".power > .GND" to="net.GND" />
-    <trace from=".signalChain > .GND" to="net.GND" />
     <trace from=".signalChain > .V_PLUS" to="net.V_PLUS" />
     <trace from=".signalChain > .V_MINUS" to="net.V_MINUS" />
-    <trace from=".signalChain > .ADCMOTOR" to="net.ADCMOTOR" />
-    <trace from=".signalChain > .TIMER" to="net.TIMER" />
   </subcircuit>
 );
 
-export default PinchDetection_TIDA01421;
+export default PinchDetection_INA240_TLV2316_LMV7275;

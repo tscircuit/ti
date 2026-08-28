@@ -21,8 +21,9 @@ const p = (x: number, y: number) =>
  * Only the TIDA-01421 local 3.3 V and 5 V regulators required by the analog
  * chain. J3, D1, the ADCBAT monitor, D2, and LaunchPad circuitry are excluded.
  */
-export const PinchDetectionPower_TIDA01421 = (props: SubcircuitProps) => (
+export const PinchDetectionPower_TPS7B69 = (props: SubcircuitProps) => (
   <subcircuit
+    exposedNets={["PWR", "V3_3", "V5", "GND"]}
     schAutoLayoutEnabled={false}
     schMaxTraceDistance="20mm"
     routingDisabled
@@ -75,14 +76,10 @@ export const PinchDetectionPower_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="U5.GND_3" to="C14.pin2" />
 
     <trace from="U4.VIN" to="net.PWR" />
-    <trace from="C11.pin2" to="net.GND" />
-    <trace from="C13.pin2" to="net.GND" />
     {/* Source V3.3 is normalized to V3_3 because native net identifiers reject
         periods. The component, value, placement, and electrical net are exact. */}
     <trace from="U4.VOUT" to="net.V3_3" />
-    <trace from="C12.pin2" to="net.GND" />
     <trace from="U5.VOUT" to="net.V5" />
-    <trace from="C14.pin2" to="net.GND" />
 
     {/* The source draws four independent local GND symbols in this block.
         Keep them as native electrical rail labels rather than a shared bus. */}
@@ -110,12 +107,7 @@ export const PinchDetectionPower_TIDA01421 = (props: SubcircuitProps) => (
       anchorSide="top"
       {...p(900, 250)}
     />
-
-    <port name="PWR" direction="left" connectsTo="U4.VIN" />
-    <port name="V3_3" direction="right" connectsTo="U4.VOUT" />
-    <port name="V5" direction="right" connectsTo="U5.VOUT" />
-    <port name="GND" direction="right" connectsTo="U4.GND_3" />
   </subcircuit>
 );
 
-export default PinchDetectionPower_TIDA01421;
+export default PinchDetectionPower_TPS7B69;

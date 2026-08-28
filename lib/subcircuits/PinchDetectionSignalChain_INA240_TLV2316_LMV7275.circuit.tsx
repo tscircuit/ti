@@ -5,7 +5,6 @@ import { LMV7275IDCKRQ1 } from "../chips/LMV7275IDCKRQ1.circuit.tsx";
 import { TLV2316QDGKRQ1 } from "../chips/TLV2316QDGKRQ1.circuit.tsx";
 import {
   type Tida01421AltiumOrigin,
-  tida01421Delta,
   tida01421Position,
 } from "../tida01421-coordinates.ts";
 
@@ -22,7 +21,7 @@ const motorConnectorPinLabels = {
   pin2: "V_MINUS",
 } as const;
 
-/** J1, reproduced from the mirrored 1727010 source symbol. */
+/** J1, using the native chip-box renderer with the source's right-side pins. */
 const MotorCurrentConnector = (
   props: ChipProps<typeof motorConnectorPinLabels>,
 ) => (
@@ -30,35 +29,14 @@ const MotorCurrentConnector = (
     manufacturerPartNumber="1727010"
     footprint="kicad:TerminalBlock_Phoenix/TerminalBlock_Phoenix_MKDS-1,5-2_1x02_P3.81mm_Horizontal"
     pinLabels={motorConnectorPinLabels}
-    symbol={
-      <symbol>
-        <schematicrect
-          schX={0}
-          schY={tida01421Delta(5)}
-          width={tida01421Delta(20)}
-          height={tida01421Delta(30)}
-          strokeWidth={0.025}
-        />
-        <port
-          name="V_PLUS"
-          aliases={["V+", "pin1"]}
-          pinNumber={1}
-          schX={tida01421Delta(30)}
-          schY={tida01421Delta(10)}
-          direction="right"
-          schStemLength={tida01421Delta(20)}
-        />
-        <port
-          name="V_MINUS"
-          aliases={["V-", "pin2"]}
-          pinNumber={2}
-          schX={tida01421Delta(30)}
-          schY={0}
-          direction="right"
-          schStemLength={tida01421Delta(20)}
-        />
-      </symbol>
-    }
+    schWidth={0.8}
+    schHeight={0.9}
+    schPinArrangement={{
+      rightSide: {
+        direction: "top-to-bottom",
+        pins: ["V_PLUS", "V_MINUS"],
+      },
+    }}
     {...props}
   />
 );
@@ -74,8 +52,11 @@ const MotorCurrentConnector = (
  * tida01421Position. Native schematic traces are autorouted; no decorative
  * line is used as an electrical connection.
  */
-export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
+export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
+  props: SubcircuitProps,
+) => (
   <subcircuit
+    exposedNets={["V5", "V3_3", "GND", "ADCMOTOR", "TIMER"]}
     schAutoLayoutEnabled={false}
     schMaxTraceDistance="8mm"
     routingDisabled
@@ -87,6 +68,8 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <net name="V3_3" isPowerNet />
     <net name="GND" isGroundNet />
     <net name="BIAS" />
+    <net name="ADCMOTOR" />
+    <net name="TIMER" />
 
     {/* Current-shunt input, common-mode filter, and INA240A1-Q1 stage. */}
     <MotorCurrentConnector name="J1" {...p(180, 890)} />
@@ -158,7 +141,13 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       {...p(750, 640)}
     />
     <trace from="U2.OUT" to="R12.pin1" />
-    <trace from="R12.pin2" to="R20.pin2" schDisplayLabel="ADCMOTOR" />
+    <trace
+      name="ADCMOTOR"
+      from="R12.pin2"
+      to="R20.pin2"
+      schDisplayLabel="ADCMOTOR"
+    />
+    <trace from="R20.pin2" to="net.ADCMOTOR" />
     <trace from="R20.pin2" to="C10.pin1" />
     <trace from="R20.pin1" to="C10.pin2" />
     {/* TLV2316-Q1 active band-pass filter and DC-bias rejection stages. */}
@@ -176,6 +165,9 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
         so the U3B input traces cross instead of swapping pins or using a
         decorative connection. */}
     <TLV2316QDGKRQ1 name="U3" noSchematicRepresentation />
+    {/* Native U3A places IN- 0.14 units below its center, while Altium's
+        triangle places that pin on R3's centerline. The +15 source-grid
+        projection offset aligns the authoritative R3-to-IN- connection. */}
     <schematicsymbol
       name="U3A"
       displayName="U3A"
@@ -188,7 +180,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
         "V+": "U3.V_PLUS",
         "V-": "U3.V_MINUS",
       }}
-      {...p(790, 910)}
+      {...p(790, 925)}
     />
     <schematicsymbol
       name="U3B"
@@ -208,7 +200,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       text="TLV2316QDGKRQ1"
       fontSize={0.11}
       anchor="left"
-      {...p(800, 885)}
+      {...p(800, 900)}
     />
     <capacitor
       name="C1"
@@ -276,27 +268,19 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
 
     <trace from="U2.OUT" to="C7.pin2" />
     <trace from="C7.pin1" to="R3.pin1" />
-    <trace from="R3.pin2" to="U3.IN_MINUS_A" />
-    <trace from="R3.pin2" to="R1.pin1" />
-    <trace from="R3.pin2" to="C1.pin2" />
-    <trace from="U3.OUT_A" to="R1.pin2" />
-    <trace from="U3.OUT_A" to="C1.pin1" />
-    <trace from="U3.OUT_A" to="R8.pin1" />
-    <trace from="U3.OUT_A" to="R9.pin1" />
+    <trace path={["R3.pin2", "U3.IN_MINUS_A", "R1.pin1", "C1.pin2"]} />
+    <trace path={["U3.OUT_A", "R1.pin2", "C1.pin1", "R8.pin1", "R9.pin1"]} />
     <trace from="R11.pin1" to="R17.pin2" />
     <trace from="R11.pin1" to="U3.IN_PLUS_A" />
-    <trace from="R8.pin2" to="U3.IN_MINUS_B" />
-    <trace from="R8.pin2" to="R2.pin1" />
-    <trace from="R9.pin2" to="U3.IN_PLUS_B" />
-    <trace from="R9.pin2" to="C9.pin1" />
-    <trace from="R9.pin2" to="R10.pin2" />
+    <trace path={["R8.pin2", "U3.IN_MINUS_B", "R2.pin1"]} />
+    <trace path={["R9.pin2", "U3.IN_PLUS_B", "C9.pin1", "R10.pin2"]} />
     <trace from="R2.pin2" to="U3.OUT_B" />
     <trace from="U3.OUT_B" to="U1.IN_MINUS" />
     <trace from="C5.pin1" to="C6.pin1" />
     <trace from="C5.pin2" to="C6.pin2" />
 
-    <trace from="R11.pin1" to="net.BIAS" schDisplayLabel="BIAS" />
-    <trace from="R10.pin1" to="net.BIAS" schDisplayLabel="BIAS" />
+    <trace name="BIAS-A" from="R11.pin1" to="net.BIAS" schDisplayLabel="BIAS" />
+    <trace name="BIAS-B" from="R10.pin1" to="net.BIAS" schDisplayLabel="BIAS" />
 
     {/* LMV7275-Q1 inverting comparator, hysteresis, and open-drain pull-up. */}
     <LMV7275IDCKRQ1 name="U1" noSchematicRepresentation />
@@ -312,7 +296,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
         "V+": "U1.V_PLUS",
         "V-": "U1.V_MINUS",
       }}
-      {...p(1280, 910)}
+      {...p(1280, 903)}
     />
     <capacitor
       name="C2"
@@ -341,12 +325,15 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       footprint="0603"
       {...p(1300, 800)}
     />
+    {/* The native comparator output and vertical R4/C15 pins do not share
+        Altium's symbol geometry. These small projection offsets put all three
+        TIMER endpoints on one horizontal line without changing connectivity. */}
     <resistor
       name="R4"
       resistance="10kohm"
       footprint="0603"
       schOrientation="pos_bottom"
-      {...p(1400, 910)}
+      {...p(1400, 913)}
     />
     <capacitor
       name="C15"
@@ -354,39 +341,25 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       footprint="0603"
       schOrientation="vertical"
       doNotPlace
-      {...p(1460, 870)}
+      {...p(1460, 892)}
     />
 
-    <trace from="R15.pin1" to="R18.pin2" />
-    <trace from="R15.pin1" to="U1.IN_PLUS" />
-    <trace from="R15.pin1" to="R16.pin1" />
-    <trace from="U1.OUT" to="R16.pin2" />
-    <trace from="U1.OUT" to="R4.pin1" schDisplayLabel="TIMER" />
-    <trace from="R4.pin1" to="C15.pin1" />
+    <trace path={["R15.pin1", "R18.pin2", "U1.IN_PLUS", "R16.pin1"]} />
+    <trace
+      name="TIMER"
+      path={["R16.pin2", "U1.OUT", "R4.pin1", "C15.pin1"]}
+      schDisplayLabel="TIMER"
+    />
+    <trace from="R4.pin1" to="net.TIMER" />
     <trace name="U2-V5" from="U2.VS" to="net.V5" schDisplayLabel="V5" />
     <trace name="U2-REF1-V5" from="U2.REF1" to="net.V5" schDisplayLabel="V5" />
-    <trace name="C3-V5" from="C3.pin1" to="net.V5" />
-    <trace name="R11-V5" from="R11.pin2" to="net.V5" />
     <trace name="U3A-V5" from="U3A.pin5" to="net.V5" />
     <trace name="U3B-V5" from="U3B.pin5" to="net.V5" />
-    <trace name="C5-V5" from="C5.pin1" to="net.V5" />
-    <trace name="C2-V5" from="C2.pin1" to="net.V5" />
     <trace name="U1-V5" from="U1Symbol.pin5" to="net.V5" />
-    <trace name="R15-V5" from="R15.pin2" to="net.V5" />
 
-    <trace name="U2-GND" from="U2.GND" to="net.GND" />
-    <trace name="C3-GND" from="C3.pin2" to="net.GND" />
-    <trace name="C10-GND" from="C10.pin2" to="net.GND" />
-    <trace name="R17-GND" from="R17.pin1" to="net.GND" />
     <trace name="U3A-GND" from="U3A.pin3" to="net.GND" />
     <trace name="U3B-GND" from="U3B.pin3" to="net.GND" />
-    <trace name="C5-GND" from="C5.pin2" to="net.GND" />
-    <trace name="C9-GND" from="C9.pin2" to="net.GND" />
-    <trace name="C2-GND" from="C2.pin2" to="net.GND" />
     <trace name="U1-GND" from="U1Symbol.pin3" to="net.GND" />
-    <trace name="R18-GND" from="R18.pin1" to="net.GND" />
-    <trace name="C15-GND" from="C15.pin2" to="net.GND" />
-    <trace name="timer-pullup" from="R4.pin2" to="net.V3_3" />
     {/* The TI sheet uses local rail symbols rather than sheet-wide V5/GND
         buses. Explicitly placed native rail labels preserve that topology;
         signal names continue to use schDisplayLabel on their real traces. */}
@@ -475,14 +448,12 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       anchorSide="top"
       {...p(1460, 840)}
     />
+    {/* The source-authentic motor-current inputs terminate at child ports.
+        ADCMOTOR/TIMER are exposed named nets and keep their display text on
+        their real internal traces. */}
     <port name="V_PLUS" direction="left" connectsTo="J1.V_PLUS" />
     <port name="V_MINUS" direction="left" connectsTo="J1.V_MINUS" />
-    <port name="V5" direction="left" connectsTo="U2.VS" />
-    <port name="V3_3" direction="left" connectsTo="R4.pin2" />
-    <port name="GND" direction="left" connectsTo="U2.GND" />
-    <port name="ADCMOTOR" direction="right" connectsTo="R12.pin2" />
-    <port name="TIMER" direction="right" connectsTo="U1.OUT" />
   </subcircuit>
 );
 
-export default PinchDetectionSignalChain_TIDA01421;
+export default PinchDetectionSignalChain_INA240_TLV2316_LMV7275;

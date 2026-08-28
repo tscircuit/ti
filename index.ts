@@ -80,9 +80,9 @@ import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
-import { PinchDetectionPower_TIDA01421 } from "./lib/subcircuits/PinchDetectionPower_TIDA01421.circuit.tsx";
-import { PinchDetectionSignalChain_TIDA01421 } from "./lib/subcircuits/PinchDetectionSignalChain_TIDA01421.circuit.tsx";
-import { PinchDetection_TIDA01421 } from "./lib/subcircuits/PinchDetection_TIDA01421.circuit.tsx";
+import { PinchDetectionPower_TPS7B69 } from "./lib/subcircuits/PinchDetectionPower_TPS7B69.circuit.tsx";
+import { PinchDetectionSignalChain_INA240_TLV2316_LMV7275 } from "./lib/subcircuits/PinchDetectionSignalChain_INA240_TLV2316_LMV7275.circuit.tsx";
+import { PinchDetection_INA240_TLV2316_LMV7275 } from "./lib/subcircuits/PinchDetection_INA240_TLV2316_LMV7275.circuit.tsx";
 import { InstrumentationAmplifier_INA350 } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
 import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.circuit.tsx";
@@ -147,9 +147,9 @@ export {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
-  PinchDetectionPower_TIDA01421,
-  PinchDetectionSignalChain_TIDA01421,
-  PinchDetection_TIDA01421,
+  PinchDetectionPower_TPS7B69,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
+  PinchDetection_INA240_TLV2316_LMV7275,
   InstrumentationAmplifier_INA350,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,
@@ -275,9 +275,9 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
-  PinchDetectionPower_TIDA01421,
-  PinchDetectionSignalChain_TIDA01421,
-  PinchDetection_TIDA01421,
+  PinchDetectionPower_TPS7B69,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
+  PinchDetection_INA240_TLV2316_LMV7275,
   InstrumentationAmplifier_INA350,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,

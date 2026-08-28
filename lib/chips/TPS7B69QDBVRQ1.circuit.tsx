@@ -1,6 +1,5 @@
 import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
-import { tida01421Delta } from "../tida01421-coordinates.ts";
 
 const pinLabels = {
   pin1: "VIN",
@@ -29,62 +28,22 @@ export const TPS7B69QDBVRQ1 = ({
     datasheetUrl="https://www.ti.com/lit/gpn/TPS7B69-Q1"
     footprint="kicad:Package_TO_SOT_SMD/SOT-23-5"
     pinLabels={pinLabels}
-    symbol={
-      <symbol>
-        <schematicrect
-          schX={0}
-          schY={0}
-          width={tida01421Delta(120)}
-          height={tida01421Delta(100)}
-          strokeWidth={0.025}
-        />
-        <port
-          name="VIN"
-          aliases={["pin1"]}
-          pinNumber={1}
-          schX={tida01421Delta(-80)}
-          schY={tida01421Delta(30)}
-          direction="left"
-          schStemLength={tida01421Delta(20)}
-        />
-        <port
-          name="NC"
-          aliases={["pin2"]}
-          pinNumber={2}
-          schX={tida01421Delta(-80)}
-          schY={tida01421Delta(-30)}
-          direction="left"
-          schStemLength={tida01421Delta(20)}
-        />
-        <port
-          name="VOUT"
-          aliases={["pin5"]}
-          pinNumber={5}
-          schX={tida01421Delta(80)}
-          schY={tida01421Delta(30)}
-          direction="right"
-          schStemLength={tida01421Delta(20)}
-        />
-        <port
-          name="GND_3"
-          aliases={["GND", "pin3"]}
-          pinNumber={3}
-          schX={tida01421Delta(80)}
-          schY={tida01421Delta(-20)}
-          direction="right"
-          schStemLength={tida01421Delta(20)}
-        />
-        <port
-          name="GND_4"
-          aliases={["GND", "pin4"]}
-          pinNumber={4}
-          schX={tida01421Delta(80)}
-          schY={tida01421Delta(-30)}
-          direction="right"
-          schStemLength={tida01421Delta(20)}
-        />
-      </symbol>
-    }
+    schWidth={3.6}
+    schHeight={3}
+    schPinArrangement={{
+      leftSide: {
+        direction: "top-to-bottom",
+        pins: ["VIN", "NC"],
+      },
+      rightSide: {
+        direction: "top-to-bottom",
+        pins: ["VOUT", "GND_3", "GND_4"],
+      },
+    }}
+    schPinStyle={{
+      NC: { marginTop: 1.2 },
+      GND_3: { marginTop: 0.6 },
+    }}
     {...props}
   />
 );

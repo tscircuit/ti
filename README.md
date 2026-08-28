@@ -261,9 +261,9 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
-- `PinchDetectionPower_TIDA01421`
-- `PinchDetectionSignalChain_TIDA01421`
-- `PinchDetection_TIDA01421`
+- `PinchDetectionPower_TPS7B69`
+- `PinchDetectionSignalChain_INA240_TLV2316_LMV7275`
+- `PinchDetection_INA240_TLV2316_LMV7275` ([TIDA-01421](https://www.ti.com/tool/TIDA-01421))
 - `InstrumentationAmplifier_INA350`
 - `IsolatedRS485_ISOW7841`
 - `ClockBuffer_LMK1C1104`
