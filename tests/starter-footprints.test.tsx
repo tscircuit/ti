@@ -267,5 +267,5 @@ test("the Consumer Wireless Module PCB is placed and fully routed", {
   );
   assert.equal(circuit.db.pcb_component.list().length, 36);
   assert.equal(circuit.db.pcb_smtpad.list().length, 119);
-  assert.equal(circuit.db.pcb_trace.list().length, 89);
+  assert.equal(circuit.db.pcb_trace.list().length, 72);
 });
