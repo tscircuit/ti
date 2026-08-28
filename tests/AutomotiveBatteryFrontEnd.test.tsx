@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { Circuit } from "@tscircuit/core";
+import { Circuit } from "tscircuit";
 import type { SubcircuitProps } from "@tscircuit/props";
 import ObstacleDetectionSensor from "../examples/ObstacleDetectionSensor.circuit.tsx";
 import {
