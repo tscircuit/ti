@@ -22,8 +22,8 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       schX={-2}
       schY={1}
       schOrientation="vertical"
-      pcbX={0.45}
-      pcbY={2.35}
+      pcbX={-3.5}
+      pcbY={0}
       pcbRotation={90}
     />
     <inductor
@@ -34,7 +34,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       inductance="470nH"
       schX={2.35}
       schY={0.5}
-      pcbX={3.1}
+      pcbX={4}
       pcbY={0}
       pcbRotation={180}
     />
@@ -45,8 +45,8 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       schX={3.5}
       schY={-0.05}
       schRotation={270}
-      pcbX={-2.4}
-      pcbY={-2.1}
+      pcbX={-3.5}
+      pcbY={-3}
       pcbRotation={90}
     />
     <capacitor
@@ -56,7 +56,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       schX={4.85}
       schY={-0.2}
       schOrientation="vertical"
-      pcbX={6.5}
+      pcbX={8}
       pcbY={0}
     />
     <resistor
@@ -66,8 +66,8 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       doNotPlace
       schX={0.3}
       schY={1.55}
-      pcbX={-2}
-      pcbY={2.9}
+      pcbX={-3.5}
+      pcbY={3}
     />
 
     {/* Input rail and local input bypass. */}
