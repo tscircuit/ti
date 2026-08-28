@@ -23,6 +23,11 @@ const REGULATOR_SHEET_2_OFFSET = { x: 0.509, y: -12.192 } as const;
  * sheet 3). The child sections keep their source-relative layouts. This
  * parent joins only the verified sheet nets; it does not synthesize
  * thresholds, timing, dividers, or grounding arrangements.
+ *
+ * Both sheet frames use native ANSI-B sizing, matching the released Altium
+ * title block. Main Supply extends only the native frame height to 330 mm so
+ * the unscaled, exact-coordinate regulator section remains inside its drawing
+ * area; no circuit geometry is scaled or moved for the frame.
  */
 export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
@@ -30,11 +35,14 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
       name="main_supply"
       displayName="Main Supply"
       sheetIndex={0}
+      sheetSize="ANSI_B"
+      sheetHeight="330mm"
     />
     <schematicsheet
       name="watchdog_and_vref"
       displayName="Watchdog and Vref"
       sheetIndex={1}
+      sheetSize="ANSI_B"
     />
 
     <net name="GND" isPowerNet isGroundNet />

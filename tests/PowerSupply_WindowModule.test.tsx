@@ -688,23 +688,47 @@ test("composite joins only the shared TI sheet nets", async () => {
     (element) => element.type === "schematic_sheet",
   );
   expect(
-    sheets.map(({ name, display_name, sheet_index }) => ({
-      name,
-      display_name,
-      sheet_index,
-    })),
+    sheets.map(
+      ({
+        name,
+        display_name,
+        sheet_index,
+        sheet_size,
+        sheet_width,
+        sheet_height,
+      }) => ({
+        name,
+        display_name,
+        sheet_index,
+        sheet_size,
+        sheet_width,
+        sheet_height,
+      }),
+    ),
   ).toEqual([
     {
       name: "main_supply",
       display_name: "Main Supply",
       sheet_index: 0,
+      sheet_size: "ansi_b",
+      sheet_width: 431.8,
+      sheet_height: 330,
     },
     {
       name: "watchdog_and_vref",
       display_name: "Watchdog and Vref",
       sheet_index: 1,
+      sheet_size: "ansi_b",
+      sheet_width: 431.8,
+      sheet_height: 279.4,
     },
   ]);
+
+  expect(
+    circuitJson.filter(
+      (element) => element.type === "schematic_element_outside_sheet_warning",
+    ),
+  ).toHaveLength(0);
 
   const sheetId = (name: string) =>
     sheets.find((sheet) => sheet.name === name)!.schematic_sheet_id;
