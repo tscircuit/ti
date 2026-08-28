@@ -476,6 +476,8 @@ describe("catalog and TSX generation", () => {
     ]) {
       expect(artifacts.tsx).toContain(componentName);
     }
+    expect(artifacts.tsx).not.toContain("sheetWidth=");
+    expect(artifacts.tsx).not.toContain("sheetHeight=");
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="data_motor_control" data-kind="data"',
     );
@@ -742,10 +744,19 @@ describe("catalog and TSX generation", () => {
   });
 
   test("applies curated detail-sheet layout without overriding block placement", () => {
-    const motorDriver = definition("motor-driver-drv8305-tida01330");
+    const curatedDetail = {
+      ...definition("motor-driver-drv8305-tida01330"),
+      id: "curated-detail-layout",
+      schematicSheet: {
+        sheetWidth: "480mm",
+        sheetHeight: "340mm",
+        schY: -4,
+      },
+    };
     const generated = generateTsx({
-      blocks: [block("motor_driver", motorDriver.id)],
+      blocks: [block("detail", curatedDetail.id)],
       connections: [],
+      catalog: [curatedDetail],
     });
 
     expect(generated).toContain('sheetWidth="480mm"');
@@ -755,12 +766,13 @@ describe("catalog and TSX generation", () => {
     const explicitlyPlaced = generateTsx({
       blocks: [
         {
-          ...block("motor_driver", motorDriver.id),
+          ...block("detail", curatedDetail.id),
           schX: 2,
           schY: 3,
         },
       ],
       connections: [],
+      catalog: [curatedDetail],
     });
     expect(explicitlyPlaced).toContain("schX={2}");
     expect(explicitlyPlaced).toContain("schY={3}");
