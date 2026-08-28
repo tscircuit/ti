@@ -55,10 +55,10 @@ export const CodeIcon = (props: IconProps) => (
   </Icon>
 );
 
-export const SparkIcon = (props: IconProps) => (
+export const HammerIcon = (props: IconProps) => (
   <Icon {...props}>
     <path
-      d="m13 2-2 7H5l5 3-2 8 9-11h-6l2-7Z"
+      d="m14.5 5.5 4 4M13.2 4.2l3-3 6.6 6.6-3 3-6.6-6.6ZM15.5 8.5 6.7 20.1a2.1 2.1 0 0 1-3-3L15.5 8.5Z"
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
