@@ -12,11 +12,13 @@ export const LogicBuffer_SN74LVC1G34 = (props: SubcircuitProps) => (
       name="U1"
       schX={0}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
-        pin2: "net.MCU_OR_LOGIC_IN",
-        pin4: "net.MCU_OR_LOGIC_OUT",
-        pin5: "net.VCC",
-        pin3: "net.GND",
+        A: "net.MCU_OR_LOGIC_IN",
+        Y: "net.MCU_OR_LOGIC_OUT",
+        VCC: "net.VCC",
+        GND: "net.GND",
       }}
     />
     <schematictext
