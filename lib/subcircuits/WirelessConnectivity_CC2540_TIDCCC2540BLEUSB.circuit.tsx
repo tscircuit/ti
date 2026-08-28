@@ -1,32 +1,70 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { CC2540F256RHAR } from "../chips/CC2540F256RHAR.circuit.tsx";
+import {
+  CC2540F256RHAR,
+  CC2540F256RHAR_PIN_LABELS,
+} from "../chips/CC2540F256RHAR.circuit.tsx";
 
 interface GroundTerminalProps {
   name: string;
   connection: string;
   schX: number;
   schY: number;
+  anchorSide?: "top" | "right" | "bottom" | "left";
 }
 
-/** A local schematic ground symbol tied directly to the shared GND net. */
+/** A local schematic ground terminal tied directly to the shared GND net. */
 const GroundTerminal = ({
-  name,
   connection,
   schX,
   schY,
+  anchorSide = "top",
 }: GroundTerminalProps) => (
-  <>
-    <schematicsymbol
-      name={name}
-      displayName="GND"
-      symbolName="ground_down"
-      schX={schX}
-      schY={schY}
+  <netlabel
+    net="GND"
+    connectsTo={connection}
+    schX={schX}
+    schY={schY}
+    anchorSide={anchorSide}
+  />
+);
+
+const iifaAntennaSymbol = (
+  <symbol>
+    <schematictext
+      text="{NAME}"
+      schX={-0.7}
+      schY={0.55}
+      fontSize={0.2}
+      anchor="center"
     />
-    <trace from={connection} to={`.${name} > .pin1`} schDisplayLabel=" " />
-    <trace from={`.${name} > .pin1`} to="net.GND" schDisplayLabel=" " />
-  </>
+    <schematictext
+      text="ANTENNA_IIFA_1_LEFT"
+      schX={0.5}
+      schY={0.3}
+      fontSize={0.18}
+      anchor="center"
+    />
+    <schematicline x1={-0.8} y1={0} x2={1.8} y2={0} strokeWidth={0.03} />
+    <schematicline x1={-0.65} y1={-0.6} x2={-0.65} y2={0} strokeWidth={0.03} />
+    <schematicline x1={0.15} y1={-0.6} x2={0.15} y2={0} strokeWidth={0.03} />
+    <port
+      name="pin2"
+      pinNumber={2}
+      direction="down"
+      schX={-0.65}
+      schY={-0.6}
+      schStemLength={0}
+    />
+    <port
+      name="pin1"
+      pinNumber={1}
+      direction="down"
+      schX={0.15}
+      schY={-0.6}
+      schStemLength={0}
+    />
+  </symbol>
 );
 
 /**
@@ -42,10 +80,10 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
   props: SubcircuitProps,
 ) => (
   <subcircuit
+    {...props}
     routingDisabled
     schMaxTraceDistance="20mm"
     schTraceAutoLabelEnabled={false}
-    {...props}
   >
     <net name="GND" isGroundNet />
     <net name="VCC" isPowerNet />
@@ -58,11 +96,20 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       name="U1"
       schX={0}
       schY={0}
+      schWidth="4.2mm"
+      schHeight="9mm"
       pcbX={0}
       pcbY={0}
+      pinLabels={{
+        ...CC2540F256RHAR_PIN_LABELS,
+        pin1: ["GND", "DGND_USB", "GND_USB"],
+        pin2: ["PA_DP", "USB_P"],
+        pin3: ["PA_DM", "USB_N"],
+      }}
+      internallyConnectedPins={[["pin1", "pin41"]]}
       connections={{
-        USB_P: "net.PA_DP",
-        USB_N: "net.PA_DM",
+        PA_DP: "net.PA_DP",
+        PA_DM: "net.PA_DM",
         P2_0: "net.P2_0",
         P2_1: "net.P2_1",
         P2_2: "net.P2_2",
@@ -84,6 +131,18 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         P0_7: "net.P0_7",
       }}
     />
+    <schematicsymbol
+      name="GND_DGND_USB"
+      displayName="GND"
+      symbolName="ground_down"
+      schX={-5}
+      schY={2.1}
+    />
+    <trace
+      from=".U1 > .pin1"
+      to=".GND_DGND_USB > .pin1"
+      schematicRouteHints={[{ x: -5, y: 2.4 }]}
+    />
 
     {/* 3.3 V input and the VCC rail from the released schematic. */}
     <inductor
@@ -91,8 +150,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       manufacturerPartNumber="BLM15HG102SN1D"
       inductance="1uH"
       footprint="0402"
-      schX={11.7}
-      schY={8.1}
+      schX={11.8}
+      schY={7.6}
       pcbX={5}
       pcbY={-2.5}
     />
@@ -101,8 +160,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="2.2uF"
       footprint="0402"
       schOrientation="vertical"
-      schX={9.8}
-      schY={6.75}
+      schX={10.3}
+      schY={6.25}
       pcbX={5}
       pcbY={-5}
       pcbRotation={90}
@@ -114,8 +173,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="100nF"
       footprint="0402"
       schOrientation="vertical"
-      schX={-8.5}
-      schY={7.1}
+      schX={-7.2}
+      schY={6.6}
       pcbX={-5}
       pcbY={5}
       pcbRotation={90}
@@ -125,10 +184,21 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="1uF"
       footprint="0402"
       schOrientation="vertical"
-      schX={-6.7}
-      schY={7.1}
+      schX={-5.5}
+      schY={6.6}
       pcbX={-5}
       pcbY={2.5}
+      pcbRotation={90}
+    />
+    <capacitor
+      name="C41"
+      capacitance="10pF"
+      footprint="0402"
+      schOrientation="vertical"
+      schX={-3.8}
+      schY={6.6}
+      pcbX={-7.5}
+      pcbY={0}
       pcbRotation={90}
     />
     <capacitor
@@ -136,8 +206,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="100nF"
       footprint="0402"
       schOrientation="vertical"
-      schX={-4.9}
-      schY={7.1}
+      schX={3.3}
+      schY={6.6}
       pcbX={-5}
       pcbY={0}
       pcbRotation={90}
@@ -147,8 +217,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="100nF"
       footprint="0402"
       schOrientation="vertical"
-      schX={3.4}
-      schY={7.1}
+      schX={4.9}
+      schY={6.6}
       pcbX={5}
       pcbY={6}
       pcbRotation={90}
@@ -158,8 +228,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="100nF"
       footprint="0402"
       schOrientation="vertical"
-      schX={5.2}
-      schY={7.1}
+      schX={6.5}
+      schY={6.6}
       pcbX={5}
       pcbY={4}
       pcbRotation={90}
@@ -169,8 +239,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="220pF"
       footprint="0402"
       schOrientation="vertical"
-      schX={7}
-      schY={7.1}
+      schX={8.1}
+      schY={6.6}
       pcbX={5}
       pcbY={2}
       pcbRotation={90}
@@ -180,8 +250,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="100nF"
       footprint="0402"
       schOrientation="vertical"
-      schX={8.6}
-      schY={7.1}
+      schX={9.7}
+      schY={6.6}
       pcbX={5}
       pcbY={0}
       pcbRotation={90}
@@ -191,100 +261,123 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       <trace
         from=".C101 > .pin1"
         to=".C391 > .pin1"
-        schematicRouteHints={[{ x: -7.6, y: 7.6 }]}
+        schematicRouteHints={[{ x: -6.35, y: 7.1 }]}
       />
       <trace
         from=".C391 > .pin1"
+        to=".C41 > .pin1"
+        schematicRouteHints={[{ x: -4.65, y: 7.1 }]}
+      />
+      <trace
+        from=".C41 > .pin1"
         to=".C211 > .pin1"
-        schematicRouteHints={[{ x: -5.8, y: 7.6 }]}
+        schematicRouteHints={[{ x: -0.25, y: 7.1 }]}
       />
       <trace
         from=".C211 > .pin1"
         to=".C241 > .pin1"
-        schematicRouteHints={[{ x: -0.75, y: 7.6 }]}
+        schematicRouteHints={[{ x: 4.1, y: 7.1 }]}
       />
       <trace
         from=".C241 > .pin1"
         to=".C271 > .pin1"
-        schematicRouteHints={[{ x: 4.3, y: 7.6 }]}
+        schematicRouteHints={[{ x: 5.7, y: 7.1 }]}
       />
       <trace
         from=".C271 > .pin1"
         to=".C272 > .pin1"
-        schematicRouteHints={[{ x: 6.1, y: 7.6 }]}
+        schematicRouteHints={[{ x: 7.3, y: 7.1 }]}
       />
       <trace
         from=".C272 > .pin1"
         to=".C311 > .pin1"
-        schematicRouteHints={[{ x: 7.8, y: 7.6 }]}
+        schematicRouteHints={[{ x: 8.9, y: 7.1 }]}
       />
       <trace
         from=".C311 > .pin1"
         to=".C4 > .pin1"
         schematicRouteHints={[
-          { x: 8.6, y: 7.9 },
-          { x: 9.8, y: 7.9 },
+          { x: 9.7, y: 7.25 },
+          { x: 10.3, y: 7.25 },
         ]}
       />
       <trace
         from=".C4 > .pin1"
         to=".L1 > .pin1"
         schematicRouteHints={[
-          { x: 9.8, y: 8.1 },
-          { x: 10.75, y: 8.1 },
+          { x: 10.3, y: 7.6 },
+          { x: 10.8, y: 7.6 },
         ]}
       />
     </group>
-    <netlabel net="VCC" connection="C4.pin1" anchorSide="bottom" />
-    <netlabel net="V3P3_IN" connection="L1.pin2" anchorSide="bottom" />
+    <netlabel
+      net="VCC"
+      connection="C4.pin1"
+      schX={10.3}
+      schY={7.65}
+      anchorSide="bottom"
+    />
+    <netlabel
+      net="V3P3_IN"
+      connection="L1.pin2"
+      schX={13.2}
+      schY={7.6}
+      anchorSide="left"
+    />
 
     <GroundTerminal
       name="GND_C101"
       connection=".C101 > .pin2"
-      schX={-8.5}
-      schY={5.9}
+      schX={-7.2}
+      schY={5.4}
     />
     <GroundTerminal
       name="GND_C391"
       connection=".C391 > .pin2"
-      schX={-6.7}
-      schY={5.9}
+      schX={-5.5}
+      schY={5.4}
+    />
+    <GroundTerminal
+      name="GND_C41"
+      connection=".C41 > .pin2"
+      schX={-3.8}
+      schY={5.4}
     />
     <GroundTerminal
       name="GND_C211"
       connection=".C211 > .pin2"
-      schX={-4.9}
-      schY={5.9}
+      schX={3.3}
+      schY={5.4}
     />
     <GroundTerminal
       name="GND_C241"
       connection=".C241 > .pin2"
-      schX={3.4}
-      schY={5.9}
+      schX={4.9}
+      schY={5.4}
     />
     <GroundTerminal
       name="GND_C271"
       connection=".C271 > .pin2"
-      schX={5.2}
-      schY={5.9}
+      schX={6.5}
+      schY={5.4}
     />
     <GroundTerminal
       name="GND_C272"
       connection=".C272 > .pin2"
-      schX={7}
-      schY={5.9}
+      schX={8.1}
+      schY={5.4}
     />
     <GroundTerminal
       name="GND_C311"
       connection=".C311 > .pin2"
-      schX={8.6}
-      schY={5.9}
+      schX={9.7}
+      schY={5.4}
     />
     <GroundTerminal
       name="GND_C4"
       connection=".C4 > .pin2"
-      schX={9.8}
-      schY={5.5}
+      schX={10.3}
+      schY={5.05}
     />
 
     <group schMaxTraceDistance="20mm">
@@ -292,86 +385,80 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         from=".U1 > .DVDD2"
         to=".C101 > .pin1"
         schematicRouteHints={[
-          { x: -3.5, y: 3.25 },
-          { x: -3.5, y: 7.6 },
+          { x: -3, y: 4.9 },
+          { x: -3, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .DVDD1"
         to=".C391 > .pin1"
         schematicRouteHints={[
-          { x: -3.9, y: 3 },
-          { x: -3.9, y: 7.6 },
+          { x: -3.35, y: 4.55 },
+          { x: -3.35, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .DVDD_USB"
-        to=".C211 > .pin1"
+        to=".C41 > .pin1"
         schematicRouteHints={[
-          { x: -4.3, y: 2 },
-          { x: -4.3, y: 7.6 },
+          { x: -3.7, y: 3.3 },
+          { x: -3.7, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .AVDD5"
         to=".C211 > .pin1"
         schematicRouteHints={[
-          { x: 3.2, y: 3.2 },
-          { x: 3.2, y: 7.6 },
+          { x: 2.8, y: 4.9 },
+          { x: 2.8, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .AVDD3"
         to=".C241 > .pin1"
         schematicRouteHints={[
-          { x: 3.6, y: 2.9 },
-          { x: 3.6, y: 7.6 },
+          { x: 3.15, y: 4.5 },
+          { x: 3.15, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .AVDD2"
         to=".C271 > .pin1"
         schematicRouteHints={[
-          { x: 4, y: 2.6 },
-          { x: 4, y: 7.6 },
+          { x: 3.5, y: 4.1 },
+          { x: 3.5, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .AVDD1"
         to=".C272 > .pin1"
         schematicRouteHints={[
-          { x: 4.4, y: 2.3 },
-          { x: 4.4, y: 7.6 },
+          { x: 3.85, y: 3.75 },
+          { x: 3.85, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .AVDD4"
         to=".C272 > .pin1"
         schematicRouteHints={[
-          { x: 4.8, y: 2 },
-          { x: 4.8, y: 7.6 },
+          { x: 4.2, y: 3.4 },
+          { x: 4.2, y: 7.1 },
         ]}
       />
       <trace
         from=".U1 > .AVDD6"
         to=".C311 > .pin1"
         schematicRouteHints={[
-          { x: 5.6, y: 1.7 },
-          { x: 5.6, y: 7.6 },
+          { x: 4.55, y: 3.05 },
+          { x: 4.55, y: 7.1 },
         ]}
       />
     </group>
     <GroundTerminal
-      name="GND_DGND_USB"
-      connection=".U1 > .DGND_USB"
-      schX={-3.5}
-      schY={2.15}
-    />
-    <GroundTerminal
       name="GND_U1"
-      connection=".U1 > .GND"
-      schX={3.35}
-      schY={-3.25}
+      connection=".U1 > .pin41"
+      schX={2.5}
+      schY={-2.8}
     />
 
     {/* Differential RF output, balun, matching capacitor, and PCB antenna. */}
@@ -381,7 +468,7 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       footprint="qfn6"
       pinLabels={{
         pin1: "ANT",
-        pin2: ["GND", "GND_2_5_6"],
+        pin2: "GND",
         pin3: "RF_N",
         pin4: "RF_P",
         pin5: "GND2",
@@ -393,10 +480,10 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         rightSide: { direction: "top-to-bottom", pins: [1] },
         bottomSide: { direction: "left-to-right", pins: [2] },
       }}
-      schWidth="2mm"
-      schHeight="2.2mm"
-      schX={7.2}
-      schY={1.7}
+      schWidth="1.8mm"
+      schHeight="1mm"
+      schX={6.25}
+      schY={0.5}
       pcbX={8}
       pcbY={-0.5}
     />
@@ -404,14 +491,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       name="A2"
       manufacturerPartNumber="ANTENNA_IIFA_1_LEFT"
       footprint="pinrow2"
-      pinLabels={{ pin1: "FEED", pin2: "GND" }}
-      schPinArrangement={{
-        bottomSide: { direction: "left-to-right", pins: [2, 1] },
-      }}
-      schWidth="3.4mm"
-      schHeight="1mm"
-      schX={12.4}
-      schY={5.7}
+      symbol={iifaAntennaSymbol}
+      schX={8.05}
+      schY={2.3}
       pcbX={14}
       pcbY={0}
     />
@@ -420,8 +502,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       resistance="0ohm"
       footprint="0402"
       schOrientation="vertical"
-      schX={12.9}
-      schY={3.8}
+      schX={8.2}
+      schY={1.4}
       pcbX={10}
       pcbY={2.5}
       pcbRotation={90}
@@ -431,8 +513,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="0.5pF"
       footprint="0402"
       schOrientation="vertical"
-      schX={12.9}
-      schY={1.25}
+      schX={8.2}
+      schY={-0.05}
       pcbX={10}
       pcbY={-3.5}
       pcbRotation={90}
@@ -440,45 +522,43 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
     <group schMaxTraceDistance="20mm">
       <trace
         from=".U1 > .RF_P"
-        to=".B1 > .RF_P"
-        schematicRouteHints={[{ x: 4.8, y: 1.65 }]}
+        to=".B1 > .pin4"
       />
       <trace
         from=".U1 > .RF_N"
-        to=".B1 > .RF_N"
-        schematicRouteHints={[{ x: 4.8, y: 1.25 }]}
+        to=".B1 > .pin3"
       />
       <trace
-        from=".B1 > .ANT"
+        from=".B1 > .pin1"
+        to=".C5 > .pin1"
+      />
+      <trace
+        from=".C5 > .pin1"
         to=".R9 > .pin2"
-        schematicRouteHints={[
-          { x: 10, y: 1.7 },
-          { x: 12.9, y: 1.7 },
-        ]}
       />
       <trace
         from=".R9 > .pin1"
-        to=".A2 > .FEED"
-        schematicRouteHints={[{ x: 12.9, y: 4.8 }]}
-      />
-      <trace
-        from=".B1 > .ANT"
-        to=".C5 > .pin1"
-        schematicRouteHints={[{ x: 10, y: 1.7 }]}
+        to=".A2 > .pin1"
       />
     </group>
-    <GroundTerminal name="GND_B1" connection=".B1 > .GND" schX={7.2} schY={0} />
+    <GroundTerminal
+      name="GND_B1"
+      connection=".B1 > .pin2"
+      schX={6.25}
+      schY={-0.3}
+    />
     <GroundTerminal
       name="GND_A2"
-      connection=".A2 > .GND"
-      schX={11.9}
-      schY={4.45}
+      connection=".A2 > .pin2"
+      schX={6.9}
+      schY={1.7}
+      anchorSide="right"
     />
     <GroundTerminal
       name="GND_C5"
       connection=".C5 > .pin2"
-      schX={12.9}
-      schY={0.1}
+      schX={8.2}
+      schY={-0.85}
     />
 
     {/* RESET_N, RBIAS, DCOUPL, and 32 MHz crystal networks. */}
@@ -486,19 +566,18 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       name="R201"
       resistance="2.2k"
       footprint="0402"
-      schX={-7.1}
-      schY={-5.2}
+      schX={-5.5}
+      schY={-2.775}
       pcbX={-5}
       pcbY={-2.5}
-      connections={{ pin1: "net.RESET_N" }}
     />
     <capacitor
       name="C201"
       capacitance="1nF"
       footprint="0402"
       schOrientation="vertical"
-      schX={-5}
-      schY={-6.6}
+      schX={-5.2}
+      schY={-4.1}
       pcbX={-5}
       pcbY={-5}
       pcbRotation={90}
@@ -507,19 +586,25 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       <trace
         from=".R201 > .pin2"
         to=".U1 > .RESET_N"
-        schematicRouteHints={[{ x: -4.5, y: -5.2 }]}
       />
       <trace
         from=".R201 > .pin2"
         to=".C201 > .pin1"
-        schematicRouteHints={[{ x: -5, y: -5.2 }]}
+        schematicRouteHints={[{ x: -5.2, y: -3.72 }]}
       />
     </group>
+    <netlabel
+      net="RESET_N"
+      connectsTo=".R201 > .pin1"
+      schX={-6.7}
+      schY={-2.775}
+      anchorSide="right"
+    />
     <GroundTerminal
       name="GND_C201"
       connection=".C201 > .pin2"
-      schX={-5}
-      schY={-7.75}
+      schX={-5.2}
+      schY={-4.95}
     />
 
     <inductor
@@ -527,8 +612,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       inductance="6.8nH"
       footprint="0402"
       schOrientation="vertical"
-      schX={3.2}
-      schY={-6.4}
+      schX={3.3}
+      schY={-3.4}
       pcbX={7}
       pcbY={-6.5}
       pcbRotation={90}
@@ -538,8 +623,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       resistance="56k"
       footprint="0402"
       schOrientation="vertical"
-      schX={3.2}
-      schY={-8.7}
+      schX={3.3}
+      schY={-4.9}
       pcbX={9.5}
       pcbY={-6.5}
       pcbRotation={90}
@@ -548,19 +633,18 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       <trace
         from=".U1 > .RBIAS"
         to=".L301 > .pin1"
-        schematicRouteHints={[{ x: 3.2, y: -3.7 }]}
+        schematicRouteHints={[{ x: 3.3, y: -1.9 }]}
       />
       <trace
         from=".L301 > .pin2"
         to=".R301 > .pin1"
-        schematicRouteHints={[{ x: 3.2, y: -7.7 }]}
       />
     </group>
     <GroundTerminal
       name="GND_R301"
       connection=".R301 > .pin2"
-      schX={3.2}
-      schY={-9.85}
+      schX={3.3}
+      schY={-5.75}
     />
 
     <capacitor
@@ -568,8 +652,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="1uF"
       footprint="0402"
       schOrientation="vertical"
-      schX={4.2}
-      schY={-7.2}
+      schX={4.9}
+      schY={-3.2}
       pcbX={7}
       pcbY={-8.5}
       pcbRotation={90}
@@ -578,14 +662,14 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       <trace
         from=".U1 > .DCOUPL"
         to=".C401 > .pin1"
-        schematicRouteHints={[{ x: 4.2, y: -3.3 }]}
+        schematicRouteHints={[{ x: 4.9, y: -1.7 }]}
       />
     </group>
     <GroundTerminal
       name="GND_C401"
       connection=".C401 > .pin2"
-      schX={4.2}
-      schY={-8.35}
+      schX={4.9}
+      schY={-4.05}
     />
 
     <crystal
@@ -595,8 +679,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       loadCapacitance="12pF"
       pinVariant="four_pin"
       footprint="qfn4"
-      schX={6.8}
-      schY={-6.5}
+      schX={7.4}
+      schY={-3.1}
       pcbX={0}
       pcbY={-6}
     />
@@ -605,8 +689,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="12pF"
       footprint="0402"
       schOrientation="vertical"
-      schX={5.5}
-      schY={-8.4}
+      schX={6.2}
+      schY={-4.6}
       pcbX={-3}
       pcbY={-8.5}
       pcbRotation={90}
@@ -616,8 +700,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       capacitance="12pF"
       footprint="0402"
       schOrientation="vertical"
-      schX={8.1}
-      schY={-8.4}
+      schX={8.6}
+      schY={-4.6}
       pcbX={3}
       pcbY={-8.5}
       pcbRotation={90}
@@ -627,58 +711,67 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         from=".U1 > .XOSC_Q1"
         to=".X1 > .pin1"
         schematicRouteHints={[
-          { x: 5.5, y: -2.5 },
-          { x: 5.5, y: -6.5 },
+          { x: 6.86, y: -0.95 },
+          { x: 6.86, y: -3.11 },
         ]}
       />
       <trace
         from=".U1 > .XOSC_Q2"
         to=".X1 > .pin3"
         schematicRouteHints={[
-          { x: 8.1, y: -2.8 },
-          { x: 8.1, y: -6.5 },
+          { x: 8.9, y: -1.15 },
+          { x: 8.9, y: -3.11 },
         ]}
       />
       <trace
         from=".X1 > .pin1"
         to=".C231 > .pin1"
-        schematicRouteHints={[{ x: 5.5, y: -6.5 }]}
+        schematicRouteHints={[
+          { x: 5.9, y: -3.11 },
+          { x: 5.9, y: -4.22 },
+          { x: 6.2, y: -4.22 },
+        ]}
       />
       <trace
         from=".X1 > .pin3"
         to=".C221 > .pin1"
-        schematicRouteHints={[{ x: 8.1, y: -6.5 }]}
+        schematicRouteHints={[
+          { x: 8.9, y: -3.11 },
+          { x: 8.9, y: -4.22 },
+          { x: 8.6, y: -4.22 },
+        ]}
       />
     </group>
     <GroundTerminal
       name="GND_X1_1"
       connection=".X1 > .pin2"
-      schX={6.4}
-      schY={-7.6}
+      schX={7.4}
+      schY={-4.35}
     />
     <GroundTerminal
       name="GND_X1_2"
       connection=".X1 > .pin4"
-      schX={7.2}
-      schY={-7.6}
+      schX={8.2}
+      schY={-2.39}
+      anchorSide="left"
     />
     <GroundTerminal
       name="GND_C231"
       connection=".C231 > .pin2"
-      schX={5.5}
-      schY={-9.55}
+      schX={6.2}
+      schY={-5.45}
     />
     <GroundTerminal
       name="GND_C221"
       connection=".C221 > .pin2"
-      schX={8.1}
-      schY={-9.55}
+      schX={8.6}
+      schY={-5.45}
     />
 
     <schematictext
       text="CC2540 USB DONGLE RF-PART — TIDC-CC2540-BLE-USB"
       schX={0}
-      schY={10.1}
+      schY={8.9}
       fontSize={0.28}
     />
   </subcircuit>
