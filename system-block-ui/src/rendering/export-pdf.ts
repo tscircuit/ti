@@ -6,11 +6,47 @@ export { downloadBlob } from "./download-blob";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const DEFAULT_FILE_NAME = "system-schematic.pdf";
-const DEFAULT_MARGIN_MM = 10;
 const DEFAULT_ORIENTATION = "landscape";
-const SHEET_HEADER_BAND_MM = 8;
-const SHEET_HEADER_BASELINE_OFFSET_MM = 4.2;
-const SHEET_HEADER_DIVIDER_OFFSET_MM = 6.2;
+const PDF_FONT_FAMILY = "LiberationSans";
+const PDF_TEXT_ANCHOR_GAP_EM = 0.12;
+const PDF_NET_LABEL_BASELINE_SHIFT_EM = 0.06;
+const SVG_COLOR_ATTRIBUTES = [
+  "color",
+  "fill",
+  "flood-color",
+  "lighting-color",
+  "stop-color",
+  "stroke",
+] as const;
+const THREE_CHANNEL_RGBA_PATTERN =
+  /rgba\(\s*([^,()]+)\s*,\s*([^,()]+)\s*,\s*([^,()]+)\s*\)/gi;
+const SHEET_OVERLAY_MARGIN_MM = 16;
+const SHEET_OVERLAY_BASELINE_MM = 16;
+const SHEET_OVERLAY_GAP_MM = 4;
+const SHEET_OVERLAY_BACKDROP_Y_MM = 11.5;
+const SHEET_OVERLAY_BACKDROP_HEIGHT_MM = 5.5;
+const SHEET_OVERLAY_BACKDROP_PADDING_X_MM = 1;
+const SHEET_OVERLAY_TITLE_FONT_SIZE_PT = 10;
+const SHEET_OVERLAY_PAGE_FONT_SIZE_PT = 9;
+const SCHEMATIC_BACKGROUND_RGB = [245, 241, 237] as const;
+const EMBEDDED_PDF_FONTS = [
+  {
+    fileName: "LiberationSans-Regular.ttf",
+    style: "normal",
+    url: new URL(
+      "../../node_modules/@docx-editor.dev/fonts/assets/LiberationSans-Regular.ttf",
+      import.meta.url,
+    ).href,
+  },
+  {
+    fileName: "LiberationSans-Bold.ttf",
+    style: "bold",
+    url: new URL(
+      "../../node_modules/@docx-editor.dev/fonts/assets/LiberationSans-Bold.ttf",
+      import.meta.url,
+    ).href,
+  },
+] as const;
 
 /** The evaluator's richer sheet objects are structurally assignable here. */
 export interface SchematicPdfSheet {
@@ -24,8 +60,7 @@ export interface SchematicPdfOptions {
   /** Fixed orientation used by every page. Defaults to A4 landscape. */
   orientation?: "portrait" | "landscape";
   format?: string | readonly [number, number];
-  marginMm?: number;
-  /** PDF document metadata title; sheet titles come from the input array. */
+  /** PDF document metadata title. */
   title?: string;
 }
 
@@ -41,10 +76,6 @@ interface SvgDimensions {
 export interface SchematicPdfPageLayoutRequest {
   pageWidthMm: number;
   pageHeightMm: number;
-  svgWidth: number;
-  svgHeight: number;
-  marginMm: number;
-  hasHeader: boolean;
 }
 
 export interface SchematicPdfPageLayout {
@@ -52,14 +83,11 @@ export interface SchematicPdfPageLayout {
   y: number;
   width: number;
   height: number;
-  headerBaselineY?: number;
-  headerDividerY?: number;
 }
 
 interface PreparedSheet {
   element: Element;
-  dimensions: SvgDimensions;
-  title?: string;
+  title: string;
 }
 
 const parseSvg = (svg: string): Element => {
@@ -142,14 +170,96 @@ const normalizeSvgViewport = (
   svg: Element,
   dimensions: SvgDimensions,
 ): void => {
-  // circuit-to-svg currently emits width/height without a viewBox. svg2pdf's
-  // width/height options resize its viewport but do not scale that SVG's user
-  // coordinate system, which clips the drawing. Supplying this viewBox makes
-  // the requested PDF dimensions an actual aspect-preserving transform.
+  // circuit-to-svg currently emits width/height without a viewBox. Supplying
+  // one lets svg2pdf scale the schematic uniformly into the PDF page.
   if (!svg.hasAttribute("viewBox")) {
     svg.setAttribute("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
   }
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+};
+
+const normalizeThreeChannelRgba = (value: string): string =>
+  value.replace(
+    THREE_CHANNEL_RGBA_PATTERN,
+    (_match, red: string, green: string, blue: string) =>
+      `rgb(${red.trim()}, ${green.trim()}, ${blue.trim()})`,
+  );
+
+/** Normalizes browser-valid paint values that svg2pdf does not parse. */
+export const normalizeSvgPaintForPdf = (svg: Element): void => {
+  for (const element of [svg, ...svg.querySelectorAll("*")]) {
+    for (const attribute of SVG_COLOR_ATTRIBUTES) {
+      const value = element.getAttribute(attribute);
+      if (value === null) continue;
+
+      const normalized = normalizeThreeChannelRgba(value);
+      if (normalized !== value) element.setAttribute(attribute, normalized);
+    }
+
+    const style = element.getAttribute("style");
+    if (style === null) continue;
+
+    const normalizedStyle = normalizeThreeChannelRgba(style);
+    if (normalizedStyle !== style) {
+      element.setAttribute("style", normalizedStyle);
+    }
+  }
+};
+
+export const normalizeSvgTextForPdf = (svg: Element): void => {
+  for (const textElement of svg.querySelectorAll("text, tspan")) {
+    textElement.setAttribute("font-family", PDF_FONT_FAMILY);
+    const classes = textElement.getAttribute("class")?.split(/\s+/) ?? [];
+
+    // circuit-to-svg adds a background-colored outline around reference
+    // designators. svg2pdf paints that halo over the fill, making R/C labels
+    // invisible even though their text remains in the PDF content stream.
+    if (classes.includes("sch-component-name")) {
+      textElement.setAttribute("stroke", "none");
+      textElement.removeAttribute("stroke-width");
+      textElement.removeAttribute("paint-order");
+    }
+
+    // svg2pdf reads alignment-baseline but not dominant-baseline. Copying the
+    // SVG baseline keeps labels vertically centered instead of treating their
+    // center coordinate as an alphabetic baseline and pushing text upward.
+    const dominantBaseline = textElement.getAttribute("dominant-baseline");
+    if (dominantBaseline && !textElement.hasAttribute("alignment-baseline")) {
+      textElement.setAttribute("alignment-baseline", dominantBaseline);
+    }
+
+    // svg2pdf's baseline calculation lands closer to an anchor than browsers
+    // do. Move text away from top/bottom anchors without changing its width,
+    // and optically center middle-aligned text. Boxed net labels need a smaller
+    // correction so their underscores stay clear of the bottom outline.
+    if (!textElement.hasAttribute("dy")) {
+      const isNetLabel = classes.includes("sch-net-label-text");
+      const shiftEm =
+        dominantBaseline === "hanging"
+          ? PDF_TEXT_ANCHOR_GAP_EM
+          : dominantBaseline === "ideographic"
+            ? -PDF_TEXT_ANCHOR_GAP_EM
+            : dominantBaseline === "central" || dominantBaseline === "middle"
+              ? isNetLabel
+                ? PDF_NET_LABEL_BASELINE_SHIFT_EM
+                : PDF_TEXT_ANCHOR_GAP_EM
+              : undefined;
+      if (shiftEm !== undefined) {
+        textElement.setAttribute("dy", `${shiftEm}em`);
+      }
+    }
+
+    // Inline CSS overrides SVG presentation attributes. Appending the family
+    // keeps text that circuit-to-svg emits with style="font-family: ..." on
+    // the same embedded face as every other label.
+    const style = textElement.getAttribute("style");
+    if (style) {
+      textElement.setAttribute(
+        "style",
+        `${style};font-family:${PDF_FONT_FAMILY}`,
+      );
+    }
+  }
 };
 
 const validateFinitePositive = (name: string, value: number): void => {
@@ -158,62 +268,66 @@ const validateFinitePositive = (name: string, value: number): void => {
   }
 };
 
-const validateMargin = (marginMm: number): void => {
-  if (!Number.isFinite(marginMm) || marginMm < 0) {
-    throw new RangeError("marginMm must be a non-negative finite number");
-  }
-};
-
-/**
- * Aspect-fit one schematic inside a PDF page without crossing its margins.
- * A headed page reserves a compact band above the schematic viewport.
- */
+/** Uses the full PDF page as the schematic viewport. */
 export function calculateSchematicPdfPageLayout({
   pageWidthMm,
   pageHeightMm,
-  svgWidth,
-  svgHeight,
-  marginMm,
-  hasHeader,
 }: SchematicPdfPageLayoutRequest): SchematicPdfPageLayout {
   validateFinitePositive("pageWidthMm", pageWidthMm);
   validateFinitePositive("pageHeightMm", pageHeightMm);
-  validateFinitePositive("svgWidth", svgWidth);
-  validateFinitePositive("svgHeight", svgHeight);
-  validateMargin(marginMm);
-
-  const headerBand = hasHeader ? SHEET_HEADER_BAND_MM : 0;
-  const contentTop = marginMm + headerBand;
-  const availableWidth = pageWidthMm - marginMm * 2;
-  const availableHeight = pageHeightMm - contentTop - marginMm;
-  if (availableWidth <= 0 || availableHeight <= 0) {
-    throw new RangeError("marginMm leaves no printable area on the PDF page");
-  }
-
-  const scale = Math.min(
-    availableWidth / svgWidth,
-    availableHeight / svgHeight,
-  );
-  const width = svgWidth * scale;
-  const height = svgHeight * scale;
 
   return {
-    x: marginMm + (availableWidth - width) / 2,
-    y: contentTop + (availableHeight - height) / 2,
-    width,
-    height,
-    ...(hasHeader
-      ? {
-          headerBaselineY: marginMm + SHEET_HEADER_BASELINE_OFFSET_MM,
-          headerDividerY: marginMm + SHEET_HEADER_DIVIDER_OFFSET_MM,
-        }
-      : {}),
+    x: 0,
+    y: 0,
+    width: pageWidthMm,
+    height: pageHeightMm,
   };
 }
 
-const normalizeSheetTitle = (title: string | undefined): string | undefined => {
+const bytesToBase64 = (bytes: Uint8Array): string => {
+  if (typeof btoa === "undefined") {
+    throw new Error("PDF export requires the browser btoa API");
+  }
+
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(
+      ...bytes.subarray(offset, offset + chunkSize),
+    );
+  }
+  return btoa(binary);
+};
+
+const registerPdfFonts = async (pdf: jsPDF): Promise<void> => {
+  const fonts = await Promise.all(
+    EMBEDDED_PDF_FONTS.map(async (font) => {
+      const response = await fetch(font.url);
+      if (!response.ok) {
+        throw new Error(
+          `Unable to load the embedded PDF font ${font.fileName}: HTTP ${response.status}`,
+        );
+      }
+      return { ...font, bytes: new Uint8Array(await response.arrayBuffer()) };
+    }),
+  );
+
+  for (const font of fonts) {
+    pdf.addFileToVFS(font.fileName, bytesToBase64(font.bytes));
+    pdf.addFont(font.fileName, PDF_FONT_FAMILY, font.style);
+  }
+
+  pdf.setFont(PDF_FONT_FAMILY, "normal");
+};
+
+const normalizeSheetTitle = (
+  title: string | undefined,
+  pageNumber: number,
+  pageCount: number,
+): string => {
   const normalized = title?.replace(/\s+/g, " ").trim();
-  return normalized || undefined;
+  if (normalized) return normalized;
+  return pageCount === 1 ? "Schematic" : `Sheet ${pageNumber}`;
 };
 
 const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
@@ -232,10 +346,11 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
     const element = parseSvg(sheet.svg);
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
+    normalizeSvgPaintForPdf(element);
+    normalizeSvgTextForPdf(element);
     return {
       element,
-      dimensions,
-      title: normalizeSheetTitle(sheet.title),
+      title: normalizeSheetTitle(sheet.title, index + 1, sheets.length),
     };
   });
 };
@@ -254,61 +369,67 @@ const fitTitle = (pdf: jsPDF, title: string, maxWidth: number): string => {
   return `${title.slice(0, end).trimEnd()}${suffix}`;
 };
 
-const renderSheetHeader = ({
+/** Draws the sheet name and page count after the SVG so they remain on top. */
+export const renderSchematicPdfSheetOverlay = ({
   pdf,
   title,
   pageNumber,
   pageCount,
-  pageWidth,
-  marginMm,
-  layout,
+  pageWidthMm,
 }: {
   pdf: jsPDF;
-  title?: string;
+  title: string;
   pageNumber: number;
   pageCount: number;
-  pageWidth: number;
-  marginMm: number;
-  layout: SchematicPdfPageLayout;
+  pageWidthMm: number;
 }): void => {
-  if (
-    layout.headerBaselineY === undefined ||
-    layout.headerDividerY === undefined
-  ) {
-    return;
-  }
+  const pageLabel = `${pageNumber}/${pageCount}`;
 
-  const pageLabel = `Page ${pageNumber} / ${pageCount}`;
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(9);
-  pdf.setTextColor(85, 95, 110);
-  pdf.text(pageLabel, pageWidth - marginMm, layout.headerBaselineY, {
-    align: "right",
-  });
+  pdf.setFont(PDF_FONT_FAMILY, "normal");
+  pdf.setFontSize(SHEET_OVERLAY_PAGE_FONT_SIZE_PT);
+  const pageLabelWidth = pdf.getTextWidth(pageLabel);
 
-  if (title) {
-    const labelWidth = pdf.getTextWidth(pageLabel);
-    const maxTitleWidth = Math.max(
-      1,
-      pageWidth - marginMm * 2 - labelWidth - 8,
-    );
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(11);
-    pdf.setTextColor(45, 55, 72);
-    pdf.text(
-      fitTitle(pdf, title, maxTitleWidth),
-      marginMm,
-      layout.headerBaselineY,
-    );
-  }
+  pdf.setFont(PDF_FONT_FAMILY, "bold");
+  pdf.setFontSize(SHEET_OVERLAY_TITLE_FONT_SIZE_PT);
+  const maxTitleWidth = Math.max(
+    1,
+    pageWidthMm -
+      SHEET_OVERLAY_MARGIN_MM * 2 -
+      pageLabelWidth -
+      SHEET_OVERLAY_GAP_MM,
+  );
+  const fittedTitle = fitTitle(pdf, title, maxTitleWidth);
+  const fittedTitleWidth = pdf.getTextWidth(fittedTitle);
 
-  pdf.setDrawColor(210, 215, 222);
-  pdf.setLineWidth(0.25);
-  pdf.line(
-    marginMm,
-    layout.headerDividerY,
-    pageWidth - marginMm,
-    layout.headerDividerY,
+  pdf.setFillColor(...SCHEMATIC_BACKGROUND_RGB);
+  pdf.rect(
+    SHEET_OVERLAY_MARGIN_MM - SHEET_OVERLAY_BACKDROP_PADDING_X_MM,
+    SHEET_OVERLAY_BACKDROP_Y_MM,
+    fittedTitleWidth + SHEET_OVERLAY_BACKDROP_PADDING_X_MM * 2,
+    SHEET_OVERLAY_BACKDROP_HEIGHT_MM,
+    "F",
+  );
+  pdf.rect(
+    pageWidthMm -
+      SHEET_OVERLAY_MARGIN_MM -
+      pageLabelWidth -
+      SHEET_OVERLAY_BACKDROP_PADDING_X_MM,
+    SHEET_OVERLAY_BACKDROP_Y_MM,
+    pageLabelWidth + SHEET_OVERLAY_BACKDROP_PADDING_X_MM * 2,
+    SHEET_OVERLAY_BACKDROP_HEIGHT_MM,
+    "F",
+  );
+
+  pdf.setTextColor(45, 55, 72);
+  pdf.text(fittedTitle, SHEET_OVERLAY_MARGIN_MM, SHEET_OVERLAY_BASELINE_MM);
+
+  pdf.setFont(PDF_FONT_FAMILY, "normal");
+  pdf.setFontSize(SHEET_OVERLAY_PAGE_FONT_SIZE_PT);
+  pdf.text(
+    pageLabel,
+    pageWidthMm - SHEET_OVERLAY_MARGIN_MM,
+    SHEET_OVERLAY_BASELINE_MM,
+    { align: "right" },
   );
 };
 
@@ -318,8 +439,6 @@ export async function createSchematicPdfBlob(
   options: SchematicPdfOptions = {},
 ): Promise<Blob> {
   const sheets = prepareSheets(input);
-  const marginMm = options.marginMm ?? DEFAULT_MARGIN_MM;
-  validateMargin(marginMm);
 
   const format: string | number[] =
     typeof options.format === "string" || options.format === undefined
@@ -331,7 +450,10 @@ export async function createSchematicPdfBlob(
     unit: "mm",
     format,
     compress: true,
+    putOnlyUsedFonts: true,
   });
+
+  await registerPdfFonts(pdf);
 
   pdf.setProperties({
     ...(options.title ? { title: options.title } : {}),
@@ -343,33 +465,23 @@ export async function createSchematicPdfBlob(
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const hasHeader = Boolean(sheet.title) || sheets.length > 1;
     const layout = calculateSchematicPdfPageLayout({
       pageWidthMm: pageWidth,
       pageHeightMm: pageHeight,
-      svgWidth: sheet.dimensions.width,
-      svgHeight: sheet.dimensions.height,
-      marginMm,
-      hasHeader,
     });
-
-    if (hasHeader) {
-      renderSheetHeader({
-        pdf,
-        title: sheet.title,
-        pageNumber: index + 1,
-        pageCount: sheets.length,
-        pageWidth,
-        marginMm,
-        layout,
-      });
-    }
     await svg2pdf(sheet.element, pdf, {
       x: layout.x,
       y: layout.y,
       width: layout.width,
       height: layout.height,
       loadExternalStyleSheets: false,
+    });
+    renderSchematicPdfSheetOverlay({
+      pdf,
+      title: sheet.title,
+      pageNumber: index + 1,
+      pageCount: sheets.length,
+      pageWidthMm: pageWidth,
     });
   }
 

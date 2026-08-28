@@ -41,16 +41,22 @@ import {
   OPT3001,
   PGA300ARHHR,
   SN65HVD1473,
+  SN65LVDS31D,
+  SN74LVC1G34DBVR,
   TAS2505,
   TCAN1042HGV,
   TLC59116,
   TLV316,
   TLV755P,
   TLV9152IDR,
+  TMP103AYFF,
   TMP1827,
   TMP1075,
+  TPD2E009DRTR,
   TPS22919,
+  TPS25910RSA,
   TPS6293,
+  TPS62086RLTR,
   TPS61222,
   TPS61236RWLR,
   TPS61288RQQR,
@@ -67,6 +73,7 @@ import {
   TXB0104,
   TXS0102,
   W25Q128JVSIQ,
+  W3006,
 } from "./lib/chips/index.tsx";
 import { BatteryManagement_BQ24072 } from "./lib/subcircuits/BatteryManagement_BQ24072.circuit.tsx";
 import { BatteryManagement_BQ24073 } from "./lib/subcircuits/BatteryManagement_BQ24073.circuit.tsx";
@@ -131,6 +138,12 @@ import { PowerSupply_LM5050_TIDA00992 } from "./lib/subcircuits/PowerSupply_LM50
 import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
 import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
+import { LogicBuffer_SN74LVC1G34 } from "./lib/subcircuits/LogicBuffer_SN74LVC1G34.circuit.tsx";
+import { WirelessAntenna_W3006_TIDCWL1837MODCOM8I } from "./lib/subcircuits/WirelessAntenna_W3006_TIDCWL1837MODCOM8I.circuit.tsx";
+import { InputOutputProtection_TPD2E009_TIDA00399 } from "./lib/subcircuits/InputOutputProtection_TPD2E009_TIDA00399.circuit.tsx";
+import { BuckConverter_TPS62086_TIDA00399 } from "./lib/subcircuits/BuckConverter_TPS62086_TIDA00399.circuit.tsx";
+import { InputPowerProtection_TPS25910_TIDA00890 } from "./lib/subcircuits/InputPowerProtection_TPS25910_TIDA00890.circuit.tsx";
+import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/TemperatureSensor_TMP103_TIDA00399.circuit.tsx";
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
@@ -200,6 +213,12 @@ export {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
+  LogicBuffer_SN74LVC1G34,
+  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  InputOutputProtection_TPD2E009_TIDA00399,
+  BuckConverter_TPS62086_TIDA00399,
+  InputPowerProtection_TPS25910_TIDA00890,
+  TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
@@ -248,16 +267,22 @@ export const TiChipComponents = {
   OPT3001,
   PGA300ARHHR,
   SN65HVD1473,
+  SN65LVDS31D,
+  SN74LVC1G34DBVR,
   TAS2505,
   TCAN1042HGV,
   TLC59116,
   TLV316,
   TLV755P,
   TLV9152IDR,
+  TMP103AYFF,
   TMP1827,
   TMP1075,
+  TPD2E009DRTR,
   TPS22919,
+  TPS25910RSA,
   TPS6293,
+  TPS62086RLTR,
   TPS61222,
   TPS61236RWLR,
   TPS61288RQQR,
@@ -274,6 +299,7 @@ export const TiChipComponents = {
   TXB0104,
   TXS0102,
   W25Q128JVSIQ,
+  W3006,
 } as const;
 
 export const TiSubcircuitComponents = {
@@ -337,6 +363,12 @@ export const TiSubcircuitComponents = {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
+  LogicBuffer_SN74LVC1G34,
+  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  InputOutputProtection_TPD2E009_TIDA00399,
+  BuckConverter_TPS62086_TIDA00399,
+  InputPowerProtection_TPS25910_TIDA00890,
+  TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
