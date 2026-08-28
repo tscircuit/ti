@@ -37,7 +37,11 @@ const sanitizeJsxCommentText = (value: string): string => {
 
 const prefixSelector = (blockName: string, selector: string): string => {
   const relative = selector.trim().replace(/^>\s*/, "");
-  return `.${blockName} > ${relative}`;
+  // Nested subcircuits use a descendant selector between component levels,
+  // for example `.U4Sensor .U4 > .SCL`. Adding a child combinator before
+  // that path makes tscircuit search for a non-existent combined component.
+  const separator = /^\.[^>\s]+\s+\./.test(relative) ? " " : " > ";
+  return `.${blockName}${separator}${relative}`;
 };
 
 const renderImport = (

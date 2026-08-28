@@ -498,9 +498,7 @@ describe("catalog and TSX generation", () => {
     ]) {
       expect(artifacts.tsx).toContain(componentName);
     }
-    expect(artifacts.tsx).toContain(
-      'to=".light_sensor > .U5Sensor .U5 > .SDA"',
-    );
+    expect(artifacts.tsx).toContain('to=".light_sensor .U5Sensor .U5 > .SDA"');
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="data_power_monitor" data-kind="data"',
     );
