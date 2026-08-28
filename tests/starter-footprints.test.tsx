@@ -172,7 +172,7 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
   const passiveComponents = circuit.db.source_component
     .list()
     .filter((component) => passiveComponentTypes.has(component.ftype));
-  assert.equal(passiveComponents.length, 40);
+  assert.equal(passiveComponents.length, 41);
 
   for (const sourceComponent of passiveComponents) {
     const pcbComponent = circuit.db.pcb_component.getWhere({
@@ -191,7 +191,7 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
     );
   }
 
-  assert.equal(circuit.db.pcb_smtpad.list().length, 191);
+  assert.equal(circuit.db.pcb_smtpad.list().length, 193);
 
   for (const [name, lcscPartNumber, expectedPadCount] of [
     ["CSD17313Q2", "C2863837", 8],
@@ -268,7 +268,7 @@ test("the Consumer Wireless Module PCB is placed without autorouting", {
       .filter((element) => element.type.endsWith("_error")),
     [],
   );
-  assert.equal(circuit.db.pcb_component.list().length, 51);
-  assert.equal(circuit.db.pcb_smtpad.list().length, 191);
+  assert.equal(circuit.db.pcb_component.list().length, 52);
+  assert.equal(circuit.db.pcb_smtpad.list().length, 193);
   assert.equal(circuit.db.pcb_trace.list().length, 0);
 });
