@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import {
+  createConsumerWirelessModuleDesign,
   createSubcircuitCatalog,
+  createSystemBlockExamples,
   generateSystemDesignArtifacts,
   generateTsx,
   getSubcircuitDefinition,
@@ -374,7 +376,319 @@ describe("automatic connection resolution", () => {
 });
 
 describe("catalog and TSX generation", () => {
-  test("enriches every discovered raw source and protects prop-less blocks", () => {
+  test("loads every registered example as a resolvable semantic graph", async () => {
+    const examples = createSystemBlockExamples(SUBCIRCUIT_CATALOG);
+
+    expect(examples.map(({ sourcePath }) => sourcePath)).toEqual([
+      "examples/ConsumerWirelessModule.circuit.tsx",
+      "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
+      "examples/RearviewMirrorModule.circuit.tsx",
+      "examples/SeatPositionModule.circuit.tsx",
+    ]);
+    expect(
+      examples
+        .find(({ id }) => id === "bluetooth-speaker")
+        ?.graph.connections.find(({ protocol }) => protocol === "hci-uart"),
+    ).toMatchObject({
+      fromBlockId: "bluetooth_host",
+      toBlockId: "bluetooth_controller",
+    });
+
+    for (const example of examples) {
+      expect(
+        await Bun.file(
+          new URL(`../../../${example.sourcePath}`, import.meta.url),
+        ).exists(),
+      ).toBe(true);
+      expect(
+        resolveDesignConnections(
+          example.graph.blocks,
+          example.graph.connections,
+          SUBCIRCUIT_CATALOG,
+        ),
+      ).toHaveLength(example.graph.connections.length);
+    }
+  });
+
+  test("builds the Seat Position Module from all six application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "seat-position-module",
+    );
+    if (!example) throw new Error("Missing Seat Position Module example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "power_supply",
+      "communication_interface",
+      "microcontroller",
+      "motor_driver",
+      "position_feedback",
+      "light_driver",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(7);
+    expect(
+      resolved.find(({ id }) => id === "data_can_controller")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U6 > .PA8",
+          toSelector: ".U6 > .TXD",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U6 > .RXD",
+          toSelector: ".U6 > .PA9",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_motor_control")?.traces,
+    ).toHaveLength(13);
+    expect(
+      resolved.find(({ id }) => id === "power_protected_to_motor_driver")
+        ?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT",
+          toSelector: ".U1 > .PVDD",
+        }),
+      ]),
+    );
+
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: example.graph.blocks,
+      connections: example.graph.connections,
+      catalog: SUBCIRCUIT_CATALOG,
+      boardName: "seat_position_module",
+    });
+    for (const componentName of [
+      "PowerSupply_LM5050_TIDA00992",
+      "CommunicationInterface_TCAN1042_TIDA01428",
+      "Microcontroller_MSPM0L1306Q1_TIDA020065",
+      "MotorDriver_DRV8305_TIDA01330",
+      "PositionFeedback_DRV5013_TIDA01389",
+      "LightDriver_TIDA01330",
+    ]) {
+      expect(artifacts.tsx).toContain(componentName);
+    }
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="data_motor_control" data-kind="data"',
+    );
+  });
+
+  test("builds the Rearview Mirror Module from all seven application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "rearview-mirror-module",
+    );
+    if (!example) throw new Error("Missing Rearview Mirror Module example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "power_supply",
+      "communication_interface",
+      "microcontroller",
+      "mirror_driver",
+      "light_sensor",
+      "lamp_driver",
+      "temperature_sensor",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(16);
+    expect(
+      resolved.find(({ id }) => id === "data_can_controller")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .CAN_TX",
+          toSelector: ".U6 > .TXD",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_i2c_light_sensor")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .I2C0_SCL",
+          toSelector: ".U4Sensor .U4 > .SCL",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U1 > .I2C0_SCL",
+          toSelector: ".U5Sensor .U5 > .SCL",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "power_3v3_to_lamp_driver")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U2 > .OUT",
+          toSelector: ".J3 > .pin3",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U2 > .OUT",
+          toSelector: ".R9 > .pin1",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "power_protected_to_mirror_driver")
+        ?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT",
+          toSelector: ".Q2 > .collector",
+        }),
+      ]),
+    );
+
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: example.graph.blocks,
+      connections: example.graph.connections,
+      catalog: SUBCIRCUIT_CATALOG,
+      boardName: "rearview_mirror_module",
+    });
+    for (const componentName of [
+      "PowerSupply_LM74202_TPS7E81_Q1",
+      "CommunicationInterface_TCAN1042_TIDA01428",
+      "Microcontroller_MSPM0G3507",
+      "ElectrochromicMirrorDriver_TIDA01539",
+      "LightSensor_OPT3001_TIDA01539",
+      "LampDriver_TPS92638_TIDA00356",
+      "TemperatureSensor_LM50HV_Q1",
+    ]) {
+      expect(artifacts.tsx).toContain(componentName);
+    }
+    expect(artifacts.tsx).toContain(
+      '<PowerSupply_LM74202_TPS7E81_Q1\n      name="power_supply"\n      schSheetName="power_supply"\n      schX={-3.6}',
+    );
+    expect(artifacts.tsx).toContain('to=".light_sensor .U5Sensor .U5 > .SDA"');
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="data_power_monitor" data-kind="data"',
+    );
+  });
+
+  test("builds the Consumer wireless module from all seven reviewed blocks", () => {
+    const design = createConsumerWirelessModuleDesign(SUBCIRCUIT_CATALOG);
+    expect(design.blocks.map(({ id }) => id)).toEqual([
+      "input_power_protection",
+      "dc_dc_power_supply",
+      "io_connection",
+      "wireless_connectivity",
+      "io_protection",
+      "logic_control",
+      "sensors",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      design.blocks,
+      design.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved.map(({ id }) => id)).toEqual([
+      "data_io_connection_to_io_protection",
+      "data_logic_to_io_connection",
+      "power_dc_dc_to_io_connection",
+      "power_dc_dc_to_logic_control",
+      "power_dc_dc_to_sensors",
+      "power_protection_to_dc_dc",
+    ]);
+    expect(
+      resolved.find(({ id }) => id === "power_protection_to_dc_dc")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U7 > .IN1",
+          toSelector: ".U3P3 > .VIN",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U7 > .IN1",
+          toSelector: ".U3P3 > .EN",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U7 > .GND1",
+          toSelector: ".U3P3 > .GND",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_io_connection_to_io_protection")
+        ?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT1_P",
+          toSelector: ".UESD > .D1",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT1_N",
+          toSelector: ".UESD > .D2",
+        }),
+      ]),
+    );
+
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: design.blocks,
+      connections: design.connections,
+      catalog: SUBCIRCUIT_CATALOG,
+      boardName: "consumer_wireless_module",
+    });
+    for (const componentName of [
+      "InputPowerProtection_TPS25910_TIDA00890",
+      "BuckConverter_TPS62086_TIDA00399",
+      "LVDSDriver_SN65LVDS31_TIDA060017",
+      "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
+      "InputOutputProtection_TPD2E009_TIDA00399",
+      "LogicBuffer_SN74LVC1G34",
+      "TemperatureSensor_TMP103_TIDA00399",
+    ]) {
+      expect(artifacts.tsx).toContain(componentName);
+    }
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="power_protection_to_dc_dc" data-kind="power"',
+    );
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="data_io_connection_to_io_protection" data-kind="data"',
+    );
+    expect(artifacts.tsx).toContain(
+      'from=".logic_control > net.MCU_OR_LOGIC_OUT"',
+    );
+    expect(artifacts.tsx).toContain('to=".logic_control > net.VCC"');
+  });
+
+  test("does not connect the protected 5 V rail directly to the TMP103", () => {
+    const inputProtection = definition(
+      "input-power-protection-tps25910-tida00890",
+    );
+    const sensor = definition("temperature-sensor-tmp103-tida00399");
+
+    expect(() =>
+      resolveConnection({
+        kind: "Power",
+        from: {
+          block: block("input_power_protection", inputProtection.id),
+          definition: inputProtection,
+        },
+        to: {
+          block: block("sensors", sensor.id),
+          definition: sensor,
+        },
+      }),
+    ).toThrow(ConnectionResolutionError);
+  });
+
+  test("enriches discovered raw sources with curated adapters", () => {
     const catalog = createSubcircuitCatalog({
       "../../../lib/subcircuits/FutureSensor_X1.circuit.tsx":
         "export const FutureSensor_X1 = (props: unknown) => null",
@@ -391,7 +705,7 @@ describe("catalog and TSX generation", () => {
       catalog.find(
         (item) => item.componentName === "Microcontroller_MSP430G2332",
       ),
-    ).toMatchObject({ canInstantiate: false });
+    ).toMatchObject({ canInstantiate: true });
   });
 
   test("generates stable TSX regardless of graph array ordering", () => {
@@ -416,6 +730,11 @@ describe("catalog and TSX generation", () => {
     expect(first).toBe(second);
     expect(first).toContain("<board routingDisabled>");
     expect(first).toContain("PowerManagement_TPS7A2018,");
+    expect(first).toContain(
+      'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
+    );
+    expect(first).not.toContain("const SYSTEM_DIAGRAM_SVG");
+    expect(first).not.toContain("<svg");
     expect(first).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
     );
@@ -451,13 +770,26 @@ describe("catalog and TSX generation", () => {
 
     expect(artifacts).toEqual(reversed);
     expect(artifacts.systemDiagramSheetName).toBe("system_diagram_2");
+    expect(artifacts.systemDiagramModuleFileName).toBe(
+      "GeneratedSystem.system-diagram.ts",
+    );
     expect(artifacts.tsx).toContain(
       '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    >',
     );
     expect(artifacts.tsx).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
     );
-    expect(artifacts.systemDiagramSvg).toContain("Power · 1 load");
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="power" data-kind="power"',
+    );
+    expect(artifacts.systemDiagramSvg).not.toContain("__power-summary__");
+    expect(artifacts.systemDiagramModuleSource).toStartWith(
+      "export const SYSTEM_DIAGRAM_SVG = [",
+    );
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      'data-connection-id=\\"power\\" data-kind=\\"power\\"',
+    );
+    expect(artifacts.tsx).not.toContain(artifacts.systemDiagramSvg);
   });
 
   test("always emits a first system diagram sheet for an empty design", () => {
@@ -468,6 +800,9 @@ describe("catalog and TSX generation", () => {
 
     expect(artifacts.systemDiagramSheetName).toBe("system_diagram");
     expect(artifacts.systemDiagramSvg).toContain("No system blocks yet");
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      "No system blocks yet",
+    );
     expect(artifacts.tsx).toContain("sheetIndex={0}");
     expect(artifacts.tsx).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
@@ -578,7 +913,7 @@ describe("catalog and TSX generation", () => {
     expect(generated).not.toContain(hostileProtocol);
   });
 
-  test("curated catalog is sorted and has the Bluetooth speaker building blocks", () => {
+  test("curated catalog is sorted and has the reviewed starter-design blocks", () => {
     const titles = SUBCIRCUIT_CATALOG.map((item) => item.title);
     expect(titles).toEqual(
       [...titles].sort((a, b) => a.localeCompare(b, "en")),
@@ -586,5 +921,29 @@ describe("catalog and TSX generation", () => {
     expect(definition("battery-management-bq24074")).toBeDefined();
     expect(definition("bluetooth-controller-cc2564c")).toBeDefined();
     expect(definition("audio-amplifier-tas2505")).toBeDefined();
+    expect(
+      definition("input-power-protection-tps25910-tida00890"),
+    ).toBeDefined();
+    expect(definition("buck-converter-tps62086-tida00399")).toBeDefined();
+    expect(definition("lvds-driver-sn65lvds31-tida060017")).toBeDefined();
+    expect(
+      definition("wireless-antenna-w3006-tidcwl1837modcom8i"),
+    ).toBeDefined();
+    expect(
+      definition("input-output-protection-tpd2e009-tida00399"),
+    ).toBeDefined();
+    expect(definition("logic-buffer-sn74lvc1g34")).toBeDefined();
+    expect(definition("temperature-sensor-tmp103-tida00399")).toBeDefined();
+    expect(definition("power-supply-lm74202-tps7e81-q1")).toMatchObject({
+      sourcePath:
+        "lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx",
+    });
+    expect(definition("temperature-sensor-lm50hv-q1")).toMatchObject({
+      sourcePath:
+        "lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx",
+    });
+    expect(definition("electrochromic-mirror-driver-tida01539")).toBeDefined();
+    expect(definition("light-sensor-opt3001-tida01539")).toBeDefined();
+    expect(definition("lamp-driver-tps92638-tida00356")).toBeDefined();
   });
 });

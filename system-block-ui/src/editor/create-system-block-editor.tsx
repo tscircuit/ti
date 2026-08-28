@@ -31,7 +31,6 @@ import {
   type ResolvedConnection,
   type SubcircuitDefinition,
 } from "../model/types";
-import { getVisibleSystemBlockConnections } from "./power-aggregation";
 import { SemanticEdge } from "./SemanticEdge";
 import { SystemBlockNodeView } from "./SystemBlockNodeView";
 import {
@@ -128,7 +127,7 @@ function SystemBlockFlow({
       elevateEdgesOnSelect
       fitViewOptions={{ maxZoom: 1.2, padding: 0.18 }}
       isValidConnection={controller.isValidConnection}
-      minZoom={0.4}
+      minZoom={0.3}
       nodeTypes={NODE_TYPES}
       nodes={state.nodes}
       nodesConnectable
@@ -278,18 +277,8 @@ export class SystemBlockEditorController {
     changes: EdgeChange<SystemBlockConnection>[],
   ): void => {
     if (this.destroyed || changes.length === 0) return;
-    const powerSummaryIds = new Set(
-      this.renderState.edges
-        .filter((edge) => edge.data.powerSummary)
-        .map((edge) => edge.id),
-    );
-    const graphChanges = changes.filter(
-      (change) =>
-        !powerSummaryIds.has("id" in change ? change.id : change.item.id),
-    );
-    if (graphChanges.length === 0) return;
-    this.edges = applyEdgeChanges(graphChanges, this.edges);
-    this.publishRender(graphChanges.some((change) => change.type === "remove"));
+    this.edges = applyEdgeChanges(changes, this.edges);
+    this.publishRender(changes.some((change) => change.type === "remove"));
   };
 
   readonly isValidConnection = (
@@ -668,7 +657,7 @@ export class SystemBlockEditorController {
     this.renderState = {
       revision: this.renderState.revision + 1,
       nodes: this.nodes,
-      edges: getVisibleSystemBlockConnections(this.edges),
+      edges: this.edges,
     };
     for (const listener of this.renderListeners) listener();
     if (graphChanged) this.scheduleGraphChange();
