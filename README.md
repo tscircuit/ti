@@ -345,6 +345,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `AutomotiveBatteryFrontEnd` ([TIDA-00699](https://www.ti.com/tool/TIDA-00699))
 - `CommunicationInterface_LIN_TLIN1028`
 - `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
 - `LightDriver_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
@@ -360,6 +361,12 @@ The package currently exports these subcircuit components:
 - `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
+- `ReverseBatteryProtection_LM74610Q1`
+- `AutomotivePowerInputEmiFilter`
+- `BoostConverter_LM25122Q1`
+- `BuckConverter_LM53603Q1`
+- `VoltageSupervisor_TPS3808Q1`
+- `AutomotiveBatteryFrontEnd` ([TIDA-00699](https://www.ti.com/tool/TIDA-00699))
 
 ## Exported Chips
 
@@ -377,6 +384,7 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `CSD18531Q5A` | `-` | `CSD18531Q5A` |
 | `CSD19532Q5B` | `-` | `CSD19532Q5B` |
 | `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
 | `DRV5013Q1` | `-` | `DRV5013ADQDBZRQ1` |
@@ -390,6 +398,9 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM25122Q1` | `htssop_20` | `LM25122QPWPTQ1` |
+| `LM53603Q1` | `htssop_16` | `LM536035QPWPRQ1` |
+| `LM74610Q1` | `vssop_8` | `LM74610QDGKRQ1` |
 | `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
@@ -404,6 +415,7 @@ chip is listed individually below, including whether it supports a
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `SN65LVDS31D` | `-` | `SN65LVDS31D` |
 | `SN74LVC1G34DBVR` | `-` | `SN74LVC1G34DBVR` |
+| `SQ4850EY` | `-` | `SQ4850EY` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
@@ -416,6 +428,7 @@ chip is listed individually below, including whether it supports a
 | `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS25910RSA` | `-` | `TPS25910RSA` |
+| `TPS3808` | `sot_23_6` | `TPS3808G01QDBVRQ1` |
 | `TPS62086RLTR` | `-` | `TPS62086RLTR` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
