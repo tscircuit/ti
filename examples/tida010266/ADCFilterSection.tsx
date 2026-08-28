@@ -1,6 +1,6 @@
 import "tscircuit";
 import type { GroupProps } from "@tscircuit/props";
-import { TIDA010266InlineNetPorts } from "../../lib/tida010266/TIDA010266InlineNetPorts.tsx";
+import { TIDA010266InlineNetPorts } from "../../lib/utils/tida010266/TIDA010266InlineNetPorts.tsx";
 
 type ADCFilterSectionProps = GroupProps & { schSectionName?: string };
 

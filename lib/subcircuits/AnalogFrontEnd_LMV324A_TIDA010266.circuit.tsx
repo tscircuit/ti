@@ -1,7 +1,7 @@
 import "tscircuit";
 import { LMV324AIPWR } from "../chips/LMV324AIPWR.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "../tida010266/TIDA010266InlineNetPorts.tsx";
-import type { TIDA010266SectionedSubcircuitProps } from "../tida010266/TIDA010266.types.ts";
+import { TIDA010266InlineNetPorts } from "../utils/tida010266/TIDA010266InlineNetPorts.tsx";
+import type { TIDA010266SectionedSubcircuitProps } from "../utils/tida010266/TIDA010266.types.ts";
 
 const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
   <symbol>

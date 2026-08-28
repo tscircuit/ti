@@ -1,7 +1,7 @@
 import "tscircuit";
 import { TPS7A2433DBVR } from "../chips/TPS7A2433DBVR.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "../tida010266/TIDA010266InlineNetPorts.tsx";
-import type { TIDA010266SectionedSubcircuitProps } from "../tida010266/TIDA010266.types.ts";
+import { TIDA010266InlineNetPorts } from "../utils/tida010266/TIDA010266InlineNetPorts.tsx";
+import type { TIDA010266SectionedSubcircuitProps } from "../utils/tida010266/TIDA010266.types.ts";
 
 /** TIDA-010266 U1/C1/C5 3.3 V input regulator stage. */
 export const PowerManagement_TPS7A2433_TIDA010266 = (

@@ -1,7 +1,7 @@
 import "tscircuit";
 import { DRV8210DSGR } from "../chips/DRV8210DSGR.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "../tida010266/TIDA010266InlineNetPorts.tsx";
-import type { TIDA010266SectionedSubcircuitProps } from "../tida010266/TIDA010266.types.ts";
+import { TIDA010266InlineNetPorts } from "../utils/tida010266/TIDA010266InlineNetPorts.tsx";
+import type { TIDA010266SectionedSubcircuitProps } from "../utils/tida010266/TIDA010266.types.ts";
 
 /** TIDA-010266 U6/C14/C15/C16/J9 pump-and-valve driver stage. */
 export const MotorDriver_DRV8210_TIDA010266 = (
