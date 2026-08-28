@@ -4,6 +4,12 @@ import { ReverseBatteryProtection_TLV1805_SQJ461EP } from "./ReverseBatteryProte
 import { SupervisorWatchdog_TPS3850 } from "./SupervisorWatchdog_TPS3850.circuit.tsx";
 import { VoltageRegulator_LM73605 } from "./VoltageRegulator_LM73605.circuit.tsx";
 
+// Both sheet-2 children use source-relative coordinates. Reapply the exact
+// difference between their documented Altium origins so their relationship on
+// the Main Supply sheet remains unchanged: (22.225, 7.620) -
+// (21.716, 19.812) = (0.509, -12.192) mm.
+const REGULATOR_SHEET_2_OFFSET = { x: 0.509, y: -12.192 } as const;
+
 /**
  * Automotive-window-module power-supply composite backed by the verified
  * shared nets in TI TIDA-050008:
@@ -11,18 +17,43 @@ import { VoltageRegulator_LM73605 } from "./VoltageRegulator_LM73605.circuit.tsx
  * VBATT -> reverse protection / EMI filter -> VIN1 -> LM73605 -> +3.3V
  * +3.3V -> TPS3850 supply monitor and window watchdog
  *
- * The child sections keep their source-relative layouts. This parent joins
- * only the TIDA-050008 sheet nets; it does not synthesize thresholds, timing,
- * dividers, or grounding arrangements.
+ * The native schematic sheets mirror the authoritative TIDA-050008 CAD:
+ * reverse-battery protection and the regulator remain on "Main Supply"
+ * (source sheet 2), while the TPS3850 remains on "Watchdog and Vref" (source
+ * sheet 3). The child sections keep their source-relative layouts. This
+ * parent joins only the verified sheet nets; it does not synthesize
+ * thresholds, timing, dividers, or grounding arrangements.
  */
 export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
+    <schematicsheet
+      name="main_supply"
+      displayName="Main Supply"
+      sheetIndex={0}
+    />
+    <schematicsheet
+      name="watchdog_and_vref"
+      displayName="Watchdog and Vref"
+      sheetIndex={1}
+    />
+
     <net name="GND" isPowerNet isGroundNet />
     <net name="V3_3" isPowerNet />
 
-    <ReverseBatteryProtection_TLV1805_SQJ461EP name="reverseBattery" schY={7} />
-    <VoltageRegulator_LM73605 name="regulator" schX={-4} schY={-8} />
-    <SupervisorWatchdog_TPS3850 name="supervisorWatchdog" schX={23} schY={-8} />
+    <ReverseBatteryProtection_TLV1805_SQJ461EP
+      name="reverseBattery"
+      schSheetName="main_supply"
+    />
+    <VoltageRegulator_LM73605
+      name="regulator"
+      schSheetName="main_supply"
+      schX={REGULATOR_SHEET_2_OFFSET.x}
+      schY={REGULATOR_SHEET_2_OFFSET.y}
+    />
+    <SupervisorWatchdog_TPS3850
+      name="supervisorWatchdog"
+      schSheetName="watchdog_and_vref"
+    />
 
     <trace
       name="VBATT"
@@ -38,17 +69,20 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
     <trace
       name="V3_3"
       schDisplayLabel="+3.3V"
-      path={[".regulator > .V3_3", ".supervisorWatchdog > .V3_3", "net.V3_3"]}
+      from=".regulator > .V3_3"
+      to="net.V3_3"
+    />
+    <trace
+      name="V3_3"
+      schDisplayLabel="+3.3V"
+      from=".supervisorWatchdog > .V3_3"
+      to="net.V3_3"
     />
     <trace
       name="GND"
-      path={[
-        ".reverseBattery > .GND",
-        ".regulator > .GND",
-        ".supervisorWatchdog > .GND",
-        "net.GND",
-      ]}
+      path={[".reverseBattery > .GND", ".regulator > .GND", "net.GND"]}
     />
+    <trace name="GND" from=".supervisorWatchdog > .GND" to="net.GND" />
     <trace
       name="V_CTRL1"
       schDisplayLabel="V_CTRL1"

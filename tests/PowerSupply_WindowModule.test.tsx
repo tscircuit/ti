@@ -669,18 +669,8 @@ test("composite joins only the shared TI sheet nets", async () => {
   );
   assertSubcircuitTrace(
     circuitJson,
-    ["regulator", "V3_3"],
-    ["supervisorWatchdog", "V3_3"],
-  );
-  assertSubcircuitTrace(
-    circuitJson,
     ["reverseBattery", "GND"],
     ["regulator", "GND"],
-  );
-  assertSubcircuitTrace(
-    circuitJson,
-    ["regulator", "GND"],
-    ["supervisorWatchdog", "GND"],
   );
 
   assertSubcircuitPortNet(circuitJson, "reverseBattery", "VIN1", "VIN1");
@@ -692,5 +682,52 @@ test("composite joins only the shared TI sheet nets", async () => {
   assertSubcircuitPortNet(circuitJson, "supervisorWatchdog", "GND", "GND");
   expect(port(circuitJson, "U3", 1).subcircuit_connectivity_map_key).toBe(
     port(circuitJson, "U3", 10).subcircuit_connectivity_map_key,
+  );
+
+  const sheets = circuitJson.filter(
+    (element) => element.type === "schematic_sheet",
+  );
+  expect(
+    sheets.map(({ name, display_name, sheet_index }) => ({
+      name,
+      display_name,
+      sheet_index,
+    })),
+  ).toEqual([
+    {
+      name: "main_supply",
+      display_name: "Main Supply",
+      sheet_index: 0,
+    },
+    {
+      name: "watchdog_and_vref",
+      display_name: "Watchdog and Vref",
+      sheet_index: 1,
+    },
+  ]);
+
+  const sheetId = (name: string) =>
+    sheets.find((sheet) => sheet.name === name)!.schematic_sheet_id;
+  expect(schematicComponentFor(circuitJson, "U1").schematic_sheet_id).toBe(
+    sheetId("main_supply"),
+  );
+  expect(schematicComponentFor(circuitJson, "U2").schematic_sheet_id).toBe(
+    sheetId("main_supply"),
+  );
+  expect(schematicComponentFor(circuitJson, "U3").schematic_sheet_id).toBe(
+    sheetId("watchdog_and_vref"),
+  );
+
+  const childGroups = circuitJson.filter(
+    (element) =>
+      element.type === "source_group" &&
+      ["reverseBattery", "regulator", "supervisorWatchdog"].includes(
+        String(element.name),
+      ),
+  );
+  expect(childGroups).toHaveLength(3);
+  expect(childGroups.every((group) => !group.show_as_schematic_box)).toBe(true);
+  expect(circuitJson.some((element) => element.type === "schematic_box")).toBe(
+    false,
   );
 });
