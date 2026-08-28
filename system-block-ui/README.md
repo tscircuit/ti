@@ -14,8 +14,9 @@ interfaces remain available at their source subcircuits.
 
 Use **Load Example** in the canvas's upper-left corner to replace the current
 graph with an editable diagram backed by a complete circuit in [`../examples`](../examples).
-The menu includes the Consumer wireless module and Bluetooth speaker examples;
-reset restores whichever example was loaded most recently.
+The menu includes the Consumer wireless module, Bluetooth speaker, automotive,
+and TIDA-010266 blood-pressure monitor examples; reset restores whichever
+example was loaded most recently.
 
 ## Run with schematic evaluation
 

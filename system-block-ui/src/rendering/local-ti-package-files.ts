@@ -21,6 +21,16 @@ const discoverLocalTiSources = (): RawSourceModules => {
         import: "default",
         query: "?raw",
       }) as RawSourceModules),
+      ...(import.meta.glob("../../../imports/**/*.ts", {
+        eager: true,
+        import: "default",
+        query: "?raw",
+      }) as RawSourceModules),
+      ...(import.meta.glob("../../../imports/**/*.tsx", {
+        eager: true,
+        import: "default",
+        query: "?raw",
+      }) as RawSourceModules),
     };
   } catch {
     return {};
@@ -42,10 +52,13 @@ const normalizePath = (value: string): string => {
 
 const repositorySourcePath = (globPath: string): string => {
   const normalized = globPath.replace(/\\/g, "/");
-  const libMarker = normalized.lastIndexOf("/lib/");
-  return libMarker >= 0
-    ? normalizePath(normalized.slice(libMarker + 1))
-    : normalizePath(normalized);
+  for (const marker of ["/lib/", "/imports/"]) {
+    const markerIndex = normalized.lastIndexOf(marker);
+    if (markerIndex >= 0) {
+      return normalizePath(normalized.slice(markerIndex + 1));
+    }
+  }
+  return normalizePath(normalized);
 };
 
 const sourceByRepositoryPath = (

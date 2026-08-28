@@ -236,11 +236,11 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
           pin11: "net.GND",
         }}
         pinLabels={{
-          pin4: "V+",
-          pin5: "+",
-          pin6: "-",
+          pin4: "V_POS",
+          pin5: "IN_POS",
+          pin6: "IN_NEG",
           pin7: "OUT",
-          pin11: "V-",
+          pin11: "V_NEG",
         }}
         symbol={filterOpAmpSymbol("U2B")}
       />
@@ -259,11 +259,11 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
           pin11: "net.GND",
         }}
         pinLabels={{
-          pin4: "V+",
-          pin5: "+",
-          pin6: "-",
+          pin4: "V_POS",
+          pin5: "IN_POS",
+          pin6: "IN_NEG",
           pin7: "OUT",
-          pin11: "V-",
+          pin11: "V_NEG",
         }}
         symbol={filterOpAmpSymbol("U2C")}
       />

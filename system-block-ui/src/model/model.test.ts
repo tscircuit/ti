@@ -384,6 +384,7 @@ describe("catalog and TSX generation", () => {
       "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
       "examples/RearviewMirrorModule.circuit.tsx",
       "examples/SeatPositionModule.circuit.tsx",
+      "examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx",
     ]);
     expect(
       examples
