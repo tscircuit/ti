@@ -520,26 +520,11 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       pcbRotation={90}
     />
     <group schMaxTraceDistance="20mm">
-      <trace
-        from=".U1 > .RF_P"
-        to=".B1 > .pin4"
-      />
-      <trace
-        from=".U1 > .RF_N"
-        to=".B1 > .pin3"
-      />
-      <trace
-        from=".B1 > .pin1"
-        to=".C5 > .pin1"
-      />
-      <trace
-        from=".C5 > .pin1"
-        to=".R9 > .pin2"
-      />
-      <trace
-        from=".R9 > .pin1"
-        to=".A2 > .pin1"
-      />
+      <trace from=".U1 > .RF_P" to=".B1 > .pin4" />
+      <trace from=".U1 > .RF_N" to=".B1 > .pin3" />
+      <trace from=".B1 > .pin1" to=".C5 > .pin1" />
+      <trace from=".C5 > .pin1" to=".R9 > .pin2" />
+      <trace from=".R9 > .pin1" to=".A2 > .pin1" />
     </group>
     <GroundTerminal
       name="GND_B1"
@@ -583,10 +568,7 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       pcbRotation={90}
     />
     <group schMaxTraceDistance="20mm">
-      <trace
-        from=".R201 > .pin2"
-        to=".U1 > .RESET_N"
-      />
+      <trace from=".R201 > .pin2" to=".U1 > .RESET_N" />
       <trace
         from=".R201 > .pin2"
         to=".C201 > .pin1"
@@ -635,10 +617,7 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         to=".L301 > .pin1"
         schematicRouteHints={[{ x: 3.3, y: -1.9 }]}
       />
-      <trace
-        from=".L301 > .pin2"
-        to=".R301 > .pin1"
-      />
+      <trace from=".L301 > .pin2" to=".R301 > .pin1" />
     </group>
     <GroundTerminal
       name="GND_R301"
