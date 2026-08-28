@@ -48,15 +48,127 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         name="U2A"
         displayName="U2A"
         chipRef=".U2"
-        symbolName="opamp_no_power_right"
+        symbolName="opamp_no_power_left"
+        schRotation={180}
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
-        schX={-3}
+        schX={-8.5}
         schY={15}
         connections={{
           inp1: ".U2 > .IN_POS_A",
           inp2: ".U2 > .IN_NEG_A",
           out: ".U2 > .OUT_A",
         }}
+      />
+      {/* The released drawing flips the input order and shows the shared
+          package power pins on unit A. These primitives complete that IEC
+          presentation while U2 remains the sole electrical/PCB component. */}
+      <schematicline
+        x1={-8.53}
+        y1={15.22}
+        x2={-8.53}
+        y2={16.05}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematictext
+        text="3.3V"
+        schX={-8.53}
+        schY={16.25}
+        fontSize={0.18}
+        color="#840000"
+      />
+      <schematictext
+        text="4"
+        schX={-8.7}
+        schY={15.42}
+        fontSize={0.14}
+        color="#840000"
+      />
+      <schematicline
+        x1={-8.53}
+        y1={14.78}
+        x2={-8.53}
+        y2={14.15}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematicline
+        x1={-8.88}
+        y1={14.15}
+        x2={-8.18}
+        y2={14.15}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematicline
+        x1={-8.77}
+        y1={14.03}
+        x2={-8.29}
+        y2={14.03}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematicline
+        x1={-8.64}
+        y1={13.91}
+        x2={-8.42}
+        y2={13.91}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematictext
+        text="11"
+        schX={-8.72}
+        schY={14.62}
+        fontSize={0.14}
+        color="#840000"
+      />
+      <schematictext
+        text="GND"
+        schX={-8.53}
+        schY={13.7}
+        fontSize={0.18}
+        color="#840000"
+      />
+      <schematicline
+        x1={-8}
+        y1={15}
+        x2={-7.6}
+        y2={15}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematicline
+        x1={-7.6}
+        y1={15}
+        x2={-7.6}
+        y2={15.8}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematicline
+        x1={-7.6}
+        y1={15.8}
+        x2={-9.25}
+        y2={15.8}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematicline
+        x1={-9.25}
+        y1={15.8}
+        x2={-9.25}
+        y2={15.14}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematicline
+        x1={-9.25}
+        y1={15.14}
+        x2={-9}
+        y2={15.14}
+        strokeWidth={0.025}
+        color="#008000"
       />
       <schematicsymbol
         name="U2B"
@@ -90,7 +202,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         name="U2D"
         displayName="U2D"
         chipRef=".U2"
-        symbolName="opamp_with_power_right"
+        symbolName="opamp_no_power_left"
+        schRotation={180}
         schSectionName={pressureSectionName ?? props.schSectionName}
         schX={-19}
         schY={-16.5}
@@ -98,9 +211,61 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           inp1: ".U2 > .IN_POS_D",
           inp2: ".U2 > .IN_NEG_D",
           out: ".U2 > .OUT_D",
-          "V+": ".U2 > .V_POS",
-          "V-": ".U2 > .V_NEG",
         }}
+      />
+      <schematicline
+        x1={-19.03}
+        y1={-16.28}
+        x2={-19.03}
+        y2={-15.55}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematictext
+        text="3.3V"
+        schX={-19.03}
+        schY={-15.35}
+        fontSize={0.18}
+        color="#840000"
+      />
+      <schematicline
+        x1={-19.03}
+        y1={-16.72}
+        x2={-19.03}
+        y2={-17.3}
+        strokeWidth={0.025}
+        color="#008000"
+      />
+      <schematicline
+        x1={-19.38}
+        y1={-17.3}
+        x2={-18.68}
+        y2={-17.3}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematicline
+        x1={-19.27}
+        y1={-17.42}
+        x2={-18.79}
+        y2={-17.42}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematicline
+        x1={-19.14}
+        y1={-17.54}
+        x2={-18.92}
+        y2={-17.54}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematictext
+        text="GND"
+        schX={-19.03}
+        schY={-17.78}
+        fontSize={0.18}
+        color="#840000"
       />
 
       <resistor
@@ -108,7 +273,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
         resistance="10k"
         footprint="0603"
-        schX={-7}
+        schX={-11.5}
         schY={15.8}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_2_5", pin2: "net.VREF_DIV" }}
@@ -118,10 +283,35 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
         resistance="10k"
         footprint="0603"
-        schX={-7}
+        schX={-11.5}
         schY={14.2}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_DIV", pin2: "net.GND" }}
+      />
+      <netlabel net="GND" connectsTo=".R6 > .pin2" anchorSide="top" />
+      <schematicline
+        x1={-11.82}
+        y1={13.2}
+        x2={-11.18}
+        y2={13.2}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematicline
+        x1={-11.71}
+        y1={13.08}
+        x2={-11.29}
+        y2={13.08}
+        strokeWidth={0.035}
+        color="#840000"
+      />
+      <schematicline
+        x1={-11.59}
+        y1={12.96}
+        x2={-11.41}
+        y2={12.96}
+        strokeWidth={0.035}
+        color="#840000"
       />
 
       <capacitor
@@ -243,7 +433,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           },
           {
             name: "GND",
-            connectsTo: [".U2 > .V_NEG", ".R6 > .pin2", ".R21 > .pin2"],
+            connectsTo: [".U2 > .V_NEG", ".R21 > .pin2"],
             schX: 0,
             schY: -5.5,
             direction: "down",
@@ -251,15 +441,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           {
             name: "VREF_2_5",
             connectsTo: [".R4 > .pin1", ".R18 > .pin1"],
-            schX: -7,
-            schY: 4.1,
-            direction: "left",
-          },
-          {
-            name: "VREF_DIV",
-            connectsTo: [".R4 > .pin2", ".R6 > .pin1", ".U2 > .IN_POS_A"],
-            schX: -5,
-            schY: 3.6,
+            schX: -11.5,
+            schY: 16.1,
             direction: "left",
           },
           {
@@ -270,8 +453,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".U2 > .IN_POS_B",
               ".U2 > .IN_POS_C",
             ],
-            schX: -1,
-            schY: 3,
+            schX: -8,
+            schY: 15,
             direction: "left",
           },
           {

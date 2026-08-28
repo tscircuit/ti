@@ -64,10 +64,10 @@ export default () => (
     <schematicsection name="motor_driver" displayName="" />
 
     {/* Centered titles sit inside, rather than directly on, each top divider. */}
-    <SectionTitle title="Input + Reference" schX={-25} schY={22.15} />
-    <SectionTitle title="Connectors" schX={-4.5} schY={22.15} />
+    <SectionTitle title="Input + Reference" schX={-25} schY={21.6} />
+    <SectionTitle title="Connectors" schX={-4.5} schY={21.6} />
     <SectionTitle title="Jumpers / Test Points" schX={-4.5} schY={17.05} />
-    <SectionTitle title="Programming" schX={20.5} schY={22.15} />
+    <SectionTitle title="Programming" schX={20.5} schY={21.6} />
     <SectionTitle title="INA + Filter" schX={-15.5} schY={9.65} />
     <SectionTitle title="MCU" schX={20.5} schY={9.65} />
     <SectionTitle title="Pressure Sensor" schX={-24.5} schY={-9} />
@@ -83,7 +83,7 @@ export default () => (
     <VoltageReference_ATL431LI_TIDA010266
       name="reference_2v5"
       schSectionName="input_reference"
-      schX={-20}
+      schX={-23}
       schY={17}
     />
     <BloodPressureMonitorInterfaces_TIDA010266

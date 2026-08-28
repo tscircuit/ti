@@ -3,6 +3,35 @@ import { TPS7A2433DBVR } from "../chips/TPS7A2433DBVR.circuit.tsx";
 import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
 import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
 
+const GroundGlyph = ({ x, y }: { x: number; y: number }) => (
+  <>
+    <schematicline
+      x1={x - 0.32}
+      y1={y}
+      x2={x + 0.32}
+      y2={y}
+      strokeWidth={0.035}
+      color="#840000"
+    />
+    <schematicline
+      x1={x - 0.21}
+      y1={y - 0.12}
+      x2={x + 0.21}
+      y2={y - 0.12}
+      strokeWidth={0.035}
+      color="#840000"
+    />
+    <schematicline
+      x1={x - 0.09}
+      y1={y - 0.24}
+      x2={x + 0.09}
+      y2={y - 0.24}
+      strokeWidth={0.035}
+      color="#840000"
+    />
+  </>
+);
+
 /** TIDA-010266 U1/C1/C5 3.3 V input regulator stage. */
 export const PowerManagement_TPS7A2433_TIDA010266 = (
   props: TIDA010266SectionedSubcircuitProps,
@@ -25,7 +54,6 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
           IN: "net.VIN",
           EN: "net.VIN",
           OUT: "net.V3_3",
-          GND: "net.GND",
         }}
       />
       <capacitor
@@ -37,7 +65,7 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
         schX={-3.2}
         schY={-0.4}
         schOrientation="vertical"
-        connections={{ pin1: "net.VIN", pin2: "net.GND" }}
+        connections={{ pin1: "net.VIN" }}
       />
       <capacitor
         name="C1"
@@ -48,7 +76,20 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
         schX={3.2}
         schY={-0.4}
         schOrientation="vertical"
-        connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
+        connections={{ pin1: "net.V3_3" }}
+      />
+      <netlabel net="GND" connectsTo=".U1 > .GND" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".C5 > .pin2" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".C1 > .pin2" anchorSide="top" />
+      <GroundGlyph x={-3.2} y={-1.45} />
+      <GroundGlyph x={0} y={-2.15} />
+      <GroundGlyph x={3.2} y={-1.45} />
+      <port
+        name="GND"
+        schX={originX}
+        schY={originY - 2}
+        direction="down"
+        connectsTo="net.GND"
       />
       <TIDA010266InlineNetPorts
         originX={originX}
@@ -67,13 +108,6 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
             schX: 2.2,
             schY: 0.7,
             direction: "right",
-          },
-          {
-            name: "GND",
-            connectsTo: [".U1 > .GND", ".C5 > .pin2", ".C1 > .pin2"],
-            schX: 0,
-            schY: -2,
-            direction: "down",
           },
         ]}
       />
