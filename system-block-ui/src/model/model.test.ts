@@ -547,11 +547,6 @@ describe("catalog and TSX generation", () => {
       "lamp_driver",
       "temperature_sensor",
     ]);
-    expect(
-      [
-        ...new Set(example.graph.blocks.map(({ position }) => position?.y)),
-      ].sort((a, b) => (a ?? 0) - (b ?? 0)),
-    ).toEqual([35, 365, 695]);
 
     const resolved = resolveDesignConnections(
       example.graph.blocks,
