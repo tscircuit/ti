@@ -227,7 +227,7 @@ const createRearviewMirrorDesign = (
       name: "power_supply",
       definitionId: componentId(catalog, "PowerSupply_LM74202_TPS7E81_Q1"),
       schX: -3.6,
-      position: { x: 40, y: 165 },
+      position: { x: 40, y: 365 },
     },
     {
       id: "communication_interface",
@@ -242,7 +242,7 @@ const createRearviewMirrorDesign = (
       id: "microcontroller",
       name: "microcontroller",
       definitionId: componentId(catalog, "Microcontroller_MSPM0G3507"),
-      position: { x: 660, y: 165 },
+      position: { x: 660, y: 365 },
     },
     {
       id: "mirror_driver",
@@ -257,19 +257,19 @@ const createRearviewMirrorDesign = (
       id: "light_sensor",
       name: "light_sensor",
       definitionId: componentId(catalog, "LightSensor_OPT3001_TIDA01539"),
-      position: { x: 970, y: 165 },
+      position: { x: 970, y: 365 },
     },
     {
       id: "lamp_driver",
       name: "lamp_driver",
       definitionId: componentId(catalog, "LampDriver_TPS92638_TIDA00356"),
-      position: { x: 970, y: 295 },
+      position: { x: 970, y: 695 },
     },
     {
       id: "temperature_sensor",
       name: "temperature_sensor",
       definitionId: componentId(catalog, "TemperatureSensor_LM50HV_Q1"),
-      position: { x: 350, y: 295 },
+      position: { x: 350, y: 695 },
     },
   ],
   connections: [
