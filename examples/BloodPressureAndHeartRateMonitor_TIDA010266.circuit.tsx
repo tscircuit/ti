@@ -67,35 +67,35 @@ export default () => (
     {/* Continue native dividers from their exact endpoints to the sheet border. */}
     <schematicline
       x1={33.9}
-      y1={12.325}
+      y1={11}
       x2={35.2}
-      y2={12.325}
+      y2={11}
       strokeWidth={0.02}
       color="#000000"
       isDashed
     />
     <schematicline
       x1={33.9}
-      y1={-6.55}
+      y1={-6.3125}
       x2={35.2}
-      y2={-6.55}
+      y2={-6.3125}
       strokeWidth={0.02}
       color="#000000"
       isDashed
     />
     <schematicline
-      x1={4.03125}
-      y1={14.9}
-      x2={4.03125}
+      x1={4.7}
+      y1={20.6}
+      x2={4.7}
       y2={21.65}
       strokeWidth={0.02}
       color="#000000"
       isDashed
     />
     <schematicline
-      x1={9.575}
-      y1={21.35}
-      x2={9.575}
+      x1={9.725}
+      y1={20.6}
+      x2={9.725}
       y2={21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -111,9 +111,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={4.7}
+      x1={7.775}
       y1={-17.9}
-      x2={4.7}
+      x2={7.775}
       y2={-21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -121,8 +121,8 @@ export default () => (
     />
 
     {/* Centered titles sit inside, rather than directly on, each top divider. */}
-    <SectionTitle title="Input + Reference" schX={-15.8} schY={21.6} />
-    <SectionTitle title="Connectors" schX={6} schY={21.6} />
+    <SectionTitle title="Input + Reference" schX={-15.4} schY={21.05} />
+    <SectionTitle title="Connectors" schX={7.2} schY={21.05} />
     <SectionTitle title="Jumpers" schX={-23.8} schY={14.15} />
     <SectionTitle title="Test Points" schX={-4.3} schY={14.15} />
     <SectionTitle title="Programming" schX={20.5} schY={21.1} />
