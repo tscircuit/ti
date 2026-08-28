@@ -331,6 +331,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           {
             name: "VREF_2_5",
             connectsTo: [".R4 > .pin1", ".R18 > .pin1"],
+            inlineLabelConnectsTo: ".R18 > .pin1",
             schX: -11.5,
             schY: 16.1,
             direction: "left",
@@ -343,6 +344,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".U2 > .IN_POS_B",
               ".U2 > .IN_POS_C",
             ],
+            inlineLabelConnectsTo: [".U2 > .IN_POS_B", ".U2 > .IN_POS_C"],
             schX: -8,
             schY: 15,
             direction: "left",

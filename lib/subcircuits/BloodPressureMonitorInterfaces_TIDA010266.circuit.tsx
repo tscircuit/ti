@@ -274,6 +274,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
           {
             name: "V_EXT",
             connectsTo: [".J1 > .V_EXT", ".J4 > .V_EXT"],
+            inlineLabelConnectsTo: false,
             schX: -31,
             schY: 3.4,
             direction: "left",
@@ -281,6 +282,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
           {
             name: "VIN",
             connectsTo: [".J4 > .VIN", ".TP1 > .pin1"],
+            inlineLabelConnectsTo: ".TP1 > .pin1",
             schX: -31,
             schY: 2.3,
             direction: "left",

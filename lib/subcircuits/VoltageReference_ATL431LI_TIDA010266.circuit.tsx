@@ -38,8 +38,8 @@ export const VoltageReference_ATL431LI_TIDA010266 = (
         connections={{ pin1: "net.V3_3", pin2: "net.VREF_2_5" }}
       />
       {[
-        ["C2", 1.5],
-        ["C3", 2.8],
+        ["C2", 2],
+        ["C3", 3.4],
       ].map(([name, schX]) => (
         <capacitor
           key={name}
@@ -54,7 +54,6 @@ export const VoltageReference_ATL431LI_TIDA010266 = (
           connections={{ pin1: "net.VREF_2_5", pin2: "net.GND" }}
         />
       ))}
-      <netlabel net="VREF_2_5" connectsTo=".C3 > .pin1" inline />
       <netlabel net="GND" connectsTo=".U3 > .ANODE" anchorSide="top" />
       <port
         name="GND"
@@ -70,6 +69,7 @@ export const VoltageReference_ATL431LI_TIDA010266 = (
           {
             name: "V3_3",
             connectsTo: ".R3 > .pin1",
+            inlineLabelConnectsTo: false,
             schX: 0,
             schY: 3.2,
             direction: "up",
@@ -83,6 +83,7 @@ export const VoltageReference_ATL431LI_TIDA010266 = (
               ".C2 > .pin1",
               ".C3 > .pin1",
             ],
+            inlineLabelConnectsTo: false,
             schX: 3.5,
             schY: 0.35,
             direction: "right",

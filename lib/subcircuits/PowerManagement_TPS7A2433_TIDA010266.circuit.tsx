@@ -66,6 +66,7 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
           {
             name: "VIN",
             connectsTo: [".U1 > .IN", ".U1 > .EN", ".C5 > .pin1"],
+            inlineLabelConnectsTo: false,
             schX: -2.2,
             schY: 0.7,
             direction: "left",
@@ -73,6 +74,7 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
           {
             name: "V3_3",
             connectsTo: [".U1 > .OUT", ".C1 > .pin1"],
+            inlineLabelConnectsTo: false,
             schX: 2.2,
             schY: 0.7,
             direction: "right",

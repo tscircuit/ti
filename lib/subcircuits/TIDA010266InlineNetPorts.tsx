@@ -5,6 +5,8 @@ export type TIDA010266InlineNetPort = {
   name: string;
   net?: string;
   connectsTo: string | string[];
+  /** Override which connected endpoints receive inline labels. */
+  inlineLabelConnectsTo?: string | string[] | false;
   schX: number;
   schY: number;
   direction?: "left" | "right" | "up" | "down";
@@ -25,23 +27,42 @@ export const TIDA010266InlineNetPorts = ({
   ports: TIDA010266InlineNetPort[];
 }) => (
   <>
-    {ports.map(({ name, net = name, connectsTo, schX, schY, direction }) => (
-      <Fragment key={name}>
-        <port
-          name={name}
-          schX={originX + schX}
-          schY={originY + schY}
-          direction={direction}
-          connectsTo={`net.${net}`}
-        />
-        {(Array.isArray(connectsTo) ? connectsTo : [connectsTo]).map(
-          (target, index) => (
-            <Fragment key={`${name}-${index}`}>
-              <netlabel net={net} connectsTo={target} inline />
-            </Fragment>
-          ),
-        )}
-      </Fragment>
-    ))}
+    {ports.map(
+      ({
+        name,
+        net = name,
+        connectsTo,
+        inlineLabelConnectsTo,
+        schX,
+        schY,
+        direction,
+      }) => {
+        const selectedLabelTargets: string | string[] | false =
+          inlineLabelConnectsTo ?? connectsTo;
+        const labelTargets: string[] =
+          selectedLabelTargets === false
+            ? []
+            : Array.isArray(selectedLabelTargets)
+              ? selectedLabelTargets
+              : [selectedLabelTargets];
+
+        return (
+          <Fragment key={name}>
+            <port
+              name={name}
+              schX={originX + schX}
+              schY={originY + schY}
+              direction={direction}
+              connectsTo={`net.${net}`}
+            />
+            {labelTargets.map((target, index) => (
+              <Fragment key={`${name}-${index}`}>
+                <netlabel net={net} connectsTo={target} inline />
+              </Fragment>
+            ))}
+          </Fragment>
+        );
+      },
+    )}
   </>
 );
