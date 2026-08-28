@@ -29,6 +29,7 @@ type SchematicNetLabel = Extract<
   AnyCircuitElement,
   { type: "schematic_net_label" }
 >;
+type SchematicTrace = Extract<AnyCircuitElement, { type: "schematic_trace" }>;
 
 let signalJson: AnyCircuitElement[];
 let powerJson: AnyCircuitElement[];
@@ -277,8 +278,8 @@ test("preserves Altium placements with documented native-symbol projection offse
     C10: [750, 640],
     C7: [660, 920],
     R3: [720, 920],
-    U3A: [790, 925],
-    U3B: [1080, 900],
+    U3A: [790, 924.827586],
+    U3B: [1080, 898.517241],
     C1: [780, 1040],
     R1: [790, 1000],
     C5: [860, 1000],
@@ -295,8 +296,8 @@ test("preserves Altium placements with documented native-symbol projection offse
     R15: [1200, 830],
     R18: [1200, 780],
     R16: [1300, 800],
-    R4: [1400, 913],
-    C15: [1460, 892],
+    R4: [1400, 919.896552],
+    C15: [1460, 882.655172],
   } as const;
   const powerCenters = {
     U4: [790, 440],
@@ -433,6 +434,50 @@ test("preserves Altium placements with documented native-symbol projection offse
     ]),
   );
   expect(renderedProjectionPinSides).toEqual(projectionPinSides);
+});
+
+test("keeps the horizontally connected analog stages on straight routes", () => {
+  const nearlyEqual = (a: number, b: number) => Math.abs(a - b) < 1e-6;
+  const u3aInMinus = getProjectedSchematicPort(signalJson, "U3A", 2);
+  const r3Output = getSchematicPort(signalJson, "R3", 2);
+  const u3bOutput = getProjectedSchematicPort(signalJson, "U3B", 4);
+  const u1InMinus = getProjectedSchematicPort(signalJson, "U1Symbol", 2);
+  const u1Output = getProjectedSchematicPort(signalJson, "U1Symbol", 4);
+  const r4TimerPin = getSchematicPort(signalJson, "R4", 1);
+  const c15TimerPin = getSchematicPort(signalJson, "C15", 1);
+
+  expect(nearlyEqual(r3Output.center.y, u3aInMinus.center.y)).toBe(true);
+  expect(nearlyEqual(u3bOutput.center.y, u1InMinus.center.y)).toBe(true);
+
+  const schematicEdges = signalJson
+    .filter(
+      (element): element is SchematicTrace =>
+        element.type === "schematic_trace",
+    )
+    .flatMap((trace) => trace.edges);
+  const hasHorizontalEdge = (fromX: number, toX: number, y: number) =>
+    schematicEdges.some(
+      (edge) =>
+        nearlyEqual(edge.from.y, y) &&
+        nearlyEqual(edge.to.y, y) &&
+        nearlyEqual(Math.min(edge.from.x, edge.to.x), Math.min(fromX, toX)) &&
+        nearlyEqual(Math.max(edge.from.x, edge.to.x), Math.max(fromX, toX)),
+    );
+
+  expect(
+    hasHorizontalEdge(
+      u1Output.center.x,
+      r4TimerPin.center.x,
+      u1Output.center.y,
+    ),
+  ).toBe(true);
+  expect(
+    hasHorizontalEdge(
+      r4TimerPin.center.x,
+      c15TimerPin.center.x,
+      u1Output.center.y,
+    ),
+  ).toBe(true);
 });
 
 test("maps each native amplifier symbol port to the authoritative physical pin", () => {

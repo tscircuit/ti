@@ -175,7 +175,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         decorative connection. */}
     <TLV2316QDGKRQ1 name="U3" noSchematicRepresentation />
     {/* Native U3A places IN- 0.14 units below its center, while Altium's
-        triangle places that pin on R3's centerline. The +15 source-grid
+        triangle places that pin on R3's centerline. The +14.827586 source-grid
         projection offset aligns the authoritative R3-to-IN- connection. */}
     <schematicsymbol
       name="U3A"
@@ -189,7 +189,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         "V+": "U3.V_PLUS",
         "V-": "U3.V_MINUS",
       }}
-      {...p(790, 925)}
+      {...p(790, 924.827586)}
     />
     <schematicsymbol
       name="U3B"
@@ -203,7 +203,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         "V+": "U3.V_PLUS",
         "V-": "U3.V_MINUS",
       }}
-      {...p(1080, 900)}
+      {...p(1080, 898.517241)}
     />
     <schematictext
       text="TLV2316QDGKRQ1"
@@ -334,15 +334,16 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       footprint="0603"
       {...p(1300, 800)}
     />
-    {/* The native comparator output and vertical R4/C15 pins do not share
-        Altium's symbol geometry. These small projection offsets put all three
-        TIMER endpoints on one horizontal line without changing connectivity. */}
+    {/* Native vertical-passive ports require a short lead-in along their pin
+        direction. These source-grid projection offsets place R4 above and C15
+        below the TIMER line, so their real stems meet U1.OUT on one straight
+        horizontal route without changing connectivity. */}
     <resistor
       name="R4"
       resistance="10kohm"
       footprint="0603"
       schOrientation="pos_bottom"
-      {...p(1400, 913)}
+      {...p(1400, 919.896552)}
     />
     <capacitor
       name="C15"
@@ -350,7 +351,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       footprint="0603"
       schOrientation="vertical"
       doNotPlace
-      {...p(1460, 892)}
+      {...p(1460, 882.655172)}
     />
 
     <trace path={["R15.pin1", "R18.pin2", "U1.IN_PLUS", "R16.pin1"]} />
@@ -376,25 +377,25 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
           net="V5"
           connection="U3A.pin5"
           anchorSide="bottom"
-          {...p(788.965517, 938.448276)}
+          {...p(788.965517, 938.275862)}
         />
         <netlabel
           net="GND"
           connection="U3A.pin3"
           anchorSide="top"
-          {...p(789.310345, 911.551724)}
+          {...p(789.310345, 911.37931)}
         />
         <netlabel
           net="V5"
           connection="U3B.pin5"
           anchorSide="bottom"
-          {...p(1078.965517, 913.448276)}
+          {...p(1078.965517, 911.965517)}
         />
         <netlabel
           net="GND"
           connection="U3B.pin3"
           anchorSide="top"
-          {...p(1079.310345, 886.551724)}
+          {...p(1079.310345, 885.068965)}
         />
         <netlabel
           net="V5"

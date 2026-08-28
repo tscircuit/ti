@@ -66,25 +66,25 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
       net="V5"
       connection=".signalChain > .U3A > .pin5"
       anchorSide="bottom"
-      {...p(788.965517, 938.448276)}
+      {...p(788.965517, 938.275862)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U3A > .pin3"
       anchorSide="top"
-      {...p(789.310345, 911.551724)}
+      {...p(789.310345, 911.37931)}
     />
     <netlabel
       net="V5"
       connection=".signalChain > .U3B > .pin5"
       anchorSide="bottom"
-      {...p(1078.965517, 913.448276)}
+      {...p(1078.965517, 911.965517)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U3B > .pin3"
       anchorSide="top"
-      {...p(1079.310345, 886.551724)}
+      {...p(1079.310345, 885.068965)}
     />
     <netlabel
       net="V5"
