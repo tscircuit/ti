@@ -38,7 +38,12 @@ const pinLabels = {
 } as const;
 
 export const BQ25731RSN = (props: ChipProps<typeof pinLabels>) => (
-  <chip manufacturerPartNumber="BQ25731RSN" pinLabels={pinLabels} {...props} />
+  <chip
+    manufacturerPartNumber="BQ25731RSN"
+    footprint="qfn32_thermalpad2.7mmx2.7mm_p0.4mm_h4.65mm_pw0.2mm_pl0.65mm"
+    pinLabels={pinLabels}
+    {...props}
+  />
 );
 
 export default BQ25731RSN;

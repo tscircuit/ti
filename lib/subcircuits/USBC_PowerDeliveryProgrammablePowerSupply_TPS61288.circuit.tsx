@@ -9,6 +9,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
   <subcircuit routingDisabled {...props}>
     <net name="GND" isGroundNet />
     <capacitor
+      footprint="0603"
       name="C29"
       capacitance="1uF"
       schX={-6.2}
@@ -16,6 +17,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C10"
       capacitance="1uF"
       schX={-10.6}
@@ -23,6 +25,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C11"
       capacitance="1uF"
       schX={-9.8}
@@ -30,6 +33,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C2"
       capacitance="1uF"
       schX={-6.4}
@@ -37,6 +41,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C13"
       capacitance="1uF"
       schX={-6.2}
@@ -44,6 +49,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C9"
       capacitance="1uF"
       schX={-4.5}
@@ -51,6 +57,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C14"
       capacitance="1uF"
       schX={-4.4}
@@ -58,6 +65,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C1"
       capacitance="1uF"
       schX={0.6}
@@ -65,6 +73,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C3"
       capacitance="1uF"
       schX={4.2}
@@ -72,6 +81,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C4"
       capacitance="1uF"
       schX={4.8}
@@ -79,6 +89,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C5"
       capacitance="1uF"
       schX={5.6}
@@ -86,6 +97,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C6"
       capacitance="1uF"
       schX={6.4}
@@ -93,6 +105,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C7"
       capacitance="1uF"
       schX={7}
@@ -100,6 +113,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C8"
       capacitance="1uF"
       schX={7.8}
@@ -107,6 +121,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C26"
       capacitance="1uF"
       schX={-10.6}
@@ -114,6 +129,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C27"
       capacitance="1uF"
       schX={-9.8}
@@ -121,6 +137,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C22"
       capacitance="1uF"
       schX={-5}
@@ -128,6 +145,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C25"
       capacitance="1uF"
       schX={-4.5}
@@ -135,6 +153,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C31"
       capacitance="1uF"
       schX={-4.4}
@@ -142,6 +161,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C23"
       capacitance="1uF"
       schX={0.6}
@@ -149,6 +169,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C16"
       capacitance="1uF"
       schX={4.2}
@@ -156,6 +177,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C17"
       capacitance="1uF"
       schX={5}
@@ -163,6 +185,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C18"
       capacitance="1uF"
       schX={5.8}
@@ -170,6 +193,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C19"
       capacitance="1uF"
       schX={6.6}
@@ -177,6 +201,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C20"
       capacitance="1uF"
       schX={7.4}
@@ -184,6 +209,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C21"
       capacitance="1uF"
       schX={8.2}
@@ -191,6 +217,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C24"
       capacitance="1uF"
       schX={-1.1}
@@ -198,6 +225,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={180}
     />
     <capacitor
+      footprint="0603"
       name="C32"
       capacitance="1uF"
       schX={9.2}
@@ -205,6 +233,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C33"
       capacitance="1uF"
       schX={9.6}
@@ -212,6 +241,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C12"
       capacitance="1uF"
       schX={1.8}
@@ -219,6 +249,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C28"
       capacitance="1uF"
       schX={1.8}
@@ -226,6 +257,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C15"
       capacitance="1uF"
       schX={0.6}
@@ -233,6 +265,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C30"
       capacitance="1uF"
       schX={0.6}
@@ -240,6 +273,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R12"
       resistance="1k"
       schX={-6.2}
@@ -247,6 +281,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R4"
       resistance="1k"
       schX={-6.2}
@@ -254,6 +289,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R2"
       resistance="1k"
       schX={3.4}
@@ -261,23 +297,47 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R5"
       resistance="1k"
       schX={3.4}
       schY={6.6}
       schRotation={270}
     />
-    <resistor name="R1" resistance="1k" schX={8.8} schY={9.6} schRotation={0} />
-    <resistor name="R8" resistance="1k" schX={3.4} schY={2} schRotation={270} />
     <resistor
+      footprint="0603"
+      name="R1"
+      resistance="1k"
+      schX={8.8}
+      schY={9.6}
+      schRotation={0}
+    />
+    <resistor
+      footprint="0603"
+      name="R8"
+      resistance="1k"
+      schX={3.4}
+      schY={2}
+      schRotation={270}
+    />
+    <resistor
+      footprint="0603"
       name="R14"
       resistance="1k"
       schX={3.4}
       schY={-0.6}
       schRotation={270}
     />
-    <resistor name="R7" resistance="1k" schX={9.2} schY={2.6} schRotation={0} />
     <resistor
+      footprint="0603"
+      name="R7"
+      resistance="1k"
+      schX={9.2}
+      schY={2.6}
+      schRotation={0}
+    />
+    <resistor
+      footprint="0603"
       name="R17"
       resistance="1k"
       schX={6.2}
@@ -285,6 +345,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="R18"
       resistance="1k"
       schX={6.2}
@@ -292,6 +353,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="R9"
       resistance="1k"
       schX={0.4}
@@ -299,6 +361,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R10"
       resistance="1k"
       schX={2.4}
@@ -306,6 +369,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R15"
       resistance="1k"
       schX={-2.6}
@@ -313,6 +377,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R16"
       resistance="1k"
       schX={-2.6}
@@ -320,6 +385,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="ATOG2"
       resistance="1k"
       schX={-3.8}
@@ -327,6 +393,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="ATOG1"
       resistance="1k"
       schX={-3.8}
@@ -334,6 +401,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="R6"
       resistance="1k"
       schX={0.6}
@@ -341,6 +409,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R13"
       resistance="1k"
       schX={0.6}
@@ -348,6 +417,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R3"
       resistance="1k"
       schX={3.4}
@@ -355,6 +425,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R11"
       resistance="1k"
       schX={3.4}
@@ -362,6 +433,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={90}
     />
     <inductor
+      footprint="1210"
       name="L1"
       inductance="1uH"
       schX={-7.4}
@@ -369,6 +441,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
       schRotation={0}
     />
     <inductor
+      footprint="1210"
       name="L2"
       inductance="1uH"
       schX={-7.4}
@@ -422,6 +495,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
     <chip
       name="JOUT_P1"
       manufacturerPartNumber="691214110002"
+      footprint="pinrow2"
       pinLabels={{ pin1: "1", pin2: "2" }}
       schPinArrangement={
         { leftSide: { pins: [1, 2], direction: "top-to-bottom" } } as any
@@ -435,6 +509,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
     <chip
       name="J1"
       manufacturerPartNumber="108-0740-001"
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { rightSide: { pins: [1], direction: "top-to-bottom" } } as any
@@ -448,6 +523,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
     <chip
       name="J2"
       manufacturerPartNumber="108-0740-001"
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { rightSide: { pins: [1], direction: "top-to-bottom" } } as any
@@ -461,6 +537,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
     <chip
       name="J3"
       manufacturerPartNumber="5003"
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { rightSide: { pins: [1], direction: "top-to-bottom" } } as any
@@ -474,6 +551,7 @@ export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
     <chip
       name="J4"
       manufacturerPartNumber="5003"
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { rightSide: { pins: [1], direction: "top-to-bottom" } } as any
