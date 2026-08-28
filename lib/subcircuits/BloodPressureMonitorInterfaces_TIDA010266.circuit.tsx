@@ -329,7 +329,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5117"
         schX={6.5}
-        schY={-7.2}
+        schY={-7.8}
         connections={{ pin1: "net.OSCILLATIONS" }}
       />
       <testpoint
@@ -347,7 +347,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5001"
         schX={-6}
-        schY={-8.2}
+        schY={-9}
         connections={{ pin1: "net.GND" }}
       />
       <TIDA010266InlineNetPorts
@@ -395,7 +395,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
             name: "OSCILLATIONS",
             connectsTo: ".TP5 > .pin1",
             schX: 5.3,
-            schY: -7.2,
+            schY: -7.8,
             direction: "right",
           },
           {
