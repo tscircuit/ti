@@ -37,7 +37,7 @@ connected Bluetooth speaker schematic.
 
 The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.circuit.tsx)
 example is intentionally minimal: it composes the independently renderable
-power sections through `SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092`.
+power sections through the reusable `SystemPowerSupply` composite.
 
 ## System Block Builder
 
@@ -300,13 +300,13 @@ The package currently exports these subcircuit components:
 - `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
-- `SystemPowerPmicBuck_LP87524B_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC sheet)
-- `SystemPowerPmicSequencer_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC control sections)
-- `SystemPowerLdo1_TPS7A8101_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C 1.8 V LDO sheet)
-- `SystemPowerLdo2_TPS7A8801_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C dual 1.3 V LDO sheet)
-- `SystemPowerVpp_TPS79601_TIDEP0092` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C VPP sheet)
-- `SystemPowerReference_LM4060_Datasheet` ([LM4060 datasheet](https://www.ti.com/lit/ds/symlink/lm4060.pdf), Figure 9-1 and Section 9.2.2; datasheet-derived, not a TIDEP-0092 board section)
-- `SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092` (composite for [Obstacle Detection Sensor subsystem 21584](https://www.ti.com/solution/obstacle-detection-sensor?variantid=35081&subsystemid=21584#block-diagram))
+- `PmicPowerStage_LP87524B` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC sheet)
+- `PmicSequencer` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC control sections)
+- `LdoRegulator1V8_TPS7A8101` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C 1.8 V LDO sheet)
+- `DualLdoRegulator1V3_TPS7A8801` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C dual 1.3 V LDO sheet)
+- `VppLdoRegulator_TPS79601` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C VPP sheet)
+- `PrecisionVoltageReference_LM4060A33` ([LM4060 datasheet](https://www.ti.com/lit/ds/symlink/lm4060.pdf), Figure 9-1 and Section 9.2.2; datasheet-derived, not a TIDEP-0092 board section)
+- `SystemPowerSupply` (reusable composite used by the [Obstacle Detection Sensor subsystem 21584](https://www.ti.com/solution/obstacle-detection-sensor?variantid=35081&subsystemid=21584#block-diagram))
 
 ## Exported Chips
 

@@ -12,7 +12,7 @@ const VERTICAL_ROTATED_180_DEGREES = 90;
  * does not reproduce the published component layout, so the PDF is authoritative
  * for visible centers and pin sides on this sheet.
  */
-export const SystemPowerVpp_TPS79601_TIDEP0092 = (props: SubcircuitProps) => (
+export const VppLdoRegulator_TPS79601 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled schMaxTraceDistance="100mm" {...props}>
     <net name="GND" isGroundNet />
     <net name="V5_IN" isPowerNet />
@@ -154,4 +154,4 @@ export const SystemPowerVpp_TPS79601_TIDEP0092 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default SystemPowerVpp_TPS79601_TIDEP0092;
+export default VppLdoRegulator_TPS79601;

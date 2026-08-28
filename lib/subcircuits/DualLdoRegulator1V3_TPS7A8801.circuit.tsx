@@ -9,7 +9,7 @@ export const LDO_02_DUAL_1P3V_SECTION_NAME = "ldo_02_dual_1p3v";
  * Evaluated source transform: schX = (sourceX - 670) * 0.0275;
  * schY = (sourceY - 550) * 0.0275. Source Y and tscircuit Y both increase up.
  */
-export const SystemPowerLdo2_TPS7A8801_TIDEP0092 = (props: SubcircuitProps) => (
+export const DualLdoRegulator1V3_TPS7A8801 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled schMaxTraceDistance="100mm" {...props}>
     <net name="GND" isGroundNet />
     <net name="PMIC_1V8" isPowerNet />
@@ -460,4 +460,4 @@ export const SystemPowerLdo2_TPS7A8801_TIDEP0092 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default SystemPowerLdo2_TPS7A8801_TIDEP0092;
+export default DualLdoRegulator1V3_TPS7A8801;

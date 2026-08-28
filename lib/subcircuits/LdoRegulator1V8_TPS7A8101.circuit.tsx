@@ -9,7 +9,7 @@ export const LDO_01_PMIC_ENABLE_SECTION_NAME = "ldo_01_pmic_enable";
  * Evaluated source transform: schX = (sourceX - 690) * 0.0375;
  * schY = (sourceY - 520) * 0.0375. Source Y and tscircuit Y both increase up.
  */
-export const SystemPowerLdo1_TPS7A8101_TIDEP0092 = (props: SubcircuitProps) => (
+export const LdoRegulator1V8_TPS7A8101 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled schMaxTraceDistance="100mm" {...props}>
     <net name="GND" isGroundNet />
     <net name="PMIC_2V3" isPowerNet />
@@ -202,4 +202,4 @@ export const SystemPowerLdo1_TPS7A8101_TIDEP0092 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default SystemPowerLdo1_TPS7A8101_TIDEP0092;
+export default LdoRegulator1V8_TPS7A8101;

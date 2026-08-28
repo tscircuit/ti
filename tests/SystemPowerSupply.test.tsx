@@ -1,26 +1,26 @@
 /// <reference types="node" />
 
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { getSchematicElementBounds } from "@tscircuit/circuit-json-util";
 import { Circuit } from "@tscircuit/core";
 import ObstacleDetectionSensor from "../examples/ObstacleDetectionSensor.circuit.tsx";
 import {
+  DualLdoRegulator1V3_TPS7A8801,
+  LdoRegulator1V8_TPS7A8101,
   LM4060A33EDBZR,
   LP87524BRNFRQ1,
-  SystemPowerLdo1_TPS7A8101_TIDEP0092,
-  SystemPowerLdo2_TPS7A8801_TIDEP0092,
-  SystemPowerPmicBuck_LP87524B_TIDEP0092,
-  SystemPowerPmicSequencer_TIDEP0092,
-  SystemPowerReference_LM4060_Datasheet,
-  SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092,
-  SystemPowerVpp_TPS79601_TIDEP0092,
+  PmicPowerStage_LP87524B,
+  PmicSequencer,
+  PrecisionVoltageReference_LM4060A33,
+  SystemPowerSupply,
   TiChipComponents,
   TiSubcircuitComponents,
   TPS79601DRBR,
   TPS7A8101QDRBRQ1,
   TPS7A8801RTJR,
+  VppLdoRegulator_TPS79601,
 } from "../index.ts";
 
 type TestCircuit = InstanceType<typeof Circuit>;
@@ -28,6 +28,15 @@ type Module = (props: Record<string, unknown>) => React.JSX.Element;
 
 const SCHEMATIC_UNIT_TO_MM = 10.16 / 1.1;
 const PDF_POINT_TO_SCHEMATIC_UNIT = 25.4 / 72 / SCHEMATIC_UNIT_TO_MM;
+const SYSTEM_POWER_SUBCIRCUIT_FILE_NAMES = [
+  "DualLdoRegulator1V3_TPS7A8801.circuit.tsx",
+  "LdoRegulator1V8_TPS7A8101.circuit.tsx",
+  "PmicPowerStage_LP87524B.circuit.tsx",
+  "PmicSequencer.circuit.tsx",
+  "PrecisionVoltageReference_LM4060A33.circuit.tsx",
+  "SystemPowerSupply.circuit.tsx",
+  "VppLdoRegulator_TPS79601.circuit.tsx",
+] as const;
 const refCenter = (pdfX: number, pdfY: number) =>
   [
     (pdfX - 612) * PDF_POINT_TO_SCHEMATIC_UNIT,
@@ -36,11 +45,7 @@ const refCenter = (pdfX: number, pdfY: number) =>
 
 test("System power traces use only the native schematic autorouter", () => {
   const subcircuitDirectory = new URL("../lib/subcircuits/", import.meta.url);
-  const systemPowerFileNames = readdirSync(subcircuitDirectory).filter(
-    (fileName) =>
-      fileName.startsWith("SystemPower") && fileName.endsWith(".circuit.tsx"),
-  );
-  for (const fileName of systemPowerFileNames) {
+  for (const fileName of SYSTEM_POWER_SUBCIRCUIT_FILE_NAMES) {
     const source = readFileSync(new URL(fileName, subcircuitDirectory), "utf8");
     assert.doesNotMatch(source, /schematicRouteHints|<tracehint|routeHint/);
     assert.doesNotMatch(source, /<trace\s[^>]*\bpath=/);
@@ -68,13 +73,9 @@ test("System power traces use only the native schematic autorouter", () => {
 test("System power implementation never sets schSize", () => {
   const subcircuitDirectory = new URL("../lib/subcircuits/", import.meta.url);
   const systemPowerSourceUrls = [
-    ...readdirSync(subcircuitDirectory)
-      .filter(
-        (fileName) =>
-          fileName.startsWith("SystemPower") &&
-          fileName.endsWith(".circuit.tsx"),
-      )
-      .map((fileName) => new URL(fileName, subcircuitDirectory)),
+    ...SYSTEM_POWER_SUBCIRCUIT_FILE_NAMES.map(
+      (fileName) => new URL(fileName, subcircuitDirectory),
+    ),
     new URL("../lib/chips/LM4060A33EDBZR.circuit.tsx", import.meta.url),
     new URL("../lib/chips/LP87524BRNFRQ1.circuit.tsx", import.meta.url),
     new URL("../lib/chips/TPS79601DRBR.circuit.tsx", import.meta.url),
@@ -97,7 +98,7 @@ test("TI off-sheet ports use native on-trace labels across all applicable sheets
   const cases = [
     {
       sourceUrl: new URL(
-        "../lib/subcircuits/SystemPowerPmicBuck_LP87524B_TIDEP0092.circuit.tsx",
+        "../lib/subcircuits/PmicPowerStage_LP87524B.circuit.tsx",
         import.meta.url,
       ),
       traces: [
@@ -121,7 +122,7 @@ test("TI off-sheet ports use native on-trace labels across all applicable sheets
     },
     {
       sourceUrl: new URL(
-        "../lib/subcircuits/SystemPowerPmicSequencer_TIDEP0092.circuit.tsx",
+        "../lib/subcircuits/PmicSequencer.circuit.tsx",
         import.meta.url,
       ),
       traces: [
@@ -141,7 +142,7 @@ test("TI off-sheet ports use native on-trace labels across all applicable sheets
     },
     {
       sourceUrl: new URL(
-        "../lib/subcircuits/SystemPowerLdo1_TPS7A8101_TIDEP0092.circuit.tsx",
+        "../lib/subcircuits/LdoRegulator1V8_TPS7A8101.circuit.tsx",
         import.meta.url,
       ),
       traces: [[".R84 > .pin2", "net.LDO_01_EN", "LDO_01_EN"]],
@@ -149,7 +150,7 @@ test("TI off-sheet ports use native on-trace labels across all applicable sheets
     },
     {
       sourceUrl: new URL(
-        "../lib/subcircuits/SystemPowerLdo2_TPS7A8801_TIDEP0092.circuit.tsx",
+        "../lib/subcircuits/DualLdoRegulator1V3_TPS7A8801.circuit.tsx",
         import.meta.url,
       ),
       traces: [[".R46 > .pin2", "net.LDO_02_EN", "LDO_02_EN"]],
@@ -157,7 +158,7 @@ test("TI off-sheet ports use native on-trace labels across all applicable sheets
     },
     {
       sourceUrl: new URL(
-        "../lib/subcircuits/SystemPowerReference_LM4060_Datasheet.circuit.tsx",
+        "../lib/subcircuits/PrecisionVoltageReference_LM4060A33.circuit.tsx",
         import.meta.url,
       ),
       traces: [
@@ -204,7 +205,7 @@ test("TI labels never replace physical source wires", () => {
   const cases = [
     {
       sourceUrl: new URL(
-        "../lib/subcircuits/SystemPowerVpp_TPS79601_TIDEP0092.circuit.tsx",
+        "../lib/subcircuits/VppLdoRegulator_TPS79601.circuit.tsx",
         import.meta.url,
       ),
       from: ".U11 > .GND",
@@ -213,7 +214,7 @@ test("TI labels never replace physical source wires", () => {
     },
     {
       sourceUrl: new URL(
-        "../lib/subcircuits/SystemPowerLdo2_TPS7A8801_TIDEP0092.circuit.tsx",
+        "../lib/subcircuits/DualLdoRegulator1V3_TPS7A8801.circuit.tsx",
         import.meta.url,
       ),
       from: ".R120 > .pin1",
@@ -519,10 +520,50 @@ test("System power chips and subcircuits are publicly exported", () => {
   assert.equal(TiChipComponents.TPS7A8801RTJR, TPS7A8801RTJR);
   assert.equal(TiChipComponents.TPS79601DRBR, TPS79601DRBR);
   assert.equal(TiChipComponents.LM4060A33EDBZR, LM4060A33EDBZR);
-  assert.equal(
-    TiSubcircuitComponents.SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092,
-    SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092,
-  );
+  assert.equal(TiSubcircuitComponents.SystemPowerSupply, SystemPowerSupply);
+});
+
+test("System power production names follow reusable tscircuit conventions", () => {
+  const subcircuitDirectory = new URL("../lib/subcircuits/", import.meta.url);
+  const forbiddenProductionName =
+    /(?:TIDA|TIDEP)\d|ObstacleDetectionSensor|Datasheet/;
+
+  for (const fileName of SYSTEM_POWER_SUBCIRCUIT_FILE_NAMES) {
+    assert.doesNotMatch(fileName, forbiddenProductionName);
+    const source = readFileSync(new URL(fileName, subcircuitDirectory), "utf8");
+    const exportedComponentNames = [
+      ...source.matchAll(/export const ([A-Za-z0-9_]+)\s*=\s*\(/g),
+      ...source.matchAll(/export default ([A-Za-z0-9_]+);/g),
+    ].map((match) => match[1]);
+    assert.ok(exportedComponentNames.length >= 2, fileName);
+    for (const componentName of exportedComponentNames) {
+      assert.doesNotMatch(componentName, forbiddenProductionName);
+    }
+  }
+
+  for (const manufacturerPartNumber of [
+    "LP87524BRNFRQ1",
+    "TPS7A8101QDRBRQ1",
+    "TPS7A8801RTJR",
+    "TPS79601DRBR",
+    "LM4060A33EDBZR",
+  ]) {
+    const chipSource = readFileSync(
+      new URL(
+        `../lib/chips/${manufacturerPartNumber}.circuit.tsx`,
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    assert.match(
+      chipSource,
+      new RegExp(`export const ${manufacturerPartNumber}\\b`),
+    );
+    assert.match(
+      chipSource,
+      new RegExp(`manufacturerPartNumber="${manufacturerPartNumber}"`),
+    );
+  }
 });
 
 test("Obstacle Detection Sensor keeps every visible element inside its assigned sheet", async () => {
@@ -636,7 +677,7 @@ test("Obstacle Detection Sensor keeps every visible element inside its assigned 
 });
 
 test("TIDEP-0092 PMIC stage keeps its four official output rails", async () => {
-  const circuit = await renderModule(SystemPowerPmicBuck_LP87524B_TIDEP0092);
+  const circuit = await renderModule(PmicPowerStage_LP87524B);
   assertComponentNames(circuit, [
     "U8",
     "C59",
@@ -764,7 +805,7 @@ test("TIDEP-0092 PMIC stage keeps its four official output rails", async () => {
 });
 
 test("TIDEP-0092 LDO sheets retain exact parts, rails, and source centers", async () => {
-  const ldo1 = await renderModule(SystemPowerLdo1_TPS7A8101_TIDEP0092);
+  const ldo1 = await renderModule(LdoRegulator1V8_TPS7A8101);
   assertComponentNames(ldo1, [
     "U4",
     "C21",
@@ -803,7 +844,7 @@ test("TIDEP-0092 LDO sheets retain exact parts, rails, and source centers", asyn
     R83: [-3.75, -6],
   });
 
-  const ldo2 = await renderModule(SystemPowerLdo2_TPS7A8801_TIDEP0092);
+  const ldo2 = await renderModule(DualLdoRegulator1V3_TPS7A8801);
   assertComponentNames(ldo2, [
     "U5",
     "C31",
@@ -897,7 +938,7 @@ test("TIDEP-0092 LDO sheets retain exact parts, rails, and source centers", asyn
 });
 
 test("TIDEP-0092 sequencer and VPP sections preserve control connectivity", async () => {
-  const sequencer = await renderModule(SystemPowerPmicSequencer_TIDEP0092);
+  const sequencer = await renderModule(PmicSequencer);
   assertComponentNames(sequencer, [
     "R149",
     "R139",
@@ -937,7 +978,7 @@ test("TIDEP-0092 sequencer and VPP sections preserve control connectivity", asyn
   ]);
   assertVerticalPin1AbovePin2(sequencer, ["R150"]);
 
-  const vpp = await renderModule(SystemPowerVpp_TPS79601_TIDEP0092);
+  const vpp = await renderModule(VppLdoRegulator_TPS79601);
   assertComponentNames(vpp, [
     "U11",
     "C86",
@@ -985,7 +1026,7 @@ test("LM4060 section is isolated as a datasheet-derived reference", async () => 
   assert.match(lm4060Source, /noSchematicRepresentation/);
   assert.doesNotMatch(lm4060Source, /schPinArrangement/);
 
-  const circuit = await renderModule(SystemPowerReference_LM4060_Datasheet);
+  const circuit = await renderModule(PrecisionVoltageReference_LM4060A33);
   assertComponentNames(circuit, ["R1", "U1", "U1_SCHEMATIC", "C1"]);
   const lm4060SymbolSource = circuit.db.source_component.getWhere({
     name: "U1_SCHEMATIC",

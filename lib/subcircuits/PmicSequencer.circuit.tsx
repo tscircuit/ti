@@ -15,7 +15,7 @@ const VERTICAL_ROTATED_180_DEGREES = 90;
  * TIDEP-0092 Rev C PMIC source page 9, TIDRQR8.PDF. This shares the same
  * physical ANSI-B page transform as the PMIC power-stage module.
  */
-export const SystemPowerPmicSequencer_TIDEP0092 = (props: SubcircuitProps) => (
+export const PmicSequencer = (props: SubcircuitProps) => (
   <subcircuit routingDisabled schMaxTraceDistance="100mm" {...props}>
     <net name="GND" isGroundNet />
     <net name="V5_IN" isPowerNet />
@@ -176,4 +176,4 @@ export const SystemPowerPmicSequencer_TIDEP0092 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default SystemPowerPmicSequencer_TIDEP0092;
+export default PmicSequencer;

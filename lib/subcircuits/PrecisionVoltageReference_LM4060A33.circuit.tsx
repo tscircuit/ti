@@ -9,9 +9,7 @@ import { LM4060A33EDBZR } from "../chips/LM4060A33EDBZR.circuit.tsx";
  * capacitor is the tested Figure 9-3 case.
  * This is not a TIDEP-0092 board section and has no editable board coordinates.
  */
-export const SystemPowerReference_LM4060_Datasheet = (
-  props: SubcircuitProps,
-) => (
+export const PrecisionVoltageReference_LM4060A33 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled schMaxTraceDistance="100mm" {...props}>
     <net name="GND" isGroundNet />
     <port name="V5_IN" />
@@ -97,4 +95,4 @@ export const SystemPowerReference_LM4060_Datasheet = (
   </subcircuit>
 );
 
-export default SystemPowerReference_LM4060_Datasheet;
+export default PrecisionVoltageReference_LM4060A33;

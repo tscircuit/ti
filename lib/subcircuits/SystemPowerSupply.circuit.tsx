@@ -2,26 +2,26 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import {
   LDO_01_PMIC_ENABLE_SECTION_NAME,
-  SystemPowerLdo1_TPS7A8101_TIDEP0092,
-} from "./SystemPowerLdo1_TPS7A8101_TIDEP0092.circuit.tsx";
+  LdoRegulator1V8_TPS7A8101,
+} from "./LdoRegulator1V8_TPS7A8101.circuit.tsx";
 import {
+  DualLdoRegulator1V3_TPS7A8801,
   LDO_02_DUAL_1P3V_SECTION_NAME,
-  SystemPowerLdo2_TPS7A8801_TIDEP0092,
-} from "./SystemPowerLdo2_TPS7A8801_TIDEP0092.circuit.tsx";
+} from "./DualLdoRegulator1V3_TPS7A8801.circuit.tsx";
 import {
   PMIC_INPUT_DECOUPLING_SECTION_NAME,
   PMIC_POWER_STAGE_SECTION_NAME,
   PMIC_SWITCH_NODE_SNUBBER_SECTION_NAME,
-  SystemPowerPmicBuck_LP87524B_TIDEP0092,
-} from "./SystemPowerPmicBuck_LP87524B_TIDEP0092.circuit.tsx";
+  PmicPowerStage_LP87524B,
+} from "./PmicPowerStage_LP87524B.circuit.tsx";
 import {
   PMIC_CONTROL_DIVIDER_SECTION_NAME,
   PMIC_ENABLE_PULLUPS_SECTION_NAME,
   PMIC_PGOOD_SECTION_NAME,
-  SystemPowerPmicSequencer_TIDEP0092,
-} from "./SystemPowerPmicSequencer_TIDEP0092.circuit.tsx";
-import { SystemPowerReference_LM4060_Datasheet } from "./SystemPowerReference_LM4060_Datasheet.circuit.tsx";
-import { SystemPowerVpp_TPS79601_TIDEP0092 } from "./SystemPowerVpp_TPS79601_TIDEP0092.circuit.tsx";
+  PmicSequencer,
+} from "./PmicSequencer.circuit.tsx";
+import { PrecisionVoltageReference_LM4060A33 } from "./PrecisionVoltageReference_LM4060A33.circuit.tsx";
+import { VppLdoRegulator_TPS79601 } from "./VppLdoRegulator_TPS79601.circuit.tsx";
 
 /**
  * Obstacle Detection Sensor system power supply, TI system-block subsystem 21584.
@@ -32,9 +32,7 @@ import { SystemPowerVpp_TPS79601_TIDEP0092 } from "./SystemPowerVpp_TPS79601_TID
  * source document's ANSI B size.
  * The LM4060 section is separately identified as datasheet-derived.
  */
-export const SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092 = (
-  props: SubcircuitProps,
-) => (
+export const SystemPowerSupply = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
     <schematicsheet
       name="pmic_power_stage"
@@ -95,33 +93,30 @@ export const SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092 = (
       sheetIndex={4}
     />
 
-    <SystemPowerPmicBuck_LP87524B_TIDEP0092
+    <PmicPowerStage_LP87524B
       name="pmic_power_stage"
       schSheetName="pmic_power_stage"
     />
-    <SystemPowerPmicSequencer_TIDEP0092
-      name="pmic_sequencer"
-      schSheetName="pmic_power_stage"
-    />
-    <SystemPowerLdo1_TPS7A8101_TIDEP0092
+    <PmicSequencer name="pmic_sequencer" schSheetName="pmic_power_stage" />
+    <LdoRegulator1V8_TPS7A8101
       name="ldo_1p8v"
       schSheetName="ldo_1p8v"
       schX={2.0625}
       schY={-1.2375}
     />
-    <SystemPowerLdo2_TPS7A8801_TIDEP0092
+    <DualLdoRegulator1V3_TPS7A8801
       name="dual_ldo_1p3v"
       schSheetName="dual_ldo_1p3v"
       schX={-0.3575}
       schY={-1.1075}
     />
-    <SystemPowerVpp_TPS79601_TIDEP0092
+    <VppLdoRegulator_TPS79601
       name="vpp_ldo"
       schSheetName="vpp_ldo"
       schX={6.325}
       schY={-2.745}
     />
-    <SystemPowerReference_LM4060_Datasheet
+    <PrecisionVoltageReference_LM4060A33
       name="precision_reference"
       schSheetName="precision_reference"
       schX={-0.68}
@@ -130,4 +125,4 @@ export const SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092 = (
   </subcircuit>
 );
 
-export default SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092;
+export default SystemPowerSupply;

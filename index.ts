@@ -126,13 +126,13 @@ import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/Com
 import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
 import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
-import { SystemPowerLdo1_TPS7A8101_TIDEP0092 } from "./lib/subcircuits/SystemPowerLdo1_TPS7A8101_TIDEP0092.circuit.tsx";
-import { SystemPowerLdo2_TPS7A8801_TIDEP0092 } from "./lib/subcircuits/SystemPowerLdo2_TPS7A8801_TIDEP0092.circuit.tsx";
-import { SystemPowerPmicBuck_LP87524B_TIDEP0092 } from "./lib/subcircuits/SystemPowerPmicBuck_LP87524B_TIDEP0092.circuit.tsx";
-import { SystemPowerPmicSequencer_TIDEP0092 } from "./lib/subcircuits/SystemPowerPmicSequencer_TIDEP0092.circuit.tsx";
-import { SystemPowerReference_LM4060_Datasheet } from "./lib/subcircuits/SystemPowerReference_LM4060_Datasheet.circuit.tsx";
-import { SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092 } from "./lib/subcircuits/SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092.circuit.tsx";
-import { SystemPowerVpp_TPS79601_TIDEP0092 } from "./lib/subcircuits/SystemPowerVpp_TPS79601_TIDEP0092.circuit.tsx";
+import { DualLdoRegulator1V3_TPS7A8801 } from "./lib/subcircuits/DualLdoRegulator1V3_TPS7A8801.circuit.tsx";
+import { LdoRegulator1V8_TPS7A8101 } from "./lib/subcircuits/LdoRegulator1V8_TPS7A8101.circuit.tsx";
+import { PmicPowerStage_LP87524B } from "./lib/subcircuits/PmicPowerStage_LP87524B.circuit.tsx";
+import { PmicSequencer } from "./lib/subcircuits/PmicSequencer.circuit.tsx";
+import { PrecisionVoltageReference_LM4060A33 } from "./lib/subcircuits/PrecisionVoltageReference_LM4060A33.circuit.tsx";
+import { SystemPowerSupply } from "./lib/subcircuits/SystemPowerSupply.circuit.tsx";
+import { VppLdoRegulator_TPS79601 } from "./lib/subcircuits/VppLdoRegulator_TPS79601.circuit.tsx";
 import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/TemperatureSensor_TMP103_TIDA00399.circuit.tsx";
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
@@ -198,13 +198,13 @@ export {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
-  SystemPowerLdo1_TPS7A8101_TIDEP0092,
-  SystemPowerLdo2_TPS7A8801_TIDEP0092,
-  SystemPowerPmicBuck_LP87524B_TIDEP0092,
-  SystemPowerPmicSequencer_TIDEP0092,
-  SystemPowerReference_LM4060_Datasheet,
-  SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092,
-  SystemPowerVpp_TPS79601_TIDEP0092,
+  DualLdoRegulator1V3_TPS7A8801,
+  LdoRegulator1V8_TPS7A8101,
+  PmicPowerStage_LP87524B,
+  PmicSequencer,
+  PrecisionVoltageReference_LM4060A33,
+  SystemPowerSupply,
+  VppLdoRegulator_TPS79601,
   TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
@@ -338,13 +338,13 @@ export const TiSubcircuitComponents = {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
-  SystemPowerLdo1_TPS7A8101_TIDEP0092,
-  SystemPowerLdo2_TPS7A8801_TIDEP0092,
-  SystemPowerPmicBuck_LP87524B_TIDEP0092,
-  SystemPowerPmicSequencer_TIDEP0092,
-  SystemPowerReference_LM4060_Datasheet,
-  SystemPowerSupply_ObstacleDetectionSensor_TIDEP0092,
-  SystemPowerVpp_TPS79601_TIDEP0092,
+  DualLdoRegulator1V3_TPS7A8801,
+  LdoRegulator1V8_TPS7A8101,
+  PmicPowerStage_LP87524B,
+  PmicSequencer,
+  PrecisionVoltageReference_LM4060A33,
+  SystemPowerSupply,
+  VppLdoRegulator_TPS79601,
   TemperatureSensor_TMP103_TIDA00399,
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,

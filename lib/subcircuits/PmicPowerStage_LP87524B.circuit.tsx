@@ -39,9 +39,7 @@ const renderDfe252012pFootprint = () => (
  * official 19-sheet PDF supplies final placement. The one documented mapping is
  * schX = (pdfX - 612) * 0.038194444; schY = (403.2 - pdfY) * 0.038194444.
  */
-export const SystemPowerPmicBuck_LP87524B_TIDEP0092 = (
-  props: SubcircuitProps,
-) => (
+export const PmicPowerStage_LP87524B = (props: SubcircuitProps) => (
   <subcircuit routingDisabled schMaxTraceDistance="100mm" {...props}>
     <net name="GND" isGroundNet />
     <net name="V5_UNREG" isPowerNet />
@@ -554,4 +552,4 @@ export const SystemPowerPmicBuck_LP87524B_TIDEP0092 = (
   </subcircuit>
 );
 
-export default SystemPowerPmicBuck_LP87524B_TIDEP0092;
+export default PmicPowerStage_LP87524B;
