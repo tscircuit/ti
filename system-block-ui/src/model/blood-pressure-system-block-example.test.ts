@@ -16,6 +16,9 @@ test("builds the TIDA-010266 blood-pressure monitor from its reusable blocks", (
     "power",
     "reference_2v5",
     "analog_front_end",
+    "integrated_ina",
+    "pressure_sensor",
+    "external_ina",
     "microcontroller",
     "motor_driver",
   ]);
@@ -25,7 +28,21 @@ test("builds the TIDA-010266 blood-pressure monitor from its reusable blocks", (
     example.graph.connections,
     SUBCIRCUIT_CATALOG,
   );
-  expect(resolved).toHaveLength(7);
+  expect(resolved).toHaveLength(13);
+  expect(
+    resolved.find(({ id }) => id === "pressure_sensor_to_external_ina")?.traces,
+  ).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        fromSelector: ".BRIDGE_POS",
+        toSelector: ".IN_POS",
+      }),
+      expect.objectContaining({
+        fromSelector: ".BRIDGE_NEG",
+        toSelector: ".IN_NEG",
+      }),
+    ]),
+  );
   expect(
     resolved.find(({ id }) => id === "microcontroller_to_motor_driver")?.traces,
   ).toEqual(
@@ -50,7 +67,10 @@ test("builds the TIDA-010266 blood-pressure monitor from its reusable blocks", (
   for (const componentName of [
     "PowerManagement_TPS7A2433_TIDA010266",
     "VoltageReference_ATL431LI_TIDA010266",
-    "AnalogFrontEnd_LMV324A_TIDA010266",
+    "AnalogSignalConditioning_LMV324A_TIDA010266",
+    "InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266",
+    "PressureSensor_2SMPP03_TIDA010266",
+    "InstrumentationAmplifier_INA350_TIDA010266",
     "Microcontroller_MSPM0L1306_TIDA010266",
     "MotorDriver_DRV8210_TIDA010266",
   ]) {

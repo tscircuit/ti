@@ -7,7 +7,6 @@ import {
   SUBCIRCUIT_CATALOG,
 } from "../model";
 import { evaluateGeneratedTsx } from "./evaluate-schematic";
-import { getGeneratedSystemEvaluationFsMap } from "./generated-source-files";
 import { createLocalTiPackageEvaluationFsMap } from "./local-ti-package-files";
 
 const bloodPressureDefinitions = [
@@ -22,13 +21,28 @@ const bloodPressureDefinitions = [
       "lib/subcircuits/VoltageReference_ATL431LI_TIDA010266.circuit.tsx",
   },
   {
-    componentName: "AnalogFrontEnd_LMV324A_TIDA010266",
-    sourcePath: "lib/subcircuits/AnalogFrontEnd_LMV324A_TIDA010266.circuit.tsx",
+    componentName: "AnalogSignalConditioning_LMV324A_TIDA010266",
+    sourcePath:
+      "lib/subcircuits/AnalogSignalConditioning_LMV324A_TIDA010266.circuit.tsx",
+  },
+  {
+    componentName: "InstrumentationAmplifier_INA350_TIDA010266",
+    sourcePath:
+      "lib/subcircuits/InstrumentationAmplifier_INA350_TIDA010266.circuit.tsx",
+  },
+  {
+    componentName: "InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266",
+    sourcePath:
+      "lib/subcircuits/InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266.circuit.tsx",
   },
   {
     componentName: "Microcontroller_MSPM0L1306_TIDA010266",
     sourcePath:
       "lib/subcircuits/Microcontroller_MSPM0L1306_TIDA010266.circuit.tsx",
+  },
+  {
+    componentName: "PressureSensor_2SMPP03_TIDA010266",
+    sourcePath: "lib/subcircuits/PressureSensor_2SMPP03_TIDA010266.circuit.tsx",
   },
   {
     componentName: "MotorDriver_DRV8210_TIDA010266",
@@ -67,23 +81,22 @@ test("renders every reusable TIDA-010266 monitor block", async () => {
     boardName: "tida_010266_blood_pressure_monitor",
   });
   const evaluated = await evaluateGeneratedTsx(artifacts.tsx, {
-    fsMap: {
-      ...createLocalTiPackageEvaluationFsMap(
-        bloodPressureDefinitions,
-        sourceModules,
-      ),
-      ...getGeneratedSystemEvaluationFsMap(artifacts),
-    },
+    fsMap: createLocalTiPackageEvaluationFsMap(
+      bloodPressureDefinitions,
+      sourceModules,
+    ),
     mainComponentPath: "GeneratedSystem.circuit.tsx",
     timeoutMs: 90_000,
   });
 
   expect(evaluated.sheets.map(({ title }) => title)).toEqual([
-    "System Diagram",
-    "LMV324A Analog Front End",
+    "LMV324A Analog Signal Conditioning",
+    "INA350 Instrumentation Amplifier",
+    "MSPM0L1306 Internal OPA Instrumentation Amplifier",
     "MSPM0L1306 Microcontroller",
     "DRV8210 Pump and Valve Driver",
     "TPS7A2433 3.3 V Power Management",
+    "2SMPP-03 Pressure Sensor",
     "ATL431LI 2.5 V Voltage Reference",
   ]);
 }, 30_000);

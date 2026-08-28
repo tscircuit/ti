@@ -409,7 +409,7 @@ const createBloodPressureMonitorDesign = (
         catalog,
         "PowerManagement_TPS7A2433_TIDA010266",
       ),
-      position: { x: 40, y: 210 },
+      position: { x: 40, y: 300 },
     },
     {
       id: "reference_2v5",
@@ -423,8 +423,35 @@ const createBloodPressureMonitorDesign = (
     {
       id: "analog_front_end",
       name: "analog_front_end",
-      definitionId: componentId(catalog, "AnalogFrontEnd_LMV324A_TIDA010266"),
+      definitionId: componentId(
+        catalog,
+        "AnalogSignalConditioning_LMV324A_TIDA010266",
+      ),
       position: { x: 680, y: 40 },
+    },
+    {
+      id: "integrated_ina",
+      name: "integrated_ina",
+      definitionId: componentId(
+        catalog,
+        "InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266",
+      ),
+      position: { x: 1000, y: 40 },
+    },
+    {
+      id: "pressure_sensor",
+      name: "pressure_sensor",
+      definitionId: componentId(catalog, "PressureSensor_2SMPP03_TIDA010266"),
+      position: { x: 360, y: 380 },
+    },
+    {
+      id: "external_ina",
+      name: "external_ina",
+      definitionId: componentId(
+        catalog,
+        "InstrumentationAmplifier_INA350_TIDA010266",
+      ),
+      position: { x: 680, y: 380 },
     },
     {
       id: "microcontroller",
@@ -433,13 +460,13 @@ const createBloodPressureMonitorDesign = (
         catalog,
         "Microcontroller_MSPM0L1306_TIDA010266",
       ),
-      position: { x: 680, y: 380 },
+      position: { x: 1000, y: 380 },
     },
     {
       id: "motor_driver",
       name: "motor_driver",
       definitionId: componentId(catalog, "MotorDriver_DRV8210_TIDA010266"),
-      position: { x: 1000, y: 380 },
+      position: { x: 1320, y: 380 },
     },
   ],
   connections: [
@@ -454,6 +481,13 @@ const createBloodPressureMonitorDesign = (
       id: "power_3v3_to_analog_front_end",
       fromBlockId: "power",
       toBlockId: "analog_front_end",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_external_ina",
+      fromBlockId: "power",
+      toBlockId: "external_ina",
       kind: "power",
       protocol: "logic-3v3",
     },
@@ -484,6 +518,41 @@ const createBloodPressureMonitorDesign = (
       toBlockId: "microcontroller",
       kind: "power",
       protocol: "precision-reference-2v5",
+    },
+    {
+      id: "reference_1v25_to_external_ina",
+      fromBlockId: "analog_front_end",
+      toBlockId: "external_ina",
+      kind: "power",
+      protocol: "buffered-reference-1v25",
+    },
+    {
+      id: "reference_1v25_to_integrated_ina",
+      fromBlockId: "analog_front_end",
+      toBlockId: "integrated_ina",
+      kind: "data",
+      protocol: "buffered-reference-signal",
+    },
+    {
+      id: "analog_front_end_to_pressure_sensor",
+      fromBlockId: "analog_front_end",
+      toBlockId: "pressure_sensor",
+      kind: "data",
+      protocol: "pressure-sensor-bias",
+    },
+    {
+      id: "pressure_sensor_to_external_ina",
+      fromBlockId: "pressure_sensor",
+      toBlockId: "external_ina",
+      kind: "data",
+      protocol: "pressure-bridge",
+    },
+    {
+      id: "microcontroller_to_integrated_ina",
+      fromBlockId: "microcontroller",
+      toBlockId: "integrated_ina",
+      kind: "data",
+      protocol: "internal-opa",
     },
     {
       id: "microcontroller_to_motor_driver",
