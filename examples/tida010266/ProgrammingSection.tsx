@@ -1,20 +1,16 @@
 import "tscircuit";
-import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
-import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
+import type { GroupProps } from "@tscircuit/props";
+import { TIDA010266InlineNetPorts } from "../../lib/subcircuits/TIDA010266InlineNetPorts.tsx";
+
+type ProgrammingSectionProps = GroupProps & { schSectionName?: string };
 
 /** TIDA-010266 J2/S1 reset and Arm 10-pin SWD programming interface. */
-export const ProgrammingInterface_MSPM0_TIDA010266 = (
-  props: TIDA010266SectionedSubcircuitProps,
-) => {
+export const ProgrammingSection = (props: ProgrammingSectionProps) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
 
   return (
-    <subcircuit
-      {...props}
-      schTraceAutoLabelEnabled={false}
-      schMaxTraceDistance="4mm"
-    >
+    <group {...props}>
       <connector
         name="J2"
         schSectionName={props.schSectionName}
@@ -183,8 +179,8 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
           },
         ]}
       />
-    </subcircuit>
+    </group>
   );
 };
 
-export default ProgrammingInterface_MSPM0_TIDA010266;
+export default ProgrammingSection;

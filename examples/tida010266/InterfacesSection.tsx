@@ -1,6 +1,6 @@
-import type { SubcircuitProps } from "@tscircuit/props";
+import type { GroupProps } from "@tscircuit/props";
 import "tscircuit";
-import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
+import { TIDA010266InlineNetPorts } from "../../lib/subcircuits/TIDA010266InlineNetPorts.tsx";
 
 const throughHoleTestPoint = {
   footprintVariant: "through_hole" as const,
@@ -9,7 +9,7 @@ const throughHoleTestPoint = {
   doNotPlace: true,
 };
 
-export type BloodPressureMonitorInterfaces_TIDA010266Props = SubcircuitProps & {
+export type InterfacesSectionProps = GroupProps & {
   schSectionName?: string;
   inputSectionName?: string;
   connectorSectionName?: string;
@@ -34,7 +34,7 @@ export type BloodPressureMonitorInterfaces_TIDA010266Props = SubcircuitProps & {
 };
 
 /** TIDA-010266 power, UART/GPIO, selection jumpers, and seven test points. */
-export const BloodPressureMonitorInterfaces_TIDA010266 = ({
+export const InterfacesSection = ({
   inputSectionName,
   connectorSectionName,
   jumperSectionName,
@@ -56,7 +56,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
   inaFilterSchXOffset = 0,
   inaFilterSchYOffset = 0,
   ...props
-}: BloodPressureMonitorInterfaces_TIDA010266Props) => {
+}: InterfacesSectionProps) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
   const inputX = (x: number) => x + inputSchXOffset;
@@ -71,11 +71,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
   const inaFilterY = (y: number) => y + inaFilterSchYOffset;
 
   return (
-    <subcircuit
-      {...props}
-      schTraceAutoLabelEnabled={false}
-      schMaxTraceDistance="1000mm"
-    >
+    <group {...props}>
       <connector
         name="J1"
         schSectionName={inputSectionName ?? props.schSectionName}
@@ -654,8 +650,8 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
           },
         ]}
       />
-    </subcircuit>
+    </group>
   );
 };
 
-export default BloodPressureMonitorInterfaces_TIDA010266;
+export default InterfacesSection;

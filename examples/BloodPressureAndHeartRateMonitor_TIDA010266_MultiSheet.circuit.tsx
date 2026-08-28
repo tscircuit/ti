@@ -1,17 +1,17 @@
 import {
-  ADCFilter_TIDA010266,
   AnalogFrontEnd_LMV324A_TIDA010266,
-  BloodPressureMonitorInterfaces_TIDA010266,
   InstrumentationAmplifier_INA350,
-  IntegratedInstrumentationAmplifier_MSPM0_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,
-  PressureSensor_2SMPP03_TIDA010266,
-  ProgrammingInterface_MSPM0_TIDA010266,
   VoltageReference_ATL431LI_TIDA010266,
 } from "@tsci/tscircuit.ti";
 import "tscircuit";
+import { ADCFilterSection } from "./tida010266/ADCFilterSection.tsx";
+import { IntegratedInstrumentationAmplifierSection } from "./tida010266/IntegratedInstrumentationAmplifierSection.tsx";
+import { InterfacesSection } from "./tida010266/InterfacesSection.tsx";
+import { PressureSensorSection } from "./tida010266/PressureSensorSection.tsx";
+import { ProgrammingSection } from "./tida010266/ProgrammingSection.tsx";
 
 /**
  * TIDA-010266 organized as one schematic sheet per functional section.
@@ -70,7 +70,7 @@ export default () => (
       name="reference_2v5"
       schSheetName="input_reference"
     />
-    <BloodPressureMonitorInterfaces_TIDA010266
+    <InterfacesSection
       name="interfaces"
       inputSheetName="input_reference"
       connectorSheetName="connectors"
@@ -86,7 +86,7 @@ export default () => (
       inaFilterSchXOffset={10.5}
       inaFilterSchYOffset={14.5}
     />
-    <ProgrammingInterface_MSPM0_TIDA010266
+    <ProgrammingSection
       name="programming"
       schSheetName="programming"
     />
@@ -104,7 +104,7 @@ export default () => (
       schX={-8.5}
       schY={-2}
     />
-    <IntegratedInstrumentationAmplifier_MSPM0_TIDA010266
+    <IntegratedInstrumentationAmplifierSection
       name="integrated_ina"
       schSheetName="ina_filter"
       schX={-8}
@@ -127,12 +127,12 @@ export default () => (
       schSheetName="mcu"
       schY={4}
     />
-    <PressureSensor_2SMPP03_TIDA010266
+    <PressureSensorSection
       name="pressure_sensor"
       schSheetName="pressure_sensor"
       schX={5}
     />
-    <ADCFilter_TIDA010266 name="adc_filter" schSheetName="adc_filter" />
+    <ADCFilterSection name="adc_filter" schSheetName="adc_filter" />
     <MotorDriver_DRV8210_TIDA010266
       name="motor_driver"
       schSheetName="motor_driver"

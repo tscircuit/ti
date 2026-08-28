@@ -50,14 +50,14 @@ reusable modules:
 - `PowerManagement_TPS7A2433_TIDA010266`
 - `VoltageReference_ATL431LI_TIDA010266`
 - `InstrumentationAmplifier_INA350`
-- `IntegratedInstrumentationAmplifier_MSPM0_TIDA010266`
 - `AnalogFrontEnd_LMV324A_TIDA010266`
-- `PressureSensor_2SMPP03_TIDA010266`
-- `ADCFilter_TIDA010266`
 - `Microcontroller_MSPM0L1306_TIDA010266`
-- `ProgrammingInterface_MSPM0_TIDA010266`
 - `MotorDriver_DRV8210_TIDA010266`
-- `BloodPressureMonitorInterfaces_TIDA010266`
+
+Only blocks centered on imported TI chips are published as reusable library
+subcircuits. The ADC filters, connectors, jumpers, test points, programming
+header, internal-MCU amplifier network, and Omron pressure-sensor stage remain
+example-local sections used to compose the complete monitor.
 
 The newly modeled bare parts are available under the readable names
 `TPS7A24`, `ATL431LI`, `LMV324A`, and `SMPP2_03`. Exact-package exports for the

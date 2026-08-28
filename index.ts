@@ -157,30 +157,20 @@ import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/Temperatur
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
-import { ADCFilter_TIDA010266 } from "./lib/subcircuits/ADCFilter_TIDA010266.circuit.tsx";
 import { AnalogFrontEnd_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogFrontEnd_LMV324A_TIDA010266.circuit.tsx";
-import { BloodPressureMonitorInterfaces_TIDA010266 } from "./lib/subcircuits/BloodPressureMonitorInterfaces_TIDA010266.circuit.tsx";
-import { IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 } from "./lib/subcircuits/IntegratedInstrumentationAmplifier_MSPM0_TIDA010266.circuit.tsx";
 import { Microcontroller_MSPM0L1306_TIDA010266 } from "./lib/subcircuits/Microcontroller_MSPM0L1306_TIDA010266.circuit.tsx";
 import { MotorDriver_DRV8210_TIDA010266 } from "./lib/subcircuits/MotorDriver_DRV8210_TIDA010266.circuit.tsx";
 import { PowerManagement_TPS7A2433_TIDA010266 } from "./lib/subcircuits/PowerManagement_TPS7A2433_TIDA010266.circuit.tsx";
-import { PressureSensor_2SMPP03_TIDA010266 } from "./lib/subcircuits/PressureSensor_2SMPP03_TIDA010266.circuit.tsx";
-import { ProgrammingInterface_MSPM0_TIDA010266 } from "./lib/subcircuits/ProgrammingInterface_MSPM0_TIDA010266.circuit.tsx";
 import { VoltageReference_ATL431LI_TIDA010266 } from "./lib/subcircuits/VoltageReference_ATL431LI_TIDA010266.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
-  ADCFilter_TIDA010266,
   AnalogFrontEnd_LMV324A_TIDA010266,
-  BloodPressureMonitorInterfaces_TIDA010266,
-  IntegratedInstrumentationAmplifier_MSPM0_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,
-  PressureSensor_2SMPP03_TIDA010266,
-  ProgrammingInterface_MSPM0_TIDA010266,
   VoltageReference_ATL431LI_TIDA010266,
   BatteryManagement_BQ24072,
   BatteryManagement_BQ24073,
@@ -341,15 +331,10 @@ export const TiChipComponents = {
 } as const;
 
 export const TiSubcircuitComponents = {
-  ADCFilter_TIDA010266,
   AnalogFrontEnd_LMV324A_TIDA010266,
-  BloodPressureMonitorInterfaces_TIDA010266,
-  IntegratedInstrumentationAmplifier_MSPM0_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,
-  PressureSensor_2SMPP03_TIDA010266,
-  ProgrammingInterface_MSPM0_TIDA010266,
   VoltageReference_ATL431LI_TIDA010266,
   BatteryManagement_BQ24072,
   BatteryManagement_BQ24073,

@@ -1,20 +1,16 @@
 import "tscircuit";
-import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
-import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
+import type { GroupProps } from "@tscircuit/props";
+import { TIDA010266InlineNetPorts } from "../../lib/subcircuits/TIDA010266InlineNetPorts.tsx";
+
+type ADCFilterSectionProps = GroupProps & { schSectionName?: string };
 
 /** TIDA-010266 R19/R20/C17/C18 200-ohm, 100-pF ADC input filters. */
-export const ADCFilter_TIDA010266 = (
-  props: TIDA010266SectionedSubcircuitProps,
-) => {
+export const ADCFilterSection = (props: ADCFilterSectionProps) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
 
   return (
-    <subcircuit
-      {...props}
-      schTraceAutoLabelEnabled={false}
-      schMaxTraceDistance="1000mm"
-    >
+    <group {...props}>
       <resistor
         name="R19"
         schSectionName={props.schSectionName}
@@ -96,8 +92,8 @@ export const ADCFilter_TIDA010266 = (
           },
         ]}
       />
-    </subcircuit>
+    </group>
   );
 };
 
-export default ADCFilter_TIDA010266;
+export default ADCFilterSection;

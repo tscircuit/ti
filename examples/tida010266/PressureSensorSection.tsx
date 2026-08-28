@@ -1,21 +1,17 @@
 import "tscircuit";
-import { SMPP2_03 } from "../chips/SMPP2_03.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
-import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
+import type { GroupProps } from "@tscircuit/props";
+import { SMPP2_03 } from "../../lib/chips/SMPP2_03.circuit.tsx";
+import { TIDA010266InlineNetPorts } from "../../lib/subcircuits/TIDA010266InlineNetPorts.tsx";
+
+type PressureSensorSectionProps = GroupProps & { schSectionName?: string };
 
 /** TIDA-010266 U7/R22 Omron bridge-pressure-sensor stage. */
-export const PressureSensor_2SMPP03_TIDA010266 = (
-  props: TIDA010266SectionedSubcircuitProps,
-) => {
+export const PressureSensorSection = (props: PressureSensorSectionProps) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
 
   return (
-    <subcircuit
-      {...props}
-      schTraceAutoLabelEnabled={false}
-      schMaxTraceDistance="1000mm"
-    >
+    <group {...props}>
       <SMPP2_03
         name="U7"
         schSectionName={props.schSectionName}
@@ -83,8 +79,8 @@ export const PressureSensor_2SMPP03_TIDA010266 = (
           },
         ]}
       />
-    </subcircuit>
+    </group>
   );
 };
 
-export default PressureSensor_2SMPP03_TIDA010266;
+export default PressureSensorSection;
