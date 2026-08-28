@@ -219,7 +219,7 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
 
   return (
     <subcircuit schMaxTraceDistance="10mm" routingDisabled {...props}>
-      <net name="GND" isGroundNet={false} />
+      <net name="GND" isGroundNet />
       <net name="VCC" isPowerNet />
       <net name="V_BAT" isPowerNet={false} />
       <net name="HALL_1" />
@@ -284,14 +284,10 @@ export const PositionFeedbackConnector_TIDA01389 = (props: SubcircuitProps) => {
         schematicRouteHints={[inConnector(120, 530), inConnector(120, 520)]}
       />
       <trace from="R9.pin2" to="net.VCC" />
+      <trace name="J2_GND" from="J2.pin1" to="net.GND" />
       <trace from="J2.pin6" to="net.HALL_1" />
       <trace from="J2.pin7" to="net.HALL_2" />
-      <trace
-        name="J4_GND"
-        path={["J4.pin1", "J2.pin1", "net.GND"]}
-        schDisplayLabel="GND"
-        schematicRouteHints={[inConnector(130, 600)]}
-      />
+      <trace name="J4_GND" from="J4.pin1" to="net.GND" />
       <trace
         name="J4_VBAT"
         path={["J4.pin2", ".V_BAT", "net.V_BAT"]}

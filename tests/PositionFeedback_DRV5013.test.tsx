@@ -185,11 +185,10 @@ describe("TIDA-01389 position feedback extraction", () => {
     }
   });
 
-  test("renders supply names inline on physical traces", () => {
+  test("uses inline labels and native trace-to-ground connections", () => {
     for (const [name, label] of [
       ["U6_GND", "GND"],
       ["U5_GND", "GND"],
-      ["J4_GND", "GND"],
       ["J4_VBAT", "V_BAT"],
     ] as const) {
       const sourceTrace = circuitJson.find(
@@ -209,12 +208,35 @@ describe("TIDA-01389 position feedback extraction", () => {
       ).toBeTrue();
     }
 
-    const standaloneSupplyLabels = circuitJson.filter(
-      (element) =>
-        element.type === "schematic_net_label" &&
-        (element.text === "GND" || element.text === "V_BAT"),
-    );
-    expect(standaloneSupplyLabels).toEqual([]);
+    for (const name of ["J2_GND", "J4_GND"]) {
+      const sourceTrace = circuitJson.find(
+        (element) => element.type === "source_trace" && element.name === name,
+      );
+      expect(sourceTrace).toBeDefined();
+      if (!sourceTrace || sourceTrace.type !== "source_trace") continue;
+
+      expect(sourceTrace.connected_source_port_ids).toHaveLength(1);
+      expect(sourceTrace.connected_source_net_ids).toHaveLength(1);
+      const groundNet = circuitJson.find(
+        (element) =>
+          element.type === "source_net" &&
+          element.source_net_id === sourceTrace.connected_source_net_ids[0],
+      );
+      expect(groundNet).toMatchObject({ name: "GND", is_ground: true });
+    }
+
+    expect(
+      circuitJson.some(
+        (element) =>
+          element.type === "schematic_net_label" && element.text === "GND",
+      ),
+    ).toBeTrue();
+    expect(
+      circuitJson.some(
+        (element) =>
+          element.type === "schematic_net_label" && element.text === "V_BAT",
+      ),
+    ).toBeFalse();
   });
 
   test("connects both Hall outputs and both supply rails end to end", () => {
