@@ -4,14 +4,21 @@ import type { AnyCircuitElement } from "circuit-json";
 import { getFullConnectivityMapFromCircuitJson } from "circuit-json-to-connectivity-map";
 import { MSP430FR6007IPZ_PIN_LABELS } from "../lib/chips/MSP430FR6007IPZ.circuit.tsx";
 import { Microcontroller_MSP430FR6007 } from "../lib/subcircuits/Microcontroller_MSP430FR6007.circuit.tsx";
+import { Microcontroller_MSP430FR6007_MultiSheet } from "../lib/subcircuits/Microcontroller_MSP430FR6007_MultiSheet.circuit.tsx";
+
+type LayoutVariant = "single-sheet" | "multi-sheet";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-const renderMcu = async () => {
+const renderMcu = async (layoutVariant: LayoutVariant) => {
   const circuit = new Circuit();
-  circuit.add(<Microcontroller_MSP430FR6007 name="MCU" />);
+  const Component =
+    layoutVariant === "single-sheet"
+      ? Microcontroller_MSP430FR6007
+      : Microcontroller_MSP430FR6007_MultiSheet;
+  circuit.add(<Component name="MCU" />);
   await circuit.renderUntilSettled();
   return circuit.getCircuitJson();
 };
@@ -122,8 +129,8 @@ const testPinMap = () => {
   assert(MSP430FR6007IPZ_PIN_LABELS.pin100.includes("AVCC"), "pin100 AVCC");
 };
 
-const testConnectivity = async () => {
-  const circuitJson = await renderMcu();
+const testConnectivity = async (layoutVariant: LayoutVariant) => {
+  const circuitJson = await renderMcu(layoutVariant);
   const connectivityMap = getFullConnectivityMapFromCircuitJson(circuitJson);
   const sourcePortsById = new Map(
     circuitJson
@@ -210,13 +217,19 @@ const testConnectivity = async () => {
   const sheets = circuitJson.filter(
     (element) => element.type === "schematic_sheet",
   );
-  const expectedSheetNames = [
-    "mcu_socket",
-    "programming_debug",
-    "power_user",
-    "clocks_channels",
-  ] as const;
-  assert(sheets.length === 4, `Expected 4 native sheets, got ${sheets.length}`);
+  const expectedSheetNames =
+    layoutVariant === "single-sheet"
+      ? (["reference_full"] as const)
+      : ([
+          "mcu_socket",
+          "programming_debug",
+          "power_user",
+          "clocks_channels",
+        ] as const);
+  assert(
+    sheets.length === expectedSheetNames.length,
+    `${layoutVariant}: expected ${expectedSheetNames.length} native sheets, got ${sheets.length}`,
+  );
   for (const [sheetIndex, sheetName] of expectedSheetNames.entries()) {
     const sheet = sheets.find((candidate) => candidate.name === sheetName);
     assert(sheet, `Missing native schematic sheet ${sheetName}`);
@@ -326,15 +339,31 @@ const testConnectivity = async () => {
     ],
   } as const;
 
-  for (const [sheetName, componentNames] of Object.entries(componentsBySheet)) {
-    const expectedSheetId = sheetIdByName.get(sheetName);
-    assert(expectedSheetId, `Missing sheet id for ${sheetName}`);
-    for (const componentName of componentNames) {
-      const component = findSchematicComponent(circuitJson, componentName);
-      assert(
-        component.schematic_sheet_id === expectedSheetId,
-        `${componentName} is not on ${sheetName}`,
-      );
+  if (layoutVariant === "multi-sheet") {
+    for (const [sheetName, componentNames] of Object.entries(
+      componentsBySheet,
+    )) {
+      const expectedSheetId = sheetIdByName.get(sheetName);
+      assert(expectedSheetId, `Missing sheet id for ${sheetName}`);
+      for (const componentName of componentNames) {
+        const component = findSchematicComponent(circuitJson, componentName);
+        assert(
+          component.schematic_sheet_id === expectedSheetId,
+          `${componentName} is not on ${sheetName}`,
+        );
+      }
+    }
+  } else {
+    const fullSheetId = sheetIdByName.get("reference_full");
+    assert(fullSheetId, "Missing full reference sheet id");
+    for (const componentNames of Object.values(componentsBySheet)) {
+      for (const componentName of componentNames) {
+        const component = findSchematicComponent(circuitJson, componentName);
+        assert(
+          component.schematic_sheet_id === fullSheetId,
+          `${componentName} is not on the full reference sheet`,
+        );
+      }
     }
   }
 
@@ -402,6 +431,20 @@ const testConnectivity = async () => {
       element.type === "schematic_component" ||
       element.type === "schematic_net_label",
   );
+  const schematicElementName = (element: AnyCircuitElement) => {
+    if ("source_component_id" in element) {
+      const sourceComponent = circuitJson.find(
+        (candidate) =>
+          candidate.type === "source_component" &&
+          candidate.source_component_id === element.source_component_id,
+      );
+      if (sourceComponent && "name" in sourceComponent) {
+        return sourceComponent.name;
+      }
+    }
+    if ("text" in element) return element.text;
+    return element.type;
+  };
   for (
     let firstIndex = 0;
     firstIndex < schematicBodiesAndLabels.length;
@@ -429,7 +472,7 @@ const testConnectivity = async () => {
 
       assert(
         overlapX <= 0.05 || overlapY <= 0.05,
-        `${first.type} ${"schematic_component_id" in first ? first.schematic_component_id : "text" in first ? first.text : ""} overlaps ${second.type} ${"schematic_component_id" in second ? second.schematic_component_id : "text" in second ? second.text : ""} on ${first.schematic_sheet_id}`,
+        `${first.type} ${schematicElementName(first)} overlaps ${second.type} ${schematicElementName(second)} on ${first.schematic_sheet_id}`,
       );
     }
   }
@@ -454,6 +497,24 @@ const testConnectivity = async () => {
   assert(findSchematicCenter(circuitJson, "J4").y < icCenter.y, "J4 below");
   assert(findSchematicCenter(circuitJson, "J5").x > icCenter.x, "J5 right");
   assert(findSchematicCenter(circuitJson, "J6").y > icCenter.y, "J6 above");
+
+  if (layoutVariant === "single-sheet") {
+    const jtagCenter = findSchematicCenter(circuitJson, "JTAG");
+    const bslCenter = findSchematicCenter(circuitJson, "BSL");
+    const powerCenter = findSchematicCenter(circuitJson, "J1");
+    const userCenter = findSchematicCenter(circuitJson, "SW1");
+    const channelCenter = findSchematicCenter(circuitJson, "JP13");
+    assert(jtagCenter.x < icCenter.x, "Figure B-78 places JTAG left of IC1");
+    assert(jtagCenter.y > icCenter.y, "Figure B-78 places JTAG above IC1");
+    assert(bslCenter.y > icCenter.y, "Figure B-78 places BSL above IC1");
+    assert(powerCenter.x < icCenter.x, "Figure B-78 places power left of IC1");
+    assert(userCenter.x < icCenter.x, "Figure B-78 places SW1 left of IC1");
+    assert(userCenter.y < icCenter.y, "Figure B-78 places SW1 below IC1");
+    assert(
+      channelCenter.x > icCenter.x,
+      "Figure B-78 places channel headers right of IC1",
+    );
+  }
 
   const socketCenters = Object.fromEntries(
     ["J3", "J4", "J5", "J6"].map((name) => [
@@ -545,7 +606,9 @@ const testConnectivity = async () => {
 
   let directSocketTraceCount = 0;
   const directSocketMcuPins = new Set<number>();
-  const mcuSocketSheetId = sheetIdByName.get("mcu_socket");
+  const mcuSocketSheetId = sheetIdByName.get(
+    layoutVariant === "single-sheet" ? "reference_full" : "mcu_socket",
+  );
   assert(mcuSocketSheetId, "Missing MCU socket sheet id");
   for (const trace of circuitJson) {
     if (trace.type !== "schematic_trace") continue;
@@ -716,5 +779,8 @@ const testConnectivity = async () => {
 };
 
 testPinMap();
-await testConnectivity();
-console.log("MSP430FR6007 pin-map and connectivity checks passed");
+await testConnectivity("single-sheet");
+await testConnectivity("multi-sheet");
+console.log(
+  "MSP430FR6007 single-sheet and multi-sheet connectivity checks passed",
+);
