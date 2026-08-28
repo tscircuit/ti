@@ -8,11 +8,6 @@ import { SN74LVC1G34DBVR } from "../chips/SN74LVC1G34DBVR.circuit.tsx";
  */
 export const LogicBuffer_SN74LVC1G34 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
-    <breakoutpoint connection=".U1 > .A" pcbX={-2.5} pcbY={0} />
-    <breakoutpoint connection=".U1 > .Y" pcbX={2.5} pcbY={0} />
-    <breakoutpoint connection=".U1 > .VCC" pcbX={0} pcbY={2.2} />
-    <breakoutpoint connection=".U1 > .GND" pcbX={0} pcbY={-2.2} />
-
     <SN74LVC1G34DBVR
       name="U1"
       schX={0}
