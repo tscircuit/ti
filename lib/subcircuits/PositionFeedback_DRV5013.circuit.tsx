@@ -84,6 +84,10 @@ const HallSensorChannel = ({
       name={sensorName}
       schX={sensorCenter.x}
       schY={sensorCenter.y}
+      schPinArrangement={{
+        leftSide: { direction: "top-to-bottom", pins: [1] },
+        rightSide: { direction: "top-to-bottom", pins: [2, 3] },
+      }}
     />
     <capacitor
       name={capacitorName}

@@ -1,3 +1,4 @@
+import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { MSP430G2332IPW20 } from "../chips/MSP430G2332IPW20.circuit.tsx";
 import { TPS78230DRVR } from "../chips/TPS78230DRVR.circuit.tsx";
@@ -5,12 +6,15 @@ import { TPS78230DRVR } from "../chips/TPS78230DRVR.circuit.tsx";
 const threeVoltNetName = "​3V";
 const threeVoltNetSelector = "net.​3V";
 
-export const Microcontroller_MSP430G2332 = () => (
+export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
   <subcircuit
     routingDisabled
     schAutoLayoutEnabled={false}
     schTraceAutoLabelEnabled={false}
     schMaxTraceDistance={100}
+    schX={4.5}
+    schY={2.9}
+    {...props}
   >
     <net name="GND" isGroundNet />
     <net name={threeVoltNetName} isPowerNet />

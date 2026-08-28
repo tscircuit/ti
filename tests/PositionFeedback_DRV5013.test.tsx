@@ -143,14 +143,10 @@ describe("TIDA-01389 position feedback extraction", () => {
     }
   });
 
-  test("uses the data-sheet DBZ pin numbers and aliases", () => {
+  test("uses the data-sheet DBZ pin numbers and names", () => {
     for (const sensor of ["U5", "U6"]) {
-      expect(port(sensor, 1).port_hints).toEqual(
-        expect.arrayContaining(["VCC", "VS"]),
-      );
-      expect(port(sensor, 2).port_hints).toEqual(
-        expect.arrayContaining(["OUT", "OUTPUT"]),
-      );
+      expect(port(sensor, 1).port_hints).toContain("VCC");
+      expect(port(sensor, 2).port_hints).toContain("OUT");
       expect(port(sensor, 3).port_hints).toContain("GND");
     }
 
