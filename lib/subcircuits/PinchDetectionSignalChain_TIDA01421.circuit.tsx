@@ -86,6 +86,7 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
         output trace still requests the source spelling as its display label. */}
     <net name="V3_3" isPowerNet />
     <net name="GND" isGroundNet />
+    <net name="BIAS" />
 
     {/* Current-shunt input, common-mode filter, and INA240A1-Q1 stage. */}
     <MotorCurrentConnector name="J1" {...p(180, 890)} />
@@ -294,7 +295,8 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="C5.pin1" to="C6.pin1" />
     <trace from="C5.pin2" to="C6.pin2" />
 
-    <trace from="R11.pin1" to="R10.pin1" schDisplayLabel="BIAS" />
+    <trace from="R11.pin1" to="net.BIAS" schDisplayLabel="BIAS" />
+    <trace from="R10.pin1" to="net.BIAS" schDisplayLabel="BIAS" />
 
     {/* LMV7275-Q1 inverting comparator, hysteresis, and open-drain pull-up. */}
     <LMV7275IDCKRQ1 name="U1" noSchematicRepresentation />
@@ -359,47 +361,35 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="R15.pin1" to="U1.IN_PLUS" />
     <trace from="R15.pin1" to="R16.pin1" />
     <trace from="U1.OUT" to="R16.pin2" />
-    <trace from="U1.OUT" to="R4.pin1" />
-    <trace from="R4.pin1" to="C15.pin1" schDisplayLabel="TIMER" />
+    <trace from="U1.OUT" to="R4.pin1" schDisplayLabel="TIMER" />
+    <trace from="R4.pin1" to="C15.pin1" />
     <trace name="U2-V5" from="U2.VS" to="net.V5" schDisplayLabel="V5" />
     <trace name="U2-REF1-V5" from="U2.REF1" to="net.V5" schDisplayLabel="V5" />
-    <trace name="C3-V5" from="C3.pin1" to="net.V5" schDisplayLabel="V5" />
-    <trace name="R11-V5" from="R11.pin2" to="net.V5" schDisplayLabel="V5" />
+    <trace name="C3-V5" from="C3.pin1" to="net.V5" />
+    <trace name="R11-V5" from="R11.pin2" to="net.V5" />
     <trace name="U3A-V5" from="U3A.pin5" to="net.V5" />
     <trace name="U3B-V5" from="U3B.pin5" to="net.V5" />
-    <trace name="C5-V5" from="C5.pin1" to="net.V5" schDisplayLabel="V5" />
-    <trace name="C2-V5" from="C2.pin1" to="net.V5" schDisplayLabel="V5" />
+    <trace name="C5-V5" from="C5.pin1" to="net.V5" />
+    <trace name="C2-V5" from="C2.pin1" to="net.V5" />
     <trace name="U1-V5" from="U1Symbol.pin5" to="net.V5" />
-    <trace name="R15-V5" from="R15.pin2" to="net.V5" schDisplayLabel="V5" />
+    <trace name="R15-V5" from="R15.pin2" to="net.V5" />
 
-    <trace name="U2-GND" from="U2.GND" to="net.GND" schDisplayLabel="GND" />
-    <trace name="C3-GND" from="C3.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace name="C10-GND" from="C10.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace name="R17-GND" from="R17.pin1" to="net.GND" schDisplayLabel="GND" />
+    <trace name="U2-GND" from="U2.GND" to="net.GND" />
+    <trace name="C3-GND" from="C3.pin2" to="net.GND" />
+    <trace name="C10-GND" from="C10.pin2" to="net.GND" />
+    <trace name="R17-GND" from="R17.pin1" to="net.GND" />
     <trace name="U3A-GND" from="U3A.pin3" to="net.GND" />
     <trace name="U3B-GND" from="U3B.pin3" to="net.GND" />
-    <trace name="C5-GND" from="C5.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace name="C9-GND" from="C9.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace name="C2-GND" from="C2.pin2" to="net.GND" schDisplayLabel="GND" />
+    <trace name="C5-GND" from="C5.pin2" to="net.GND" />
+    <trace name="C9-GND" from="C9.pin2" to="net.GND" />
+    <trace name="C2-GND" from="C2.pin2" to="net.GND" />
     <trace name="U1-GND" from="U1Symbol.pin3" to="net.GND" />
-    <trace name="R18-GND" from="R18.pin1" to="net.GND" schDisplayLabel="GND" />
-    <trace name="C15-GND" from="C15.pin2" to="net.GND" schDisplayLabel="GND" />
-    <trace
-      name="timer-pullup"
-      from="R4.pin2"
-      to="net.V3_3"
-      schDisplayLabel="V3.3"
-    />
+    <trace name="R18-GND" from="R18.pin1" to="net.GND" />
+    <trace name="C15-GND" from="C15.pin2" to="net.GND" />
+    <trace name="timer-pullup" from="R4.pin2" to="net.V3_3" />
     {/* The TI sheet uses local rail symbols rather than sheet-wide V5/GND
         buses. Explicitly placed native rail labels preserve that topology;
         signal names continue to use schDisplayLabel on their real traces. */}
-    <netlabel net="V5" connection="U2.VS" anchorSide="right" {...p(450, 920)} />
-    <netlabel
-      net="V5"
-      connection="U2.REF1"
-      anchorSide="left"
-      {...p(600, 900)}
-    />
     <netlabel net="GND" connection="U2.GND" anchorSide="top" {...p(570, 840)} />
     <netlabel
       net="V5"

@@ -731,6 +731,14 @@ test("preserves the local power nets and renders without circuit errors", () => 
     element.type.endsWith("_error"),
   );
   expect(circuitErrors).toEqual([]);
+
+  const powerGroundLabels = powerJson.filter(
+    (element) =>
+      element.type === "schematic_net_label" &&
+      element.text === "GND" &&
+      element.symbol_name === "rail_down",
+  );
+  expect(powerGroundLabels).toHaveLength(4);
 });
 
 test("uses on-trace labels for the source signal names", () => {
@@ -738,13 +746,16 @@ test("uses on-trace labels for the source signal names", () => {
     .filter((element) => element.type === "source_net")
     .map((net) => net.name)
     .sort();
-  expect(explicitNetNames).toEqual(["GND", "V3_3", "V5"]);
+  expect(explicitNetNames).toEqual(["BIAS", "GND", "V3_3", "V5"]);
 
   const renderedLabels = [
     ...new Set(
-      signalJson
-        .filter((element) => element.type === "schematic_net_label")
-        .map((label) => label.text),
+      signalJson.flatMap((element) => {
+        if (element.type === "schematic_net_label") return [element.text];
+        if (element.type === "schematic_text" && element.source_trace_id)
+          return [element.text];
+        return [];
+      }),
     ),
   ].sort();
   expect(renderedLabels).toEqual([

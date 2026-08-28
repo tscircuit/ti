@@ -84,6 +84,33 @@ export const PinchDetectionPower_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="U5.VOUT" to="net.V5" />
     <trace from="C14.pin2" to="net.GND" />
 
+    {/* The source draws four independent local GND symbols in this block.
+        Keep them as native electrical rail labels rather than a shared bus. */}
+    <netlabel
+      net="GND"
+      connection="C11.pin2"
+      anchorSide="top"
+      {...p(690, 410)}
+    />
+    <netlabel
+      net="GND"
+      connection="C12.pin2"
+      anchorSide="top"
+      {...p(900, 410)}
+    />
+    <netlabel
+      net="GND"
+      connection="C13.pin2"
+      anchorSide="top"
+      {...p(690, 250)}
+    />
+    <netlabel
+      net="GND"
+      connection="C14.pin2"
+      anchorSide="top"
+      {...p(900, 250)}
+    />
+
     <port name="PWR" direction="left" connectsTo="U4.VIN" />
     <port name="V3_3" direction="right" connectsTo="U4.VOUT" />
     <port name="V5" direction="right" connectsTo="U5.VOUT" />
