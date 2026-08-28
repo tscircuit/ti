@@ -133,12 +133,12 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
-import { PowerSupply_Boost_LM25122_TIDA00699 } from "./lib/subcircuits/PowerSupply_Boost_LM25122_TIDA00699.circuit.tsx";
-import { PowerSupply_Buck_LM53603_TIDA00699 } from "./lib/subcircuits/PowerSupply_Buck_LM53603_TIDA00699.circuit.tsx";
-import { PowerSupply_EmiFilter_TIDA00699 } from "./lib/subcircuits/PowerSupply_EmiFilter_TIDA00699.circuit.tsx";
-import { PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699 } from "./lib/subcircuits/PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699.circuit.tsx";
-import { PowerSupply_Supervisor_TPS3808_TIDA00699 } from "./lib/subcircuits/PowerSupply_Supervisor_TPS3808_TIDA00699.circuit.tsx";
-import { PowerSupply_TIDA00699 } from "./lib/subcircuits/PowerSupply_TIDA00699.circuit.tsx";
+import { AutomotiveBatteryFrontEnd } from "./lib/subcircuits/AutomotiveBatteryFrontEnd.circuit.tsx";
+import { AutomotivePowerInputEmiFilter } from "./lib/subcircuits/AutomotivePowerInputEmiFilter.circuit.tsx";
+import { BoostConverter_LM25122Q1 } from "./lib/subcircuits/BoostConverter_LM25122Q1.circuit.tsx";
+import { BuckConverter_LM53603Q1 } from "./lib/subcircuits/BuckConverter_LM53603Q1.circuit.tsx";
+import { ReverseBatteryProtection_LM74610Q1 } from "./lib/subcircuits/ReverseBatteryProtection_LM74610Q1.circuit.tsx";
+import { VoltageSupervisor_TPS3808Q1 } from "./lib/subcircuits/VoltageSupervisor_TPS3808Q1.circuit.tsx";
 import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits/BatteryCharging_2to5CellNVDCBuckBoost_BQ25731.circuit.tsx";
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
@@ -214,12 +214,12 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  PowerSupply_Boost_LM25122_TIDA00699,
-  PowerSupply_Buck_LM53603_TIDA00699,
-  PowerSupply_EmiFilter_TIDA00699,
-  PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
-  PowerSupply_Supervisor_TPS3808_TIDA00699,
-  PowerSupply_TIDA00699,
+  AutomotiveBatteryFrontEnd,
+  AutomotivePowerInputEmiFilter,
+  BoostConverter_LM25122Q1,
+  BuckConverter_LM53603Q1,
+  ReverseBatteryProtection_LM74610Q1,
+  VoltageSupervisor_TPS3808Q1,
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
@@ -376,12 +376,12 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  PowerSupply_Boost_LM25122_TIDA00699,
-  PowerSupply_Buck_LM53603_TIDA00699,
-  PowerSupply_EmiFilter_TIDA00699,
-  PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
-  PowerSupply_Supervisor_TPS3808_TIDA00699,
-  PowerSupply_TIDA00699,
+  AutomotiveBatteryFrontEnd,
+  AutomotivePowerInputEmiFilter,
+  BoostConverter_LM25122Q1,
+  BuckConverter_LM53603Q1,
+  ReverseBatteryProtection_LM74610Q1,
+  VoltageSupervisor_TPS3808Q1,
   BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,

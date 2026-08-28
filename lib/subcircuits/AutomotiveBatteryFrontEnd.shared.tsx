@@ -1113,7 +1113,7 @@ const u4Connections = {
   pin6: "net.VSYS",
 };
 
-export type Tida00699ReferenceSectionName =
+export type AutomotiveBatteryFrontEndSectionName =
   | "reverse_battery_protection"
   | "emi_filter"
   | "boost_regulator"
@@ -1121,7 +1121,7 @@ export type Tida00699ReferenceSectionName =
   | "supervisor_and_header";
 
 const referenceComponentNamesBySection: Record<
-  Tida00699ReferenceSectionName,
+  AutomotiveBatteryFrontEndSectionName,
   readonly string[]
 > = {
   reverse_battery_protection: [
@@ -1246,7 +1246,7 @@ const referenceComponentConnections = [
 ];
 
 type ReferenceNamedNetOccurrence = {
-  sectionName: Tida00699ReferenceSectionName;
+  sectionName: AutomotiveBatteryFrontEndSectionName;
   netName: string;
   ports: readonly string[];
 };
@@ -1601,7 +1601,7 @@ const toPortSelector = ({
 }: ReferenceComponentConnection) => `.${componentName} > .${pinName}`;
 
 const getInternalReferenceTraceGroups = (
-  sectionName: Tida00699ReferenceSectionName,
+  sectionName: AutomotiveBatteryFrontEndSectionName,
 ): ReferenceTraceGroup[] => {
   const componentNames = new Set(referenceComponentNamesBySection[sectionName]);
   const portsByNetName = referenceComponentConnections
@@ -1622,7 +1622,7 @@ const getInternalReferenceTraceGroups = (
 };
 
 type ReferenceTracesProps = {
-  sectionName: Tida00699ReferenceSectionName;
+  sectionName: AutomotiveBatteryFrontEndSectionName;
 };
 
 type ReferenceNamedNetOccurrenceTracesProps = {
@@ -1685,7 +1685,7 @@ type ReferenceSectionVisual = {
 };
 
 const referenceSectionVisualByName: Record<
-  Tida00699ReferenceSectionName,
+  AutomotiveBatteryFrontEndSectionName,
   ReferenceSectionVisual
 > = {
   reverse_battery_protection: {
@@ -1723,7 +1723,7 @@ const referenceSectionVisualByName: Record<
 
 type ReferenceSpecialComponentsProps = {
   componentNames: ReadonlySet<string>;
-  schSectionName: Tida00699ReferenceSectionName;
+  schSectionName: AutomotiveBatteryFrontEndSectionName;
 };
 
 const ReferenceSpecialComponents = ({
@@ -1827,8 +1827,8 @@ const ReferenceSpecialComponents = ({
   </>
 );
 
-type Tida00699ReferenceSectionContentsProps = {
-  sectionName: Tida00699ReferenceSectionName;
+type AutomotiveBatteryFrontEndSectionContentsProps = {
+  sectionName: AutomotiveBatteryFrontEndSectionName;
 };
 
 /**
@@ -1837,9 +1837,9 @@ type Tida00699ReferenceSectionContentsProps = {
  * for the source annotations. Native schematic sections derive their own
  * dividers from those fixed component centers.
  */
-export const Tida00699ReferenceSectionContents = ({
+export const AutomotiveBatteryFrontEndSectionContents = ({
   sectionName,
-}: Tida00699ReferenceSectionContentsProps) => {
+}: AutomotiveBatteryFrontEndSectionContentsProps) => {
   const componentNames = new Set(referenceComponentNamesBySection[sectionName]);
   const referenceSectionVisual = referenceSectionVisualByName[sectionName];
 
@@ -1937,7 +1937,7 @@ export const Tida00699ReferenceSectionContents = ({
   );
 };
 
-export const Tida00699ReferenceNets = () => (
+export const AutomotiveBatteryFrontEndReferenceNets = () => (
   <>
     <net name="GND" isGroundNet />
     <net name="VBAT" isPowerNet />

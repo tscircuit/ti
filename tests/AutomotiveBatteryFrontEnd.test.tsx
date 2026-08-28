@@ -8,12 +8,12 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import ObstacleDetectionSensor from "../examples/ObstacleDetectionSensor.circuit.tsx";
 import {
   CSD18531Q5A,
-  PowerSupply_Boost_LM25122_TIDA00699,
-  PowerSupply_Buck_LM53603_TIDA00699,
-  PowerSupply_EmiFilter_TIDA00699,
-  PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
-  PowerSupply_Supervisor_TPS3808_TIDA00699,
-  PowerSupply_TIDA00699,
+  AutomotiveBatteryFrontEnd,
+  AutomotivePowerInputEmiFilter,
+  BoostConverter_LM25122Q1,
+  BuckConverter_LM53603Q1,
+  ReverseBatteryProtection_LM74610Q1,
+  VoltageSupervisor_TPS3808Q1,
   SQ4850EY,
   TiChipComponents,
   TiSubcircuitComponents,
@@ -105,13 +105,13 @@ const sectionModules: readonly [
   keyof typeof sectionComponents,
 ][] = [
   [
-    PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
+    ReverseBatteryProtection_LM74610Q1,
     "Transient & Reverse Polarity Protection",
   ],
-  [PowerSupply_EmiFilter_TIDA00699, "EMI Filter"],
-  [PowerSupply_Boost_LM25122_TIDA00699, "WVIN Boost"],
-  [PowerSupply_Buck_LM53603_TIDA00699, "WVIN Buck"],
-  [PowerSupply_Supervisor_TPS3808_TIDA00699, "SVS & Header"],
+  [AutomotivePowerInputEmiFilter, "EMI Filter"],
+  [BoostConverter_LM25122Q1, "WVIN Boost"],
+  [BuckConverter_LM53603Q1, "WVIN Buck"],
+  [VoltageSupervisor_TPS3808Q1, "SVS & Header"],
 ];
 
 const officialTraceLabelsBySection = {
@@ -152,27 +152,27 @@ const officialTraceLabelsBySection = {
 
 const tida00699SubcircuitSourceUrls = [
   new URL(
-    "../lib/subcircuits/PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699.circuit.tsx",
+    "../lib/subcircuits/ReverseBatteryProtection_LM74610Q1.circuit.tsx",
     import.meta.url,
   ),
   new URL(
-    "../lib/subcircuits/PowerSupply_EmiFilter_TIDA00699.circuit.tsx",
+    "../lib/subcircuits/AutomotivePowerInputEmiFilter.circuit.tsx",
     import.meta.url,
   ),
   new URL(
-    "../lib/subcircuits/PowerSupply_Boost_LM25122_TIDA00699.circuit.tsx",
+    "../lib/subcircuits/BoostConverter_LM25122Q1.circuit.tsx",
     import.meta.url,
   ),
   new URL(
-    "../lib/subcircuits/PowerSupply_Buck_LM53603_TIDA00699.circuit.tsx",
+    "../lib/subcircuits/BuckConverter_LM53603Q1.circuit.tsx",
     import.meta.url,
   ),
   new URL(
-    "../lib/subcircuits/PowerSupply_Supervisor_TPS3808_TIDA00699.circuit.tsx",
+    "../lib/subcircuits/VoltageSupervisor_TPS3808Q1.circuit.tsx",
     import.meta.url,
   ),
   new URL(
-    "../lib/subcircuits/PowerSupply_TIDA00699.circuit.tsx",
+    "../lib/subcircuits/AutomotiveBatteryFrontEnd.circuit.tsx",
     import.meta.url,
   ),
 ];
@@ -180,7 +180,7 @@ const tida00699SubcircuitSourceUrls = [
 test("TIDA-00699 delegates trace topology and routing to native tscircuit behavior", () => {
   const sharedImplementationSource = readFileSync(
     new URL(
-      "../lib/subcircuits/PowerSupply_TIDA00699.shared.tsx",
+      "../lib/subcircuits/AutomotiveBatteryFrontEnd.shared.tsx",
       import.meta.url,
     ),
     "utf8",
@@ -488,34 +488,34 @@ test("TIDA-00699 composite preserves all five source sections, coordinates, and 
   timeout: 15_000,
 }, async () => {
   assert.equal(
-    TiSubcircuitComponents.PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
-    PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699,
+    TiSubcircuitComponents.ReverseBatteryProtection_LM74610Q1,
+    ReverseBatteryProtection_LM74610Q1,
   );
   assert.equal(
-    TiSubcircuitComponents.PowerSupply_EmiFilter_TIDA00699,
-    PowerSupply_EmiFilter_TIDA00699,
+    TiSubcircuitComponents.AutomotivePowerInputEmiFilter,
+    AutomotivePowerInputEmiFilter,
   );
   assert.equal(
-    TiSubcircuitComponents.PowerSupply_Boost_LM25122_TIDA00699,
-    PowerSupply_Boost_LM25122_TIDA00699,
+    TiSubcircuitComponents.BoostConverter_LM25122Q1,
+    BoostConverter_LM25122Q1,
   );
   assert.equal(
-    TiSubcircuitComponents.PowerSupply_Buck_LM53603_TIDA00699,
-    PowerSupply_Buck_LM53603_TIDA00699,
+    TiSubcircuitComponents.BuckConverter_LM53603Q1,
+    BuckConverter_LM53603Q1,
   );
   assert.equal(
-    TiSubcircuitComponents.PowerSupply_Supervisor_TPS3808_TIDA00699,
-    PowerSupply_Supervisor_TPS3808_TIDA00699,
+    TiSubcircuitComponents.VoltageSupervisor_TPS3808Q1,
+    VoltageSupervisor_TPS3808Q1,
   );
   assert.equal(
-    TiSubcircuitComponents.PowerSupply_TIDA00699,
-    PowerSupply_TIDA00699,
+    TiSubcircuitComponents.AutomotiveBatteryFrontEnd,
+    AutomotiveBatteryFrontEnd,
   );
 
   const circuit = new Circuit({ platform: { pcbDisabled: true } });
   circuit.add(
     <board routingDisabled>
-      <PowerSupply_TIDA00699 name="power_supply" />
+      <AutomotiveBatteryFrontEnd name="power_supply" />
     </board>,
   );
   await circuit.renderUntilSettled();

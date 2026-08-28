@@ -312,7 +312,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
-- `PowerSupply_TIDA00699`
+- `AutomotiveBatteryFrontEnd` ([TIDA-00699](https://www.ti.com/tool/TIDA-00699))
 - `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
 - `LightDriver_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
 - `PositionFeedback_DRV5013_TIDA01389` ([TIDA-01389](https://www.ti.com/tool/TIDA-01389))
@@ -327,12 +327,12 @@ The package currently exports these subcircuit components:
 - `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
-- `PowerSupply_ReverseBatteryProtection_LM74610_TIDA00699`
-- `PowerSupply_EmiFilter_TIDA00699`
-- `PowerSupply_Boost_LM25122_TIDA00699`
-- `PowerSupply_Buck_LM53603_TIDA00699`
-- `PowerSupply_Supervisor_TPS3808_TIDA00699`
-- `PowerSupply_TIDA00699`
+- `ReverseBatteryProtection_LM74610Q1`
+- `AutomotivePowerInputEmiFilter`
+- `BoostConverter_LM25122Q1`
+- `BuckConverter_LM53603Q1`
+- `VoltageSupervisor_TPS3808Q1`
+- `AutomotiveBatteryFrontEnd` ([TIDA-00699](https://www.ti.com/tool/TIDA-00699))
 
 ## Exported Chips
 

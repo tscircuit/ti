@@ -1,4 +1,4 @@
-import { PowerSupply_TIDA00699 } from "@tsci/tscircuit.ti";
+import { AutomotiveBatteryFrontEnd } from "@tsci/tscircuit.ti";
 import "tscircuit";
 
 export default () => (
@@ -8,6 +8,9 @@ export default () => (
       displayName="Power Supply - TIDA-00699"
       sheetSize="ANSI_B"
     />
-    <PowerSupply_TIDA00699 name="power_supply" schSheetName="power_supply" />
+    <AutomotiveBatteryFrontEnd
+      name="power_supply"
+      schSheetName="power_supply"
+    />
   </board>
 );
