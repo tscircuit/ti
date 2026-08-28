@@ -15,6 +15,10 @@ export type InstrumentationAmplifier_INA350Props = SubcircuitProps & {
   bypassCapacitorName?: string;
   /** Expose TIDA-style module ports and render their signal names inline. */
   inlineNetLabels?: boolean;
+  /** Select the compact reusable symbol or TI reference-drawing block style. */
+  schematicStyle?: "triangle" | "box";
+  /** Internal supply-net label; the reusable default remains VS. */
+  supplyNetName?: string;
 };
 
 /**
@@ -30,6 +34,8 @@ export const InstrumentationAmplifier_INA350 = ({
   chipName = "U1",
   bypassCapacitorName = "C1",
   inlineNetLabels = false,
+  schematicStyle = "triangle",
+  supplyNetName = "VS",
   ...props
 }: InstrumentationAmplifier_INA350Props) => {
   if (gain !== "external" && gain !== 30 && gain !== 50) {
@@ -47,7 +53,7 @@ export const InstrumentationAmplifier_INA350 = ({
       {...(inlineNetLabels
         ? {
             schTraceAutoLabelEnabled: false,
-            schMaxTraceDistance: "1000mm",
+            schMaxTraceDistance: schematicStyle === "box" ? "4mm" : "1000mm",
           }
         : {})}
     >
@@ -58,108 +64,259 @@ export const InstrumentationAmplifier_INA350 = ({
         pcbY={0}
         schX={0}
         schY={0}
-        schWidth={undefined}
-        schHeight={undefined}
-        schPinArrangement={undefined}
-        schPinStyle={undefined}
+        schWidth={schematicStyle === "box" ? "4.2mm" : undefined}
+        schHeight={schematicStyle === "box" ? "5mm" : undefined}
+        schPinArrangement={
+          schematicStyle === "box"
+            ? {
+                leftSide: {
+                  direction: "top-to-bottom",
+                  pins: ["V_POS", "IN_NEG", "IN_POS", "SHDN", "GS"],
+                },
+                rightSide: {
+                  direction: "top-to-bottom",
+                  pins: ["OUT", "REF"],
+                },
+                bottomSide: {
+                  direction: "left-to-right",
+                  pins: ["EP", "V_NEG"],
+                },
+              }
+            : undefined
+        }
+        schPinStyle={
+          schematicStyle === "box"
+            ? {
+                IN_NEG: { marginTop: 0.25 },
+                IN_POS: { marginTop: 0.25 },
+                SHDN: { marginTop: 0.25 },
+                GS: { marginTop: 0.25 },
+                REF: { marginTop: 0.8 },
+                V_NEG: { marginLeft: 0.7 },
+              }
+            : undefined
+        }
         symbol={
-          <symbol>
-            <schematicpath
-              points={[
-                { x: -2, y: 2 },
-                { x: 2, y: 0 },
-                { x: -2, y: -2 },
-                { x: -2, y: 2 },
-              ]}
-              strokeWidth={0.04}
-            />
-            <schematictext
-              text="{NAME}"
-              schX={-0.5}
-              schY={0.25}
-              fontSize={0.22}
-            />
-            <schematictext
-              text="INA350CDS"
-              schX={-0.5}
-              schY={-0.15}
-              fontSize={0.22}
-            />
-            <schematictext text="-" schX={-1.65} schY={0.7} fontSize={0.3} />
-            <schematictext text="+" schX={-1.65} schY={-0.7} fontSize={0.3} />
-            <port
-              name="pin2"
-              pinNumber={2}
-              schX={-2.5}
-              schY={1}
-              direction="left"
-              schStemLength={0.5}
-            />
-            <port
-              name="pin3"
-              pinNumber={3}
-              schX={-2.5}
-              schY={-1}
-              direction="left"
-              schStemLength={0.5}
-            />
-            <port
-              name="pin6"
-              pinNumber={6}
-              schX={2.5}
-              schY={0}
-              direction="right"
-              schStemLength={0.5}
-            />
-            <port
-              name="pin8"
-              pinNumber={8}
-              schX={-1.65}
-              schY={2.2}
-              direction="up"
-              schStemLength={0.375}
-            />
-            <port
-              name="pin7"
-              pinNumber={7}
-              schX={-1}
-              schY={2.2}
-              direction="up"
-              schStemLength={0.7}
-            />
-            <port
-              name="pin1"
-              pinNumber={1}
-              schX={-0.35}
-              schY={2.2}
-              direction="up"
-              schStemLength={1.025}
-            />
-            <port
-              name="pin9"
-              pinNumber={9}
-              schX={-1.65}
-              schY={-2.2}
-              direction="down"
-              schStemLength={0.375}
-            />
-            <port
-              name="pin4"
-              pinNumber={4}
-              schX={-1}
-              schY={-2.2}
-              direction="down"
-              schStemLength={0.7}
-            />
-            <port
-              name="pin5"
-              pinNumber={5}
-              schX={0.35}
-              schY={-2.2}
-              direction="down"
-              schStemLength={1.375}
-            />
-          </symbol>
+          schematicStyle === "triangle" ? (
+            <symbol>
+              <schematicpath
+                points={[
+                  { x: -2, y: 2 },
+                  { x: 2, y: 0 },
+                  { x: -2, y: -2 },
+                  { x: -2, y: 2 },
+                ]}
+                strokeWidth={0.04}
+              />
+              <schematictext
+                text="{NAME}"
+                schX={-0.5}
+                schY={0.25}
+                fontSize={0.22}
+              />
+              <schematictext
+                text="INA350CDS"
+                schX={-0.5}
+                schY={-0.15}
+                fontSize={0.22}
+              />
+              <schematictext text="-" schX={-1.65} schY={0.7} fontSize={0.3} />
+              <schematictext text="+" schX={-1.65} schY={-0.7} fontSize={0.3} />
+              <port
+                name="pin2"
+                pinNumber={2}
+                schX={-2.5}
+                schY={1}
+                direction="left"
+                schStemLength={0.5}
+              />
+              <port
+                name="pin3"
+                pinNumber={3}
+                schX={-2.5}
+                schY={-1}
+                direction="left"
+                schStemLength={0.5}
+              />
+              <port
+                name="pin6"
+                pinNumber={6}
+                schX={2.5}
+                schY={0}
+                direction="right"
+                schStemLength={0.5}
+              />
+              <port
+                name="pin8"
+                pinNumber={8}
+                schX={-1.65}
+                schY={2.2}
+                direction="up"
+                schStemLength={0.375}
+              />
+              <port
+                name="pin7"
+                pinNumber={7}
+                schX={-1}
+                schY={2.2}
+                direction="up"
+                schStemLength={0.7}
+              />
+              <port
+                name="pin1"
+                pinNumber={1}
+                schX={-0.35}
+                schY={2.2}
+                direction="up"
+                schStemLength={1.025}
+              />
+              <port
+                name="pin9"
+                pinNumber={9}
+                schX={-1.65}
+                schY={-2.2}
+                direction="down"
+                schStemLength={0.375}
+              />
+              <port
+                name="pin4"
+                pinNumber={4}
+                schX={-1}
+                schY={-2.2}
+                direction="down"
+                schStemLength={0.7}
+              />
+              <port
+                name="pin5"
+                pinNumber={5}
+                schX={0.35}
+                schY={-2.2}
+                direction="down"
+                schStemLength={1.375}
+              />
+            </symbol>
+          ) : schematicStyle === "box" ? (
+            <symbol>
+              <schematicpath
+                points={[
+                  { x: -2.1, y: 2.5 },
+                  { x: 2.1, y: 2.5 },
+                  { x: 2.1, y: -2.5 },
+                  { x: -2.1, y: -2.5 },
+                  { x: -2.1, y: 2.5 },
+                ]}
+                strokeWidth={0.04}
+              />
+              <schematictext
+                text="{NAME}"
+                schX={-1.8}
+                schY={2.78}
+                anchor="left"
+                fontSize={0.22}
+              />
+              <schematictext
+                text="INA350CDSIDSGR"
+                schX={-2.1}
+                schY={-2.78}
+                anchor="left"
+                fontSize={0.2}
+              />
+              <schematictext
+                text="Thermal_Pad"
+                schX={0.35}
+                schY={-1.92}
+                fontSize={0.18}
+              />
+              <schematicpath
+                points={[
+                  { x: -0.95, y: 1.05 },
+                  { x: 0.95, y: 0.25 },
+                  { x: -0.95, y: -0.55 },
+                  { x: -0.95, y: 1.05 },
+                ]}
+                strokeWidth={0.04}
+              />
+              <schematictext text="-" schX={-0.72} schY={0.68} fontSize={0.3} />
+              <schematictext
+                text="+"
+                schX={-0.72}
+                schY={-0.18}
+                fontSize={0.3}
+              />
+              <port
+                name="pin7"
+                pinNumber={7}
+                schX={-2.5}
+                schY={1.9}
+                direction="left"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin2"
+                pinNumber={2}
+                schX={-2.5}
+                schY={1.05}
+                direction="left"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin3"
+                pinNumber={3}
+                schX={-2.5}
+                schY={0.25}
+                direction="left"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin8"
+                pinNumber={8}
+                schX={-2.5}
+                schY={-0.65}
+                direction="left"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin1"
+                pinNumber={1}
+                schX={-2.5}
+                schY={-1.5}
+                direction="left"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin6"
+                pinNumber={6}
+                schX={2.5}
+                schY={0.9}
+                direction="right"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin5"
+                pinNumber={5}
+                schX={2.5}
+                schY={-0.15}
+                direction="right"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin9"
+                pinNumber={9}
+                schX={0.5}
+                schY={-2.9}
+                direction="down"
+                schStemLength={0.4}
+              />
+              <port
+                name="pin4"
+                pinNumber={4}
+                schX={1.3}
+                schY={-2.9}
+                direction="down"
+                schStemLength={0.4}
+              />
+            </symbol>
+          ) : undefined
         }
       />
       <trace
@@ -190,12 +347,13 @@ export const InstrumentationAmplifier_INA350 = ({
         pcbX={2.4}
         pcbY={-0.26}
         pcbRotation={-90}
-        schX={1.5}
-        schY={3.1}
-        schRotation={-90}
+        schX={schematicStyle === "box" ? -6 : 1.5}
+        schY={schematicStyle === "box" ? 0.8 : 3.1}
+        schRotation={schematicStyle === "box" ? undefined : -90}
+        schOrientation={schematicStyle === "box" ? "vertical" : undefined}
       />
       <netlabel
-        net="VS"
+        net={supplyNetName}
         schX={-1}
         schY={3.1}
         anchorSide="bottom"
@@ -203,7 +361,7 @@ export const InstrumentationAmplifier_INA350 = ({
         inline={inlineNetLabels}
       />
       <netlabel
-        net="VS"
+        net={supplyNetName}
         schX={1.5}
         schY={3.7}
         anchorSide="bottom"
@@ -248,6 +406,13 @@ export const InstrumentationAmplifier_INA350 = ({
         connectsTo={`.${bypassCapacitorName} > .pin2`}
         inline={inlineNetLabels}
       />
+      {schematicStyle === "box" && (
+        <netlabel
+          net="GND"
+          connectsTo={`.${chipName} > .V_NEG`}
+          anchorSide="top"
+        />
+      )}
 
       <trace
         name="THERMAL_PAD"
@@ -270,80 +435,84 @@ export const InstrumentationAmplifier_INA350 = ({
               name: "IN_NEG",
               connectsTo: `.${chipName} > .IN_NEG`,
               schX: -3,
-              schY: 1,
+              schY: schematicStyle === "box" ? 0.8 : 1,
               direction: "left",
             },
             {
               name: "IN_POS",
               connectsTo: `.${chipName} > .IN_POS`,
               schX: -3,
-              schY: -1,
+              schY: schematicStyle === "box" ? 0 : -1,
               direction: "left",
             },
             {
               name: "OUT",
               connectsTo: `.${chipName} > .OUT`,
               schX: 3,
-              schY: 0,
+              schY: schematicStyle === "box" ? 0.8 : 0,
               direction: "right",
             },
             {
               name: "V_POS",
-              net: "VS",
+              net: supplyNetName,
               connectsTo: [
                 `.${chipName} > .V_POS`,
                 `.${bypassCapacitorName} > .pin1`,
               ],
-              schX: -1,
-              schY: 3.7,
-              direction: "up",
+              inlineLabelConnectsTo:
+                schematicStyle === "box"
+                  ? `.${bypassCapacitorName} > .pin1`
+                  : undefined,
+              schX: schematicStyle === "box" ? -5.8 : -1,
+              schY: schematicStyle === "box" ? 1.9 : 3.7,
+              direction: schematicStyle === "box" ? "left" : "up",
             },
             {
               name: "V_NEG",
               net: "GND",
-              connectsTo: [
-                `.${chipName} > .V_NEG`,
-                `.${chipName} > .EP`,
-                `.${bypassCapacitorName} > .pin2`,
-              ],
-              schX: -1,
+              connectsTo: [`.${chipName} > .V_NEG`, `.${chipName} > .EP`],
+              inlineLabelConnectsTo:
+                schematicStyle === "box" ? false : undefined,
+              schX: schematicStyle === "box" ? 1 : -1,
               schY: -3,
               direction: "down",
             },
             {
               name: "REF",
               connectsTo: `.${chipName} > .REF`,
-              schX: 1.5,
-              schY: -2.2,
-              direction: "down",
+              schX: schematicStyle === "box" ? 3 : 1.5,
+              schY: schematicStyle === "box" ? 0 : -2.2,
+              direction: schematicStyle === "box" ? "right" : "down",
             },
             {
               name: "GS",
               connectsTo: `.${chipName} > .GS`,
-              schX: -0.35,
-              schY: 3,
-              direction: "up",
+              schX: schematicStyle === "box" ? -3 : -0.35,
+              schY: schematicStyle === "box" ? -1.4 : 3,
+              direction: schematicStyle === "box" ? "left" : "up",
             },
             {
               name: "SHDN",
               connectsTo: `.${chipName} > .SHDN`,
-              schX: -1.65,
-              schY: 3,
-              direction: "up",
+              schX: schematicStyle === "box" ? -3 : -1.65,
+              schY: schematicStyle === "box" ? -0.8 : 3,
+              direction: schematicStyle === "box" ? "left" : "up",
             },
           ]}
         />
       )}
-      <schematictext
-        text={
-          gain === "external"
-            ? "GS: low = 30, high/open = 50"
-            : `G = ${gain} V/V`
-        }
-        schX={0}
-        schY={-3.1}
-        fontSize={0.2}
-      />
+      {schematicStyle === "triangle" && (
+        <schematictext
+          text={
+            gain === "external"
+              ? "GS: low = 30, high/open = 50"
+              : `G = ${gain} V/V`
+          }
+          schX={0}
+          schY={-3.1}
+          fontSize={0.2}
+        />
+      )}
     </subcircuit>
   );
 };

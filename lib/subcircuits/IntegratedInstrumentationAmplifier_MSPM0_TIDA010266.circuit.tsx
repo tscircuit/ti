@@ -15,59 +15,133 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
       schTraceAutoLabelEnabled={false}
       schMaxTraceDistance="1000mm"
     >
-      <group
+      <chip
         name="OPA0"
-        showAsSchematicBox
-        schTitle="Internal OPA0"
-        schWidth={2.6}
-        schHeight={2.4}
+        manufacturerPartNumber="MSPM0 Internal OPA0"
+        doNotPlace
+        pinLabels={{
+          pin1: "+",
+          pin2: "-",
+          pin3: "OUT",
+        }}
         schX={-2.2}
-        schY={0}
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: ["inverting_input", "non_inverting_input"],
-          },
-          rightSide: { direction: "top-to-bottom", pins: ["output"] },
-        }}
-      >
-        <port name="inverting_input" direction="left" />
-        <port name="non_inverting_input" direction="left" />
-        <port name="output" direction="right" />
-      </group>
-      <trace from=".OPA0 > .inverting_input" to="net.OPA0_IN0_NEG" />
-      <trace from=".OPA0 > .non_inverting_input" to="net.OPA0_IN0_POS" />
+        schY={-0.4}
+        symbol={
+          <symbol>
+            <schematicpath
+              points={[
+                { x: -1.35, y: 1.15 },
+                { x: 1.35, y: 0 },
+                { x: -1.35, y: -1.15 },
+                { x: -1.35, y: 1.15 },
+              ]}
+              strokeWidth={0.04}
+            />
+            <schematictext text="-" schX={-1.02} schY={0.55} fontSize={0.3} />
+            <schematictext text="+" schX={-1.02} schY={-0.55} fontSize={0.3} />
+            <schematictext
+              text="Internal OPA0"
+              schX={0}
+              schY={-1.48}
+              fontSize={0.22}
+            />
+            <port
+              name="pin2"
+              pinNumber={2}
+              schX={-1.85}
+              schY={0.55}
+              direction="left"
+              schStemLength={0.5}
+            />
+            <port
+              name="pin1"
+              pinNumber={1}
+              schX={-1.85}
+              schY={-0.55}
+              direction="left"
+              schStemLength={0.5}
+            />
+            <port
+              name="pin3"
+              pinNumber={3}
+              schX={1.85}
+              schY={0}
+              direction="right"
+              schStemLength={0.5}
+            />
+          </symbol>
+        }
+      />
+      <trace from=".OPA0 > .pin2" to="net.OPA0_IN0_NEG" />
+      <trace from=".OPA0 > .pin1" to="net.OPA0_IN0_POS" />
 
-      <group
+      <chip
         name="OPA1"
-        showAsSchematicBox
-        schTitle="Internal OPA1"
-        schWidth={2.6}
-        schHeight={2.4}
-        schX={3.2}
-        schY={0}
-        schPinArrangement={{
-          leftSide: {
-            direction: "top-to-bottom",
-            pins: ["inverting_input", "non_inverting_input"],
-          },
-          rightSide: { direction: "top-to-bottom", pins: ["output"] },
+        manufacturerPartNumber="MSPM0 Internal OPA1"
+        doNotPlace
+        pinLabels={{
+          pin1: "+",
+          pin2: "-",
+          pin3: "OUT",
         }}
-      >
-        <port name="inverting_input" direction="left" />
-        <port name="non_inverting_input" direction="left" />
-        <port name="output" direction="right" />
-      </group>
-      <trace from=".OPA1 > .inverting_input" to="net.OPA1_IN0_NEG" />
-      <trace from=".OPA1 > .output" to="net.OPA1_OUT" />
+        schX={3.2}
+        schY={-0.4}
+        symbol={
+          <symbol>
+            <schematicpath
+              points={[
+                { x: -1.35, y: 1.15 },
+                { x: 1.35, y: 0 },
+                { x: -1.35, y: -1.15 },
+                { x: -1.35, y: 1.15 },
+              ]}
+              strokeWidth={0.04}
+            />
+            <schematictext text="-" schX={-1.02} schY={0.55} fontSize={0.3} />
+            <schematictext text="+" schX={-1.02} schY={-0.55} fontSize={0.3} />
+            <schematictext
+              text="Internal OPA1"
+              schX={0}
+              schY={-1.48}
+              fontSize={0.22}
+            />
+            <port
+              name="pin2"
+              pinNumber={2}
+              schX={-1.85}
+              schY={0.55}
+              direction="left"
+              schStemLength={0.5}
+            />
+            <port
+              name="pin1"
+              pinNumber={1}
+              schX={-1.85}
+              schY={-0.55}
+              direction="left"
+              schStemLength={0.5}
+            />
+            <port
+              name="pin3"
+              pinNumber={3}
+              schX={1.85}
+              schY={0}
+              direction="right"
+              schStemLength={0.5}
+            />
+          </symbol>
+        }
+      />
+      <trace from=".OPA1 > .pin2" to="net.OPA1_IN0_NEG" />
+      <trace from=".OPA1 > .pin3" to="net.OPA1_OUT" />
       <port
         name="OPA0_OUT_PORT"
         schX={originX + 6.5}
-        schY={originY}
+        schY={originY - 0.4}
         direction="right"
       />
       <trace
-        from=".OPA0 > .output"
+        from=".OPA0 > .pin3"
         to=".OPA0_OUT_PORT"
         schDisplayLabel="OPA0_OUT"
       />
@@ -96,11 +170,11 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
       <port
         name="OPA1_IN0_POS_PORT"
         schX={originX + 7}
-        schY={originY - 0.6}
+        schY={originY - 0.95}
         direction="right"
       />
       <trace
-        from=".OPA1 > .non_inverting_input"
+        from=".OPA1 > .pin1"
         to=".OPA1_IN0_POS_PORT"
         schDisplayLabel="OPA1_IN0_POS"
       />
@@ -163,39 +237,39 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
           {
             name: "OPA0_IN0_NEG",
             connectsTo: [
-              ".OPA0 > .inverting_input",
+              ".OPA0 > .pin2",
               ".R14 > .pin2",
               ".R12 > .pin1",
               ".R11 > .pin1",
             ],
             schX: -3.8,
-            schY: 0.6,
+            schY: 0.15,
             direction: "left",
           },
           {
             name: "OPA0_IN0_POS",
-            connectsTo: ".OPA0 > .non_inverting_input",
+            connectsTo: ".OPA0 > .pin1",
             schX: -3.8,
-            schY: -0.6,
+            schY: -0.95,
             direction: "left",
           },
           {
             name: "OPA1_IN0_NEG",
             connectsTo: [
-              ".OPA1 > .inverting_input",
+              ".OPA1 > .pin2",
               ".R11 > .pin2",
               ".R15 > .pin2",
               ".R13 > .pin1",
             ],
             schX: 1.6,
-            schY: 0.6,
+            schY: 0.15,
             direction: "left",
           },
           {
             name: "OPA1_OUT",
-            connectsTo: [".OPA1 > .output", ".R13 > .pin2"],
+            connectsTo: [".OPA1 > .pin3", ".R13 > .pin2"],
             schX: 5,
-            schY: 0,
+            schY: -0.4,
             direction: "right",
           },
         ]}

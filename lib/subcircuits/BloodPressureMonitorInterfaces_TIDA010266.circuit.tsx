@@ -253,10 +253,10 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={inaFilterSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={-23}
-        schY={-11.5}
-        schWidth="0.8mm"
-        schHeight="1.5mm"
+        schX={-14.5}
+        schY={-19.5}
+        schWidth="1.1mm"
+        schHeight="2mm"
         schPinArrangement={{
           rightSide: {
             pins: ["pin3", "pin2", "pin1"],
@@ -279,8 +279,8 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
       />
       <port
         name="INA_GS_PORT"
-        schX={originX - 21.8}
-        schY={originY - 11.5}
+        schX={originX - 13.5}
+        schY={originY - 19.5}
         direction="right"
       />
       <trace from=".J10 > .INA_GS" to=".INA_GS_PORT" schDisplayLabel="INA_GS" />

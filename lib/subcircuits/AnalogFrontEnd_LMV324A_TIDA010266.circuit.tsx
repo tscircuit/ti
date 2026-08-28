@@ -3,6 +3,64 @@ import { LMV324AIPWR } from "../chips/LMV324AIPWR.circuit.tsx";
 import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
 import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
 
+const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
+  <symbol>
+    <schematicpath
+      points={[
+        { x: -1.1, y: 1 },
+        { x: 1.1, y: 0 },
+        { x: -1.1, y: -1 },
+        { x: -1.1, y: 1 },
+      ]}
+      strokeWidth={0.04}
+    />
+    <schematictext text="-" schX={-0.82} schY={0.48} fontSize={0.3} />
+    <schematictext text="+" schX={-0.82} schY={-0.48} fontSize={0.3} />
+    <schematictext text={unitName} schX={1.3} schY={0.6} fontSize={0.22} />
+    <schematictext text="LMV324AIPWR" schX={1.3} schY={0.3} fontSize={0.18} />
+    <port
+      name="pin6"
+      pinNumber={6}
+      schX={-1.5}
+      schY={0.48}
+      direction="left"
+      schStemLength={0.4}
+    />
+    <port
+      name="pin5"
+      pinNumber={5}
+      schX={-1.5}
+      schY={-0.48}
+      direction="left"
+      schStemLength={0.4}
+    />
+    <port
+      name="pin7"
+      pinNumber={7}
+      schX={1.5}
+      schY={0}
+      direction="right"
+      schStemLength={0.4}
+    />
+    <port
+      name="pin4"
+      pinNumber={4}
+      schX={0}
+      schY={1.45}
+      direction="up"
+      schStemLength={0.45}
+    />
+    <port
+      name="pin11"
+      pinNumber={11}
+      schX={0}
+      schY={-1.45}
+      direction="down"
+      schStemLength={0.45}
+    />
+  </symbol>
+);
+
 export type AnalogFrontEnd_LMV324A_TIDA010266Props =
   TIDA010266SectionedSubcircuitProps & {
     inputReferenceSectionName?: string;
@@ -123,34 +181,40 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         strokeWidth={0.025}
         color="#008000"
       />
-      <schematicsymbol
+      <chip
         name="U2B"
-        displayName="U2B"
-        chipRef=".U2"
-        symbolName="opamp_no_power_right"
-        schSectionName={props.schSectionName}
+        manufacturerPartNumber="LMV324AIPWR U2B"
+        doNotPlace
         schX={0}
         schY={0}
-        connections={{
-          inp1: ".U2 > .IN_POS_B",
-          inp2: ".U2 > .IN_NEG_B",
-          out: ".U2 > .OUT_B",
+        pinLabels={{
+          pin4: "V+",
+          pin5: "+",
+          pin6: "-",
+          pin7: "OUT",
+          pin11: "V-",
         }}
+        symbol={filterOpAmpSymbol("U2B")}
       />
-      <schematicsymbol
+      <chip
         name="U2C"
-        displayName="U2C"
-        chipRef=".U2"
-        symbolName="opamp_no_power_right"
-        schSectionName={props.schSectionName}
-        schX={8}
+        manufacturerPartNumber="LMV324AIPWR U2C"
+        doNotPlace
+        schX={7}
         schY={0}
-        connections={{
-          inp1: ".U2 > .IN_POS_C",
-          inp2: ".U2 > .IN_NEG_C",
-          out: ".U2 > .OUT_C",
+        pinLabels={{
+          pin4: "V+",
+          pin5: "+",
+          pin6: "-",
+          pin7: "OUT",
+          pin11: "V-",
         }}
+        symbol={filterOpAmpSymbol("U2C")}
       />
+      <netlabel net="V3_3" connectsTo=".U2B > .pin4" inline />
+      <netlabel net="GND" connectsTo=".U2B > .pin11" anchorSide="top" />
+      <netlabel net="V3_3" connectsTo=".U2C > .pin4" inline />
+      <netlabel net="GND" connectsTo=".U2C > .pin11" anchorSide="top" />
       <schematicsymbol
         name="U2D"
         displayName="U2D"
@@ -228,8 +292,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSectionName={props.schSectionName}
         resistance="270k"
         footprint="0603"
-        schX={-3.8}
-        schY={2.2}
+        schX={0}
+        schY={3.2}
         connections={{ pin1: "net.FILTER_1_INV" }}
       />
       <capacitor
@@ -238,8 +302,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         capacitance="100nF"
         maxVoltageRating="25V"
         footprint="0603"
-        schX={-3.8}
-        schY={1.3}
+        schX={0}
+        schY={2.3}
         connections={{ pin1: "net.FILTER_1_INV" }}
       />
 
@@ -249,7 +313,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         capacitance="4.7uF"
         maxVoltageRating="16V"
         footprint="0603"
-        schX={4.7}
+        schX={3.5}
         schY={0.3}
         connections={{}}
       />
@@ -258,7 +322,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSectionName={props.schSectionName}
         resistance="20k"
         footprint="0603"
-        schX={6}
+        schX={4.8}
         schY={0.6}
         connections={{ pin2: "net.FILTER_2_INV" }}
       />
@@ -267,8 +331,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSectionName={props.schSectionName}
         resistance="270k"
         footprint="0603"
-        schX={3.8}
-        schY={2.2}
+        schX={7}
+        schY={3.2}
         connections={{ pin1: "net.FILTER_2_INV", pin2: "net.OSCILLATIONS" }}
       />
       <capacitor
@@ -277,8 +341,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         capacitance="100nF"
         maxVoltageRating="25V"
         footprint="0603"
-        schX={3.8}
-        schY={1.3}
+        schX={7}
+        schY={2.3}
         connections={{ pin1: "net.FILTER_2_INV", pin2: "net.OSCILLATIONS" }}
       />
 
@@ -343,6 +407,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".U2 > .IN_NEG_A",
               ".U2 > .IN_POS_B",
               ".U2 > .IN_POS_C",
+              ".U2B > .pin5",
+              ".U2C > .pin5",
             ],
             inlineLabelConnectsTo: [".U2 > .IN_POS_B", ".U2 > .IN_POS_C"],
             schX: 5,
@@ -359,6 +425,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           {
             name: "FILTER_1_HP",
             connectsTo: [".C11 > .pin2", ".R16 > .pin1"],
+            inlineLabelConnectsTo: ".C11 > .pin2",
             schX: -6,
             schY: 0.6,
             direction: "left",
@@ -370,7 +437,9 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".R9 > .pin1",
               ".C9 > .pin1",
               ".U2 > .IN_NEG_B",
+              ".U2B > .pin6",
             ],
+            inlineLabelConnectsTo: ".R16 > .pin2",
             schX: -3,
             schY: 1,
             direction: "left",
@@ -382,7 +451,9 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".R9 > .pin2",
               ".C9 > .pin2",
               ".C12 > .pin1",
+              ".U2B > .pin7",
             ],
+            inlineLabelConnectsTo: ".U2B > .pin7",
             schX: 2.4,
             schY: 1,
             direction: "right",
@@ -390,7 +461,8 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           {
             name: "FILTER_2_HP",
             connectsTo: [".C12 > .pin2", ".R17 > .pin1"],
-            schX: 5.3,
+            inlineLabelConnectsTo: ".C12 > .pin2",
+            schX: 4.2,
             schY: 0.3,
             direction: "right",
           },
@@ -401,15 +473,22 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".R10 > .pin1",
               ".C10 > .pin1",
               ".U2 > .IN_NEG_C",
+              ".U2C > .pin6",
             ],
-            schX: 3,
+            inlineLabelConnectsTo: ".R17 > .pin2",
+            schX: 5.5,
             schY: 1,
             direction: "right",
           },
           {
             name: "OSCILLATIONS",
-            connectsTo: [".U2 > .OUT_C", ".R10 > .pin2", ".C10 > .pin2"],
-            schX: 7,
+            connectsTo: [
+              ".U2 > .OUT_C",
+              ".R10 > .pin2",
+              ".C10 > .pin2",
+              ".U2C > .pin7",
+            ],
+            schX: 8.5,
             schY: 1,
             direction: "right",
           },

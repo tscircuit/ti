@@ -64,21 +64,43 @@ export default () => (
     <schematicsection name="adc_filter" displayName="" />
     <schematicsection name="motor_driver" displayName="" />
 
+    {/* A visually empty DNP anchor keeps the MCU and INA baselines aligned. */}
+    <chip
+      name="MCU_SECTION_BASELINE"
+      manufacturerPartNumber="section-layout-anchor"
+      doNotPlace
+      schSectionName="mcu"
+      schX={20.5}
+      schY={-7}
+      pinLabels={{ pin1: "ANCHOR" }}
+      symbol={
+        <symbol>
+          <schematicpath
+            points={[
+              { x: -0.005, y: 0 },
+              { x: 0.005, y: 0 },
+            ]}
+            strokeWidth={0}
+          />
+        </symbol>
+      }
+    />
+
     {/* Continue native dividers from their exact endpoints to the sheet border. */}
     <schematicline
       x1={33.9}
-      y1={11}
+      y1={11.2125}
       x2={35.2}
-      y2={11}
+      y2={11.2125}
       strokeWidth={0.02}
       color="#000000"
       isDashed
     />
     <schematicline
       x1={33.9}
-      y1={-6.3125}
+      y1={-8.65}
       x2={35.2}
-      y2={-6.3125}
+      y2={-8.65}
       strokeWidth={0.02}
       color="#000000"
       isDashed
@@ -111,9 +133,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={7.775}
+      x1={6.85625}
       y1={-17.9}
-      x2={7.775}
+      x2={6.85625}
       y2={-21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -169,8 +191,10 @@ export default () => (
       gain="external"
       shutdown="external"
       inlineNetLabels
-      schX={-30}
-      schY={2}
+      schematicStyle="box"
+      supplyNetName="V3_3"
+      schX={-25}
+      schY={-2.5}
     />
     <IntegratedInstrumentationAmplifier_MSPM0_TIDA010266
       name="integrated_ina"
@@ -219,8 +243,8 @@ export default () => (
       resistance="0"
       footprint="0402"
       doNotPlace
-      schX={-28}
-      schY={-2}
+      schX={-29}
+      schY={-3.3}
       connections={{
         pin1: "net.SHDN",
         pin2: "net.GND",
@@ -228,7 +252,7 @@ export default () => (
     />
     <trace from=".external_ina > .SHDN" to="net.SHDN" />
     <netlabel net="SHDN" connectsTo=".R23 > .pin1" inline />
-    <netlabel net="GND" connectsTo=".R23 > .pin2" inline />
+    <netlabel net="GND" connectsTo=".R23 > .pin2" anchorSide="top" />
 
     {/* Input, regulated rails, buffered references, and the common return. */}
     <trace from=".interfaces > .VIN" to=".power > .VIN" />
