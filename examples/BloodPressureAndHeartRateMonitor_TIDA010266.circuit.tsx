@@ -64,12 +64,57 @@ export default () => (
     <schematicsection name="adc_filter" displayName="" />
     <schematicsection name="motor_driver" displayName="" />
 
-    {/* Continue the native Programming/MCU divider to the sheet border. */}
+    {/* Continue native dividers from their exact endpoints to the sheet border. */}
     <schematicline
-      x1={11.825}
+      x1={11.925}
       y1={12.7}
       x2={35.2}
       y2={12.7}
+      strokeWidth={0.02}
+      color="#000000"
+      isDashed
+    />
+    <schematicline
+      x1={28.7}
+      y1={-8.15}
+      x2={35.2}
+      y2={-8.15}
+      strokeWidth={0.02}
+      color="#000000"
+      isDashed
+    />
+    <schematicline
+      x1={4.03125}
+      y1={21.35}
+      x2={4.03125}
+      y2={21.65}
+      strokeWidth={0.02}
+      color="#000000"
+      isDashed
+    />
+    <schematicline
+      x1={7.775}
+      y1={21.35}
+      x2={7.775}
+      y2={21.65}
+      strokeWidth={0.02}
+      color="#000000"
+      isDashed
+    />
+    <schematicline
+      x1={-12.625}
+      y1={-19.7}
+      x2={-12.625}
+      y2={-21.65}
+      strokeWidth={0.02}
+      color="#000000"
+      isDashed
+    />
+    <schematicline
+      x1={7.775}
+      y1={-19.7}
+      x2={7.775}
+      y2={-21.65}
       strokeWidth={0.02}
       color="#000000"
       isDashed
