@@ -7,6 +7,10 @@ export { BQ25895 } from "./BQ25895.circuit.tsx";
 export { BQ27441G1 } from "./BQ27441G1.circuit.tsx";
 export { BQ32002 } from "./BQ32002.circuit.tsx";
 export { CC2340R5 } from "./CC2340R5.circuit.tsx";
+export {
+  CC2540F256RHAR,
+  CC2540F256RHAR_PIN_LABELS,
+} from "./CC2540F256RHAR.circuit.tsx";
 export { CC2564C } from "./CC2564C.circuit.tsx";
 export { CC2745R10 } from "./CC2745R10.circuit.tsx";
 export { CC3235SF } from "./CC3235SF.circuit.tsx";

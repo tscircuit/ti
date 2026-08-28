@@ -21,9 +21,9 @@ const starterDefinitions = [
     sourcePath: "lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx",
   },
   {
-    componentName: "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
+    componentName: "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB",
     sourcePath:
-      "lib/subcircuits/WirelessAntenna_W3006_TIDCWL1837MODCOM8I.circuit.tsx",
+      "lib/subcircuits/WirelessConnectivity_CC2540_TIDCCC2540BLEUSB.circuit.tsx",
   },
   {
     componentName: "InputOutputProtection_TPD2E009_TIDA00399",
@@ -75,7 +75,7 @@ test("Consumer Wireless Module KiCad export preserves every available pad", asyn
 
   expect(
     evaluated.circuitJson.filter((element) => element.type === "pcb_smtpad"),
-  ).toHaveLength(119);
+  ).toHaveLength(193);
 
   const blob = await createKicadProjectZipBlob(evaluated.circuitJson, {
     projectName: "consumer-wireless-module",
@@ -85,6 +85,6 @@ test("Consumer Wireless Module KiCad export preserves every available pad", asyn
     archive["consumer-wireless-module.kicad_pcb"] ?? new Uint8Array(),
   );
 
-  expect(pcb.match(/\(footprint\b/g)).toHaveLength(36);
-  expect(pcb.match(/\(pad\b/g)).toHaveLength(119);
+  expect(pcb.match(/\(footprint\b/g)).toHaveLength(52);
+  expect(pcb.match(/\(pad\b/g)).toHaveLength(195);
 });
