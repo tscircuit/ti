@@ -90,6 +90,13 @@ export interface SubcircuitDefinition {
   canInstantiate?: boolean;
   /** Catalog warning shown before a user adds a constrained subcircuit. */
   warning?: string;
+  /** Preferred detail-sheet dimensions and placement for generated systems. */
+  schematicSheet?: {
+    sheetWidth?: string;
+    sheetHeight?: string;
+    schX?: number;
+    schY?: number;
+  };
   ports: readonly PortDefinition[];
 }
 

@@ -896,6 +896,11 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
     componentName: "MotorDriver_DRV8305_TIDA01330",
     sourceFile: "MotorDriver_DRV8305_TIDA01330.circuit.tsx",
     tags: ["automotive", "motor", "gate-driver", "drv8305"],
+    schematicSheet: {
+      sheetWidth: "480mm",
+      sheetHeight: "340mm",
+      schY: -4,
+    },
     ports: [
       powerPort({
         id: "protected-power",

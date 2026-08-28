@@ -741,6 +741,32 @@ describe("catalog and TSX generation", () => {
     expect(first).toContain('to=".audio_amplifier > .U1 > .IOVDD"');
   });
 
+  test("applies curated detail-sheet layout without overriding block placement", () => {
+    const motorDriver = definition("motor-driver-drv8305-tida01330");
+    const generated = generateTsx({
+      blocks: [block("motor_driver", motorDriver.id)],
+      connections: [],
+    });
+
+    expect(generated).toContain('sheetWidth="480mm"');
+    expect(generated).toContain('sheetHeight="340mm"');
+    expect(generated).toContain("schY={-4}");
+
+    const explicitlyPlaced = generateTsx({
+      blocks: [
+        {
+          ...block("motor_driver", motorDriver.id),
+          schX: 2,
+          schY: 3,
+        },
+      ],
+      connections: [],
+    });
+    expect(explicitlyPlaced).toContain("schX={2}");
+    expect(explicitlyPlaced).toContain("schY={3}");
+    expect(explicitlyPlaced).not.toContain("schY={-4}");
+  });
+
   test("emits canonical system artifacts deterministically", () => {
     const blocks = [
       {

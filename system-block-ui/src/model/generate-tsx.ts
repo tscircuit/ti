@@ -208,27 +208,32 @@ const renderGeneratedSource = ({
   );
 
   prepared.forEach((item, sheetIndex) => {
+    const sheetLayout = item.definition.schematicSheet;
     lines.push(
       "    <schematicsheet",
       `      name=${quote(item.sheetName)}`,
       `      displayName=${quote(item.definition.title)}`,
       `      sheetIndex={${sheetIndex}}`,
+      ...(sheetLayout?.sheetWidth === undefined
+        ? []
+        : [`      sheetWidth=${quote(sheetLayout.sheetWidth)}`]),
+      ...(sheetLayout?.sheetHeight === undefined
+        ? []
+        : [`      sheetHeight=${quote(sheetLayout.sheetHeight)}`]),
       "    />",
     );
   });
 
   lines.push("");
   for (const item of prepared) {
+    const schX = item.block.schX ?? item.definition.schematicSheet?.schX;
+    const schY = item.block.schY ?? item.definition.schematicSheet?.schY;
     lines.push(
       `    <${item.definition.componentName}`,
       `      name=${quote(item.instanceName)}`,
       `      schSheetName=${quote(item.sheetName)}`,
-      ...(item.block.schX === undefined
-        ? []
-        : [`      schX={${item.block.schX}}`]),
-      ...(item.block.schY === undefined
-        ? []
-        : [`      schY={${item.block.schY}}`]),
+      ...(schX === undefined ? [] : [`      schX={${schX}}`]),
+      ...(schY === undefined ? [] : [`      schY={${schY}}`]),
       "    />",
     );
   }
