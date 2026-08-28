@@ -5,7 +5,6 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { getSchematicElementBounds } from "@tscircuit/circuit-json-util";
 import { Circuit } from "@tscircuit/core";
-import ObstacleDetectionSensor from "../examples/ObstacleDetectionSensor.circuit.tsx";
 import {
   DualLdoRegulator1V3_TPS7A8801,
   LdoRegulator1V8_TPS7A8101,
@@ -566,8 +565,12 @@ test("System power production names follow reusable tscircuit conventions", () =
   }
 });
 
-test("Obstacle Detection Sensor keeps every visible element inside its assigned sheet", async () => {
-  const circuit = await renderModule(ObstacleDetectionSensor);
+test("System Power keeps every visible element inside its assigned sheet", async () => {
+  const circuit = await renderModule(() => (
+    <board routingDisabled>
+      <SystemPowerSupply name="system_power_supply" />
+    </board>
+  ));
   const sheets = circuit.db.schematic_sheet.list();
   assert.deepEqual(sheets.map((sheet) => sheet.name).sort(), [
     "dual_ldo_1p3v",

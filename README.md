@@ -40,8 +40,9 @@ audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
 The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.circuit.tsx)
-example is intentionally minimal: it composes the independently renderable
-power sections through the reusable `SystemPowerSupply` composite.
+example is intentionally minimal: it composes the reusable `SystemPowerSupply`
+with the TIDEP-01024 AWR1843AoP radar SoC, 40 MHz clock, and QSPI flash through
+the `RadarFrontEndProcessing` composite.
 
 The
 [`BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx`](examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx)
