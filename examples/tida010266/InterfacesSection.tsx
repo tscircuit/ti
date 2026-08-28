@@ -1,6 +1,6 @@
 import type { GroupProps } from "@tscircuit/props";
 import "tscircuit";
-import { TIDA010266InlineNetPorts } from "../../lib/subcircuits/TIDA010266InlineNetPorts.tsx";
+import { TIDA010266InlineNetPorts } from "../../lib/tida010266/TIDA010266InlineNetPorts.tsx";
 
 const throughHoleTestPoint = {
   footprintVariant: "through_hole" as const,

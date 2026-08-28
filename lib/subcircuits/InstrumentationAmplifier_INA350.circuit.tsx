@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { INA350CDSIDSGR } from "../chips/INA350CDSIDSGR.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
+import { TIDA010266InlineNetPorts } from "../tida010266/TIDA010266InlineNetPorts.tsx";
 
 export type InstrumentationAmplifier_INA350Props = SubcircuitProps & {
   /** Native schematic-section membership for the physical U/C components. */

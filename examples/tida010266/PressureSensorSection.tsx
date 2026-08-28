@@ -1,7 +1,7 @@
 import "tscircuit";
 import type { GroupProps } from "@tscircuit/props";
 import { SMPP2_03 } from "../../lib/chips/SMPP2_03.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "../../lib/subcircuits/TIDA010266InlineNetPorts.tsx";
+import { TIDA010266InlineNetPorts } from "../../lib/tida010266/TIDA010266InlineNetPorts.tsx";
 
 type PressureSensorSectionProps = GroupProps & { schSectionName?: string };
 

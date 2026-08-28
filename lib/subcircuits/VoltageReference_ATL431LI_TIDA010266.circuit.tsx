@@ -1,7 +1,7 @@
 import "tscircuit";
 import { ATL431LIBIDBZR } from "../chips/ATL431LIBIDBZR.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
-import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
+import { TIDA010266InlineNetPorts } from "../tida010266/TIDA010266InlineNetPorts.tsx";
+import type { TIDA010266SectionedSubcircuitProps } from "../tida010266/TIDA010266.types.ts";
 
 /** TIDA-010266 U3/R3/C2/C3 precision 2.5 V shunt-reference stage. */
 export const VoltageReference_ATL431LI_TIDA010266 = (

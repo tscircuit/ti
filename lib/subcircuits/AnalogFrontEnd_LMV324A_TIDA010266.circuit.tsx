@@ -1,7 +1,7 @@
 import "tscircuit";
 import { LMV324AIPWR } from "../chips/LMV324AIPWR.circuit.tsx";
-import { TIDA010266InlineNetPorts } from "./TIDA010266InlineNetPorts.tsx";
-import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
+import { TIDA010266InlineNetPorts } from "../tida010266/TIDA010266InlineNetPorts.tsx";
+import type { TIDA010266SectionedSubcircuitProps } from "../tida010266/TIDA010266.types.ts";
 
 const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
   <symbol>
@@ -92,10 +92,26 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
   const originY = typeof props.schY === "number" ? props.schY : 0;
   const inputSheetName = inputReferenceSheetName ?? props.schSheetName;
   const sensorSheetName = pressureSheetName ?? props.schSheetName;
-  const inputX = (x: number) => x + inputReferenceSchXOffset;
-  const inputY = (y: number) => y + inputReferenceSchYOffset;
-  const pressureX = (x: number) => x + pressureSchXOffset;
-  const pressureY = (y: number) => y + pressureSchYOffset;
+  const usesDistributedLayout = Boolean(
+    inputReferenceSectionName ||
+      pressureSectionName ||
+      inputReferenceSheetName ||
+      pressureSheetName,
+  );
+  const compactInputOffset = usesDistributedLayout
+    ? { x: 0, y: 0 }
+    : { x: -9, y: -9 };
+  const compactPressureOffset = usesDistributedLayout
+    ? { x: 0, y: 0 }
+    : { x: 14.5, y: 11.5 };
+  const inputX = (x: number) =>
+    x + inputReferenceSchXOffset + compactInputOffset.x;
+  const inputY = (y: number) =>
+    y + inputReferenceSchYOffset + compactInputOffset.y;
+  const pressureX = (x: number) =>
+    x + pressureSchXOffset + compactPressureOffset.x;
+  const pressureY = (y: number) =>
+    y + pressureSchYOffset + compactPressureOffset.y;
 
   return (
     <subcircuit

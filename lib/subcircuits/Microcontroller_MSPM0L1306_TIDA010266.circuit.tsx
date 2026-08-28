@@ -1,7 +1,7 @@
 import "tscircuit";
 import { Fragment } from "react";
 import { MSPM0L1306SRHBR } from "../../imports/MSPM0L1306SRHBR.tsx";
-import type { TIDA010266SectionedSubcircuitProps } from "./TIDA010266.types.ts";
+import type { TIDA010266SectionedSubcircuitProps } from "../tida010266/TIDA010266.types.ts";
 
 const inlineMcuNets = [
   { port: "V3_3", pin: "VDD", net: "V3_3", schY: 4 },
