@@ -246,7 +246,9 @@ test("Obstacle-detection example assigns TIDA-00699 to a named schematic sheet",
     circuit
       .getCircuitJson()
       .filter(
-        (element) => element.type === "schematic_element_outside_sheet_warning",
+        (element) =>
+          element.type === "schematic_element_outside_sheet_warning" &&
+          element.schematic_sheet_id === schematicSheet.schematic_sheet_id,
       ),
     [],
   );

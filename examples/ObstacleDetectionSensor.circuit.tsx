@@ -1,4 +1,7 @@
-import { AutomotiveBatteryFrontEnd } from "@tsci/tscircuit.ti";
+import {
+  AutomotiveBatteryFrontEnd,
+  RadarFrontEndProcessing,
+} from "@tsci/tscircuit.ti";
 import "tscircuit";
 
 export default () => (
@@ -12,5 +15,6 @@ export default () => (
       name="power_supply"
       schSheetName="power_supply"
     />
+    <RadarFrontEndProcessing name="radar_front_end_processing" />
   </board>
 );
