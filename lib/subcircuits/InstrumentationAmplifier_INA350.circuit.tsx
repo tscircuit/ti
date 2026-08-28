@@ -246,10 +246,10 @@ export const InstrumentationAmplifier_INA350 = ({
               <port
                 name="pin7"
                 pinNumber={7}
-                schX={-2.5}
+                schX={-3.2}
                 schY={1.9}
                 direction="left"
-                schStemLength={0.4}
+                schStemLength={1.2}
               />
               <port
                 name="pin2"
@@ -257,7 +257,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={-2.5}
                 schY={1.05}
                 direction="left"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
               <port
                 name="pin3"
@@ -265,7 +265,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={-2.5}
                 schY={0.25}
                 direction="left"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
               <port
                 name="pin8"
@@ -273,7 +273,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={-2.5}
                 schY={-0.65}
                 direction="left"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
               <port
                 name="pin1"
@@ -281,7 +281,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={-2.5}
                 schY={-1.5}
                 direction="left"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
               <port
                 name="pin6"
@@ -289,7 +289,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={2.5}
                 schY={0.9}
                 direction="right"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
               <port
                 name="pin5"
@@ -297,7 +297,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={2.5}
                 schY={-0.15}
                 direction="right"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
               <port
                 name="pin9"
@@ -305,7 +305,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={0.5}
                 schY={-2.9}
                 direction="down"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
               <port
                 name="pin4"
@@ -313,7 +313,7 @@ export const InstrumentationAmplifier_INA350 = ({
                 schX={1.3}
                 schY={-2.9}
                 direction="down"
-                schStemLength={0.4}
+                schStemLength={0.5}
               />
             </symbol>
           ) : undefined

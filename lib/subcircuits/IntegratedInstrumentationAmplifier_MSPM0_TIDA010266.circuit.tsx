@@ -51,7 +51,7 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
               schX={-1.85}
               schY={0.55}
               direction="left"
-              schStemLength={0.5}
+              schStemLength={0.6}
             />
             <port
               name="pin1"
@@ -59,7 +59,7 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
               schX={-1.85}
               schY={-0.55}
               direction="left"
-              schStemLength={0.5}
+              schStemLength={0.6}
             />
             <port
               name="pin3"
@@ -67,7 +67,7 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
               schX={1.85}
               schY={0}
               direction="right"
-              schStemLength={0.5}
+              schStemLength={0.6}
             />
           </symbol>
         }
@@ -111,7 +111,7 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
               schX={-1.85}
               schY={0.55}
               direction="left"
-              schStemLength={0.5}
+              schStemLength={0.6}
             />
             <port
               name="pin1"
@@ -119,7 +119,7 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
               schX={-1.85}
               schY={-0.55}
               direction="left"
-              schStemLength={0.5}
+              schStemLength={0.6}
             />
             <port
               name="pin3"
@@ -127,7 +127,7 @@ export const IntegratedInstrumentationAmplifier_MSPM0_TIDA010266 = (
               schX={1.85}
               schY={0}
               direction="right"
-              schStemLength={0.5}
+              schStemLength={0.6}
             />
           </symbol>
         }

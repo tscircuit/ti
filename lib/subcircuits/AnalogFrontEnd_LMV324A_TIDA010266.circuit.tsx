@@ -24,7 +24,7 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
       schX={-1.5}
       schY={0.48}
       direction="left"
-      schStemLength={0.4}
+      schStemLength={0.5}
     />
     <port
       name="pin5"
@@ -32,7 +32,7 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
       schX={-1.5}
       schY={-0.48}
       direction="left"
-      schStemLength={0.4}
+      schStemLength={0.5}
     />
     <port
       name="pin7"
@@ -40,7 +40,7 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
       schX={1.5}
       schY={0}
       direction="right"
-      schStemLength={0.4}
+      schStemLength={0.5}
     />
     <port
       name="pin4"
@@ -48,7 +48,7 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
       schX={0}
       schY={1.45}
       direction="up"
-      schStemLength={0.45}
+      schStemLength={1.05}
     />
     <port
       name="pin11"
@@ -56,7 +56,7 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
       schX={0}
       schY={-1.45}
       direction="down"
-      schStemLength={0.45}
+      schStemLength={1.05}
     />
   </symbol>
 );
