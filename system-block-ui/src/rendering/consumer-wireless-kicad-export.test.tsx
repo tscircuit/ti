@@ -85,6 +85,6 @@ test("Consumer Wireless Module KiCad export preserves every available pad", asyn
     archive["consumer-wireless-module.kicad_pcb"] ?? new Uint8Array(),
   );
 
-  expect(pcb.match(/\(footprint\b/g)).toHaveLength(52);
+  expect(pcb.match(/\(footprint\b/g)).toHaveLength(51);
   expect(pcb.match(/\(pad\b/g)).toHaveLength(193);
 });

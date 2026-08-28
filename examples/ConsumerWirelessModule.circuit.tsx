@@ -77,8 +77,8 @@ export default () => (
     <WirelessConnectivity_CC2540_TIDCCC2540BLEUSB
       name="wireless_connectivity"
       schSheetName="wireless_connectivity"
-      pcbX={30}
-      pcbY={-11}
+      pcbX={24}
+      pcbY={-9.5}
       pcbPositionMode="relative_to_board_anchor"
     />
     <InputOutputProtection_TPD2E009_TIDA00399

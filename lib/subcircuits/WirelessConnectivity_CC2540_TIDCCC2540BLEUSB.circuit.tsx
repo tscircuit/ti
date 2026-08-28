@@ -2,41 +2,16 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { CC2540F256RHAR } from "../chips/CC2540F256RHAR.circuit.tsx";
 
-const groundPinLabels = {
-  pin1: "C101_GND",
-  pin2: "C391_GND",
-  pin3: "C211_GND",
-  pin4: "C241_GND",
-  pin5: "C271_GND",
-  pin6: "C272_GND",
-  pin7: "C311_GND",
-  pin8: "C4_GND",
-  pin9: "DGND_USB",
-  pin10: "EPAD_GND",
-  pin11: "BALUN_GND",
-  pin12: "ANTENNA_GND",
-  pin13: "C5_GND",
-  pin14: "C201_GND",
-  pin15: "R301_GND",
-  pin16: "C401_GND",
-  pin17: "X1_GND_1",
-  pin18: "X1_GND_2",
-  pin19: "C231_GND",
-  pin20: "C221_GND",
-} as const;
-
 interface GroundTerminalProps {
   name: string;
-  pin: keyof typeof groundPinLabels;
   connection: string;
   schX: number;
   schY: number;
 }
 
-/** One schematic ground unit backed by an internally common hidden terminal. */
+/** A local schematic ground symbol tied directly to the shared GND net. */
 const GroundTerminal = ({
   name,
-  pin,
   connection,
   schX,
   schY,
@@ -45,13 +20,12 @@ const GroundTerminal = ({
     <schematicsymbol
       name={name}
       displayName="GND"
-      chipRef=".GNDSTAR"
       symbolName="ground_down"
       schX={schX}
       schY={schY}
-      connections={{ "1": `.GNDSTAR > .${pin}` }}
     />
-    <trace from={connection} to={`.GNDSTAR > .${pin}`} schDisplayLabel=" " />
+    <trace from={connection} to={`.${name} > .pin1`} schDisplayLabel=" " />
+    <trace from={`.${name} > .pin1`} to="net.GND" schDisplayLabel=" " />
   </>
 );
 
@@ -80,18 +54,12 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
     <net name="PA_DM" />
     <net name="RESET_N" />
 
-    <chip
-      name="GNDSTAR"
-      noSchematicRepresentation
-      pinLabels={groundPinLabels}
-      internallyConnectedPins={[Object.keys(groundPinLabels)]}
-      connections={{ pin1: "net.GND" }}
-    />
-
     <CC2540F256RHAR
       name="U1"
       schX={0}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
         USB_P: "net.PA_DP",
         USB_N: "net.PA_DM",
@@ -125,6 +93,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       footprint="0402"
       schX={11.7}
       schY={8.1}
+      pcbX={5}
+      pcbY={-2.5}
     />
     <capacitor
       name="C4"
@@ -133,6 +103,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={9.8}
       schY={6.75}
+      pcbX={5}
+      pcbY={-5}
+      pcbRotation={90}
     />
 
     {/* Decoupling capacitors, in the same left-to-right order as sheet 3. */}
@@ -143,6 +116,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={-8.5}
       schY={7.1}
+      pcbX={-5}
+      pcbY={5}
+      pcbRotation={90}
     />
     <capacitor
       name="C391"
@@ -151,6 +127,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={-6.7}
       schY={7.1}
+      pcbX={-5}
+      pcbY={2.5}
+      pcbRotation={90}
     />
     <capacitor
       name="C211"
@@ -159,6 +138,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={-4.9}
       schY={7.1}
+      pcbX={-5}
+      pcbY={0}
+      pcbRotation={90}
     />
     <capacitor
       name="C241"
@@ -167,6 +149,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={3.4}
       schY={7.1}
+      pcbX={5}
+      pcbY={6}
+      pcbRotation={90}
     />
     <capacitor
       name="C271"
@@ -175,6 +160,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={5.2}
       schY={7.1}
+      pcbX={5}
+      pcbY={4}
+      pcbRotation={90}
     />
     <capacitor
       name="C272"
@@ -183,6 +171,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={7}
       schY={7.1}
+      pcbX={5}
+      pcbY={2}
+      pcbRotation={90}
     />
     <capacitor
       name="C311"
@@ -191,6 +182,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={8.6}
       schY={7.1}
+      pcbX={5}
+      pcbY={0}
+      pcbRotation={90}
     />
 
     <group schMaxTraceDistance="20mm">
@@ -246,56 +240,48 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
 
     <GroundTerminal
       name="GND_C101"
-      pin="pin1"
       connection=".C101 > .pin2"
       schX={-8.5}
       schY={5.9}
     />
     <GroundTerminal
       name="GND_C391"
-      pin="pin2"
       connection=".C391 > .pin2"
       schX={-6.7}
       schY={5.9}
     />
     <GroundTerminal
       name="GND_C211"
-      pin="pin3"
       connection=".C211 > .pin2"
       schX={-4.9}
       schY={5.9}
     />
     <GroundTerminal
       name="GND_C241"
-      pin="pin4"
       connection=".C241 > .pin2"
       schX={3.4}
       schY={5.9}
     />
     <GroundTerminal
       name="GND_C271"
-      pin="pin5"
       connection=".C271 > .pin2"
       schX={5.2}
       schY={5.9}
     />
     <GroundTerminal
       name="GND_C272"
-      pin="pin6"
       connection=".C272 > .pin2"
       schX={7}
       schY={5.9}
     />
     <GroundTerminal
       name="GND_C311"
-      pin="pin7"
       connection=".C311 > .pin2"
       schX={8.6}
       schY={5.9}
     />
     <GroundTerminal
       name="GND_C4"
-      pin="pin8"
       connection=".C4 > .pin2"
       schX={9.8}
       schY={5.5}
@@ -377,14 +363,12 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
     </group>
     <GroundTerminal
       name="GND_DGND_USB"
-      pin="pin9"
       connection=".U1 > .DGND_USB"
       schX={-3.5}
       schY={2.15}
     />
     <GroundTerminal
       name="GND_U1"
-      pin="pin10"
       connection=".U1 > .GND"
       schX={3.35}
       schY={-3.25}
@@ -413,6 +397,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schHeight="2.2mm"
       schX={7.2}
       schY={1.7}
+      pcbX={8}
+      pcbY={-0.5}
     />
     <chip
       name="A2"
@@ -426,6 +412,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schHeight="1mm"
       schX={12.4}
       schY={5.7}
+      pcbX={14}
+      pcbY={0}
     />
     <resistor
       name="R9"
@@ -434,6 +422,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={12.9}
       schY={3.8}
+      pcbX={10}
+      pcbY={2.5}
+      pcbRotation={90}
     />
     <capacitor
       name="C5"
@@ -442,6 +433,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={12.9}
       schY={1.25}
+      pcbX={10}
+      pcbY={-3.5}
+      pcbRotation={90}
     />
     <group schMaxTraceDistance="20mm">
       <trace
@@ -473,23 +467,15 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         schematicRouteHints={[{ x: 10, y: 1.7 }]}
       />
     </group>
-    <GroundTerminal
-      name="GND_B1"
-      pin="pin11"
-      connection=".B1 > .GND"
-      schX={7.2}
-      schY={0}
-    />
+    <GroundTerminal name="GND_B1" connection=".B1 > .GND" schX={7.2} schY={0} />
     <GroundTerminal
       name="GND_A2"
-      pin="pin12"
       connection=".A2 > .GND"
       schX={11.9}
       schY={4.45}
     />
     <GroundTerminal
       name="GND_C5"
-      pin="pin13"
       connection=".C5 > .pin2"
       schX={12.9}
       schY={0.1}
@@ -502,6 +488,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       footprint="0402"
       schX={-7.1}
       schY={-5.2}
+      pcbX={-5}
+      pcbY={-2.5}
       connections={{ pin1: "net.RESET_N" }}
     />
     <capacitor
@@ -511,6 +499,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={-5}
       schY={-6.6}
+      pcbX={-5}
+      pcbY={-5}
+      pcbRotation={90}
     />
     <group schMaxTraceDistance="20mm">
       <trace
@@ -526,7 +517,6 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
     </group>
     <GroundTerminal
       name="GND_C201"
-      pin="pin14"
       connection=".C201 > .pin2"
       schX={-5}
       schY={-7.75}
@@ -539,6 +529,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={3.2}
       schY={-6.4}
+      pcbX={7}
+      pcbY={-6.5}
+      pcbRotation={90}
     />
     <resistor
       name="R301"
@@ -547,6 +540,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={3.2}
       schY={-8.7}
+      pcbX={9.5}
+      pcbY={-6.5}
+      pcbRotation={90}
     />
     <group schMaxTraceDistance="20mm">
       <trace
@@ -562,7 +558,6 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
     </group>
     <GroundTerminal
       name="GND_R301"
-      pin="pin15"
       connection=".R301 > .pin2"
       schX={3.2}
       schY={-9.85}
@@ -575,6 +570,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={4.2}
       schY={-7.2}
+      pcbX={7}
+      pcbY={-8.5}
+      pcbRotation={90}
     />
     <group schMaxTraceDistance="20mm">
       <trace
@@ -585,7 +583,6 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
     </group>
     <GroundTerminal
       name="GND_C401"
-      pin="pin16"
       connection=".C401 > .pin2"
       schX={4.2}
       schY={-8.35}
@@ -600,6 +597,8 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       footprint="qfn4"
       schX={6.8}
       schY={-6.5}
+      pcbX={0}
+      pcbY={-6}
     />
     <capacitor
       name="C231"
@@ -608,6 +607,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={5.5}
       schY={-8.4}
+      pcbX={-3}
+      pcbY={-8.5}
+      pcbRotation={90}
     />
     <capacitor
       name="C221"
@@ -616,6 +618,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       schOrientation="vertical"
       schX={8.1}
       schY={-8.4}
+      pcbX={3}
+      pcbY={-8.5}
+      pcbRotation={90}
     />
     <group schMaxTraceDistance="20mm">
       <trace
@@ -647,28 +652,24 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
     </group>
     <GroundTerminal
       name="GND_X1_1"
-      pin="pin17"
       connection=".X1 > .pin2"
       schX={6.4}
       schY={-7.6}
     />
     <GroundTerminal
       name="GND_X1_2"
-      pin="pin18"
       connection=".X1 > .pin4"
       schX={7.2}
       schY={-7.6}
     />
     <GroundTerminal
       name="GND_C231"
-      pin="pin19"
       connection=".C231 > .pin2"
       schX={5.5}
       schY={-9.55}
     />
     <GroundTerminal
       name="GND_C221"
-      pin="pin20"
       connection=".C221 > .pin2"
       schX={8.1}
       schY={-9.55}

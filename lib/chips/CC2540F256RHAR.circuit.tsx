@@ -1,5 +1,6 @@
 import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
+import { CC2540F256RHAR_FOOTPRINT } from "./jlcpcb-footprints.tsx";
 
 export const CC2540F256RHAR_PIN_LABELS = {
   pin1: ["DGND_USB", "GND_USB"],
@@ -51,8 +52,9 @@ export const CC2540F256RHAR = (
 ) => (
   <chip
     manufacturerPartNumber="CC2540F256RHAR"
+    supplierPartNumbers={{ jlcpcb: ["C22649"] }}
     pinLabels={CC2540F256RHAR_PIN_LABELS}
-    footprint="qfn40_thermalpad4.7mmx4.7mm_p0.5001mm_h7.1mm_pl0.9mm"
+    footprint={CC2540F256RHAR_FOOTPRINT}
     schWidth="5.2mm"
     schHeight="12.8mm"
     schPinArrangement={{

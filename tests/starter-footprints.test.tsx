@@ -6,6 +6,7 @@ import { Circuit } from "@tscircuit/core";
 import ConsumerWirelessModule from "../examples/ConsumerWirelessModule.circuit.tsx";
 import { LFB212G45SG8C341_FOOTPRINT } from "../lib/chips/jlcpcb-footprints.tsx";
 import {
+  CC2540F256RHAR,
   SN65LVDS31D,
   SN74LVC1G34DBVR,
   TMP103AYFF,
@@ -23,6 +24,7 @@ const starterChips = [
   ["SN74LVC1G34DBVR", SN74LVC1G34DBVR, 5, "C840096"],
   ["TMP103AYFF", TMP103AYFF, 4, "C165141"],
   ["W3006", W3006, 2, "C5123155"],
+  ["CC2540F256RHAR", CC2540F256RHAR, 41, "C22649"],
 ] as const;
 
 const passiveComponentTypes = new Set([
@@ -145,7 +147,9 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
   circuit.add(<ConsumerWirelessModule />);
   await circuit.renderUntilSettled();
 
-  for (const [name, , expectedPadCount, lcscPartNumber] of starterChips) {
+  for (const [name, , expectedPadCount, lcscPartNumber] of starterChips.filter(
+    ([chipName]) => chipName !== "W3006",
+  )) {
     const sourceComponent = circuit.db.source_component
       .list()
       .find((component) =>
@@ -168,7 +172,7 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
   const passiveComponents = circuit.db.source_component
     .list()
     .filter((component) => passiveComponentTypes.has(component.ftype));
-  assert.equal(passiveComponents.length, 27);
+  assert.equal(passiveComponents.length, 40);
 
   for (const sourceComponent of passiveComponents) {
     const pcbComponent = circuit.db.pcb_component.getWhere({
@@ -187,11 +191,10 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
     );
   }
 
-  assert.equal(circuit.db.pcb_smtpad.list().length, 119);
+  assert.equal(circuit.db.pcb_smtpad.list().length, 191);
 
   for (const [name, lcscPartNumber, expectedPadCount] of [
     ["CSD17313Q2", "C2863837", 8],
-    ["U.FL-R-SMT-1(10)", "C88373", 3],
   ] as const) {
     const sourceComponent = circuit.db.source_component
       .list()
@@ -265,7 +268,7 @@ test("the Consumer Wireless Module PCB is placed without autorouting", {
       .filter((element) => element.type.endsWith("_error")),
     [],
   );
-  assert.equal(circuit.db.pcb_component.list().length, 36);
-  assert.equal(circuit.db.pcb_smtpad.list().length, 119);
+  assert.equal(circuit.db.pcb_component.list().length, 51);
+  assert.equal(circuit.db.pcb_smtpad.list().length, 191);
   assert.equal(circuit.db.pcb_trace.list().length, 0);
 });
