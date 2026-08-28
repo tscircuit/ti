@@ -55,7 +55,8 @@ export default () => (
     {/* Native section metadata drives divider placement and section-aware routing. */}
     <schematicsection name="input_reference" displayName="" />
     <schematicsection name="connectors" displayName="" />
-    <schematicsection name="jumpers_test_points" displayName="" />
+    <schematicsection name="jumpers" displayName="" />
+    <schematicsection name="test_points" displayName="" />
     <schematicsection name="programming" displayName="" />
     <schematicsection name="ina_filter" displayName="" />
     <schematicsection name="mcu" displayName="" />
@@ -65,11 +66,12 @@ export default () => (
 
     {/* Centered titles sit inside, rather than directly on, each top divider. */}
     <SectionTitle title="Input + Reference" schX={-25} schY={21.6} />
-    <SectionTitle title="Connectors" schX={-4.5} schY={21.6} />
-    <SectionTitle title="Jumpers / Test Points" schX={-4.5} schY={17.05} />
+    <SectionTitle title="Connectors" schX={-9} schY={21.6} />
+    <SectionTitle title="Jumpers" schX={-28} schY={14.15} />
+    <SectionTitle title="Test Points" schX={-15} schY={14.15} />
     <SectionTitle title="Programming" schX={20.5} schY={21.6} />
-    <SectionTitle title="INA + Filter" schX={-15.5} schY={9.65} />
-    <SectionTitle title="MCU" schX={20.5} schY={9.65} />
+    <SectionTitle title="INA + Filter" schX={-15.5} schY={6.8} />
+    <SectionTitle title="MCU" schX={20.5} schY={6.8} />
     <SectionTitle title="Pressure Sensor" schX={-24.5} schY={-9} />
     <SectionTitle title="ADC Filter" schX={-4} schY={-9} />
     <SectionTitle title="Motor Driver" schX={20.5} schY={-9} />
@@ -90,7 +92,9 @@ export default () => (
       name="interfaces"
       inputSectionName="input_reference"
       connectorSectionName="connectors"
-      jumperSectionName="jumpers_test_points"
+      jumperSectionName="jumpers"
+      testPointSectionName="test_points"
+      inaFilterSectionName="ina_filter"
       schX={-4}
       schY={17}
     />

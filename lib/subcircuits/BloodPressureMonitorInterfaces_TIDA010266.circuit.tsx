@@ -14,6 +14,8 @@ export type BloodPressureMonitorInterfaces_TIDA010266Props = SubcircuitProps & {
   inputSectionName?: string;
   connectorSectionName?: string;
   jumperSectionName?: string;
+  testPointSectionName?: string;
+  inaFilterSectionName?: string;
 };
 
 /** TIDA-010266 power, UART/GPIO, selection jumpers, and seven test points. */
@@ -21,6 +23,8 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
   inputSectionName,
   connectorSectionName,
   jumperSectionName,
+  testPointSectionName,
+  inaFilterSectionName,
   ...props
 }: BloodPressureMonitorInterfaces_TIDA010266Props) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
@@ -69,8 +73,16 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={connectorSectionName ?? props.schSectionName}
         manufacturerPartNumber="90121-0766"
         footprint="pinrow6"
-        schX={-1}
-        schY={4.2}
+        schX={-6.5}
+        schY={1.5}
+        schWidth="0.8mm"
+        schHeight="3mm"
+        schPinArrangement={{
+          leftSide: {
+            pins: ["pin1", "pin2", "pin3", "pin4", "pin5", "pin6"],
+            direction: "top-to-bottom",
+          },
+        }}
         pinLabels={{
           pin1: ["UART_RTS"],
           pin2: ["UART_RX"],
@@ -93,8 +105,27 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={connectorSectionName ?? props.schSectionName}
         manufacturerPartNumber="TSW-110-08-G-S"
         footprint="pinrow10"
-        schX={5}
-        schY={3.5}
+        schX={-6.5}
+        schY={-5.8}
+        schWidth="0.8mm"
+        schHeight="5mm"
+        schPinArrangement={{
+          leftSide: {
+            pins: [
+              "pin1",
+              "pin2",
+              "pin3",
+              "pin4",
+              "pin5",
+              "pin6",
+              "pin7",
+              "pin8",
+              "pin9",
+              "pin10",
+            ],
+            direction: "top-to-bottom",
+          },
+        }}
         pinLabels={{
           pin1: ["SDA"],
           pin2: ["SCL"],
@@ -126,8 +157,16 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={jumperSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={-7}
-        schY={-0.4}
+        schX={-28}
+        schY={-4.6}
+        schWidth="0.8mm"
+        schHeight="1.5mm"
+        schPinArrangement={{
+          rightSide: {
+            pins: ["pin3", "pin2", "pin1"],
+            direction: "top-to-bottom",
+          },
+        }}
         pinLabels={{
           pin1: ["OPA1_IN0_POS"],
           pin2: ["BRIDGE_POS"],
@@ -144,8 +183,16 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={jumperSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={-2.5}
-        schY={-0.4}
+        schX={-21}
+        schY={-4.6}
+        schWidth="0.8mm"
+        schHeight="1.5mm"
+        schPinArrangement={{
+          rightSide: {
+            pins: ["pin3", "pin2", "pin1"],
+            direction: "top-to-bottom",
+          },
+        }}
         pinLabels={{
           pin1: ["OPA1_OUT"],
           pin2: ["PRESSURE"],
@@ -162,8 +209,16 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={jumperSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={2}
-        schY={-0.4}
+        schX={-28}
+        schY={-7}
+        schWidth="0.8mm"
+        schHeight="1.5mm"
+        schPinArrangement={{
+          rightSide: {
+            pins: ["pin3", "pin2", "pin1"],
+            direction: "top-to-bottom",
+          },
+        }}
         pinLabels={{
           pin1: ["OPA0_IN0_POS"],
           pin2: ["BRIDGE_NEG"],
@@ -176,18 +231,26 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
       />
       <connector
         name="J10"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={inaFilterSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={6.5}
-        schY={-0.4}
+        schX={-23}
+        schY={-11.5}
+        schWidth="0.8mm"
+        schHeight="1.5mm"
+        schPinArrangement={{
+          rightSide: {
+            pins: ["pin3", "pin2", "pin1"],
+            direction: "top-to-bottom",
+          },
+        }}
         pinLabels={{ pin1: ["GND"], pin2: ["INA_GS"], pin3: ["V3_3"] }}
         connections={{ pin1: "net.GND", pin3: "net.V3_3" }}
       />
       <port
         name="INA_IN_NEG_PORT"
-        schX={originX + 7.5}
-        schY={originY - 2}
+        schX={originX - 26.8}
+        schY={originY - 7.8}
         direction="right"
       />
       <trace
@@ -197,74 +260,78 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
       />
       <port
         name="INA_GS_PORT"
-        schX={originX + 9.5}
-        schY={originY - 1.2}
+        schX={originX - 21.8}
+        schY={originY - 11.5}
         direction="right"
       />
       <trace from=".J10 > .INA_GS" to=".INA_GS_PORT" schDisplayLabel="INA_GS" />
       <netlabel net="GND" connectsTo=".J1 > .GND" anchorSide="bottom" />
+      <netlabel net="GND" connectsTo=".J3 > .GND" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".J10 > .GND" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".TP6 > .pin1" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".TP7 > .pin1" anchorSide="top" />
 
       <testpoint
         {...throughHoleTestPoint}
         name="TP1"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
-        schX={-7}
-        schY={-3}
+        schX={-14}
+        schY={-4.2}
         connections={{ pin1: "net.VIN" }}
       />
       <testpoint
         {...throughHoleTestPoint}
         name="TP2"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5117"
-        schX={-4.7}
-        schY={-3}
+        schX={-10.5}
+        schY={-5.4}
         connections={{ pin1: "net.PRESSURE" }}
       />
       <testpoint
         {...throughHoleTestPoint}
         name="TP3"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
-        schX={-2.4}
-        schY={-3}
+        schX={-14}
+        schY={-5.4}
         connections={{ pin1: "net.V3_3" }}
       />
       <testpoint
         {...throughHoleTestPoint}
         name="TP4"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
-        schX={-0.1}
-        schY={-3}
+        schX={-14}
+        schY={-6.6}
         connections={{ pin1: "net.VREF_2_5" }}
       />
       <testpoint
         {...throughHoleTestPoint}
         name="TP5"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5117"
-        schX={2.2}
-        schY={-3}
+        schX={-10.5}
+        schY={-7.2}
         connections={{ pin1: "net.OSCILLATIONS" }}
       />
       <testpoint
         {...throughHoleTestPoint}
         name="TP6"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5001"
-        schX={4.5}
-        schY={-3}
+        schX={-14}
+        schY={-7.8}
         connections={{ pin1: "net.GND" }}
       />
       <testpoint
         {...throughHoleTestPoint}
         name="TP7"
-        schSectionName={jumperSectionName ?? props.schSectionName}
+        schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5001"
-        schX={6.8}
-        schY={-3}
+        schX={-12.8}
+        schY={-9}
         connections={{ pin1: "net.GND" }}
       />
       <TIDA010266InlineNetPorts
@@ -290,176 +357,176 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
           {
             name: "V3_3",
             connectsTo: [".J10 > .V3_3", ".TP3 > .pin1"],
-            schX: 7.5,
-            schY: -0.4,
-            direction: "right",
+            schX: -15.2,
+            schY: -5.4,
+            direction: "left",
           },
           {
             name: "VREF_2_5",
             connectsTo: ".TP4 > .pin1",
-            schX: -0.1,
-            schY: -4,
-            direction: "down",
+            schX: -15.2,
+            schY: -6.6,
+            direction: "left",
           },
           {
             name: "PRESSURE",
             connectsTo: [".J6 > .PRESSURE", ".TP2 > .pin1"],
-            schX: -3.7,
-            schY: -1.2,
-            direction: "left",
+            schX: -11.7,
+            schY: -5.4,
+            direction: "right",
           },
           {
             name: "OSCILLATIONS",
             connectsTo: ".TP5 > .pin1",
-            schX: 2.2,
-            schY: -4,
-            direction: "down",
+            schX: -11.7,
+            schY: -7.2,
+            direction: "right",
           },
           {
             name: "BRIDGE_POS",
             connectsTo: ".J5 > .BRIDGE_POS",
-            schX: -8,
-            schY: -0.4,
+            schX: -29.2,
+            schY: -4.6,
             direction: "left",
           },
           {
             name: "BRIDGE_NEG",
             connectsTo: ".J8 > .BRIDGE_NEG",
-            schX: 1,
-            schY: -1.2,
+            schX: -29.2,
+            schY: -7,
             direction: "left",
           },
           {
             name: "INA_IN_POS",
             connectsTo: ".J5 > .INA_IN_POS",
-            schX: -8,
-            schY: -1.2,
+            schX: -29.2,
+            schY: -5.4,
             direction: "left",
           },
           {
             name: "INA_OUT",
             connectsTo: ".J6 > .INA_OUT",
-            schX: -3.7,
-            schY: -2,
+            schX: -22.2,
+            schY: -5.4,
             direction: "left",
           },
           {
             name: "OPA0_IN0_POS",
             connectsTo: ".J8 > .OPA0_IN0_POS",
-            schX: 1,
-            schY: 0.4,
+            schX: -29.2,
+            schY: -6.2,
             direction: "left",
           },
           {
             name: "OPA1_IN0_POS",
             connectsTo: ".J5 > .OPA1_IN0_POS",
-            schX: -8,
-            schY: 0.4,
+            schX: -29.2,
+            schY: -3.8,
             direction: "left",
           },
           {
             name: "OPA1_OUT",
             connectsTo: ".J6 > .OPA1_OUT",
-            schX: -3.7,
-            schY: 0.4,
+            schX: -22.2,
+            schY: -3.8,
             direction: "left",
           },
           {
             name: "UART_RTS",
             connectsTo: ".J3 > .UART_RTS",
-            schX: -2.5,
-            schY: 5.2,
+            schX: -9,
+            schY: 2.5,
             direction: "left",
           },
           {
             name: "UART_RX",
             connectsTo: ".J3 > .UART_RX",
-            schX: -2.5,
-            schY: 4.7,
+            schX: -9,
+            schY: 2,
             direction: "left",
           },
           {
             name: "UART_TX",
             connectsTo: ".J3 > .UART_TX",
-            schX: -2.5,
-            schY: 4.2,
+            schX: -9,
+            schY: 1.5,
             direction: "left",
           },
           {
             name: "UART_CTS",
             connectsTo: ".J3 > .UART_CTS",
-            schX: -2.5,
-            schY: 3.2,
+            schX: -9,
+            schY: 0.5,
             direction: "left",
           },
           {
             name: "SDA",
             connectsTo: ".J7 > .SDA",
-            schX: 3.5,
-            schY: 5.7,
+            schX: -9.3,
+            schY: -3.55,
             direction: "left",
           },
           {
             name: "SCL",
             connectsTo: ".J7 > .SCL",
-            schX: 3.5,
-            schY: 5.2,
+            schX: -9.3,
+            schY: -4.05,
             direction: "left",
           },
           {
             name: "SPI0_CS",
             connectsTo: ".J7 > .SPI0_CS",
-            schX: 3.5,
-            schY: 4.7,
+            schX: -9.3,
+            schY: -4.55,
             direction: "left",
           },
           {
             name: "PA3",
             connectsTo: ".J7 > .PA3",
-            schX: 3.5,
-            schY: 4.2,
+            schX: -9.3,
+            schY: -5.05,
             direction: "left",
           },
           {
             name: "SPI0_POCI",
             connectsTo: ".J7 > .SPI0_POCI",
-            schX: 3.5,
-            schY: 3.7,
+            schX: -9.3,
+            schY: -5.55,
             direction: "left",
           },
           {
             name: "SPI0_PICO",
             connectsTo: ".J7 > .SPI0_PICO",
-            schX: 3.5,
-            schY: 3.2,
+            schX: -9.3,
+            schY: -6.05,
             direction: "left",
           },
           {
             name: "SPI_SCLK",
             connectsTo: ".J7 > .SPI_SCLK",
-            schX: 3.5,
-            schY: 2.7,
+            schX: -9.3,
+            schY: -6.55,
             direction: "left",
           },
           {
             name: "PA7",
             connectsTo: ".J7 > .PA7",
-            schX: 3.5,
-            schY: 2.2,
+            schX: -9.3,
+            schY: -7.05,
             direction: "left",
           },
           {
             name: "PA10",
             connectsTo: ".J7 > .PA10",
-            schX: 3.5,
-            schY: 1.7,
+            schX: -9.3,
+            schY: -7.55,
             direction: "left",
           },
           {
             name: "PA11",
             connectsTo: ".J7 > .PA11",
-            schX: 3.5,
-            schY: 1.2,
+            schX: -9.3,
+            schY: -8.05,
             direction: "left",
           },
           {
@@ -470,8 +537,9 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
               ".TP6 > .pin1",
               ".TP7 > .pin1",
             ],
-            schX: 0,
-            schY: -4.5,
+            inlineLabelConnectsTo: false,
+            schX: -14,
+            schY: -10,
             direction: "down",
           },
         ]}
