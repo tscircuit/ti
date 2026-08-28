@@ -630,12 +630,13 @@ describe("catalog and TSX generation", () => {
     );
   });
 
-  test("builds the Consumer wireless module without the antenna block", () => {
+  test("builds the Consumer wireless module with an active radio block", () => {
     const design = createConsumerWirelessModuleDesign(SUBCIRCUIT_CATALOG);
     expect(design.blocks.map(({ id }) => id)).toEqual([
       "input_power_protection",
       "dc_dc_power_supply",
       "io_connection",
+      "wireless_connectivity",
       "io_protection",
       "logic_control",
       "sensors",
@@ -652,6 +653,7 @@ describe("catalog and TSX generation", () => {
       "power_dc_dc_to_io_connection",
       "power_dc_dc_to_logic_control",
       "power_dc_dc_to_sensors",
+      "power_dc_dc_to_wireless_connectivity",
       "power_protection_to_dc_dc",
     ]);
     expect(
@@ -698,6 +700,7 @@ describe("catalog and TSX generation", () => {
       "InputPowerProtection_TPS25910_TIDA00890",
       "BuckConverter_TPS62086_TIDA00399",
       "LVDSDriver_SN65LVDS31_TIDA060017",
+      "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB",
       "InputOutputProtection_TPD2E009_TIDA00399",
       "LogicBuffer_SN74LVC1G34",
       "TemperatureSensor_TMP103_TIDA00399",

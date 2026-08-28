@@ -12,6 +12,7 @@ import {
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2540F256RHAR,
   CC2564C,
   CC2745R10,
   CC3235SF,
@@ -156,6 +157,7 @@ import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS9
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
 import { LogicBuffer_SN74LVC1G34 } from "./lib/subcircuits/LogicBuffer_SN74LVC1G34.circuit.tsx";
 import { WirelessAntenna_W3006_TIDCWL1837MODCOM8I } from "./lib/subcircuits/WirelessAntenna_W3006_TIDCWL1837MODCOM8I.circuit.tsx";
+import { WirelessConnectivity_CC2540_TIDCCC2540BLEUSB } from "./lib/subcircuits/WirelessConnectivity_CC2540_TIDCCC2540BLEUSB.circuit.tsx";
 import { InputOutputProtection_TPD2E009_TIDA00399 } from "./lib/subcircuits/InputOutputProtection_TPD2E009_TIDA00399.circuit.tsx";
 import { BuckConverter_TPS62086_TIDA00399 } from "./lib/subcircuits/BuckConverter_TPS62086_TIDA00399.circuit.tsx";
 import { InputPowerProtection_TPS25910_TIDA00890 } from "./lib/subcircuits/InputPowerProtection_TPS25910_TIDA00890.circuit.tsx";
@@ -252,6 +254,7 @@ export {
   LightSensor_OPT3001_TIDA01539,
   LogicBuffer_SN74LVC1G34,
   WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
   InputOutputProtection_TPD2E009_TIDA00399,
   BuckConverter_TPS62086_TIDA00399,
   InputPowerProtection_TPS25910_TIDA00890,
@@ -283,6 +286,7 @@ export const TiChipComponents = {
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2540F256RHAR,
   CC2564C,
   CC2745R10,
   CC3235SF,
@@ -425,6 +429,7 @@ export const TiSubcircuitComponents = {
   LightSensor_OPT3001_TIDA01539,
   LogicBuffer_SN74LVC1G34,
   WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
   InputOutputProtection_TPD2E009_TIDA00399,
   BuckConverter_TPS62086_TIDA00399,
   InputPowerProtection_TPS25910_TIDA00890,

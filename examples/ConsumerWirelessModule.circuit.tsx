@@ -5,7 +5,7 @@ import {
   LogicBuffer_SN74LVC1G34,
   LVDSDriver_SN65LVDS31_TIDA060017,
   TemperatureSensor_TMP103_TIDA00399,
-  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
 } from "@tsci/tscircuit.ti";
 import "tscircuit";
 
@@ -50,7 +50,8 @@ export default () => (
     <net name="CONNECTOR_N" />
     <net name="I2C_SCL" />
     <net name="I2C_SDA" />
-    <net name="RF_ANT1" />
+    <net name="WIRELESS_USB_P" />
+    <net name="WIRELESS_USB_N" />
 
     <InputPowerProtection_TPS25910_TIDA00890
       name="input_power_protection"
@@ -73,7 +74,7 @@ export default () => (
       pcbY={8}
       pcbPositionMode="relative_to_board_anchor"
     />
-    <WirelessAntenna_W3006_TIDCWL1837MODCOM8I
+    <WirelessConnectivity_CC2540_TIDCCC2540BLEUSB
       name="wireless_connectivity"
       schSheetName="wireless_connectivity"
       pcbX={30}
@@ -150,6 +151,14 @@ export default () => (
       from=".dc_dc_power_supply > .U3P3 > .GND"
       to=".io_connection > .U1 > .ENABLE_NOT"
     />
+    <trace
+      from=".dc_dc_power_supply > .L3P3 > .pin2"
+      to=".wireless_connectivity > .L1 > .pin2"
+    />
+    <trace
+      from=".dc_dc_power_supply > .U3P3 > .GND"
+      to=".wireless_connectivity > .U1 > .GND"
+    />
 
     {/* Buffered control feeds one LVDS channel and its protected connector. */}
     <trace from=".logic_control > net.MCU_OR_LOGIC_IN" to="net.LOGIC_IN" />
@@ -172,18 +181,16 @@ export default () => (
     <trace from=".io_protection > .UESD > .D1" to="net.CONNECTOR_P" />
     <trace from=".io_protection > .UESD > .D2" to="net.CONNECTOR_N" />
 
-    {/* External sensor bus and radio feed complete the module interfaces. */}
+    {/* External sensor bus and USB radio interface complete the module I/O. */}
     <trace from=".sensors > .UTMP > .SCL" to="net.I2C_SCL" />
     <trace from=".sensors > .UTMP > .SDA" to="net.I2C_SDA" />
     <trace
-      from=".dc_dc_power_supply > .U3P3 > .GND"
-      to=".wireless_connectivity > .J5 > .pin3"
-      pcbRouteHints={[
-        { x: -12, y: -2 },
-        { x: -12, y: -16 },
-        { x: 18, y: -16 },
-      ]}
+      from=".wireless_connectivity > .U1 > .USB_P"
+      to="net.WIRELESS_USB_P"
     />
-    <trace from=".wireless_connectivity > .C5 > .pin1" to="net.RF_ANT1" />
+    <trace
+      from=".wireless_connectivity > .U1 > .USB_N"
+      to="net.WIRELESS_USB_N"
+    />
   </board>
 );

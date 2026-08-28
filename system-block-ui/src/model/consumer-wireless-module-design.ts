@@ -48,6 +48,15 @@ export const createConsumerWirelessModuleDesign = (
       position: { x: 1180, y: 250 },
     },
     {
+      id: "wireless_connectivity",
+      name: "wireless_connectivity",
+      definitionId: componentId(
+        catalog,
+        "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB",
+      ),
+      position: { x: 40, y: 35 },
+    },
+    {
       id: "io_protection",
       name: "io_protection",
       definitionId: componentId(
@@ -92,6 +101,12 @@ export const createConsumerWirelessModuleDesign = (
       id: "power_dc_dc_to_sensors",
       fromBlockId: "dc_dc_power_supply",
       toBlockId: "sensors",
+      kind: "power",
+    },
+    {
+      id: "power_dc_dc_to_wireless_connectivity",
+      fromBlockId: "dc_dc_power_supply",
+      toBlockId: "wireless_connectivity",
       kind: "power",
     },
     {
