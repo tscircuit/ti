@@ -2,13 +2,15 @@
  * TIDA-01421 Altium binary SchDoc coordinates are stored on a 10 mil grid.
  *
  * Every schematic coordinate in this extraction uses one transform:
- *   schX = (altiumX - originX) * 0.01827814
- *   schY = (altiumY - originY) * 0.01827814
+ *   schX = (altiumX - originX) * 0.03
+ *   schY = (altiumY - originY) * 0.03
  *
- * The positive Y direction is unchanged. The scale matches the normalized
- * Altium-to-tscircuit transform used by the TIDA reference-design subcircuits.
+ * The positive Y direction is unchanged. Altium stores this schematic on a
+ * 10-mil grid. The uniform 0.03 schematic-unit scale maps the source's
+ * 20-coordinate passive pin span to the native 0.6-unit symbol span while
+ * preserving every relative component center.
  */
-export const TIDA01421_ALTIUM_SCALE = 0.01827814;
+export const TIDA01421_ALTIUM_SCALE = 0.03;
 
 export type Tida01421AltiumOrigin = {
   x: number;

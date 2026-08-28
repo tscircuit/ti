@@ -72,6 +72,20 @@ const getConnectivityKey = (
   componentName: string,
   pinNumber: number,
 ) => {
+  const port = getSourcePort(circuitJson, componentName, pinNumber);
+  if (!port.subcircuit_connectivity_map_key) {
+    throw new Error(
+      `Missing connectivity key for ${componentName}.${pinNumber}`,
+    );
+  }
+  return port.subcircuit_connectivity_map_key;
+};
+
+const getSourcePort = (
+  circuitJson: AnyCircuitElement[],
+  componentName: string,
+  pinNumber: number,
+) => {
   const component = getComponent(circuitJson, componentName);
   const port = circuitJson.find(
     (element): element is SourcePort =>
@@ -80,12 +94,7 @@ const getConnectivityKey = (
       element.pin_number === pinNumber,
   );
   if (!port) throw new Error(`Missing ${componentName} pin ${pinNumber}`);
-  if (!port.subcircuit_connectivity_map_key) {
-    throw new Error(
-      `Missing connectivity key for ${componentName}.${pinNumber}`,
-    );
-  }
-  return port.subcircuit_connectivity_map_key;
+  return port;
 };
 
 const getSchematicComponent = (
@@ -130,6 +139,30 @@ const getSchematicPort = (
   return schematicPort;
 };
 
+const getProjectedSchematicPort = (
+  circuitJson: AnyCircuitElement[],
+  representationName: string,
+  symbolPinNumber: number,
+) => {
+  const schematicComponent = getSchematicComponent(
+    circuitJson,
+    representationName,
+  );
+  const schematicPort = circuitJson.find(
+    (element): element is SchematicPort =>
+      element.type === "schematic_port" &&
+      element.schematic_component_id ===
+        schematicComponent.schematic_component_id &&
+      element.pin_number === symbolPinNumber,
+  );
+  if (!schematicPort) {
+    throw new Error(
+      `Missing projected schematic port ${representationName}.${symbolPinNumber}`,
+    );
+  }
+  return schematicPort;
+};
+
 const getPortSide = (
   circuitJson: AnyCircuitElement[],
   componentName: string,
@@ -143,6 +176,28 @@ const getPortSide = (
     circuitJson,
     componentName,
     pinNumber,
+  ).center;
+  const xDelta = portCenter.x - componentCenter.x;
+  const yDelta = portCenter.y - componentCenter.y;
+  if (Math.abs(xDelta) > Math.abs(yDelta)) {
+    return xDelta < 0 ? "left" : "right";
+  }
+  return yDelta < 0 ? "bottom" : "top";
+};
+
+const getProjectedPortSide = (
+  circuitJson: AnyCircuitElement[],
+  representationName: string,
+  symbolPinNumber: number,
+) => {
+  const componentCenter = getSchematicComponent(
+    circuitJson,
+    representationName,
+  ).center;
+  const portCenter = getProjectedSchematicPort(
+    circuitJson,
+    representationName,
+    symbolPinNumber,
   ).center;
   const xDelta = portCenter.x - componentCenter.x;
   const yDelta = portCenter.y - componentCenter.y;
@@ -182,10 +237,10 @@ const getTraceConnectivityKey = (
 };
 
 test("uses the authoritative devices, values, and one coordinate transform", () => {
-  expect(TIDA01421_ALTIUM_SCALE).toBe(0.01827814);
+  expect(TIDA01421_ALTIUM_SCALE).toBe(0.03);
   expect(tida01421Position(1280, 910, TIDA01421_SIGNAL_CHAIN_ORIGIN)).toEqual({
-    schX: 8.407944,
-    schY: 1.27947,
+    schX: 13.8,
+    schY: 2.1,
   });
 
   expect(getComponent(signalJson, "J1").manufacturer_part_number).toBe(
@@ -239,6 +294,7 @@ test("preserves every included Altium placement and pin orientation", () => {
     C9: [980, 860],
     R10: [1010, 860],
     R2: [1050, 980],
+    U1Symbol: [1280, 910],
     C2: [1280, 1010],
     R15: [1200, 830],
     R18: [1200, 780],
@@ -293,27 +349,6 @@ test("preserves every included Altium placement and pin orientation", () => {
       6: [450, 920],
       7: [590, 900],
       8: [450, 900],
-    },
-    U3A: {
-      1: [830, 910],
-      2: [750, 920],
-      3: [750, 900],
-      4: [790, 870],
-      8: [790, 950],
-    },
-    U3B: {
-      4: [1080, 860],
-      5: [1040, 890],
-      6: [1040, 910],
-      7: [1120, 900],
-      8: [1080, 940],
-    },
-    U1: {
-      1: [1260, 880],
-      2: [1300, 850],
-      3: [1260, 900],
-      4: [1340, 890],
-      5: [1300, 930],
     },
   } as const;
   const powerCustomPinLocations = {
@@ -402,8 +437,6 @@ test("preserves every included Altium placement and pin orientation", () => {
     C10: { 1: "top", 2: "bottom" },
     C7: { 1: "right", 2: "left" },
     R3: { 1: "left", 2: "right" },
-    U3A: { 1: "right", 2: "left", 3: "left", 4: "bottom", 8: "top" },
-    U3B: { 4: "bottom", 5: "left", 6: "left", 7: "right", 8: "top" },
     C1: { 1: "right", 2: "left" },
     R1: { 1: "left", 2: "right" },
     C5: { 1: "top", 2: "bottom" },
@@ -415,7 +448,6 @@ test("preserves every included Altium placement and pin orientation", () => {
     C9: { 1: "top", 2: "bottom" },
     R10: { 1: "bottom", 2: "top" },
     R2: { 1: "left", 2: "right" },
-    U1: { 1: "left", 2: "bottom", 3: "left", 4: "right", 5: "top" },
     C2: { 1: "top", 2: "bottom" },
     R15: { 1: "bottom", 2: "top" },
     R18: { 1: "bottom", 2: "top" },
@@ -449,6 +481,86 @@ test("preserves every included Altium placement and pin orientation", () => {
 
   expect(renderedPinSides(signalJson, signalPinSides)).toEqual(signalPinSides);
   expect(renderedPinSides(powerJson, powerPinSides)).toEqual(powerPinSides);
+
+  const projectionPinSides = {
+    U3A: { 1: "left", 2: "left", 3: "bottom", 4: "right", 5: "top" },
+    U3B: { 1: "left", 2: "left", 3: "bottom", 4: "right", 5: "top" },
+    U1Symbol: {
+      1: "left",
+      2: "left",
+      3: "bottom",
+      4: "right",
+      5: "top",
+    },
+  } as const;
+  const renderedProjectionPinSides = Object.fromEntries(
+    Object.entries(projectionPinSides).map(([name, pins]) => [
+      name,
+      Object.fromEntries(
+        Object.keys(pins).map((pin) => [
+          pin,
+          getProjectedPortSide(signalJson, name, Number(pin)),
+        ]),
+      ),
+    ]),
+  );
+  expect(renderedProjectionPinSides).toEqual(projectionPinSides);
+});
+
+test("maps each native amplifier symbol port to the authoritative physical pin", () => {
+  const disconnectedProjectionPorts: string[] = [];
+  const expectedProjectionMappings = {
+    U3A: {
+      1: ["U3", 3],
+      2: ["U3", 2],
+      3: ["U3", 4],
+      4: ["U3", 1],
+      5: ["U3", 8],
+    },
+    U3B: {
+      1: ["U3", 5],
+      2: ["U3", 6],
+      3: ["U3", 4],
+      4: ["U3", 7],
+      5: ["U3", 8],
+    },
+    U1Symbol: {
+      1: ["U1", 1],
+      2: ["U1", 3],
+      3: ["U1", 2],
+      4: ["U1", 4],
+      5: ["U1", 5],
+    },
+  } as const;
+
+  for (const [representationName, mappings] of Object.entries(
+    expectedProjectionMappings,
+  )) {
+    expect(
+      getSchematicComponent(signalJson, representationName).symbol_name,
+    ).toBe("opamp_with_power_right");
+    for (const [
+      symbolPinNumber,
+      [physicalComponent, physicalPinNumber],
+    ] of Object.entries(mappings)) {
+      const projectedPort = getProjectedSchematicPort(
+        signalJson,
+        representationName,
+        Number(symbolPinNumber),
+      );
+      expect(projectedPort.source_port_id).toBe(
+        getSourcePort(signalJson, physicalComponent, physicalPinNumber)
+          .source_port_id,
+      );
+      if (!projectedPort.is_connected)
+        disconnectedProjectionPorts.push(
+          `${representationName}.${symbolPinNumber}`,
+        );
+    }
+  }
+  // Direct traces to the shared physical V+ and V- ports must connect both
+  // independently placed native symbol projections.
+  expect(disconnectedProjectionPorts).toEqual([]);
 });
 
 test("preserves the shunt, ripple-filter, comparator, and output nets", () => {
@@ -489,10 +601,8 @@ test("preserves the shunt, ripple-filter, comparator, and output nets", () => {
       ["C1", 2],
       ["R1", 1],
       ["U3", 2],
-      ["U3A", 2],
     ],
     [
-      ["U3A", 1],
       ["C1", 1],
       ["R1", 2],
       ["U3", 1],
@@ -503,26 +613,22 @@ test("preserves the shunt, ripple-filter, comparator, and output nets", () => {
       ["R11", 1],
       ["R17", 2],
       ["U3", 3],
-      ["U3A", 3],
       ["R10", 1],
     ],
     [
       ["R8", 2],
       ["R2", 1],
       ["U3", 6],
-      ["U3B", 6],
     ],
     [
       ["R9", 2],
       ["C9", 1],
       ["R10", 2],
       ["U3", 5],
-      ["U3B", 5],
     ],
     [
       ["R2", 2],
       ["U3", 7],
-      ["U3B", 7],
       ["U1", 3],
     ],
     [
@@ -548,8 +654,6 @@ test("preserves the shunt, ripple-filter, comparator, and output nets", () => {
       ["C3", 1],
       ["C4", 1],
       ["U3", 8],
-      ["U3A", 8],
-      ["U3B", 8],
       ["C5", 1],
       ["C6", 1],
       ["R11", 2],
@@ -566,8 +670,6 @@ test("preserves the shunt, ripple-filter, comparator, and output nets", () => {
       ["R20", 1],
       ["R17", 1],
       ["U3", 4],
-      ["U3A", 4],
-      ["U3B", 4],
       ["C5", 2],
       ["C6", 2],
       ["C9", 2],
@@ -617,8 +719,6 @@ test("preserves the local power nets and renders without circuit errors", () => 
     ["C10", 2],
     ["R17", 1],
     ["U3", 4],
-    ["U3A", 4],
-    ["U3B", 4],
     ["C5", 2],
     ["C9", 2],
     ["U1", 2],
@@ -631,6 +731,32 @@ test("preserves the local power nets and renders without circuit errors", () => 
     element.type.endsWith("_error"),
   );
   expect(circuitErrors).toEqual([]);
+});
+
+test("uses on-trace labels for the source signal names", () => {
+  const explicitNetNames = signalJson
+    .filter((element) => element.type === "source_net")
+    .map((net) => net.name)
+    .sort();
+  expect(explicitNetNames).toEqual(["GND", "V3_3", "V5"]);
+
+  const renderedLabels = [
+    ...new Set(
+      signalJson
+        .filter((element) => element.type === "schematic_net_label")
+        .map((label) => label.text),
+    ),
+  ].sort();
+  expect(renderedLabels).toEqual([
+    "ADCMOTOR",
+    "BIAS",
+    "GND",
+    "TIMER",
+    "V+",
+    "V-",
+    "V3_3",
+    "V5",
+  ]);
 });
 
 test("joins the child power rails in the composite without circuit errors", () => {

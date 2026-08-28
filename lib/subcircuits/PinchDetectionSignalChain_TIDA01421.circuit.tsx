@@ -2,11 +2,7 @@ import type { ChipProps, SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { INA240A1QDRQ1 } from "../chips/INA240A1QDRQ1.circuit.tsx";
 import { LMV7275IDCKRQ1 } from "../chips/LMV7275IDCKRQ1.circuit.tsx";
-import {
-  TLV2316QDGKRQ1,
-  TLV2316QDGKRQ1UnitA,
-  TLV2316QDGKRQ1UnitB,
-} from "../chips/TLV2316QDGKRQ1.circuit.tsx";
+import { TLV2316QDGKRQ1 } from "../chips/TLV2316QDGKRQ1.circuit.tsx";
 import {
   type Tida01421AltiumOrigin,
   tida01421Delta,
@@ -81,18 +77,15 @@ const MotorCurrentConnector = (
 export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
   <subcircuit
     schAutoLayoutEnabled={false}
-    schMaxTraceDistance="30mm"
+    schMaxTraceDistance="8mm"
     routingDisabled
     {...props}
   >
-    <net name="GND" isGroundNet />
-    <net name="V_PLUS" />
-    <net name="V_MINUS" />
     <net name="V5" isPowerNet />
+    {/* Net selectors reject periods, so V3.3 is normalized internally. The
+        output trace still requests the source spelling as its display label. */}
     <net name="V3_3" isPowerNet />
-    <net name="BIAS" />
-    <net name="ADCMOTOR" />
-    <net name="TIMER" />
+    <net name="GND" isGroundNet />
 
     {/* Current-shunt input, common-mode filter, and INA240A1-Q1 stage. */}
     <MotorCurrentConnector name="J1" {...p(180, 890)} />
@@ -128,9 +121,9 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       {...p(550, 1000)}
     />
 
-    <trace from="J1.V_PLUS" to="R5.pin1" />
+    <trace from="J1.V_PLUS" to="R5.pin1" schDisplayLabel="V+" />
     <trace from="R6.pin2" to="R5.pin1" />
-    <trace from="J1.V_MINUS" to="R7.pin1" />
+    <trace from="J1.V_MINUS" to="R7.pin1" schDisplayLabel="V-" />
     <trace from="R6.pin1" to="R7.pin1" />
     <trace from="R5.pin2" to="C8.pin1" />
     <trace from="C8.pin1" to="U2.IN_PLUS" />
@@ -140,17 +133,8 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
     <trace from="C3.pin1" to="C4.pin1" />
     <trace from="C3.pin2" to="C4.pin2" />
 
-    {/* tscircuit net identifiers reject '+' and '-'. The source V+ and V-
-        labels are therefore normalized to V_PLUS and V_MINUS; the J1 aliases
-        retain the exact Altium labels. */}
-    <trace from="R5.pin1" to="net.V_PLUS" />
-    <trace from="R7.pin1" to="net.V_MINUS" />
-    <trace from="U2.VS" to="net.V5" />
-    <trace from="U2.REF1" to="net.V5" />
-    <trace from="U2.GND" to="net.GND" />
-    <trace from="C3.pin1" to="net.V5" />
-    <trace from="C3.pin2" to="net.GND" />
-
+    {/* The public TSX ports retain underscore-safe identifiers. The source's
+        exact V+ and V- text is carried electrically by the on-trace labels. */}
     {/* ADCMOTOR is the source design's scaled DC-current interface. */}
     <resistor
       name="R12"
@@ -173,12 +157,9 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       {...p(750, 640)}
     />
     <trace from="U2.OUT" to="R12.pin1" />
-    <trace from="R12.pin2" to="R20.pin2" />
+    <trace from="R12.pin2" to="R20.pin2" schDisplayLabel="ADCMOTOR" />
     <trace from="R20.pin2" to="C10.pin1" />
     <trace from="R20.pin1" to="C10.pin2" />
-    <trace from="R12.pin2" to="net.ADCMOTOR" />
-    <trace from="C10.pin2" to="net.GND" />
-
     {/* TLV2316-Q1 active band-pass filter and DC-bias rejection stages. */}
     <capacitor
       name="C7"
@@ -188,30 +169,40 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       {...p(660, 920)}
     />
     <resistor name="R3" resistance="30kohm" footprint="0603" {...p(720, 920)} />
-    {/* Native TSX does not yet bind two independently placed schematic units
-        to one physical chip. U3 is the exact hidden package/BOM record; the
-        two do-not-place units retain the source's centers and pin numbers. */}
+    {/* Two native symbol projections share the exact physical U3 package.
+        The native right-facing powered op-amp currently has + above -, while
+        the TI symbol has - above +. The datasheet-correct pin mapping is kept,
+        so the U3B input traces cross instead of swapping pins or using a
+        decorative connection. */}
     <TLV2316QDGKRQ1 name="U3" noSchematicRepresentation />
-    <TLV2316QDGKRQ1UnitA
+    <schematicsymbol
       name="U3A"
       displayName="U3A"
-      doNotPlace
+      chipRef=".U3"
+      symbolName="opamp_with_power_right"
+      connections={{
+        inp1: "U3.IN_PLUS_A",
+        inp2: "U3.IN_MINUS_A",
+        out: "U3.OUT_A",
+        "V+": "U3.V_PLUS",
+        "V-": "U3.V_MINUS",
+      }}
       {...p(790, 910)}
     />
-    <TLV2316QDGKRQ1UnitB
+    <schematicsymbol
       name="U3B"
       displayName="U3B"
-      doNotPlace
+      chipRef=".U3"
+      symbolName="opamp_with_power_right"
+      connections={{
+        inp1: "U3.IN_PLUS_B",
+        inp2: "U3.IN_MINUS_B",
+        out: "U3.OUT_B",
+        "V+": "U3.V_PLUS",
+        "V-": "U3.V_MINUS",
+      }}
       {...p(1080, 900)}
     />
-    <trace from="U3.OUT_A" to="U3A.OUT" />
-    <trace from="U3.IN_MINUS_A" to="U3A.IN_MINUS" />
-    <trace from="U3.IN_PLUS_A" to="U3A.IN_PLUS" />
-    <trace from="U3.V_MINUS" to="U3A.V_MINUS" />
-    <trace from="U3.IN_PLUS_B" to="U3B.IN_PLUS" />
-    <trace from="U3.IN_MINUS_B" to="U3B.IN_MINUS" />
-    <trace from="U3.OUT_B" to="U3B.OUT" />
-    <trace from="U3.V_PLUS" to="U3A.V_PLUS" />
     <schematictext
       text="TLV2316QDGKRQ1"
       fontSize={0.11}
@@ -284,38 +275,43 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
 
     <trace from="U2.OUT" to="C7.pin2" />
     <trace from="C7.pin1" to="R3.pin1" />
-    <trace from="R3.pin2" to="U3A.IN_MINUS" />
+    <trace from="R3.pin2" to="U3.IN_MINUS_A" />
     <trace from="R3.pin2" to="R1.pin1" />
     <trace from="R3.pin2" to="C1.pin2" />
-    <trace from="U3A.OUT" to="R1.pin2" />
-    <trace from="U3A.OUT" to="C1.pin1" />
-    <trace from="U3A.OUT" to="R8.pin1" />
-    <trace from="U3A.OUT" to="R9.pin1" />
+    <trace from="U3.OUT_A" to="R1.pin2" />
+    <trace from="U3.OUT_A" to="C1.pin1" />
+    <trace from="U3.OUT_A" to="R8.pin1" />
+    <trace from="U3.OUT_A" to="R9.pin1" />
     <trace from="R11.pin1" to="R17.pin2" />
-    <trace from="R11.pin1" to="U3A.IN_PLUS" />
-    <trace from="R8.pin2" to="U3B.IN_MINUS" />
+    <trace from="R11.pin1" to="U3.IN_PLUS_A" />
+    <trace from="R8.pin2" to="U3.IN_MINUS_B" />
     <trace from="R8.pin2" to="R2.pin1" />
-    <trace from="R9.pin2" to="U3B.IN_PLUS" />
+    <trace from="R9.pin2" to="U3.IN_PLUS_B" />
     <trace from="R9.pin2" to="C9.pin1" />
     <trace from="R9.pin2" to="R10.pin2" />
-    <trace from="R2.pin2" to="U3B.OUT" />
+    <trace from="R2.pin2" to="U3.OUT_B" />
+    <trace from="U3.OUT_B" to="U1.IN_MINUS" />
     <trace from="C5.pin1" to="C6.pin1" />
     <trace from="C5.pin2" to="C6.pin2" />
 
-    <trace from="R11.pin2" to="net.V5" />
-    <trace from="R17.pin1" to="net.GND" />
-    <trace from="R11.pin1" to="net.BIAS" />
-    <trace from="R10.pin1" to="net.BIAS" />
-    <trace from="U3A.V_PLUS" to="net.V5" />
-    <trace from="U3A.V_MINUS" to="net.GND" />
-    <trace from="U3B.V_PLUS" to="net.V5" />
-    <trace from="U3B.V_MINUS" to="net.GND" />
-    <trace from="C5.pin1" to="net.V5" />
-    <trace from="C5.pin2" to="net.GND" />
-    <trace from="C9.pin2" to="net.GND" />
+    <trace from="R11.pin1" to="R10.pin1" schDisplayLabel="BIAS" />
 
     {/* LMV7275-Q1 inverting comparator, hysteresis, and open-drain pull-up. */}
-    <LMV7275IDCKRQ1 name="U1" {...p(1280, 910)} />
+    <LMV7275IDCKRQ1 name="U1" noSchematicRepresentation />
+    <schematicsymbol
+      name="U1Symbol"
+      displayName="U1"
+      chipRef=".U1"
+      symbolName="opamp_with_power_right"
+      connections={{
+        inp1: "U1.IN_PLUS",
+        inp2: "U1.IN_MINUS",
+        out: "U1.OUT",
+        "V+": "U1.V_PLUS",
+        "V-": "U1.V_MINUS",
+      }}
+      {...p(1280, 910)}
+    />
     <capacitor
       name="C2"
       capacitance="0.1uF"
@@ -359,25 +355,136 @@ export const PinchDetectionSignalChain_TIDA01421 = (props: SubcircuitProps) => (
       {...p(1460, 870)}
     />
 
-    <trace from="U3B.OUT" to="U1.IN_MINUS" />
     <trace from="R15.pin1" to="R18.pin2" />
     <trace from="R15.pin1" to="U1.IN_PLUS" />
     <trace from="R15.pin1" to="R16.pin1" />
     <trace from="U1.OUT" to="R16.pin2" />
     <trace from="U1.OUT" to="R4.pin1" />
-    <trace from="U1.OUT" to="C15.pin1" />
-    <trace from="C2.pin2" to="U1.V_MINUS" />
+    <trace from="R4.pin1" to="C15.pin1" schDisplayLabel="TIMER" />
+    <trace name="U2-V5" from="U2.VS" to="net.V5" schDisplayLabel="V5" />
+    <trace name="U2-REF1-V5" from="U2.REF1" to="net.V5" schDisplayLabel="V5" />
+    <trace name="C3-V5" from="C3.pin1" to="net.V5" schDisplayLabel="V5" />
+    <trace name="R11-V5" from="R11.pin2" to="net.V5" schDisplayLabel="V5" />
+    <trace name="U3A-V5" from="U3A.pin5" to="net.V5" />
+    <trace name="U3B-V5" from="U3B.pin5" to="net.V5" />
+    <trace name="C5-V5" from="C5.pin1" to="net.V5" schDisplayLabel="V5" />
+    <trace name="C2-V5" from="C2.pin1" to="net.V5" schDisplayLabel="V5" />
+    <trace name="U1-V5" from="U1Symbol.pin5" to="net.V5" />
+    <trace name="R15-V5" from="R15.pin2" to="net.V5" schDisplayLabel="V5" />
 
-    <trace from="C2.pin1" to="net.V5" />
-    <trace from="C2.pin2" to="net.GND" />
-    <trace from="U1.V_PLUS" to="net.V5" />
-    <trace from="U1.V_MINUS" to="net.GND" />
-    <trace from="R15.pin2" to="net.V5" />
-    <trace from="R18.pin1" to="net.GND" />
-    <trace from="R4.pin2" to="net.V3_3" />
-    <trace from="U1.OUT" to="net.TIMER" />
-    <trace from="C15.pin2" to="net.GND" />
-
+    <trace name="U2-GND" from="U2.GND" to="net.GND" schDisplayLabel="GND" />
+    <trace name="C3-GND" from="C3.pin2" to="net.GND" schDisplayLabel="GND" />
+    <trace name="C10-GND" from="C10.pin2" to="net.GND" schDisplayLabel="GND" />
+    <trace name="R17-GND" from="R17.pin1" to="net.GND" schDisplayLabel="GND" />
+    <trace name="U3A-GND" from="U3A.pin3" to="net.GND" />
+    <trace name="U3B-GND" from="U3B.pin3" to="net.GND" />
+    <trace name="C5-GND" from="C5.pin2" to="net.GND" schDisplayLabel="GND" />
+    <trace name="C9-GND" from="C9.pin2" to="net.GND" schDisplayLabel="GND" />
+    <trace name="C2-GND" from="C2.pin2" to="net.GND" schDisplayLabel="GND" />
+    <trace name="U1-GND" from="U1Symbol.pin3" to="net.GND" />
+    <trace name="R18-GND" from="R18.pin1" to="net.GND" schDisplayLabel="GND" />
+    <trace name="C15-GND" from="C15.pin2" to="net.GND" schDisplayLabel="GND" />
+    <trace
+      name="timer-pullup"
+      from="R4.pin2"
+      to="net.V3_3"
+      schDisplayLabel="V3.3"
+    />
+    {/* The TI sheet uses local rail symbols rather than sheet-wide V5/GND
+        buses. Explicitly placed native rail labels preserve that topology;
+        signal names continue to use schDisplayLabel on their real traces. */}
+    <netlabel net="V5" connection="U2.VS" anchorSide="right" {...p(450, 920)} />
+    <netlabel
+      net="V5"
+      connection="U2.REF1"
+      anchorSide="left"
+      {...p(600, 900)}
+    />
+    <netlabel net="GND" connection="U2.GND" anchorSide="top" {...p(570, 840)} />
+    <netlabel
+      net="V5"
+      connection="C3.pin1"
+      anchorSide="bottom"
+      {...p(520, 1040)}
+    />
+    <netlabel
+      net="GND"
+      connection="C3.pin2"
+      anchorSide="top"
+      {...p(520, 970)}
+    />
+    <netlabel
+      net="GND"
+      connection="C10.pin2"
+      anchorSide="top"
+      {...p(750, 610)}
+    />
+    <netlabel
+      net="V5"
+      connection="R11.pin2"
+      anchorSide="bottom"
+      {...p(670, 880)}
+    />
+    <netlabel
+      net="GND"
+      connection="R17.pin1"
+      anchorSide="top"
+      {...p(670, 750)}
+    />
+    <netlabel
+      net="V5"
+      connection="C5.pin1"
+      anchorSide="bottom"
+      {...p(860, 1040)}
+    />
+    <netlabel
+      net="GND"
+      connection="C5.pin2"
+      anchorSide="top"
+      {...p(860, 970)}
+    />
+    <netlabel
+      net="GND"
+      connection="C9.pin2"
+      anchorSide="top"
+      {...p(980, 830)}
+    />
+    <netlabel
+      net="V5"
+      connection="C2.pin1"
+      anchorSide="bottom"
+      {...p(1280, 1050)}
+    />
+    <netlabel
+      net="GND"
+      connection="C2.pin2"
+      anchorSide="top"
+      {...p(1280, 980)}
+    />
+    <netlabel
+      net="V5"
+      connection="R15.pin2"
+      anchorSide="bottom"
+      {...p(1200, 870)}
+    />
+    <netlabel
+      net="GND"
+      connection="R18.pin1"
+      anchorSide="top"
+      {...p(1200, 740)}
+    />
+    <netlabel
+      net="V3_3"
+      connection="R4.pin2"
+      anchorSide="bottom"
+      {...p(1400, 950)}
+    />
+    <netlabel
+      net="GND"
+      connection="C15.pin2"
+      anchorSide="top"
+      {...p(1460, 840)}
+    />
     <port name="V_PLUS" direction="left" connectsTo="J1.V_PLUS" />
     <port name="V_MINUS" direction="left" connectsTo="J1.V_MINUS" />
     <port name="V5" direction="left" connectsTo="U2.VS" />
