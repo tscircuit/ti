@@ -122,7 +122,8 @@ export default () => (
     <Microcontroller_MSPM0L1306_TIDA010266
       name="microcontroller"
       schSheetName="mcu"
-      schY={4}
+      schX={3.5}
+      schY={-1.5}
     />
     <PressureSensorSection
       name="pressure_sensor"
