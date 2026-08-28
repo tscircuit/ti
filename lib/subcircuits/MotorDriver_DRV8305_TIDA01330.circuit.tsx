@@ -764,7 +764,7 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       {...pcbPlacement.J5}
       pinCount={6}
       manufacturerPartNumber="1729160"
-      schX={12.6}
+      schX={14.2}
       schY={-2.9}
       schWidth={0.5}
       schHeight={1.4}
