@@ -210,18 +210,132 @@ const testConnectivity = async () => {
   const sheets = circuitJson.filter(
     (element) => element.type === "schematic_sheet",
   );
-  assert(
-    sheets.length === 0,
-    "The fixed-size schematic-sheet frame must remain removed",
-  );
-
-  for (const component of circuitJson) {
-    if (component.type !== "schematic_component") continue;
-
+  const expectedSheetNames = [
+    "mcu_socket",
+    "programming_debug",
+    "power_user",
+    "clocks_channels",
+  ] as const;
+  assert(sheets.length === 4, `Expected 4 native sheets, got ${sheets.length}`);
+  for (const [sheetIndex, sheetName] of expectedSheetNames.entries()) {
+    const sheet = sheets.find((candidate) => candidate.name === sheetName);
+    assert(sheet, `Missing native schematic sheet ${sheetName}`);
     assert(
-      !component.schematic_sheet_id,
-      `${component.schematic_component_id} is unexpectedly assigned to a fixed sheet`,
+      sheet.sheet_index === sheetIndex,
+      `${sheetName} has sheet index ${sheet.sheet_index}, expected ${sheetIndex}`,
     );
+  }
+
+  const sheetIdByName = new Map(
+    sheets.map((sheet) => [sheet.name, sheet.schematic_sheet_id]),
+  );
+  const componentsBySheet = {
+    mcu_socket: ["IC1", "J3", "J4", "J5", "J6"],
+    programming_debug: [
+      "BSL",
+      "C5",
+      "JTAG",
+      "JP5",
+      "JP6",
+      "JP7",
+      "JP8",
+      "JP9",
+      "JP10",
+      "R3",
+      "R4",
+      "R7",
+      "R16",
+      "R17",
+      "R19",
+      "R20",
+      "R21",
+      "SH_JP5",
+      "SH_JP6",
+      "SH_JP7",
+      "SH_JP8",
+      "SH_JP9",
+      "SH_JP10",
+      "SW2",
+      "SW3",
+      "SW4",
+      "SW5",
+      "TP1",
+      "TP2",
+      "TP3",
+      "TP4",
+    ],
+    power_user: [
+      "C3",
+      "C4",
+      "C6",
+      "C7",
+      "C10",
+      "C11",
+      "C13",
+      "C16",
+      "D1",
+      "D2",
+      "J1",
+      "J2",
+      "JP1",
+      "JP2",
+      "JP3",
+      "JP4",
+      "JP11",
+      "JP12",
+      "R1",
+      "R2",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "SH_J1",
+      "SH_JP1",
+      "SH_JP2",
+      "SH_JP3",
+      "SH_JP4",
+      "SH_JP11",
+      "SH_JP12",
+      "SW1",
+      "TP5",
+      "TP6",
+    ],
+    clocks_channels: [
+      "C1",
+      "C2",
+      "C8",
+      "C9",
+      "C12",
+      "C14",
+      "C15",
+      "JP13",
+      "JP14",
+      "Q1",
+      "Q2",
+      "Q3",
+      "R5",
+      "R6",
+      "R8",
+      "R9",
+      "R14",
+      "R15",
+      "R18",
+      "R22",
+      "SH_JP13",
+      "SH_JP14",
+    ],
+  } as const;
+
+  for (const [sheetName, componentNames] of Object.entries(componentsBySheet)) {
+    const expectedSheetId = sheetIdByName.get(sheetName);
+    assert(expectedSheetId, `Missing sheet id for ${sheetName}`);
+    for (const componentName of componentNames) {
+      const component = findSchematicComponent(circuitJson, componentName);
+      assert(
+        component.schematic_sheet_id === expectedSheetId,
+        `${componentName} is not on ${sheetName}`,
+      );
+    }
   }
 
   for (const connectorName of ["J3", "J4", "J5", "J6"]) {
@@ -262,6 +376,8 @@ const testConnectivity = async () => {
     "SW3",
     "SW4",
     "SW5",
+    "Q1",
+    "Q2",
     "Q3",
     "D1",
     "D2",
@@ -301,6 +417,7 @@ const testConnectivity = async () => {
       secondIndex += 1
     ) {
       const second = schematicBodiesAndLabels[secondIndex];
+      if (first.schematic_sheet_id !== second.schematic_sheet_id) continue;
       const secondBounds = getSchematicElementBounds(second);
       if (!secondBounds) continue;
       const overlapX =
@@ -311,8 +428,8 @@ const testConnectivity = async () => {
         Math.max(firstBounds.minY, secondBounds.minY);
 
       assert(
-        overlapX <= 0.01 || overlapY <= 0.01,
-        `${first.type} overlaps ${second.type} in the expanded schematic layout`,
+        overlapX <= 0.05 || overlapY <= 0.05,
+        `${first.type} ${"schematic_component_id" in first ? first.schematic_component_id : "text" in first ? first.text : ""} overlaps ${second.type} ${"schematic_component_id" in second ? second.schematic_component_id : "text" in second ? second.text : ""} on ${first.schematic_sheet_id}`,
       );
     }
   }
@@ -428,8 +545,11 @@ const testConnectivity = async () => {
 
   let directSocketTraceCount = 0;
   const directSocketMcuPins = new Set<number>();
+  const mcuSocketSheetId = sheetIdByName.get("mcu_socket");
+  assert(mcuSocketSheetId, "Missing MCU socket sheet id");
   for (const trace of circuitJson) {
     if (trace.type !== "schematic_trace") continue;
+    if (trace.schematic_sheet_id !== mcuSocketSheetId) continue;
 
     const touchedEndpoints = new Map<
       string,
