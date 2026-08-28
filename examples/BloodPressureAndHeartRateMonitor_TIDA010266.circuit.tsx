@@ -66,26 +66,26 @@ export default () => (
 
     {/* Continue native dividers from their exact endpoints to the sheet border. */}
     <schematicline
-      x1={11.925}
-      y1={12.7}
+      x1={33.9}
+      y1={12.325}
       x2={35.2}
-      y2={12.7}
+      y2={12.325}
       strokeWidth={0.02}
       color="#000000"
       isDashed
     />
     <schematicline
-      x1={28.7}
-      y1={-8.15}
+      x1={33.9}
+      y1={-6.55}
       x2={35.2}
-      y2={-8.15}
+      y2={-6.55}
       strokeWidth={0.02}
       color="#000000"
       isDashed
     />
     <schematicline
       x1={4.03125}
-      y1={21.35}
+      y1={14.9}
       x2={4.03125}
       y2={21.65}
       strokeWidth={0.02}
@@ -93,9 +93,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={7.775}
+      x1={9.575}
       y1={21.35}
-      x2={7.775}
+      x2={9.575}
       y2={21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -103,7 +103,7 @@ export default () => (
     />
     <schematicline
       x1={-12.625}
-      y1={-19.7}
+      y1={-17.9}
       x2={-12.625}
       y2={-21.65}
       strokeWidth={0.02}
@@ -111,9 +111,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={7.775}
-      y1={-19.7}
-      x2={7.775}
+      x1={4.7}
+      y1={-17.9}
+      x2={4.7}
       y2={-21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -209,7 +209,7 @@ export default () => (
       name="motor_driver"
       schSectionName="motor_driver"
       schX={21}
-      schY={-16}
+      schY={-13}
     />
 
     {/* R23 is intentionally not populated in TI's released assembly. */}

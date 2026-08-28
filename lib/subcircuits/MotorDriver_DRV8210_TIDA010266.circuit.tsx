@@ -14,39 +14,29 @@ export const MotorDriver_DRV8210_TIDA010266 = (
     <subcircuit
       {...props}
       schTraceAutoLabelEnabled={false}
-      schMaxTraceDistance="1000mm"
+      schMaxTraceDistance="9mm"
     >
       <DRV8210DSGR
         name="U6"
         schSectionName={props.schSectionName}
         schX={0}
         schY={0}
+        schWidth="4.8mm"
+        schHeight="3.4mm"
         schPinArrangement={{
           leftSide: {
             direction: "top-to-bottom",
-            pins: ["IN1", "IN2", "MODE"],
+            pins: ["VM", "VCC", "MODE", "IN1", "IN2"],
           },
-          rightSide: { direction: "top-to-bottom", pins: ["OUT1", "OUT2"] },
-          topSide: { direction: "left-to-right", pins: ["VM", "VCC"] },
-          bottomSide: { direction: "left-to-right", pins: ["GND", "EP"] },
+          rightSide: {
+            direction: "top-to-bottom",
+            pins: ["OUT1", "OUT2", "EP", "GND"],
+          },
         }}
         schPinStyle={{
-          IN2: { marginTop: 0.3 },
-          MODE: { marginTop: 0.3 },
-          VCC: { marginLeft: 0.55 },
           OUT2: { marginTop: 0.3 },
-          EP: { marginLeft: 0.3 },
-        }}
-        connections={{
-          VM: "net.VIN",
-          VCC: "net.V3_3",
-          MODE: "net.GND",
-          IN1: "net.VALVE_CONTROL",
-          IN2: "net.PUMP_CONTROL",
-          OUT1: "net.VALVE_OUT",
-          OUT2: "net.PUMP_OUT",
-          GND: "net.GND",
-          EP: "net.GND",
+          EP: { marginTop: 0.45 },
+          GND: { marginTop: 0.25 },
         }}
       />
       <capacitor
@@ -55,10 +45,9 @@ export const MotorDriver_DRV8210_TIDA010266 = (
         capacitance="22uF"
         maxVoltageRating="16V"
         footprint="0603"
-        schX={-3.3}
-        schY={2.2}
+        schX={-7}
+        schY={2.4}
         schOrientation="vertical"
-        connections={{ pin1: "net.VIN", pin2: "net.GND" }}
       />
       <capacitor
         name="C15"
@@ -66,10 +55,9 @@ export const MotorDriver_DRV8210_TIDA010266 = (
         capacitance="100nF"
         maxVoltageRating="25V"
         footprint="0402"
-        schX={-2.1}
-        schY={2.2}
+        schX={-5.4}
+        schY={2.4}
         schOrientation="vertical"
-        connections={{ pin1: "net.VIN", pin2: "net.GND" }}
       />
       <capacitor
         name="C16"
@@ -77,31 +65,44 @@ export const MotorDriver_DRV8210_TIDA010266 = (
         capacitance="100nF"
         maxVoltageRating="25V"
         footprint="0402"
-        schX={-3.3}
-        schY={-2.4}
+        schX={-10}
+        schY={0}
         schOrientation="vertical"
-        connections={{ pin1: "net.V3_3", pin2: "net.GND" }}
       />
       <connector
         name="J9"
         schSectionName={props.schSectionName}
         manufacturerPartNumber="M22-5330405"
         footprint="pinrow4_rows1_p2mm"
-        schX={5.3}
+        schX={11.5}
         schY={0}
-        pinLabels={{
-          pin1: ["GND_1"],
-          pin2: ["VALVE_OUT"],
-          pin3: ["PUMP_OUT"],
-          pin4: ["GND_4"],
+        schWidth="0.8mm"
+        schHeight="1.6mm"
+        schPinArrangement={{
+          leftSide: {
+            pins: ["pin1", "pin2", "pin3", "pin4"],
+            direction: "top-to-bottom",
+          },
         }}
-        connections={{
-          pin1: "net.GND",
-          pin2: "net.VALVE_OUT",
-          pin3: "net.PUMP_OUT",
-          pin4: "net.GND",
+        pinLabels={{
+          pin1: ["G1", "GND_1"],
+          pin2: ["V", "VALVE_OUT"],
+          pin3: ["P", "PUMP_OUT"],
+          pin4: ["G4", "GND_4"],
         }}
       />
+      <trace from=".C14 > .pin1" to=".C15 > .pin1" maxLength="100mm" />
+      <trace from=".C15 > .pin1" to=".U6 > .VM" maxLength="100mm" />
+      <trace from=".C16 > .pin1" to=".U6 > .VCC" maxLength="100mm" />
+      <trace from=".U6 > .OUT1" to=".J9 > .VALVE_OUT" maxLength="100mm" />
+      <trace from=".U6 > .OUT2" to=".J9 > .PUMP_OUT" maxLength="100mm" />
+      <trace from=".U6 > .EP" to=".U6 > .GND" maxLength="100mm" />
+      <trace from=".J9 > .GND_1" to=".J9 > .GND_4" maxLength="100mm" />
+      <netlabel net="GND" connectsTo=".C14 > .pin2" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".C15 > .pin2" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".C16 > .pin2" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".U6 > .GND" anchorSide="top" />
+      <netlabel net="GND" connectsTo=".J9 > .GND_4" anchorSide="top" />
       <TIDA010266InlineNetPorts
         originX={originX}
         originY={originY}
@@ -109,60 +110,48 @@ export const MotorDriver_DRV8210_TIDA010266 = (
           {
             name: "VIN",
             connectsTo: [".U6 > .VM", ".C14 > .pin1", ".C15 > .pin1"],
-            schX: -2.7,
-            schY: 3.2,
+            inlineLabelConnectsTo: ".C14 > .pin1",
+            schX: -6.2,
+            schY: 3.5,
             direction: "up",
           },
           {
             name: "V3_3",
             connectsTo: [".U6 > .VCC", ".C16 > .pin1"],
-            schX: -1,
-            schY: 3.2,
+            inlineLabelConnectsTo: ".C16 > .pin1",
+            schX: -10,
+            schY: 1.3,
             direction: "up",
           },
           {
             name: "VALVE_CONTROL",
             connectsTo: ".U6 > .IN1",
-            schX: -3,
-            schY: 0.6,
+            schX: -5.5,
+            schY: -0.7,
             direction: "left",
           },
           {
             name: "PUMP_CONTROL",
             connectsTo: ".U6 > .IN2",
-            schX: -3,
-            schY: -0.2,
+            schX: -5.5,
+            schY: -1.4,
             direction: "left",
           },
           {
             name: "VALVE_OUT",
             connectsTo: [".U6 > .OUT1", ".J9 > .VALVE_OUT"],
-            schX: 3,
-            schY: 0.6,
+            inlineLabelConnectsTo: ".J9 > .VALVE_OUT",
+            schX: 6.5,
+            schY: 0.8,
             direction: "right",
           },
           {
             name: "PUMP_OUT",
             connectsTo: [".U6 > .OUT2", ".J9 > .PUMP_OUT"],
-            schX: 3,
-            schY: -0.2,
+            inlineLabelConnectsTo: ".J9 > .PUMP_OUT",
+            schX: 6.5,
+            schY: 0.1,
             direction: "right",
-          },
-          {
-            name: "GND",
-            connectsTo: [
-              ".U6 > .MODE",
-              ".U6 > .GND",
-              ".U6 > .EP",
-              ".C14 > .pin2",
-              ".C15 > .pin2",
-              ".C16 > .pin2",
-              ".J9 > .GND_1",
-              ".J9 > .GND_4",
-            ],
-            schX: 0,
-            schY: -3.5,
-            direction: "down",
           },
         ]}
       />

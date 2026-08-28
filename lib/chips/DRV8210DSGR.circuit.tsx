@@ -5,11 +5,11 @@ const pinLabels = {
   pin2: ["OUT1"],
   pin3: ["OUT2"],
   pin4: ["GND"],
-  pin5: ["IN2", "EN", "IN2_EN"],
-  pin6: ["IN1", "PH", "IN1_PH"],
+  pin5: ["IN2/EN", "IN2", "EN", "IN2_EN"],
+  pin6: ["IN1/PH", "IN1", "PH", "IN1_PH"],
   pin7: ["MODE"],
   pin8: ["VCC"],
-  pin9: ["EP", "PAD"],
+  pin9: ["Thermal_Pad", "EP", "PAD"],
 } as const;
 
 const pinAttributes = {
