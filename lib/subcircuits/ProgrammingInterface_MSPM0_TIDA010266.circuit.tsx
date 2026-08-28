@@ -80,7 +80,7 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
         schSectionName={props.schSectionName}
         resistance="47k"
         footprint="0603"
-        schX={-24}
+        schX={-8}
         schY={1.7}
         schOrientation="vertical"
         connections={{ pin1: "net.V3_3", pin2: "net.RST" }}
@@ -91,7 +91,7 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
         capacitance="1100pF"
         maxVoltageRating="50V"
         footprint="0603"
-        schX={-24}
+        schX={-8}
         schY={-0.2}
         schOrientation="vertical"
         connections={{
@@ -104,7 +104,7 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
         schSectionName={props.schSectionName}
         manufacturerPartNumber="EVQ-21505R"
         footprint="smdpushbutton"
-        schX={-21}
+        schX={-5}
         schY={0.7}
         // EVQ-21505R has two pins on each switch terminal. The upstream
         // pushbutton prop type currently exposes only the two logical pins,
@@ -137,7 +137,7 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
               ".C4 > .pin1",
               ".S1 > .pin1",
             ],
-            schX: -25.5,
+            schX: -9.5,
             schY: 0,
             direction: "left",
           },

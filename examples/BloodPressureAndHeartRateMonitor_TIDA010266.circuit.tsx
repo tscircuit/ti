@@ -66,9 +66,9 @@ export default () => (
 
     {/* Centered titles sit inside, rather than directly on, each top divider. */}
     <SectionTitle title="Input + Reference" schX={-25} schY={21.6} />
-    <SectionTitle title="Connectors" schX={-9} schY={21.6} />
+    <SectionTitle title="Connectors" schX={6} schY={21.6} />
     <SectionTitle title="Jumpers" schX={-28} schY={14.15} />
-    <SectionTitle title="Test Points" schX={-15} schY={14.15} />
+    <SectionTitle title="Test Points" schX={-7.5} schY={14.15} />
     <SectionTitle title="Programming" schX={20.5} schY={21.6} />
     <SectionTitle title="INA + Filter" schX={-15.5} schY={6.8} />
     <SectionTitle title="MCU" schX={20.5} schY={6.8} />
@@ -127,7 +127,7 @@ export default () => (
       schSectionName="ina_filter"
       inputReferenceSectionName="input_reference"
       pressureSectionName="pressure_sensor"
-      schX={-7}
+      schX={-4}
       schY={2}
     />
     <Microcontroller_MSPM0L1306_TIDA010266
