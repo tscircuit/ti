@@ -16,6 +16,7 @@ const pinLabels = {
 export const TPS61236RWLR = (props: ChipProps<typeof pinLabels>) => (
   <chip
     manufacturerPartNumber="TPS61236RWLR"
+    footprint="qfn9_w2.5mm_h2.5mm_p0.5mm_pw0.3mm_pl0.7mm"
     pinLabels={pinLabels}
     {...props}
   />
