@@ -23,7 +23,7 @@ export const ProgrammingInterface_MSPM0_TIDA010266 = (
         schX={3.4}
         schY={0.8}
         schWidth="2.2mm"
-        schHeight="2.1mm"
+        schHeight="2mm"
         schPinArrangement={{
           leftSide: {
             pins: ["pin1", "pin3", "pin5", "pin7", "pin9"],

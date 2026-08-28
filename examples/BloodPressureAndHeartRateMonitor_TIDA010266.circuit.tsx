@@ -90,13 +90,13 @@ export default () => (
     <PowerManagement_TPS7A2433_TIDA010266
       name="power"
       schSectionName="input_reference"
-      schX={-30}
+      schX={-23}
       schY={17}
     />
     <VoltageReference_ATL431LI_TIDA010266
       name="reference_2v5"
       schSectionName="input_reference"
-      schX={-23}
+      schX={-15}
       schY={17}
     />
     <BloodPressureMonitorInterfaces_TIDA010266
