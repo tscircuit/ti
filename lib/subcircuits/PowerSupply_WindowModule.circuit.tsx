@@ -10,6 +10,11 @@ import { VoltageRegulator_LM73605 } from "./VoltageRegulator_LM73605.circuit.tsx
 // (21.716, 19.812) = (0.509, -12.192) mm.
 const REGULATOR_SHEET_2_OFFSET = { x: 0.509, y: -12.192 } as const;
 
+// Uniformly place the complete source layout in the vertical center of the
+// enlarged native sheet frame. This parent-only translation preserves every
+// child coordinate and the exact relative offset between the two sections.
+const MAIN_SUPPLY_SHEET_Y_OFFSET = 6.2;
+
 /**
  * Automotive-window-module power-supply composite backed by the verified
  * shared nets in TI TIDA-050008:
@@ -27,7 +32,8 @@ const REGULATOR_SHEET_2_OFFSET = { x: 0.509, y: -12.192 } as const;
  * Both sheet frames use native ANSI-B sizing, matching the released Altium
  * title block. Main Supply extends only the native frame height to 330 mm so
  * the unscaled, exact-coordinate regulator section remains inside its drawing
- * area; no circuit geometry is scaled or moved for the frame.
+ * area. A uniform +6.2-mm parent translation centers the complete source
+ * layout vertically; no child geometry is scaled or independently moved.
  */
 export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
@@ -51,12 +57,13 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
     <ReverseBatteryProtection_TLV1805_SQJ461EP
       name="reverseBattery"
       schSheetName="main_supply"
+      schY={MAIN_SUPPLY_SHEET_Y_OFFSET}
     />
     <VoltageRegulator_LM73605
       name="regulator"
       schSheetName="main_supply"
       schX={REGULATOR_SHEET_2_OFFSET.x}
-      schY={REGULATOR_SHEET_2_OFFSET.y}
+      schY={REGULATOR_SHEET_2_OFFSET.y + MAIN_SUPPLY_SHEET_Y_OFFSET}
     />
     <SupervisorWatchdog_TPS3850
       name="supervisorWatchdog"

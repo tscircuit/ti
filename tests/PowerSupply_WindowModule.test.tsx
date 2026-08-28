@@ -741,6 +741,14 @@ test("composite joins only the shared TI sheet nets", async () => {
   expect(schematicComponentFor(circuitJson, "U3").schematic_sheet_id).toBe(
     sheetId("watchdog_and_vref"),
   );
+  const u1Center = schematicComponentFor(circuitJson, "U1").center as {
+    y: number;
+  };
+  const u2Center = schematicComponentFor(circuitJson, "U2").center as {
+    y: number;
+  };
+  expect(u1Center.y).toBeCloseTo(5.819, 6);
+  expect(u2Center.y).toBeCloseTo(-5.992, 6);
 
   const childGroups = circuitJson.filter(
     (element) =>
