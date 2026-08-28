@@ -293,7 +293,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
         schX={-6}
-        schY={-4.2}
+        schY={-3.7}
         connections={{ pin1: "net.VIN" }}
       />
       <testpoint
@@ -302,7 +302,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5117"
         schX={6.5}
-        schY={-5.4}
+        schY={-4.9}
         connections={{ pin1: "net.PRESSURE" }}
       />
       <testpoint
@@ -311,7 +311,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
         schX={-6}
-        schY={-5.4}
+        schY={-4.9}
         connections={{ pin1: "net.V3_3" }}
       />
       <testpoint
@@ -320,7 +320,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
         schX={-6}
-        schY={-6.6}
+        schY={-6.1}
         connections={{ pin1: "net.VREF_2_5" }}
       />
       <testpoint
@@ -329,7 +329,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5117"
         schX={6.5}
-        schY={-7.8}
+        schY={-7.3}
         connections={{ pin1: "net.OSCILLATIONS" }}
       />
       <testpoint
@@ -338,7 +338,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5001"
         schX={-6}
-        schY={-7.8}
+        schY={-7.3}
         connections={{ pin1: "net.GND" }}
       />
       <testpoint
@@ -347,7 +347,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5001"
         schX={-6}
-        schY={-9}
+        schY={-8.5}
         connections={{ pin1: "net.GND" }}
       />
       <TIDA010266InlineNetPorts
@@ -374,28 +374,28 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
             name: "V3_3",
             connectsTo: [".J10 > .V3_3", ".TP3 > .pin1"],
             schX: -7.2,
-            schY: -5.4,
+            schY: -4.9,
             direction: "left",
           },
           {
             name: "VREF_2_5",
             connectsTo: ".TP4 > .pin1",
             schX: -7.2,
-            schY: -6.6,
+            schY: -6.1,
             direction: "left",
           },
           {
             name: "PRESSURE",
             connectsTo: [".J6 > .PRESSURE", ".TP2 > .pin1"],
             schX: 5.3,
-            schY: -5.4,
+            schY: -4.9,
             direction: "right",
           },
           {
             name: "OSCILLATIONS",
             connectsTo: ".TP5 > .pin1",
             schX: 5.3,
-            schY: -7.8,
+            schY: -7.3,
             direction: "right",
           },
           {
