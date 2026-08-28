@@ -34,6 +34,7 @@
     "polygon-clipping": "0.15.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-hot-toast": "^2.6.0",
     "schematic-symbols": "0.0.243",
     "svg2pdf.js": "2.7.0",
     "transformation-matrix": "3.1.0",
