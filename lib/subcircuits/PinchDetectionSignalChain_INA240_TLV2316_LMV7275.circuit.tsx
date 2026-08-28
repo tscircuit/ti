@@ -8,6 +8,15 @@ import {
   tida01421Position,
 } from "../tida01421-coordinates.ts";
 
+type PinchDetectionSignalChainProps = SubcircuitProps & {
+  renderAmplifierRailLabels?: boolean;
+};
+
+const withoutAmplifierRailLabelProp = ({
+  renderAmplifierRailLabels: _renderAmplifierRailLabels,
+  ...subcircuitProps
+}: PinchDetectionSignalChainProps): SubcircuitProps => subcircuitProps;
+
 export const TIDA01421_SIGNAL_CHAIN_ORIGIN: Tida01421AltiumOrigin = {
   x: 820,
   y: 840,
@@ -53,14 +62,14 @@ const MotorCurrentConnector = (
  * line is used as an electrical connection.
  */
 export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
-  props: SubcircuitProps,
+  props: PinchDetectionSignalChainProps,
 ) => (
   <subcircuit
     exposedNets={["V5", "V3_3", "GND", "ADCMOTOR", "TIMER"]}
     schAutoLayoutEnabled={false}
     schMaxTraceDistance="8mm"
     routingDisabled
-    {...props}
+    {...withoutAmplifierRailLabelProp(props)}
   >
     <net name="V5" isPowerNet />
     {/* Net selectors reject periods, so V3.3 is normalized internally. The
@@ -353,16 +362,54 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
     <trace from="R4.pin1" to="net.TIMER" />
     <trace name="U2-V5" from="U2.VS" to="net.V5" schDisplayLabel="V5" />
     <trace name="U2-REF1-V5" from="U2.REF1" to="net.V5" schDisplayLabel="V5" />
-    <trace name="U3A-V5" from="U3A.pin5" to="net.V5" />
-    <trace name="U3B-V5" from="U3B.pin5" to="net.V5" />
-    <trace name="U1-V5" from="U1Symbol.pin5" to="net.V5" />
-
-    <trace name="U3A-GND" from="U3A.pin3" to="net.GND" />
-    <trace name="U3B-GND" from="U3B.pin3" to="net.GND" />
-    <trace name="U1-GND" from="U1Symbol.pin3" to="net.GND" />
     {/* The TI sheet uses local rail symbols rather than sheet-wide V5/GND
         buses. Explicitly placed native rail labels preserve that topology;
         signal names continue to use schDisplayLabel on their real traces. */}
+    {/* Each rail symbol is placed at the exact native triangle-stem endpoint.
+        The fractional Altium-space coordinates below still pass through p(),
+        keeping one transform for source centers and native-symbol projections.
+        U3A/U3B share the same physical TLV2316 supply pins, while each visual
+        projection retains its own source-authentic V5/GND endpoint. */}
+    {props.renderAmplifierRailLabels !== false && (
+      <>
+        <netlabel
+          net="V5"
+          connection="U3A.pin5"
+          anchorSide="bottom"
+          {...p(788.965517, 938.448276)}
+        />
+        <netlabel
+          net="GND"
+          connection="U3A.pin3"
+          anchorSide="top"
+          {...p(789.310345, 911.551724)}
+        />
+        <netlabel
+          net="V5"
+          connection="U3B.pin5"
+          anchorSide="bottom"
+          {...p(1078.965517, 913.448276)}
+        />
+        <netlabel
+          net="GND"
+          connection="U3B.pin3"
+          anchorSide="top"
+          {...p(1079.310345, 886.551724)}
+        />
+        <netlabel
+          net="V5"
+          connection="U1Symbol.pin5"
+          anchorSide="bottom"
+          {...p(1278.965517, 916.448276)}
+        />
+        <netlabel
+          net="GND"
+          connection="U1Symbol.pin3"
+          anchorSide="top"
+          {...p(1279.310345, 889.551724)}
+        />
+      </>
+    )}
     <netlabel net="GND" connection="U2.GND" anchorSide="top" {...p(570, 840)} />
     <netlabel
       net="V5"

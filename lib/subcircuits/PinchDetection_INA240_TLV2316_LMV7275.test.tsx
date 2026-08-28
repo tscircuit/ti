@@ -25,6 +25,10 @@ type SchematicComponent = Extract<
   { type: "schematic_component" }
 >;
 type SchematicPort = Extract<AnyCircuitElement, { type: "schematic_port" }>;
+type SchematicNetLabel = Extract<
+  AnyCircuitElement,
+  { type: "schematic_net_label" }
+>;
 
 let signalJson: AnyCircuitElement[];
 let powerJson: AnyCircuitElement[];
@@ -476,15 +480,47 @@ test("maps each native amplifier symbol port to the authoritative physical pin",
         getSourcePort(signalJson, physicalComponent, physicalPinNumber)
           .source_port_id,
       );
-      if (!projectedPort.is_connected)
+      const isSignalPin = ![3, 5].includes(Number(symbolPinNumber));
+      if (isSignalPin && !projectedPort.is_connected)
         disconnectedProjectionPorts.push(
           `${representationName}.${symbolPinNumber}`,
         );
     }
   }
-  // Direct traces to the shared physical V+ and V- ports must connect both
-  // independently placed native symbol projections.
   expect(disconnectedProjectionPorts).toEqual([]);
+
+  const supplyLabels = {
+    U3A: { 3: "GND", 5: "V5" },
+    U3B: { 3: "GND", 5: "V5" },
+    U1Symbol: { 3: "GND", 5: "V5" },
+  } as const;
+  for (const [representationName, pins] of Object.entries(supplyLabels)) {
+    for (const [symbolPinNumber, netName] of Object.entries(pins)) {
+      const projectedPort = getProjectedSchematicPort(
+        signalJson,
+        representationName,
+        Number(symbolPinNumber),
+      );
+      const sourceNet = signalJson.find(
+        (element): element is SourceNet =>
+          element.type === "source_net" && element.name === netName,
+      );
+      const railLabel = signalJson.find(
+        (element): element is SchematicNetLabel =>
+          element.type === "schematic_net_label" &&
+          element.text === netName &&
+          element.anchor_position !== undefined &&
+          Math.abs(element.anchor_position.x - projectedPort.center.x) < 1e-6 &&
+          Math.abs(element.anchor_position.y - projectedPort.center.y) < 1e-6,
+      );
+
+      expect(sourceNet).toBeDefined();
+      expect(railLabel?.source_net_id).toBe(sourceNet?.source_net_id);
+      expect(railLabel?.symbol_name).toBe(
+        netName === "GND" ? "rail_down" : "rail_up",
+      );
+    }
+  }
 });
 
 test("preserves the shunt, ripple-filter, comparator, and output nets", () => {
@@ -691,14 +727,8 @@ test("uses on-trace labels for the source signal names", () => {
     "BIAS-A",
     "BIAS-B",
     "TIMER",
-    "U1-GND",
-    "U1-V5",
     "U2-REF1-V5",
     "U2-V5",
-    "U3A-GND",
-    "U3A-V5",
-    "U3B-GND",
-    "U3B-V5",
   ]);
 
   const traceOwnedSignalLabels = signalJson.filter(
@@ -757,4 +787,45 @@ test("joins the child power rails in the composite without circuit errors", () =
   expect(
     compositeJson.filter((element) => element.type.endsWith("_error")),
   ).toEqual([]);
+
+  expect(
+    compositeJson.filter(
+      (element) =>
+        element.type === "schematic_net_label" &&
+        /(?:^|[_-])(?:U\d+[A-Z]?[_-])?(?:V5|GND)$/.test(element.text) &&
+        !["V5", "GND"].includes(element.text),
+    ),
+  ).toEqual([]);
+
+  const compositeSupplyLabels = {
+    U3A: { 3: "GND", 5: "V5" },
+    U3B: { 3: "GND", 5: "V5" },
+    U1Symbol: { 3: "GND", 5: "V5" },
+  } as const;
+  for (const [representationName, pins] of Object.entries(
+    compositeSupplyLabels,
+  )) {
+    for (const [symbolPinNumber, netName] of Object.entries(pins)) {
+      const projectedPort = getProjectedSchematicPort(
+        compositeJson,
+        representationName,
+        Number(symbolPinNumber),
+      );
+      const labelsAtStem = compositeJson.filter(
+        (element): element is SchematicNetLabel =>
+          element.type === "schematic_net_label" &&
+          element.anchor_position !== undefined &&
+          Math.abs(element.anchor_position.x - projectedPort.center.x) < 1e-6 &&
+          Math.abs(element.anchor_position.y - projectedPort.center.y) < 1e-6,
+      );
+
+      expect(labelsAtStem.length).toBeGreaterThanOrEqual(1);
+      expect(new Set(labelsAtStem.map((label) => label.text))).toEqual(
+        new Set([netName]),
+      );
+      expect(new Set(labelsAtStem.map((label) => label.symbol_name))).toEqual(
+        new Set([netName === "GND" ? "rail_down" : "rail_up"]),
+      );
+    }
+  }
 });
