@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import {
   createConsumerWirelessModuleDesign,
-  createSystemBlockExamples,
   createSubcircuitCatalog,
+  createSystemBlockExamples,
   generateSystemDesignArtifacts,
   generateTsx,
   getSubcircuitDefinition,

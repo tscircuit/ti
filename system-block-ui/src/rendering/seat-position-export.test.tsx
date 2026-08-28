@@ -7,8 +7,8 @@ import {
   generateSystemDesignArtifacts,
   SUBCIRCUIT_CATALOG,
 } from "../model";
-import { createKicadProjectZipBlob } from "./export-kicad-project";
 import { evaluateGeneratedTsx } from "./evaluate-schematic";
+import { createKicadProjectZipBlob } from "./export-kicad-project";
 import { getGeneratedSystemEvaluationFsMap } from "./generated-source-files";
 import { createLocalTiPackageEvaluationFsMap } from "./local-ti-package-files";
 

@@ -335,10 +335,7 @@ const createSeatPositionModuleDesign = (
     {
       id: "position_feedback",
       name: "position_feedback",
-      definitionId: componentId(
-        catalog,
-        "PositionFeedback_DRV5013_TIDA01389",
-      ),
+      definitionId: componentId(catalog, "PositionFeedback_DRV5013_TIDA01389"),
       position: { x: 780, y: 270 },
     },
     {
