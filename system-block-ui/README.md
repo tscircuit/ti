@@ -6,11 +6,12 @@ blocks. The graph uses broad, readable connections such as **Power** and
 **Data**, then resolves them to the concrete tscircuit selectors needed by the
 generated TSX.
 
-The starter graph reproduces TI's seven-block Consumer wireless module using
-the reviewed input-protection, 3.3 V buck, LVDS, antenna, I/O-protection, logic,
-and temperature-sensor subcircuits. Six semantic connections describe its
-power distribution and logic-to-LVDS signal path; the external RF and I2C
-interfaces remain available at their source subcircuits.
+The starter graph reproduces the implementation-ready portion of TI's Consumer
+wireless module using the reviewed input-protection, 3.3 V buck, LVDS,
+I/O-protection, logic, and temperature-sensor subcircuits. The antenna is
+temporarily omitted because it is not working properly in the editor. Six
+semantic connections describe its power distribution and logic-to-LVDS signal
+path; the external I2C interface remains available at its source subcircuit.
 
 Use **Load Example** in the canvas's upper-left corner to replace the current
 graph with an editable diagram backed by a complete circuit in [`../examples`](../examples).

@@ -93,9 +93,10 @@ exact tscircuit selectors. The app generates example-style TSX and can evaluate
 it with PCB and routing work disabled to produce a schematic preview and
 downloadable PDF.
 
-The default editor graph is the same seven-block Consumer wireless module, so
-its high-level Power, GPIO, and LVDS edges generate the same reviewed internal
-selectors as the complete example.
+The default editor graph uses the six implementation-ready blocks from the
+Consumer wireless module. The antenna is temporarily omitted because it is not
+working properly in the editor. Its high-level Power, GPIO, and LVDS edges
+generate the same reviewed internal selectors as the complete example.
 
 [Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
 

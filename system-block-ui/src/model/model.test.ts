@@ -630,13 +630,12 @@ describe("catalog and TSX generation", () => {
     );
   });
 
-  test("builds the Consumer wireless module from all seven reviewed blocks", () => {
+  test("builds the Consumer wireless module without the antenna block", () => {
     const design = createConsumerWirelessModuleDesign(SUBCIRCUIT_CATALOG);
     expect(design.blocks.map(({ id }) => id)).toEqual([
       "input_power_protection",
       "dc_dc_power_supply",
       "io_connection",
-      "wireless_connectivity",
       "io_protection",
       "logic_control",
       "sensors",
@@ -699,13 +698,15 @@ describe("catalog and TSX generation", () => {
       "InputPowerProtection_TPS25910_TIDA00890",
       "BuckConverter_TPS62086_TIDA00399",
       "LVDSDriver_SN65LVDS31_TIDA060017",
-      "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
       "InputOutputProtection_TPD2E009_TIDA00399",
       "LogicBuffer_SN74LVC1G34",
       "TemperatureSensor_TMP103_TIDA00399",
     ]) {
       expect(artifacts.tsx).toContain(componentName);
     }
+    expect(artifacts.tsx).not.toContain(
+      "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
+    );
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="power_protection_to_dc_dc" data-kind="power"',
     );

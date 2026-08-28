@@ -21,7 +21,7 @@ const componentId = (
   return definition.id;
 };
 
-/** Starter graph matching TI's Consumer wireless module block diagram. */
+/** Starter graph matching the implementation-ready Consumer wireless blocks. */
 export const createConsumerWirelessModuleDesign = (
   catalog: readonly SubcircuitDefinition[],
 ): ConsumerWirelessModuleDesign => ({
@@ -46,15 +46,6 @@ export const createConsumerWirelessModuleDesign = (
       name: "io_connection",
       definitionId: componentId(catalog, "LVDSDriver_SN65LVDS31_TIDA060017"),
       position: { x: 1180, y: 250 },
-    },
-    {
-      id: "wireless_connectivity",
-      name: "wireless_connectivity",
-      definitionId: componentId(
-        catalog,
-        "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
-      ),
-      position: { x: 40, y: 35 },
     },
     {
       id: "io_protection",
