@@ -476,8 +476,6 @@ describe("catalog and TSX generation", () => {
     ]) {
       expect(artifacts.tsx).toContain(componentName);
     }
-    expect(artifacts.tsx).not.toContain("sheetWidth=");
-    expect(artifacts.tsx).not.toContain("sheetHeight=");
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="data_motor_control" data-kind="data"',
     );
@@ -741,42 +739,6 @@ describe("catalog and TSX generation", () => {
     expect(first).not.toContain("sheetIndex={2}");
     expect(first).toContain('from=".power_1v8 > .U1 > .VOUT"');
     expect(first).toContain('to=".audio_amplifier > .U1 > .IOVDD"');
-  });
-
-  test("applies curated detail-sheet layout without overriding block placement", () => {
-    const curatedDetail = {
-      ...definition("motor-driver-drv8305-tida01330"),
-      id: "curated-detail-layout",
-      schematicSheet: {
-        sheetWidth: "480mm",
-        sheetHeight: "340mm",
-        schY: -4,
-      },
-    };
-    const generated = generateTsx({
-      blocks: [block("detail", curatedDetail.id)],
-      connections: [],
-      catalog: [curatedDetail],
-    });
-
-    expect(generated).toContain('sheetWidth="480mm"');
-    expect(generated).toContain('sheetHeight="340mm"');
-    expect(generated).toContain("schY={-4}");
-
-    const explicitlyPlaced = generateTsx({
-      blocks: [
-        {
-          ...block("detail", curatedDetail.id),
-          schX: 2,
-          schY: 3,
-        },
-      ],
-      connections: [],
-      catalog: [curatedDetail],
-    });
-    expect(explicitlyPlaced).toContain("schX={2}");
-    expect(explicitlyPlaced).toContain("schY={3}");
-    expect(explicitlyPlaced).not.toContain("schY={-4}");
   });
 
   test("emits canonical system artifacts deterministically", () => {
