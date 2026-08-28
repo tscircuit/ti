@@ -157,10 +157,10 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={jumperSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={-28}
+        schX={-25}
         schY={-4.6}
-        schWidth="0.8mm"
-        schHeight="1.5mm"
+        schWidth="1.1mm"
+        schHeight="1.8mm"
         schPinArrangement={{
           rightSide: {
             pins: ["pin3", "pin2", "pin1"],
@@ -183,10 +183,10 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={jumperSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={-21}
+        schX={-15}
         schY={-4.6}
-        schWidth="0.8mm"
-        schHeight="1.5mm"
+        schWidth="1.1mm"
+        schHeight="1.8mm"
         schPinArrangement={{
           rightSide: {
             pins: ["pin3", "pin2", "pin1"],
@@ -209,10 +209,10 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         schSectionName={jumperSectionName ?? props.schSectionName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={-28}
-        schY={-7}
-        schWidth="0.8mm"
-        schHeight="1.5mm"
+        schX={-25}
+        schY={-7.2}
+        schWidth="1.1mm"
+        schHeight="1.8mm"
         schPinArrangement={{
           rightSide: {
             pins: ["pin3", "pin2", "pin1"],
@@ -228,6 +228,22 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
           pin1: "net.OPA0_IN0_POS",
           pin2: "net.BRIDGE_NEG",
         }}
+      />
+      <schematictext
+        text="For MSPM0 INA + LMV324A Filter: Short pins 1-2"
+        schX={-30.5}
+        schY={-8.5}
+        anchor="left"
+        fontSize={0.22}
+        color="#000000"
+      />
+      <schematictext
+        text="For INA350 + LMV324A Filter: Short pins 2-3"
+        schX={-30.5}
+        schY={-9.2}
+        anchor="left"
+        fontSize={0.22}
+        color="#000000"
       />
       <connector
         name="J10"
@@ -249,8 +265,8 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
       />
       <port
         name="INA_IN_NEG_PORT"
-        schX={originX - 26.8}
-        schY={originY - 7.8}
+        schX={originX - 23.8}
+        schY={originY - 8}
         direction="right"
       />
       <trace
@@ -385,49 +401,49 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
           {
             name: "BRIDGE_POS",
             connectsTo: ".J5 > .BRIDGE_POS",
-            schX: -29.2,
+            schX: -26.2,
             schY: -4.6,
             direction: "left",
           },
           {
             name: "BRIDGE_NEG",
             connectsTo: ".J8 > .BRIDGE_NEG",
-            schX: -29.2,
-            schY: -7,
+            schX: -26.2,
+            schY: -7.2,
             direction: "left",
           },
           {
             name: "INA_IN_POS",
             connectsTo: ".J5 > .INA_IN_POS",
-            schX: -29.2,
+            schX: -26.2,
             schY: -5.4,
             direction: "left",
           },
           {
             name: "INA_OUT",
             connectsTo: ".J6 > .INA_OUT",
-            schX: -22.2,
+            schX: -16.2,
             schY: -5.4,
             direction: "left",
           },
           {
             name: "OPA0_IN0_POS",
             connectsTo: ".J8 > .OPA0_IN0_POS",
-            schX: -29.2,
-            schY: -6.2,
+            schX: -26.2,
+            schY: -6.4,
             direction: "left",
           },
           {
             name: "OPA1_IN0_POS",
             connectsTo: ".J5 > .OPA1_IN0_POS",
-            schX: -29.2,
+            schX: -26.2,
             schY: -3.8,
             direction: "left",
           },
           {
             name: "OPA1_OUT",
             connectsTo: ".J6 > .OPA1_OUT",
-            schX: -22.2,
+            schX: -16.2,
             schY: -3.8,
             direction: "left",
           },
