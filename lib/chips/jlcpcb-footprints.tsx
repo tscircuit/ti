@@ -18,6 +18,14 @@ type CirclePad = readonly [
   radius: number,
 ];
 
+type MappedRectPad = readonly [
+  portHints: readonly string[],
+  pcbX: number,
+  pcbY: number,
+  width: number,
+  height: number,
+];
+
 const createRectPadFootprint = (pads: readonly RectPad[]) => (
   <footprint>
     {pads.map(([pin, pcbX, pcbY, width, height, shape, radius]) =>
@@ -59,6 +67,26 @@ const createCirclePadFootprint = (pads: readonly CirclePad[]) => (
           pcbY={pcbY}
           radius={radius}
           shape="circle"
+        />
+      </Fragment>
+    ))}
+  </footprint>
+);
+
+const createMappedRectPadFootprint = (
+  pads: readonly MappedRectPad[],
+  insertionDirection?: "from_above",
+) => (
+  <footprint insertionDirection={insertionDirection}>
+    {pads.map(([portHints, pcbX, pcbY, width, height], index) => (
+      <Fragment key={`${portHints.join("-")}-${index}`}>
+        <smtpad
+          portHints={[...portHints]}
+          pcbX={pcbX}
+          pcbY={pcbY}
+          width={width}
+          height={height}
+          shape="rect"
         />
       </Fragment>
     ))}
@@ -166,3 +194,36 @@ export const ESD5Z6_0T1G_FOOTPRINT = createRectPadFootprint([
   [1, -0.7112, 0.0050038, 0.6096, 0.4826, "rect"],
   [2, 0.7112, -0.0050038, 0.6096, 0.4826, "rect"],
 ]);
+
+/**
+ * Exact EasyEDA copper imported from JLCPCB C2863837.
+ *
+ * Logical MOSFET ports follow TI's DQK package assignment: gate pad 3,
+ * source pads 4 and 7, and drain pads 1, 2, 5, 6 and 8.
+ */
+export const CSD17313Q2_FOOTPRINT = createMappedRectPadFootprint([
+  [["pin1", "drain"], -0.974979, 0.650113, 0.4500118, 0.350012],
+  [["pin1", "drain"], -0.974979, 0.000127, 0.4500118, 0.350012],
+  [["pin3", "gate"], -0.974979, -0.650113, 0.4500118, 0.350012],
+  [["pin2", "source"], 0.974979, -0.650113, 0.4500118, 0.350012],
+  [["pin1", "drain"], 0.974979, 0.000381, 0.4500118, 0.350012],
+  [["pin1", "drain"], 0.974979, 0.650113, 0.4500118, 0.350012],
+  [["pin2", "source"], 0.094869, -0.650113, 0.7500112, 0.2999994],
+  [["pin1", "drain"], -0.000127, 0.324993, 0.999998, 0.9500108],
+]);
+
+/**
+ * Exact EasyEDA copper imported from JLCPCB C88373.
+ *
+ * The existing reference schematic numbers the center contact as pin 1 and
+ * the two shell contacts as pins 2 and 3, so those logical pins are mapped to
+ * Hirose's SIG and GND lands respectively.
+ */
+export const U_FL_R_SMT_1_10_FOOTPRINT = createMappedRectPadFootprint(
+  [
+    [["pin1"], -0.79996665, 0.001143, 1.499997, 1.0999978],
+    [["pin2"], 0.44996735, 1.499997, 2.1999956, 1.0999978],
+    [["pin3"], 0.44996735, -1.499997, 2.1999956, 1.0999978],
+  ],
+  "from_above",
+);

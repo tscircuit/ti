@@ -10,11 +10,20 @@ import { SN65LVDS31D } from "../chips/SN65LVDS31D.circuit.tsx";
  * @see https://www.ti.com/tool/TIDA-060017
  */
 export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit {...props}>
+    <breakoutpoint connection=".U1 > .OUT2_P" pcbX={8.2} pcbY={3} />
+    <breakoutpoint connection=".U1 > .OUT2_N" pcbX={8.2} pcbY={2} />
+    <breakoutpoint connection=".U1 > .OUT3_P" pcbX={8.2} pcbY={1} />
+    <breakoutpoint connection=".U1 > .OUT3_N" pcbX={8.2} pcbY={-1} />
+    <breakoutpoint connection=".U1 > .OUT4_P" pcbX={8.2} pcbY={-2} />
+    <breakoutpoint connection=".U1 > .OUT4_N" pcbX={8.2} pcbY={-3} />
+
     <SN65LVDS31D
       name="U1"
       schX={0}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
         IN1: "net.IN1",
         OUT1_P: "net.DIFF1_P",
@@ -33,11 +42,11 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
     />
 
     {[
-      ["R1", "net.IN1", -3.4, 1.35, false],
-      ["R2", "U1.IN2", -3.4, -1.5, true],
-      ["R3", "U1.IN3", 3.4, -1.5, true],
-      ["R4", "U1.IN4", 5.2, -1.5, true],
-    ].map(([name, signalTarget, schX, schY, signalOnTop]) => (
+      ["R1", "net.IN1", -3.4, 1.35, false, -6.2, 3],
+      ["R2", "U1.IN2", -3.4, -1.5, true, -6.2, -3],
+      ["R3", "U1.IN3", 3.4, -1.5, true, 6.2, -3],
+      ["R4", "U1.IN4", 5.2, -1.5, true, 6.2, 3],
+    ].map(([name, signalTarget, schX, schY, signalOnTop, pcbX, pcbY]) => (
       <resistor
         key={name}
         name={name as string}
@@ -46,6 +55,8 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
         schX={schX as number}
         schY={schY as number}
         schRotation={90}
+        pcbX={pcbX as number}
+        pcbY={pcbY as number}
         connections={
           signalOnTop
             ? { pin1: "net.GND", pin2: signalTarget as string }
@@ -61,6 +72,8 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
       schX={-1.4}
       schY={-3.2}
       schOrientation="vertical"
+      pcbX={-3}
+      pcbY={5.4}
       connections={{ pin1: "net.VCC1_3V3", pin2: "net.GND" }}
     />
     <capacitor
@@ -70,6 +83,8 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
       schX={0}
       schY={-3.2}
       schOrientation="vertical"
+      pcbX={0}
+      pcbY={5.4}
       connections={{ pin1: "net.VCC1_3V3", pin2: "net.GND" }}
     />
     <capacitor
@@ -79,6 +94,8 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
       schX={1.4}
       schY={-3.2}
       schOrientation="vertical"
+      pcbX={3}
+      pcbY={5.4}
       connections={{ pin1: "net.VCC1_3V3", pin2: "net.GND" }}
     />
   </subcircuit>

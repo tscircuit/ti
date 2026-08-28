@@ -9,11 +9,13 @@ import { TPD2E009DRTR } from "../chips/TPD2E009DRTR.circuit.tsx";
 export const InputOutputProtection_TPD2E009_TIDA00399 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit {...props}>
     <TPD2E009DRTR
       name="UESD"
       schX={0}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
         pin1: "net.SATA_P",
         pin2: "net.SATA_N",

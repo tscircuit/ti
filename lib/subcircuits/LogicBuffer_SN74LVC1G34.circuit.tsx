@@ -7,16 +7,23 @@ import { SN74LVC1G34DBVR } from "../chips/SN74LVC1G34DBVR.circuit.tsx";
  * @see https://www.ti.com/lit/gpn/SN74LVC1G34
  */
 export const LogicBuffer_SN74LVC1G34 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit {...props}>
+    <breakoutpoint connection=".U1 > .A" pcbX={-2.5} pcbY={0} />
+    <breakoutpoint connection=".U1 > .Y" pcbX={2.5} pcbY={0} />
+    <breakoutpoint connection=".U1 > .VCC" pcbX={0} pcbY={2.2} />
+    <breakoutpoint connection=".U1 > .GND" pcbX={0} pcbY={-2.2} />
+
     <SN74LVC1G34DBVR
       name="U1"
       schX={0}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
-        pin2: "net.MCU_OR_LOGIC_IN",
-        pin4: "net.MCU_OR_LOGIC_OUT",
-        pin5: "net.VCC",
-        pin3: "net.GND",
+        A: "net.MCU_OR_LOGIC_IN",
+        Y: "net.MCU_OR_LOGIC_OUT",
+        VCC: "net.VCC",
+        GND: "net.GND",
       }}
     />
     <schematictext

@@ -75,7 +75,7 @@ test("Consumer Wireless Module KiCad export preserves every available pad", asyn
 
   expect(
     evaluated.circuitJson.filter((element) => element.type === "pcb_smtpad"),
-  ).toHaveLength(108);
+  ).toHaveLength(119);
 
   const blob = await createKicadProjectZipBlob(evaluated.circuitJson, {
     projectName: "consumer-wireless-module",
@@ -86,5 +86,5 @@ test("Consumer Wireless Module KiCad export preserves every available pad", asyn
   );
 
   expect(pcb.match(/\(footprint\b/g)).toHaveLength(36);
-  expect(pcb.match(/\(pad\b/g)).toHaveLength(108);
+  expect(pcb.match(/\(pad\b/g)).toHaveLength(119);
 });

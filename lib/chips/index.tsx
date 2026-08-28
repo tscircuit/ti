@@ -62,7 +62,10 @@ export {
   SN65LVDS31D,
   SN65LVDS31D_PIN_LABELS,
 } from "./SN65LVDS31D.circuit.tsx";
-export { SN74LVC1G34DBVR } from "./SN74LVC1G34DBVR.circuit.tsx";
+export {
+  SN74LVC1G34DBVR,
+  SN74LVC1G34DBVR_PIN_LABELS,
+} from "./SN74LVC1G34DBVR.circuit.tsx";
 export { NTR5198NLT1G } from "./NTR5198NLT1G.circuit.tsx";
 export { SQJ858AEP_T1_GE3 } from "./SQJ858AEP_T1_GE3.circuit.tsx";
 export { TAS2505 } from "./TAS2505.circuit.tsx";

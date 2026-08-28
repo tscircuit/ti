@@ -11,7 +11,7 @@ import "tscircuit";
 
 /** Consumer wireless module assembled from the seven reusable TI blocks. */
 export default () => (
-  <board routingDisabled>
+  <board width="84mm" height="38mm" autorouter="beta_pipeline9">
     <schematicsheet
       name="input_power_protection"
       displayName="Input Power Protection"
@@ -55,28 +55,52 @@ export default () => (
     <InputPowerProtection_TPS25910_TIDA00890
       name="input_power_protection"
       schSheetName="input_power_protection"
+      pcbX={-33}
+      pcbY={9}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <BuckConverter_TPS62086_TIDA00399
       name="dc_dc_power_supply"
       schSheetName="dc_dc_power_supply"
+      pcbX={-15}
+      pcbY={9}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <LVDSDriver_SN65LVDS31_TIDA060017
       name="io_connection"
       schSheetName="io_connection"
+      pcbX={8}
+      pcbY={8}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <WirelessAntenna_W3006_TIDCWL1837MODCOM8I
       name="wireless_connectivity"
       schSheetName="wireless_connectivity"
+      pcbX={30}
+      pcbY={-11}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <InputOutputProtection_TPD2E009_TIDA00399
       name="io_protection"
       schSheetName="io_protection"
+      pcbX={24}
+      pcbY={8}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <LogicBuffer_SN74LVC1G34
       name="logic_control"
       schSheetName="logic_control"
+      pcbX={-2}
+      pcbY={-7}
+      pcbPositionMode="relative_to_board_anchor"
     />
-    <TemperatureSensor_TMP103_TIDA00399 name="sensors" schSheetName="sensors" />
+    <TemperatureSensor_TMP103_TIDA00399
+      name="sensors"
+      schSheetName="sensors"
+      pcbX={10}
+      pcbY={-7}
+      pcbPositionMode="relative_to_board_anchor"
+    />
 
     {/* External protected-input source and 5 V rail into the buck stage. */}
     <trace from=".input_power_protection > .R25 > .pin1" to="net.VBUS_IN" />
@@ -153,7 +177,12 @@ export default () => (
     <trace from=".sensors > .UTMP > .SDA" to="net.I2C_SDA" />
     <trace
       from=".dc_dc_power_supply > .U3P3 > .GND"
-      to=".wireless_connectivity > net.GND"
+      to=".wireless_connectivity > .J5 > .pin3"
+      pcbRouteHints={[
+        { x: -12, y: -2 },
+        { x: -12, y: -16 },
+        { x: 18, y: -16 },
+      ]}
     />
     <trace from=".wireless_connectivity > .C5 > .pin1" to="net.RF_ANT1" />
   </board>

@@ -8,11 +8,13 @@ import { TMP103AYFF } from "../chips/TMP103AYFF.circuit.tsx";
  * @see https://www.ti.com/tool/TIDA-00399
  */
 export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit {...props}>
     <TMP103AYFF
       name="UTMP"
       schX={1.2}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
         GND: "net.GND",
       }}
@@ -26,6 +28,9 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
       schX={-1.4}
       schY={2}
       schRotation={90}
+      pcbX={-0.7}
+      pcbY={1.4}
+      pcbRotation={90}
       connections={{ pin1: "UTMP.SCL", pin2: "RPU2.pin2" }}
     />
     <resistor
@@ -36,6 +41,9 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
       schX={-0.2}
       schY={2}
       schRotation={90}
+      pcbX={0.7}
+      pcbY={1.4}
+      pcbRotation={90}
       connections={{
         pin1: "UTMP.SDA",
         pin2: ["UTMP.V_PLUS", "net.V3P3"],

@@ -2,6 +2,13 @@ import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
 import { SN74LVC1G34DBVR_FOOTPRINT } from "./jlcpcb-footprints";
 
+export const SN74LVC1G34DBVR_PIN_LABELS = {
+  pin2: ["A", "INPUT"],
+  pin3: ["GND"],
+  pin4: ["Y", "OUTPUT"],
+  pin5: ["VCC"],
+} as const;
+
 const logicBufferSymbol = (
   <symbol>
     <schematicpath
@@ -71,11 +78,14 @@ const logicBufferSymbol = (
   </symbol>
 );
 
-export const SN74LVC1G34DBVR = (props: ChipProps) => (
+export const SN74LVC1G34DBVR = (
+  props: ChipProps<typeof SN74LVC1G34DBVR_PIN_LABELS>,
+) => (
   <chip
     manufacturerPartNumber="SN74LVC1G34DBVR"
     supplierPartNumbers={{ jlcpcb: ["C840096"] }}
     footprint={SN74LVC1G34DBVR_FOOTPRINT}
+    pinLabels={SN74LVC1G34DBVR_PIN_LABELS}
     noConnect={["pin1"]}
     symbol={logicBufferSymbol}
     {...props}

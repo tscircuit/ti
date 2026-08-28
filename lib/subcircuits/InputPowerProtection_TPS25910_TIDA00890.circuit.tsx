@@ -1,7 +1,10 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { TPS25910RSA } from "../chips/TPS25910RSA.circuit.tsx";
-import { ESD5Z6_0T1G_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
+import {
+  CSD17313Q2_FOOTPRINT,
+  ESD5Z6_0T1G_FOOTPRINT,
+} from "../chips/jlcpcb-footprints.tsx";
 
 /**
  * TIDA-00890 sheet-3 VBUS input-protection stage.
@@ -14,12 +17,16 @@ import { ESD5Z6_0T1G_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
 export const InputPowerProtection_TPS25910_TIDA00890 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit routingDisabled schMaxTraceDistance="3.6mm" {...props}>
-    <TPS25910RSA name="U7" schX={3.15} schY={0.03} />
+  <subcircuit schMaxTraceDistance="3.6mm" {...props}>
+    <breakoutpoint connection=".R34 > .pin1" pcbX={7.2} pcbY={4} />
+
+    <TPS25910RSA name="U7" schX={3.15} schY={0.03} pcbX={0} pcbY={0} />
 
     <mosfet
       name="Q1"
       manufacturerPartNumber="CSD17313Q2"
+      supplierPartNumbers={{ jlcpcb: ["C2863837"] }}
+      footprint={CSD17313Q2_FOOTPRINT}
       channelType="n"
       mosfetMode="enhancement"
       symbolDrainSide="top"
@@ -27,6 +34,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       symbolGateSide="left"
       schX={-1.4}
       schY={0.82}
+      pcbX={-4.7}
+      pcbY={0.7}
     />
 
     <resistor
@@ -36,6 +45,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schX={-6.2}
       schY={0.87}
       schRotation={270}
+      pcbX={-7.1}
+      pcbY={2.6}
     />
     <diode
       name="D6"
@@ -46,6 +57,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schX={-4.6}
       schY={0.87}
       schRotation={90}
+      pcbX={-7.1}
+      pcbY={0.7}
     />
 
     <resistor
@@ -55,6 +68,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schX={0.35}
       schY={2.5}
       schRotation={90}
+      pcbX={-2.5}
+      pcbY={4}
     />
     <resistor
       name="R24"
@@ -63,6 +78,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schX={1.55}
       schY={2.5}
       schRotation={90}
+      pcbX={0}
+      pcbY={4}
     />
     <resistor
       name="R34"
@@ -71,6 +88,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       doNotPlace
       schX={1.15}
       schY={0.65}
+      pcbX={2.5}
+      pcbY={4}
     />
 
     <resistor
@@ -80,6 +99,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schX={5.45}
       schY={-0.97}
       schRotation={270}
+      pcbX={4.2}
+      pcbY={-3.5}
     />
     <capacitor
       name="C11"
@@ -88,6 +109,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schX={6.45}
       schY={-0.17}
       schOrientation="vertical"
+      pcbX={1.4}
+      pcbY={-3.8}
     />
     <capacitor
       name="C10"
@@ -96,6 +119,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       schX={7.75}
       schY={0.4}
       schOrientation="vertical"
+      pcbX={5}
+      pcbY={0.2}
     />
 
     {/* Type-C VBUS input rail, discharge resistor, and ESD clamp. */}
