@@ -86,10 +86,7 @@ export default () => (
       inaFilterSchXOffset={10.5}
       inaFilterSchYOffset={14.5}
     />
-    <ProgrammingSection
-      name="programming"
-      schSheetName="programming"
-    />
+    <ProgrammingSection name="programming" schSheetName="programming" />
 
     <InstrumentationAmplifier_INA350
       name="external_ina"
