@@ -56,8 +56,13 @@ const targetSocketNetBreakouts = [
   { connector: "J3", connectorPin: 9, net: "HFXIN" },
   { connector: "J3", connectorPin: 10, net: "HFXOUT" },
   { connector: "J3", connectorPin: 11, net: "AVSS" },
+  { connector: "J3", connectorPin: 3, net: "P1_0" },
+  { connector: "J3", connectorPin: 4, net: "P1_1" },
+  { connector: "J3", connectorPin: 14, net: "BSL_SDA" },
+  { connector: "J3", connectorPin: 15, net: "BSL_SCL" },
   { connector: "J3", connectorPin: 16, net: "BSL_TX" },
   { connector: "J3", connectorPin: 17, net: "BSL_RX" },
+  { connector: "J3", connectorPin: 19, net: "P1_3" },
   { connector: "J3", connectorPin: 20, net: "TEST_SBWTCK" },
   { connector: "J3", connectorPin: 21, net: "RESET_SBWTDIO" },
   { connector: "J3", connectorPin: 22, net: "TDO" },
@@ -69,11 +74,16 @@ const targetSocketNetBreakouts = [
   { connector: "J5", connectorPin: 1, net: "GND" },
   { connector: "J5", connectorPin: 2, net: "DVCC" },
   { connector: "J5", connectorPin: 25, net: "GND" },
+  { connector: "J5", connectorPin: 24, net: "LCDCAP" },
   { connector: "J6", connectorPin: 1, net: "DVCC" },
+  { connector: "J6", connectorPin: 10, net: "CH1_IN" },
   { connector: "J6", connectorPin: 12, net: "PVSS" },
   { connector: "J6", connectorPin: 13, net: "PVCC" },
   { connector: "J6", connectorPin: 14, net: "PVSS" },
+  { connector: "J6", connectorPin: 16, net: "CH0_IN" },
   { connector: "J6", connectorPin: 21, net: "AVSS" },
+  { connector: "J6", connectorPin: 22, net: "USSXTIN" },
+  { connector: "J6", connectorPin: 23, net: "USSXTOUT" },
   { connector: "J6", connectorPin: 24, net: "AVSS" },
   { connector: "J6", connectorPin: 25, net: "AVCC" },
 ] as const;
@@ -83,6 +93,7 @@ const supportNetTraces: ReadonlyArray<{
   pin: number;
   net: string;
   name?: string;
+  displayLabel?: string;
 }> = [
   { component: "C3", pin: 1, net: "AVCC", name: "C3_AVCC" },
   { component: "C3", pin: 2, net: "AVSS" },
@@ -98,6 +109,8 @@ const supportNetTraces: ReadonlyArray<{
   { component: "R11", pin: 2, net: "GND" },
   { component: "R12", pin: 1, net: "GND" },
   { component: "R12", pin: 2, net: "AVSS" },
+  { component: "R10", pin: 1, net: "GND" },
+  { component: "R10", pin: 2, net: "GND" },
   { component: "C10", pin: 1, net: "DVCC" },
   { component: "C10", pin: 2, net: "GND" },
   { component: "C7", pin: 1, net: "DVCC" },
@@ -141,30 +154,190 @@ const supportNetTraces: ReadonlyArray<{
   { component: "R19", pin: 2, net: "JTAG_BSL_RX" },
   { component: "R20", pin: 1, net: "BSL_TX" },
   { component: "R20", pin: 2, net: "JTAG_BSL_TX" },
-  { component: "JTAG", pin: 1, net: "TDO" },
-  { component: "JTAG", pin: 2, net: "DVCC" },
-  { component: "JTAG", pin: 3, net: "TDI" },
-  { component: "JTAG", pin: 4, net: "DVCC" },
-  { component: "JTAG", pin: 5, net: "TMS" },
-  { component: "JTAG", pin: 7, net: "TCK" },
-  { component: "JTAG", pin: 8, net: "TEST_SBWTCK" },
+  { component: "R21", pin: 1, net: "BSL_SCL" },
+  { component: "R21", pin: 2, net: "JTAG_BSL_SCL" },
+  { component: "JTAG", pin: 1, net: "JTAG_TDO_SBWTDIO" },
+  { component: "JTAG", pin: 2, net: "VCC_TOOL" },
+  { component: "JTAG", pin: 3, net: "JTAG_TDI" },
+  { component: "JTAG", pin: 4, net: "VCC" },
+  { component: "JTAG", pin: 5, net: "JTAG_TMS" },
+  { component: "JTAG", pin: 7, net: "JTAG_TCK_SBWTCK" },
+  { component: "JTAG", pin: 8, net: "JTAG_TEST_SBWTCK" },
   { component: "JTAG", pin: 9, net: "GND" },
-  { component: "JTAG", pin: 11, net: "RESET_SBWTDIO" },
+  { component: "JTAG", pin: 11, net: "JTAG_RST_NMI" },
   { component: "JTAG", pin: 12, net: "JTAG_BSL_TX" },
+  { component: "JTAG", pin: 10, net: "JTAG_BSL_SCL" },
   { component: "JTAG", pin: 14, net: "JTAG_BSL_RX" },
+  { component: "J1", pin: 1, net: "VCC_TOOL" },
+  { component: "J1", pin: 2, net: "VCC" },
+  { component: "J1", pin: 3, net: "EXT_PWR" },
+  { component: "J2", pin: 1, net: "GND" },
+  { component: "J2", pin: 2, net: "EXT_PWR" },
+  { component: "J2", pin: 3, net: "EXT_PWR" },
+  { component: "JP1", pin: 1, net: "VCC_MEAS" },
+  { component: "JP1", pin: 2, net: "VCC" },
+  { component: "JP2", pin: 1, net: "DVCC" },
+  { component: "JP2", pin: 2, net: "VCC_MEAS" },
+  { component: "JP3", pin: 1, net: "AVCC" },
+  { component: "JP3", pin: 2, net: "VCC_MEAS" },
+  { component: "JP4", pin: 1, net: "PVCC" },
+  { component: "JP4", pin: 2, net: "VCC_MEAS" },
+  { component: "JP5", pin: 2, net: "TDO" },
+  { component: "JP5", pin: 3, net: "JTAG_TDO_SBWTDIO" },
+  { component: "JP5", pin: 1, net: "NC_JP5_1", displayLabel: "NC" },
+  { component: "JP6", pin: 2, net: "TDI" },
+  { component: "JP6", pin: 3, net: "JTAG_TDI" },
+  { component: "JP6", pin: 1, net: "NC_JP6_1", displayLabel: "NC" },
+  { component: "JP7", pin: 2, net: "TMS" },
+  { component: "JP7", pin: 3, net: "JTAG_TMS" },
+  { component: "JP7", pin: 1, net: "NC_JP7_1", displayLabel: "NC" },
+  { component: "JP8", pin: 2, net: "TCK" },
+  { component: "JP8", pin: 3, net: "JTAG_TCK_SBWTCK" },
+  { component: "JP8", pin: 1, net: "NC_JP8_1", displayLabel: "NC" },
+  { component: "JP9", pin: 1, net: "JTAG_TEST_SBWTCK" },
+  { component: "JP9", pin: 2, net: "TEST_SBWTCK" },
+  { component: "JP9", pin: 3, net: "JTAG_TCK_SBWTCK" },
+  { component: "JP10", pin: 1, net: "JTAG_TDO_SBWTDIO" },
+  { component: "JP10", pin: 2, net: "RESET_SBWTDIO" },
+  { component: "JP10", pin: 3, net: "JTAG_RST_NMI" },
+  { component: "BSL", pin: 1, net: "BSL_TX_CONN" },
+  { component: "BSL", pin: 2, net: "GND" },
+  { component: "BSL", pin: 3, net: "BSL_RX_CONN" },
+  { component: "BSL", pin: 4, net: "RESET_SBWTDIO" },
+  { component: "BSL", pin: 5, net: "BSL_SDA_CONN" },
+  { component: "BSL", pin: 6, net: "BSL_VCC" },
+  { component: "BSL", pin: 7, net: "TEST_SBWTCK" },
+  { component: "BSL", pin: 9, net: "BSL_SCL_CONN" },
+  { component: "R3", pin: 1, net: "BSL_VCC" },
+  { component: "R3", pin: 2, net: "VCC" },
+  { component: "R4", pin: 1, net: "BSL_VCC" },
+  { component: "R4", pin: 2, net: "VCC" },
+  { component: "SW4", pin: 1, net: "BSL_SCL" },
+  { component: "SW4", pin: 2, net: "BSL_SCL_CONN" },
+  { component: "SW4", pin: 3, net: "BSL_SDA" },
+  { component: "SW4", pin: 4, net: "BSL_SDA_CONN" },
+  { component: "SW5", pin: 1, net: "BSL_RX" },
+  { component: "SW5", pin: 2, net: "BSL_RX_CONN" },
+  { component: "SW5", pin: 3, net: "BSL_TX" },
+  { component: "SW5", pin: 4, net: "BSL_TX_CONN" },
+  { component: "SW3", pin: 1, net: "DVCC" },
+  { component: "SW3", pin: 2, net: "I2C_PULLUP_SDA" },
+  { component: "SW3", pin: 3, net: "DVCC" },
+  { component: "SW3", pin: 4, net: "I2C_PULLUP_SCL" },
+  { component: "R17", pin: 1, net: "I2C_PULLUP_SDA" },
+  {
+    component: "R17",
+    pin: 2,
+    net: "BSL_SDA",
+    displayLabel: "BSL_SDA",
+  },
+  { component: "R16", pin: 1, net: "I2C_PULLUP_SCL" },
+  {
+    component: "R16",
+    pin: 2,
+    net: "BSL_SCL",
+    displayLabel: "BSL_SCL",
+  },
+  { component: "TP1", pin: 1, net: "BSL_SCL_CONN" },
+  { component: "TP2", pin: 1, net: "BSL_SDA_CONN" },
+  { component: "TP3", pin: 1, net: "BSL_RX_CONN" },
+  { component: "TP4", pin: 1, net: "BSL_TX_CONN" },
+  { component: "TP5", pin: 1, net: "GND" },
+  { component: "TP6", pin: 1, net: "GND" },
+  { component: "R13", pin: 1, net: "DVCC" },
+  { component: "R13", pin: 2, net: "P1_3" },
+  { component: "SW1", pin: 1, net: "P1_3" },
+  { component: "SW1", pin: 2, net: "GND" },
+  { component: "SW1", pin: 3, net: "P1_3" },
+  { component: "SW1", pin: 4, net: "GND" },
+  { component: "D1", pin: 1, net: "LED1_A" },
+  { component: "D1", pin: 2, net: "GND" },
+  { component: "R1", pin: 1, net: "LED1_A" },
+  { component: "R1", pin: 2, net: "P1_0_LED" },
+  { component: "JP11", pin: 1, net: "P1_0_LED" },
+  { component: "JP11", pin: 2, net: "P1_0" },
+  { component: "D2", pin: 1, net: "GND" },
+  { component: "D2", pin: 2, net: "LED2_A" },
+  { component: "R2", pin: 1, net: "LED2_A" },
+  { component: "R2", pin: 2, net: "P1_1_LED" },
+  { component: "JP12", pin: 1, net: "P1_1_LED" },
+  { component: "JP12", pin: 2, net: "P1_1" },
+  { component: "Q3", pin: 1, net: "USSXTIN" },
+  { component: "Q3", pin: 2, net: "AVSS" },
+  { component: "Q3", pin: 3, net: "USSXTOUT_Q3" },
+  { component: "C14", pin: 1, net: "USSXTIN" },
+  { component: "C14", pin: 2, net: "AVSS" },
+  { component: "C15", pin: 1, net: "USSXTOUT_Q3" },
+  { component: "C15", pin: 2, net: "AVSS" },
+  { component: "R14", pin: 1, net: "USSXTIN" },
+  { component: "R14", pin: 2, net: "USSXTIN_EXT" },
+  { component: "R22", pin: 1, net: "USSXTOUT_Q3" },
+  { component: "R22", pin: 2, net: "USSXTOUT" },
+  { component: "R15", pin: 1, net: "USSXTOUT" },
+  { component: "R15", pin: 2, net: "USSXTOUT_EXT" },
+  { component: "R18", pin: 1, net: "LCDCAP" },
+  { component: "R18", pin: 2, net: "GND" },
+  { component: "C12", pin: 1, net: "LCDCAP" },
+  { component: "C12", pin: 2, net: "GND" },
+  { component: "JP14", pin: 1, net: "PVSS" },
+  { component: "JP14", pin: 2, net: "CH0_IN" },
+  { component: "JP13", pin: 1, net: "PVSS" },
+  { component: "JP13", pin: 2, net: "CH1_IN" },
 ];
 
+const sourceShunts = [
+  { name: "SH_J1", displayName: "J1: 1-2", schX: -19.0, schY: 6.2 },
+  { name: "SH_JP1", displayName: "JP1: 1-2", schX: -17.7, schY: 3.5 },
+  { name: "SH_JP2", displayName: "JP2: 1-2", schX: -17.7, schY: 1.0 },
+  { name: "SH_JP3", displayName: "JP3: 1-2", schX: -17.7, schY: -0.8 },
+  { name: "SH_JP4", displayName: "JP4: 1-2", schX: -17.7, schY: -2.6 },
+  { name: "SH_JP9", displayName: "JP9: 2-3", schX: -18.0, schY: 4.2 },
+  {
+    name: "SH_JP10",
+    displayName: "JP10: 2-3",
+    schX: -15.5,
+    schY: 4.2,
+  },
+  { name: "SH_JP5", displayName: "JP5: 2-3", schX: -12.8, schY: 4.2 },
+  { name: "SH_JP6", displayName: "JP6: 2-3", schX: -10.5, schY: 4.2 },
+  { name: "SH_JP7", displayName: "JP7: 2-3", schX: -8.2, schY: 4.2 },
+  { name: "SH_JP8", displayName: "JP8: 2-3", schX: -5.9, schY: 4.2 },
+  {
+    name: "SH_JP11",
+    displayName: "JP11: 1-2",
+    schX: -13.4,
+    schY: -8.5,
+  },
+  {
+    name: "SH_JP12",
+    displayName: "JP12: 1-2",
+    schX: -13.4,
+    schY: -7.1,
+  },
+  {
+    name: "SH_JP13",
+    displayName: "JP13: 1-2",
+    schX: 7.0,
+    schY: 3.7,
+  },
+  {
+    name: "SH_JP14",
+    displayName: "JP14: 1-2",
+    schX: 5.2,
+    schY: 3.7,
+  },
+] as const;
+
 /**
- * MSP430FR6007 minimum-system section extracted from TI's MSP-TS430PZ100E
- * target socket module. The board supports this exact MCU but supplies it as
- * a socketed target rather than documenting it as a Window Module design.
+ * Native reproduction of TI's MSP-TS430PZ100E Figure B-78 target-socket
+ * schematic. The board supports this exact MCU but supplies it as a socketed
+ * target rather than documenting it as a Window Module design.
  * The source assigns no motor-driver, pinch, position, thermal, CAN, or LIN
  * functions to MCU GPIOs, so this subcircuit intentionally does not invent
- * those interface names. J3-J6 are retained because Figure B-78 places them
- * between all four sides of IC1 and the target-board circuitry. Board-only
- * power-selection/current-measurement headers, LEDs, the user button, LCD
- * bias parts, and the optional USS sensing oscillator remain outside this
- * minimum-system extract.
+ * those interface names. The one-sheet circuit retains the source power and
+ * current-measurement headers, JP1-JP14 and documented shunts, JTAG/BSL paths,
+ * BSL interface switches and pullups, LEDs, user/reset switches, test points,
+ * LCDCAP option, crystals, USS resonator, channel inputs, and J3-J6 socket.
  *
  * Authoritative sources:
  * - Exact device and pin map (SLASEV3A):
@@ -185,12 +358,11 @@ const supportNetTraces: ReadonlyArray<{
  * Values below are rounded to 0.1 mm; the published figure supports only
  * approximate schematic centers, not exact PCB/CAD coordinates.
  * The one-sheet drawing applies a uniform +6.4 mm rendered-X translation to
- * every local center so the complete extract fits inside the native frame;
- * all source-relative component offsets remain unchanged except C10, whose
- * native symbol needs 0.4 mm additional left clearance to preserve the
- * verified IC1.pin26-to-J4.pin1 route.
- * The native render keeps IC1, J3-J6, and the retained target-board
- * minimum-system support circuitry together on one sheet, as in Figure B-78.
+ * every local center so the complete circuit fits inside the native frame.
+ * Native symbol dimensions require small clearance adjustments in the dense
+ * selector and support blocks; C10 is shifted 0.4 mm left to preserve the
+ * verified IC1.pin26-to-J4.pin1 route. These are schematic-rendering offsets,
+ * not claims of exact PCB placement. All Figure B-78 blocks remain together.
  */
 export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
   <subcircuit
@@ -210,6 +382,7 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
     <net name="AVCC" isPowerNet />
     <net name="DVCC" isPowerNet />
     <net name="PVCC" isPowerNet />
+    <net name="VCC" isPowerNet />
 
     <schematicsheet
       name="msp430fr6007_target_board"
@@ -312,6 +485,242 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
         ))}
 
         <group name="minimum_system_source_layout">
+          {/* Figure B-78 power selection, measurement, and rail headers. */}
+          <pinheader
+            name="J1"
+            displayName="VCC SELECT"
+            manufacturerPartNumber="TSW-103-07-G-S"
+            footprint="pinrow3_p2.54_nopinlabels"
+            pinCount={3}
+            gender="male"
+            pitch="2.54mm"
+            pinLabels={{ pin1: "INT", pin2: "VCC", pin3: "EXT" }}
+            schX={-20.0}
+            schY={7.2}
+            schFacingDirection="right"
+          />
+          <pinheader
+            name="J2"
+            displayName="EXT_PWR"
+            manufacturerPartNumber="TSW-103-07-G-S"
+            footprint="pinrow3_p2.54_nopinlabels"
+            pinCount={3}
+            gender="male"
+            pitch="2.54mm"
+            pinLabels={{ pin1: "GND", pin2: "EXT_PWR", pin3: "VCC" }}
+            schX={-4.7}
+            schY={9.2}
+            schFacingDirection="left"
+          />
+          <pinheader
+            name="JP1"
+            displayName="VCC CURRENT MEASUREMENT"
+            manufacturerPartNumber="TSW-102-07-G-S"
+            footprint="pinrow2_p2.54_nopinlabels"
+            pinCount={2}
+            gender="male"
+            pitch="2.54mm"
+            schX={-20.7}
+            schY={4.2}
+            schFacingDirection="right"
+          />
+          {[
+            { name: "JP2", netName: "DVCC", schY: 1.8 },
+            { name: "JP3", netName: "AVCC", schY: -0.2 },
+            { name: "JP4", netName: "PVCC", schY: -2.2 },
+          ].map(({ name, netName, schY }) => (
+            <Fragment key={name}>
+              <pinheader
+                name={name}
+                displayName={`${netName} POWER RAIL`}
+                manufacturerPartNumber="TSW-102-07-G-S"
+                footprint="pinrow2_p2.54_nopinlabels"
+                pinCount={2}
+                gender="male"
+                pitch="2.54mm"
+                schX={-20.7}
+                schY={schY}
+                schFacingDirection="right"
+              />
+            </Fragment>
+          ))}
+
+          {/* Debug-mode selectors JP5-JP10, populated 2-3 in Figure B-79. */}
+          {[
+            { name: "JP9", signal: "TEST/SBWTCK", schX: -18.0 },
+            { name: "JP10", signal: "RST/SBWTDIO", schX: -15.5 },
+            { name: "JP5", signal: "PJ.0/TDO", schX: -12.8 },
+            { name: "JP6", signal: "PJ.1/TDI", schX: -10.5 },
+            { name: "JP7", signal: "PJ.2/TMS", schX: -8.2 },
+            { name: "JP8", signal: "PJ.3/TCK", schX: -5.9 },
+          ].map(({ name, signal, schX }) => (
+            <Fragment key={name}>
+              <pinheader
+                name={name}
+                displayName={signal}
+                manufacturerPartNumber="TSW-103-07-G-S"
+                footprint="pinrow3_p2.54_nopinlabels"
+                pinCount={3}
+                gender="male"
+                pitch="2.54mm"
+                schX={schX}
+                schY={5.5}
+                schFacingDirection="right"
+              />
+            </Fragment>
+          ))}
+
+          {/* Bootloader header and Figure B-78 interface-selection bank. */}
+          <connector
+            name="BSL"
+            manufacturerPartNumber="AWHW-10G-0202-T"
+            footprint="pinrow10_p2.54_nopinlabels_rows2"
+            pinLabels={{
+              pin1: "BSL_TX",
+              pin2: "GND",
+              pin3: "BSL_RX",
+              pin4: "RST_SBWTDIO",
+              pin5: "BSL_SDA",
+              pin6: "VCC",
+              pin7: "TEST_SBWTCK",
+              pin8: "NC_8",
+              pin9: "BSL_SCL",
+              pin10: "NC_10",
+            }}
+            noConnect={["NC_8", "NC_10"]}
+            schX={-1.2}
+            schY={9.4}
+            schPinArrangement={{
+              leftSide: {
+                direction: "top-to-bottom",
+                pins: [9, 7, 5, 3, 1],
+              },
+              rightSide: {
+                direction: "top-to-bottom",
+                pins: [10, 8, 6, 4, 2],
+              },
+            }}
+          />
+          <resistor
+            name="R3"
+            resistance="0"
+            footprint="0805"
+            schX={2.8}
+            schY={8.9}
+            schOrientation="vertical"
+          />
+          <resistor
+            name="R4"
+            resistance="0"
+            footprint="0603"
+            doNotPlace
+            schX={3.4}
+            schY={8.0}
+            schOrientation="vertical"
+          />
+          <switch
+            name="SW4"
+            displayName="I2C BSL CONNECTION"
+            manufacturerPartNumber="GH7727-ND"
+            footprint="pinrow4_p2.54_nopinlabels"
+            dpst
+            schX={6.0}
+            schY={8.8}
+          />
+          <switch
+            name="SW5"
+            displayName="UART BSL CONNECTION"
+            manufacturerPartNumber="GH7727-ND"
+            footprint="pinrow4_p2.54_nopinlabels"
+            dpst
+            schX={6.0}
+            schY={6.7}
+          />
+          <switch
+            name="SW3"
+            displayName="I2C PULLUPS"
+            manufacturerPartNumber="GH7727-ND"
+            footprint="pinrow4_p2.54_nopinlabels"
+            dpst
+            schX={6.0}
+            schY={4.6}
+          />
+          <resistor
+            name="R17"
+            resistance="4.7k"
+            footprint="0805"
+            schX={6.8}
+            schY={4.9}
+          />
+          <resistor
+            name="R16"
+            resistance="4.7k"
+            footprint="0805"
+            schX={6.8}
+            schY={4.2}
+          />
+          {[
+            { name: "TP1", schX: 7.2, schY: 9.1 },
+            { name: "TP2", schX: 7.2, schY: 8.5 },
+            { name: "TP3", schX: 7.2, schY: 7.0 },
+            { name: "TP4", schX: 7.2, schY: 6.4 },
+          ].map(({ name, schX, schY }) => (
+            <Fragment key={name}>
+              <testpoint
+                name={name}
+                doNotPlace
+                footprintVariant="through_hole"
+                holeDiameter="0.8mm"
+                padDiameter="1.5mm"
+                schX={schX}
+                schY={schY}
+              />
+            </Fragment>
+          ))}
+
+          {/* USS channel-input headers and their separately documented shunts. */}
+          <pinheader
+            name="JP14"
+            displayName="Ch0IN"
+            manufacturerPartNumber="TSW-102-07-G-S"
+            footprint="pinrow2_p2.54_nopinlabels"
+            pinCount={2}
+            gender="male"
+            pitch="2.54mm"
+            schX={5.2}
+            schY={3.0}
+            schFacingDirection="right"
+          />
+          <pinheader
+            name="JP13"
+            displayName="Ch1IN"
+            manufacturerPartNumber="TSW-102-07-G-S"
+            footprint="pinrow2_p2.54_nopinlabels"
+            pinCount={2}
+            gender="male"
+            pitch="2.54mm"
+            schX={7.0}
+            schY={3.0}
+            schFacingDirection="left"
+          />
+
+          {sourceShunts.map(({ name, displayName, schX, schY }) => (
+            <Fragment key={name}>
+              <jumper
+                name={name}
+                displayName={displayName}
+                manufacturerPartNumber="3M9580-ND"
+                footprint="pinrow2_p2.54_nopinlabels"
+                pinCount={2}
+                internallyConnectedPins={[[1, 2]]}
+                schX={schX}
+                schY={schY}
+                schWidth="0.45mm"
+                schHeight="0.7mm"
+              />
+            </Fragment>
+          ))}
+
           {/* Target-board AVCC bypass network. */}
           <capacitor
             name="C3"
@@ -366,15 +775,116 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
             name="R11"
             resistance="0"
             footprint="0805"
-            schX={-19.0}
+            schX={-18.5}
             schY={-5.5}
           />
           <resistor
             name="R12"
             resistance="0"
             footprint="0805"
-            schX={-19.0}
+            schX={-18.5}
             schY={-6.5}
+          />
+          <resistor
+            name="R10"
+            resistance="0"
+            footprint="0805"
+            schX={-19.5}
+            schY={-7.2}
+            schOrientation="vertical"
+          />
+          <testpoint
+            name="TP6"
+            doNotPlace
+            footprintVariant="through_hole"
+            holeDiameter="0.8mm"
+            padDiameter="1.5mm"
+            schX={-20.2}
+            schY={-5.5}
+          />
+          <testpoint
+            name="TP5"
+            doNotPlace
+            footprintVariant="through_hole"
+            holeDiameter="0.8mm"
+            padDiameter="1.5mm"
+            schX={-20.2}
+            schY={-7.8}
+          />
+          <pushbutton
+            name="SW1"
+            displayName="P1.3"
+            manufacturerPartNumber="EVQ-11L05R"
+            footprint="smdpushbutton"
+            schX={-18.0}
+            schY={-7.8}
+          />
+          <resistor
+            name="R13"
+            resistance="47k"
+            footprint="0805"
+            doNotPlace
+            schX={-15.6}
+            schY={-7.1}
+            schOrientation="vertical"
+          />
+          <led
+            name="D2"
+            displayName="BLUE"
+            color="blue"
+            footprint="led0805"
+            manufacturerPartNumber="732-4982"
+            schX={-19.2}
+            schY={-9.0}
+            schRotation={180}
+          />
+          <resistor
+            name="R2"
+            resistance="200"
+            footprint="0805"
+            schX={-17.2}
+            schY={-9.0}
+          />
+          <pinheader
+            name="JP12"
+            displayName="P1.1"
+            manufacturerPartNumber="TSW-102-07-G-S"
+            footprint="pinrow2_p2.54_nopinlabels"
+            pinCount={2}
+            gender="male"
+            pitch="2.54mm"
+            schX={-15.0}
+            schY={-9.0}
+            schFacingDirection="right"
+          />
+          <led
+            name="D1"
+            displayName="GREEN"
+            color="green"
+            footprint="led0805"
+            manufacturerPartNumber="754-1939-1"
+            schX={-19.2}
+            schY={-10.2}
+            schRotation={180}
+          />
+          <resistor
+            name="R1"
+            resistance="330"
+            footprint="0805"
+            schX={-17.2}
+            schY={-10.2}
+          />
+          <pinheader
+            name="JP11"
+            displayName="P1.0"
+            manufacturerPartNumber="TSW-102-07-G-S"
+            footprint="pinrow2_p2.54_nopinlabels"
+            pinCount={2}
+            gender="male"
+            pitch="2.54mm"
+            schX={-15.0}
+            schY={-10.2}
+            schFacingDirection="right"
           />
           {/* Native-symbol clearance shift documented in coordinate provenance. */}
           <capacitor
@@ -520,27 +1030,105 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
             schY={-0.9}
           />
 
-          {/* UART BSL paths retained on the source JTAG header. */}
+          {/* USS 8-MHz resonator path retained exactly as the source DNP block. */}
+          <resonator
+            name="Q3"
+            manufacturerPartNumber="77D9806"
+            frequency="8MHz"
+            loadCapacitance="27pF"
+            pinVariant="ground_pin"
+            doNotPlace
+            schX={-8.0}
+            schY={-3.8}
+          />
+          <capacitor
+            name="C14"
+            capacitance="27pF"
+            footprint="0603"
+            doNotPlace
+            schX={-8.9}
+            schY={-3.3}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C15"
+            capacitance="27pF"
+            footprint="0603"
+            doNotPlace
+            schX={-8.9}
+            schY={-4.3}
+            schOrientation="vertical"
+          />
+          <resistor
+            name="R14"
+            resistance="0"
+            footprint="0603"
+            doNotPlace
+            schX={-6.5}
+            schY={-3.3}
+          />
+          <resistor
+            name="R22"
+            resistance="22"
+            footprint="0603"
+            schX={-6.5}
+            schY={-4.3}
+          />
+          <resistor
+            name="R15"
+            resistance="0"
+            footprint="0603"
+            doNotPlace
+            schX={-4.7}
+            schY={-4.3}
+          />
+
+          {/* Optional LCD_C module loading shown beside IC1 pin 74. */}
+          <resistor
+            name="R18"
+            resistance="0"
+            footprint="0805"
+            doNotPlace
+            schX={-2.8}
+            schY={-5.1}
+            schOrientation="vertical"
+          />
+          <capacitor
+            name="C12"
+            capacitance="4.7uF"
+            footprint="0805"
+            doNotPlace
+            schX={-1.8}
+            schY={-5.1}
+            schOrientation="vertical"
+          />
+
+          {/* UART/I2C BSL paths retained on the source JTAG header. */}
           <resistor
             name="R19"
             resistance="0"
             footprint="0805"
-            schX={-20.3}
-            schY={10.5}
+            schX={-19.6}
+            schY={10.0}
           />
           <resistor
             name="R20"
             resistance="0"
             footprint="0805"
-            schX={-20.3}
-            schY={9.9}
+            schX={-19.6}
+            schY={9.4}
+          />
+          <resistor
+            name="R21"
+            resistance="0"
+            footprint="0805"
+            schX={-19.6}
+            schY={8.8}
           />
 
           {/*
-           * 14-pin MSP JTAG connector resolved to the board's documented four-wire
-           * configuration (JP5-JP10 at pins 2-3). The physical selector headers and
-           * shunts are board UI, so the extracted module preserves their selected
-           * connectivity without importing those configuration-only components.
+           * 14-pin MSP JTAG connector plus the JP5-JP10 selector paths shown in
+           * Figure B-78. The separately drawn shunt bodies are retained above.
            */}
           <connector
             name="JTAG"
@@ -556,15 +1144,15 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
               pin7: "TCK",
               pin8: "TEST",
               pin9: "GND",
-              pin10: "NC_10",
+              pin10: "BSL_SCL",
               pin11: "RST",
               pin12: "BSL_TX",
               pin13: "NC_13",
               pin14: "BSL_RX",
             }}
-            noConnect={["NC_6", "NC_10", "NC_13"]}
+            noConnect={["NC_6", "NC_13"]}
             schX={-17.7}
-            schY={9.7}
+            schY={9.3}
             schPinArrangement={{
               leftSide: {
                 direction: "top-to-bottom",
@@ -578,16 +1166,18 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
           />
 
           {/* Repository-standard net names are carried by native traces. */}
-          {supportNetTraces.map(({ component, pin, net, name }) => (
-            <Fragment key={`${component}-pin${pin}-${net}`}>
-              <trace
-                name={name ?? `${component}_PIN${pin}_${net}`}
-                from={`${component}.pin${pin}`}
-                to={`net.${net}`}
-                schDisplayLabel={net}
-              />
-            </Fragment>
-          ))}
+          {supportNetTraces.map(
+            ({ component, pin, net, name, displayLabel }) => (
+              <Fragment key={`${component}-pin${pin}-${net}`}>
+                <trace
+                  name={name ?? `${component}_PIN${pin}_${net}`}
+                  from={`${component}.pin${pin}`}
+                  to={`net.${net}`}
+                  schDisplayLabel={displayLabel ?? net}
+                />
+              </Fragment>
+            ),
+          )}
         </group>
       </group>
     </schematicsheet>
@@ -599,6 +1189,16 @@ export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
     <port name="RESET" direction="left" connectsTo="net.RESET_SBWTDIO" />
     <port name="BSL_TX" direction="left" connectsTo="net.BSL_TX" />
     <port name="BSL_RX" direction="left" connectsTo="net.BSL_RX" />
+    <port name="BSL_SDA" direction="left" connectsTo="net.BSL_SDA" />
+    <port name="BSL_SCL" direction="left" connectsTo="net.BSL_SCL" />
+    <port name="P1_0" direction="left" connectsTo="net.P1_0" />
+    <port name="P1_1" direction="left" connectsTo="net.P1_1" />
+    <port name="P1_3" direction="left" connectsTo="net.P1_3" />
+    <port name="CH0_IN" direction="left" connectsTo="net.CH0_IN" />
+    <port name="CH1_IN" direction="left" connectsTo="net.CH1_IN" />
+    <port name="USSXTIN" direction="left" connectsTo="net.USSXTIN" />
+    <port name="USSXTOUT" direction="left" connectsTo="net.USSXTOUT" />
+    <port name="LCDCAP" direction="left" connectsTo="net.LCDCAP" />
     <port name="TEST" direction="right" connectsTo="net.TEST_SBWTCK" />
     <port name="TDO" direction="right" connectsTo="net.TDO" />
     <port name="TDI" direction="right" connectsTo="net.TDI" />
