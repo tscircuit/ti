@@ -228,7 +228,7 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
     ["C24", 1],
     ["C25", 1],
   ]);
-  assertNet(circuitJson, "LOAD_SENS_PCH", [
+  assertNet(circuitJson, "VIN2", [
     ["Q1", 1],
     ["Q1", 2],
     ["Q1", 3],
@@ -408,14 +408,13 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
     .filter((element) => element.type === "schematic_net_label")
     .map((element) => element.text);
   expect(renderedNetLabels).toContain("P_Gate");
-  expect(renderedNetLabels).toContain("LOAD_SENS_PCH");
+  expect(renderedNetLabels).toContain("VIN2");
+  expect(renderedNetLabels).not.toContain("LOAD_SENS_PCH");
   expect(renderedNetLabels).not.toContain("D2_A");
 
   const expectedNativeSymbols = {
     D1: "avalanche_diode_down",
     D2: "led_down",
-    D3: "schottky_diode_down",
-    D4: "schottky_diode_up",
     D5: "zener_diode_vert",
     R1: "boxresistor_left",
     R3: "boxresistor_up",
@@ -429,6 +428,41 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
       symbolName,
     );
   }
+
+  const d3Schematic = schematicComponentFor(circuitJson, "D3_SCHEMATIC");
+  const d4Schematic = schematicComponentFor(circuitJson, "D4_SCHEMATIC");
+  expect(d3Schematic.symbol_name).toBe("schottky_diode_up");
+  expect(d4Schematic.symbol_name).toBe("schottky_diode_down");
+  const d3SchematicId = String(d3Schematic.schematic_component_id);
+  const d4SchematicId = String(d4Schematic.schematic_component_id);
+
+  const schematicPinY = (
+    componentName: string,
+    schematicComponentId: string,
+    pinNumber: number,
+  ): number => {
+    const sourcePortId = port(
+      circuitJson,
+      componentName,
+      pinNumber,
+    ).source_port_id;
+    return (
+      circuitJson.find(
+        (element) =>
+          element.type === "schematic_port" &&
+          element.schematic_component_id === schematicComponentId &&
+          element.source_port_id === sourcePortId,
+      )!.center as { y: number }
+    ).y;
+  };
+  expect(
+    schematicPinY("D3", d3SchematicId, 1),
+    "D3 cathode pin 1 is above anode pin 2 in TI's Altium source",
+  ).toBeGreaterThan(schematicPinY("D3", d3SchematicId, 2));
+  expect(
+    schematicPinY("D4", d4SchematicId, 1),
+    "D4 cathode pin 1 is below anode pin 2 in TI's Altium source",
+  ).toBeLessThan(schematicPinY("D4", d4SchematicId, 2));
 });
 
 test("regulator child preserves the TIDA-050008 sheet-2 netlist", async () => {

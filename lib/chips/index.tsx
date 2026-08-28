@@ -1,4 +1,8 @@
 export { AM62L32 } from "./AM62L32.circuit.tsx";
+export {
+  BAT46W_E3_08,
+  BAT46W_E3_08_PIN_LABELS,
+} from "./BAT46W_E3_08.circuit.tsx";
 export { BQ24072 } from "./BQ24072.circuit.tsx";
 export { BQ24073 } from "./BQ24073.circuit.tsx";
 export { BQ24074 } from "./BQ24074.circuit.tsx";

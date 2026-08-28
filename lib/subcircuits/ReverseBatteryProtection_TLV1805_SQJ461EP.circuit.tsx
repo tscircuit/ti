@@ -1,5 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
+import { BAT46W_E3_08 } from "../chips/BAT46W_E3_08.circuit.tsx";
 import { SQJ461EP } from "../chips/SQJ461EP.circuit.tsx";
 import { TLV1805QDBVRQ1 } from "../chips/TLV1805QDBVRQ1.circuit.tsx";
 
@@ -119,16 +120,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       schOrientation="vertical"
     />
 
-    <SQJ461EP
-      name="Q1"
-      schX={sx(10.033)}
-      schY={sy(22.1869)}
-      connections={{
-        pin1: "net.LOAD_SENS_PCH",
-        pin2: "net.LOAD_SENS_PCH",
-        pin3: "net.LOAD_SENS_PCH",
-      }}
-    />
+    <SQJ461EP name="Q1" schX={sx(10.033)} schY={sy(22.1869)} />
     <resistor
       name="R4"
       resistance="56kohm"
@@ -149,16 +141,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       schY={sy(19.558)}
       schRotation={180}
     />
-    <diode
-      name="D3"
-      schottky
-      pinLabels={{ pin1: "K", pin2: "A" }}
-      manufacturerPartNumber="BAT46W-E3-08"
-      footprint="kicad:Diode_SMD/D_SOD-123"
-      schX={sx(11.938)}
-      schY={sy(18.1864)}
-      schOrientation="vertical"
-    />
+    <BAT46W_E3_08 name="D3" schX={sx(11.938)} schY={sy(18.1864)} />
     <capacitor
       name="C4"
       capacitance="10uF"
@@ -190,15 +173,11 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       schY={sy(19.304)}
       schOrientation="horizontal"
     />
-    <diode
+    <BAT46W_E3_08
       name="D4"
-      schottky
-      pinLabels={{ pin1: "K", pin2: "A" }}
-      manufacturerPartNumber="BAT46W-E3-08"
-      footprint="kicad:Diode_SMD/D_SOD-123"
       schX={sx(18.542)}
       schY={sy(16.3576)}
-      schRotation={90}
+      schRotation={180}
     />
     <resistor
       name="R3"
@@ -328,10 +307,12 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
     />
     <trace path={[".C24 > .pin1", ".C25 > .pin1"]} />
     <trace
-      name="LOAD_SENS_PCH"
-      schDisplayLabel="LOAD_SENS_PCH"
+      name="VIN2"
+      schDisplayLabel="VIN2"
       path={[
         ".Q1 > .pin1",
+        ".Q1 > .pin2",
+        ".Q1 > .pin3",
         ".R4 > .pin1",
         ".C4 > .pin1",
         ".D5 > .pin1",
