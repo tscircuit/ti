@@ -101,7 +101,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     {/* Type-C VBUS input rail, discharge resistor, and ESD clamp. */}
     <netlabel
       net="VBUS_IN"
-      connectsTo={["R25.pin1", "D6.cathode", "Q1.drain"]}
+      connectsTo={["R25.pin1", "D6.pin1", "Q1.drain"]}
       schX={-4.8}
       schY={2.3}
       anchorSide="bottom"
@@ -115,7 +115,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     />
     <netlabel
       net="GND"
-      connectsTo="D6.anode"
+      connectsTo="D6.pin2"
       schX={-4.6}
       schY={-0.85}
       anchorSide="top"
