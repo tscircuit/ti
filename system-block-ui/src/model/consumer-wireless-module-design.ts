@@ -54,7 +54,7 @@ export const createConsumerWirelessModuleDesign = (
         catalog,
         "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB",
       ),
-      position: { x: 40, y: 35 },
+      position: { x: 800, y: 0 },
     },
     {
       id: "io_protection",
