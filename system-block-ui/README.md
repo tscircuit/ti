@@ -128,7 +128,9 @@ remain available. The board is neither placed nor routed. The direct
 `GeneratedSystem.circuit.json` download retains these PCB records and the System
 Diagram `schematic_graphic`. The SVG-only System Diagram overview is omitted
 from the KiCad and Altium archives because those native converters do not
-support `schematic_graphic`; all editable detail sheets are retained.
+support `schematic_graphic`; all editable detail sheets are retained. KiCad
+promotes the first editable detail sheet to the hierarchy root, so page 1 is a
+real subcircuit instead of an otherwise empty sheet-index page.
 
 The Consumer Wireless Module's seven packaged chips include exact copper pad
 geometry and LCSC supplier IDs imported from JLCPCB. Its resistors and RF

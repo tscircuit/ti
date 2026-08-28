@@ -102,7 +102,7 @@ test("Seat Position Module renders every sheet and exports a complete KiCad proj
   expect(fileNames).toContain("seat-position-module.kicad_pcb");
   expect(
     fileNames.filter((fileName) => fileName.endsWith(".kicad_sch")),
-  ).toHaveLength(7);
+  ).toHaveLength(6);
 
   const pcb = strFromU8(
     archive["seat-position-module.kicad_pcb"] ?? new Uint8Array(),
@@ -113,6 +113,9 @@ test("Seat Position Module renders every sheet and exports a complete KiCad proj
   expect(pcb).toStartWith("(kicad_pcb");
   expect(pcb.match(/\(footprint\b/g)?.length ?? 0).toBeGreaterThan(0);
   expect(() => JSON.parse(project)).not.toThrow();
+  expect(
+    strFromU8(archive["seat-position-module.kicad_sch"] ?? new Uint8Array()),
+  ).toContain("(symbol");
 
   for (const fileName of fileNames.filter((name) =>
     name.endsWith(".kicad_sch"),

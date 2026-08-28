@@ -13,8 +13,94 @@ import {
 import { prepareCircuitJsonForEcadExport } from "./prepare-circuit-json-for-ecad-export";
 
 const ZIP_MIME_TYPE = "application/zip";
+const KICAD_CHILD_SHEET_WIDTH_MM = 40;
+const KICAD_CHILD_SHEET_HEIGHT_MM = 25;
+const KICAD_CHILD_SHEET_MIN_GAP_MM = 2;
+const KICAD_CHILD_SHEET_TOP_MM = 12;
+
+const KICAD_PAPER_WIDTH_MM: Readonly<Record<string, number>> = {
+  A0: 1189,
+  A1: 841,
+  A2: 594,
+  A3: 420,
+  A4: 297,
+  A5: 210,
+};
 
 export type KicadProjectZipOptions = ProjectZipOptions;
+
+type CircuitElement = CircuitJson[number];
+
+const getSheetIndex = (element: CircuitElement): number =>
+  element.type === "schematic_sheet" && typeof element.sheet_index === "number"
+    ? element.sheet_index
+    : Number.MAX_SAFE_INTEGER;
+
+/**
+ * KiCad requires one root schematic file for a hierarchy. Use the first real
+ * Circuit JSON sheet as that root instead of emitting an extra page containing
+ * only child-sheet boxes.
+ */
+export const promoteFirstSchematicSheetToKicadRoot = (
+  circuitJson: readonly CircuitElement[],
+): CircuitElement[] => {
+  const rootSheet = circuitJson
+    .filter((element) => element.type === "schematic_sheet")
+    .sort((a, b) => getSheetIndex(a) - getSheetIndex(b))[0];
+  if (!rootSheet || rootSheet.type !== "schematic_sheet") {
+    return [...circuitJson];
+  }
+
+  const rootSheetId = rootSheet.schematic_sheet_id;
+  return circuitJson.flatMap((element) => {
+    if (element === rootSheet) return [];
+    if (
+      "schematic_sheet_id" in element &&
+      element.schematic_sheet_id === rootSheetId
+    ) {
+      const promotedElement = { ...element } as Record<string, unknown>;
+      delete promotedElement.schematic_sheet_id;
+      return [promotedElement as CircuitElement];
+    }
+    return [element];
+  });
+};
+
+const placeKicadChildSheetsAboveRootCircuit = (
+  schematicConverter: CircuitJsonToKicadSchConverter,
+): string => {
+  const root = schematicConverter.getOutput();
+  const childSheets = root.sheets ?? [];
+  if (childSheets.length === 0) return root.getString();
+
+  const paperWidth = KICAD_PAPER_WIDTH_MM[root.paper?.size ?? "A4"] ?? 297;
+  const sheetsWidth = childSheets.length * KICAD_CHILD_SHEET_WIDTH_MM;
+  const availableGap =
+    childSheets.length > 1
+      ? (paperWidth - sheetsWidth) / (childSheets.length - 1)
+      : 0;
+  const gap = Math.max(KICAD_CHILD_SHEET_MIN_GAP_MM, Math.min(8, availableGap));
+  const rowWidth = sheetsWidth + gap * (childSheets.length - 1);
+  const left = Math.max(0, (paperWidth - rowWidth) / 2);
+
+  for (const [index, sheet] of childSheets.entries()) {
+    const x = left + index * (KICAD_CHILD_SHEET_WIDTH_MM + gap);
+    const y = KICAD_CHILD_SHEET_TOP_MM;
+    if (!sheet.position) continue;
+    sheet.position.x = x;
+    sheet.position.y = y;
+    for (const property of sheet.properties) {
+      if (!property.at) continue;
+      property.at.x = x;
+      property.at.y =
+        property.key === "Sheetname"
+          ? y - 0.7
+          : y + KICAD_CHILD_SHEET_HEIGHT_MM + 0.7;
+    }
+  }
+
+  return root.getString();
+};
 
 export const getKicadProjectZipFileName = (
   options: KicadProjectZipOptions = {},
@@ -26,7 +112,9 @@ export async function createKicadProjectZipBlob(
   options: KicadProjectZipOptions = {},
 ): Promise<Blob> {
   const projectName = getSafeProjectExportName(options);
-  const input = prepareCircuitJsonForEcadExport(circuitJson);
+  const input = promoteFirstSchematicSheetToKicadRoot(
+    prepareCircuitJsonForEcadExport(circuitJson),
+  );
   const schematicFileName = `${projectName}.kicad_sch`;
   const pcbFileName = `${projectName}.kicad_pcb`;
 
@@ -35,6 +123,12 @@ export async function createKicadProjectZipBlob(
   const schematicFiles = schematicConverter.getOutputFiles({
     schematicFilename: schematicFileName,
   });
+  if (schematicFiles.length > 1) {
+    schematicFiles[0] = {
+      ...schematicFiles[0],
+      content: placeKicadChildSheetsAboveRootCircuit(schematicConverter),
+    };
+  }
 
   const pcbConverter = new CircuitJsonToKicadPcbConverter(input, {
     projectName,

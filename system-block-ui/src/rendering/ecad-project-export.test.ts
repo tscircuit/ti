@@ -8,6 +8,7 @@ import {
 import {
   createKicadProjectZipBlob,
   getKicadProjectZipFileName,
+  promoteFirstSchematicSheetToKicadRoot,
 } from "./export-kicad-project";
 import { evaluateGeneratedTsx } from "./evaluate-schematic";
 import { prepareCircuitJsonForEcadExport } from "./prepare-circuit-json-for-ecad-export";
@@ -296,6 +297,20 @@ export default () => (
           element.source_component_id === "source_component_0",
       ),
     ).toBe(true);
+
+    const promotedForKicad = promoteFirstSchematicSheetToKicadRoot(prepared);
+    expect(
+      promotedForKicad
+        .filter((element) => element.type === "schematic_sheet")
+        .map((sheet) => sheet.schematic_sheet_id),
+    ).toEqual(["sheet_empty_detail", "sheet_mixed_detail"]);
+    expect(
+      promotedForKicad.find(
+        (element) =>
+          element.type === "schematic_component" &&
+          element.schematic_component_id === "schematic_component_0",
+      ),
+    ).not.toHaveProperty("schematic_sheet_id");
     expect(
       prepared.some(
         (element) =>
@@ -316,7 +331,6 @@ export default () => (
     const altiumEntries = Object.keys(unzipSync(altiumBytes)).sort();
 
     expect(kicadEntries).toEqual([
-      "detail.kicad_sch",
       "empty_detail.kicad_sch",
       "mixed_graphic_detail.kicad_sch",
       "multi-sheet.kicad_pcb",
@@ -324,6 +338,11 @@ export default () => (
       "multi-sheet.kicad_sch",
     ]);
     expect(kicadEntries).not.toContain("system_diagram.kicad_sch");
+    expect(
+      strFromU8(
+        unzipSync(kicadBytes)["multi-sheet.kicad_sch"] ?? new Uint8Array(),
+      ),
+    ).toContain("(symbol");
     expect(altiumEntries).toEqual([
       "README.txt",
       "multi-sheet-01.SchDoc",
