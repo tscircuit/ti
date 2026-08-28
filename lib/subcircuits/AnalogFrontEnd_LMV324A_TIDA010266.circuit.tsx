@@ -16,8 +16,8 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
     />
     <schematictext text="-" schX={-0.82} schY={0.48} fontSize={0.3} />
     <schematictext text="+" schX={-0.82} schY={-0.48} fontSize={0.3} />
-    <schematictext text={unitName} schX={1.3} schY={0.6} fontSize={0.22} />
-    <schematictext text="LMV324AIPWR" schX={1.3} schY={0.3} fontSize={0.18} />
+    <schematictext text={unitName} schX={0.5} schY={0.6} fontSize={0.22} />
+    <schematictext text="LMV324AIPWR" schX={0.5} schY={0.3} fontSize={0.18} />
     <port
       name="pin6"
       pinNumber={6}
