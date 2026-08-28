@@ -65,10 +65,10 @@ export default () => (
     <schematicsection name="motor_driver" displayName="" />
 
     {/* Centered titles sit inside, rather than directly on, each top divider. */}
-    <SectionTitle title="Input + Reference" schX={-25} schY={21.6} />
+    <SectionTitle title="Input + Reference" schX={-15.8} schY={21.6} />
     <SectionTitle title="Connectors" schX={6} schY={21.6} />
-    <SectionTitle title="Jumpers" schX={-28} schY={14.15} />
-    <SectionTitle title="Test Points" schX={-7.5} schY={14.15} />
+    <SectionTitle title="Jumpers" schX={-23.8} schY={14.15} />
+    <SectionTitle title="Test Points" schX={-4.3} schY={14.15} />
     <SectionTitle title="Programming" schX={20.5} schY={21.6} />
     <SectionTitle title="INA + Filter" schX={-15.5} schY={6.8} />
     <SectionTitle title="MCU" schX={20.5} schY={6.8} />

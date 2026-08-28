@@ -51,7 +51,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         symbolName="opamp_no_power_left"
         schRotation={180}
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
-        schX={-8.5}
+        schX={4.5}
         schY={15}
         connections={{
           inp1: ".U2 > .IN_POS_A",
@@ -62,63 +62,63 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
       {/* The released drawing flips the input order and loops the output back
           to the inverting input. U2 remains the sole electrical/PCB package. */}
       <schematicline
-        x1={-8.53}
+        x1={4.47}
         y1={15.22}
-        x2={-8.53}
+        x2={4.47}
         y2={16.05}
         strokeWidth={0.025}
         color="#008000"
       />
       <schematictext
         text="3.3V"
-        schX={-8.53}
+        schX={4.47}
         schY={16.25}
         fontSize={0.18}
         color="#840000"
       />
       <schematictext
         text="4"
-        schX={-8.7}
+        schX={4.3}
         schY={15.42}
         fontSize={0.14}
         color="#840000"
       />
       <schematicline
-        x1={-8}
+        x1={5}
         y1={15}
-        x2={-7.6}
+        x2={5.4}
         y2={15}
         strokeWidth={0.025}
         color="#008000"
       />
       <schematicline
-        x1={-7.6}
+        x1={5.4}
         y1={15}
-        x2={-7.6}
+        x2={5.4}
         y2={15.8}
         strokeWidth={0.025}
         color="#008000"
       />
       <schematicline
-        x1={-7.6}
+        x1={5.4}
         y1={15.8}
-        x2={-9.25}
+        x2={3.75}
         y2={15.8}
         strokeWidth={0.025}
         color="#008000"
       />
       <schematicline
-        x1={-9.25}
+        x1={3.75}
         y1={15.8}
-        x2={-9.25}
+        x2={3.75}
         y2={15.14}
         strokeWidth={0.025}
         color="#008000"
       />
       <schematicline
-        x1={-9.25}
+        x1={3.75}
         y1={15.14}
-        x2={-9}
+        x2={4}
         y2={15.14}
         strokeWidth={0.025}
         color="#008000"
@@ -187,7 +187,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
         resistance="10k"
         footprint="0603"
-        schX={-11.5}
+        schX={1.5}
         schY={15.8}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_2_5", pin2: "net.VREF_DIV" }}
@@ -197,7 +197,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
         resistance="10k"
         footprint="0603"
-        schX={-11.5}
+        schX={1.5}
         schY={14.2}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_DIV", pin2: "net.GND" }}
@@ -332,7 +332,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             name: "VREF_2_5",
             connectsTo: [".R4 > .pin1", ".R18 > .pin1"],
             inlineLabelConnectsTo: ".R18 > .pin1",
-            schX: -11.5,
+            schX: 1.5,
             schY: 16.1,
             direction: "left",
           },
@@ -345,7 +345,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".U2 > .IN_POS_C",
             ],
             inlineLabelConnectsTo: [".U2 > .IN_POS_B", ".U2 > .IN_POS_C"],
-            schX: -8,
+            schX: 5,
             schY: 15,
             direction: "left",
           },

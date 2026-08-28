@@ -276,7 +276,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         name="TP1"
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
-        schX={-14}
+        schX={-6}
         schY={-4.2}
         connections={{ pin1: "net.VIN" }}
       />
@@ -294,7 +294,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         name="TP3"
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
-        schX={-14}
+        schX={-6}
         schY={-5.4}
         connections={{ pin1: "net.V3_3" }}
       />
@@ -303,7 +303,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         name="TP4"
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5000"
-        schX={-14}
+        schX={-6}
         schY={-6.6}
         connections={{ pin1: "net.VREF_2_5" }}
       />
@@ -321,7 +321,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         name="TP6"
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5001"
-        schX={-14}
+        schX={-6}
         schY={-7.8}
         connections={{ pin1: "net.GND" }}
       />
@@ -330,8 +330,8 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
         name="TP7"
         schSectionName={testPointSectionName ?? props.schSectionName}
         manufacturerPartNumber="5001"
-        schX={-12.8}
-        schY={-9}
+        schX={-6}
+        schY={-8.2}
         connections={{ pin1: "net.GND" }}
       />
       <TIDA010266InlineNetPorts
@@ -357,14 +357,14 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
           {
             name: "V3_3",
             connectsTo: [".J10 > .V3_3", ".TP3 > .pin1"],
-            schX: -15.2,
+            schX: -7.2,
             schY: -5.4,
             direction: "left",
           },
           {
             name: "VREF_2_5",
             connectsTo: ".TP4 > .pin1",
-            schX: -15.2,
+            schX: -7.2,
             schY: -6.6,
             direction: "left",
           },
@@ -538,7 +538,7 @@ export const BloodPressureMonitorInterfaces_TIDA010266 = ({
               ".TP7 > .pin1",
             ],
             inlineLabelConnectsTo: false,
-            schX: -14,
+            schX: -6,
             schY: -10,
             direction: "down",
           },
