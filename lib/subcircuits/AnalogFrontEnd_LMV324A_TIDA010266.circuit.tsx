@@ -65,6 +65,12 @@ export type AnalogFrontEnd_LMV324A_TIDA010266Props =
   TIDA010266SectionedSubcircuitProps & {
     inputReferenceSectionName?: string;
     pressureSectionName?: string;
+    inputReferenceSheetName?: string;
+    pressureSheetName?: string;
+    inputReferenceSchXOffset?: number;
+    inputReferenceSchYOffset?: number;
+    pressureSchXOffset?: number;
+    pressureSchYOffset?: number;
   };
 
 /**
@@ -74,10 +80,22 @@ export type AnalogFrontEnd_LMV324A_TIDA010266Props =
 export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
   inputReferenceSectionName,
   pressureSectionName,
+  inputReferenceSheetName,
+  pressureSheetName,
+  inputReferenceSchXOffset = 0,
+  inputReferenceSchYOffset = 0,
+  pressureSchXOffset = 0,
+  pressureSchYOffset = 0,
   ...props
 }: AnalogFrontEnd_LMV324A_TIDA010266Props) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
+  const inputSheetName = inputReferenceSheetName ?? props.schSheetName;
+  const sensorSheetName = pressureSheetName ?? props.schSheetName;
+  const inputX = (x: number) => x + inputReferenceSchXOffset;
+  const inputY = (y: number) => y + inputReferenceSchYOffset;
+  const pressureX = (x: number) => x + pressureSchXOffset;
+  const pressureY = (y: number) => y + pressureSchYOffset;
 
   return (
     <subcircuit
@@ -109,8 +127,9 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         symbolName="opamp_no_power_left"
         schRotation={180}
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
-        schX={4.5}
-        schY={15}
+        schSheetName={inputSheetName}
+        schX={inputX(4.5)}
+        schY={inputY(15)}
         connections={{
           inp1: ".U2 > .IN_POS_A",
           inp2: ".U2 > .IN_NEG_A",
@@ -119,72 +138,75 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
       />
       {/* The released drawing flips the input order and loops the output back
           to the inverting input. U2 remains the sole electrical/PCB package. */}
-      <schematicline
-        x1={4.47}
-        y1={15.22}
-        x2={4.47}
-        y2={16.05}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematictext
-        text="3.3V"
-        schX={4.47}
-        schY={16.25}
-        fontSize={0.18}
-        color="#840000"
-      />
-      <schematictext
-        text="4"
-        schX={4.3}
-        schY={15.42}
-        fontSize={0.14}
-        color="#840000"
-      />
-      <schematicline
-        x1={5}
-        y1={15}
-        x2={5.4}
-        y2={15}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematicline
-        x1={5.4}
-        y1={15}
-        x2={5.4}
-        y2={15.8}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematicline
-        x1={5.4}
-        y1={15.8}
-        x2={3.75}
-        y2={15.8}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematicline
-        x1={3.75}
-        y1={15.8}
-        x2={3.75}
-        y2={15.14}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematicline
-        x1={3.75}
-        y1={15.14}
-        x2={4}
-        y2={15.14}
-        strokeWidth={0.025}
-        color="#008000"
-      />
+      <group schSheetName={inputSheetName}>
+        <schematicline
+          x1={inputX(4.47)}
+          y1={inputY(15.22)}
+          x2={inputX(4.47)}
+          y2={inputY(16.05)}
+          strokeWidth={0.025}
+          color="#008000"
+        />
+        <schematictext
+          text="3.3V"
+          schX={inputX(4.47)}
+          schY={inputY(16.25)}
+          fontSize={0.18}
+          color="#840000"
+        />
+        <schematictext
+          text="4"
+          schX={inputX(4.3)}
+          schY={inputY(15.42)}
+          fontSize={0.14}
+          color="#840000"
+        />
+        <schematicline
+          x1={inputX(5)}
+          y1={inputY(15)}
+          x2={inputX(5.4)}
+          y2={inputY(15)}
+          strokeWidth={0.025}
+          color="#008000"
+        />
+        <schematicline
+          x1={inputX(5.4)}
+          y1={inputY(15)}
+          x2={inputX(5.4)}
+          y2={inputY(15.8)}
+          strokeWidth={0.025}
+          color="#008000"
+        />
+        <schematicline
+          x1={inputX(5.4)}
+          y1={inputY(15.8)}
+          x2={inputX(3.75)}
+          y2={inputY(15.8)}
+          strokeWidth={0.025}
+          color="#008000"
+        />
+        <schematicline
+          x1={inputX(3.75)}
+          y1={inputY(15.8)}
+          x2={inputX(3.75)}
+          y2={inputY(15.14)}
+          strokeWidth={0.025}
+          color="#008000"
+        />
+        <schematicline
+          x1={inputX(3.75)}
+          y1={inputY(15.14)}
+          x2={inputX(4)}
+          y2={inputY(15.14)}
+          strokeWidth={0.025}
+          color="#008000"
+        />
+      </group>
       <chip
         name="U2B"
         manufacturerPartNumber="LMV324AIPWR U2B"
         doNotPlace
+        schSheetName={props.schSheetName}
         schX={0}
         schY={0}
         pinLabels={{
@@ -200,6 +222,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         name="U2C"
         manufacturerPartNumber="LMV324AIPWR U2C"
         doNotPlace
+        schSheetName={props.schSheetName}
         schX={7}
         schY={0}
         pinLabels={{
@@ -222,47 +245,52 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         symbolName="opamp_no_power_left"
         schRotation={180}
         schSectionName={pressureSectionName ?? props.schSectionName}
-        schX={-19}
-        schY={-16.5}
+        schSheetName={sensorSheetName}
+        schX={pressureX(-19)}
+        schY={pressureY(-16.5)}
         connections={{
           inp1: ".U2 > .IN_POS_D",
           inp2: ".U2 > .IN_NEG_D",
           out: ".U2 > .OUT_D",
         }}
       />
-      <schematicline
-        x1={-19.03}
-        y1={-16.28}
-        x2={-19.03}
-        y2={-15.55}
-        strokeWidth={0.025}
-        color="#008000"
-      />
-      <schematictext
-        text="3.3V"
-        schX={-19.03}
-        schY={-15.35}
-        fontSize={0.18}
-        color="#840000"
-      />
+      <group schSheetName={sensorSheetName}>
+        <schematicline
+          x1={pressureX(-19.03)}
+          y1={pressureY(-16.28)}
+          x2={pressureX(-19.03)}
+          y2={pressureY(-15.55)}
+          strokeWidth={0.025}
+          color="#008000"
+        />
+        <schematictext
+          text="3.3V"
+          schX={pressureX(-19.03)}
+          schY={pressureY(-15.35)}
+          fontSize={0.18}
+          color="#840000"
+        />
+      </group>
 
       <resistor
         name="R4"
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
+        schSheetName={inputSheetName}
         resistance="10k"
         footprint="0603"
-        schX={1.5}
-        schY={15.8}
+        schX={inputX(1.5)}
+        schY={inputY(15.8)}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_2_5", pin2: "net.VREF_DIV" }}
       />
       <resistor
         name="R6"
         schSectionName={inputReferenceSectionName ?? props.schSectionName}
+        schSheetName={inputSheetName}
         resistance="10k"
         footprint="0603"
-        schX={1.5}
-        schY={14.2}
+        schX={inputX(1.5)}
+        schY={inputY(14.2)}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_DIV", pin2: "net.GND" }}
       />
@@ -349,27 +377,30 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
       <resistor
         name="R18"
         schSectionName={pressureSectionName ?? props.schSectionName}
+        schSheetName={sensorSheetName}
         resistance="45.3k"
         footprint="0603"
-        schX={-23}
-        schY={-15.8}
+        schX={pressureX(-23)}
+        schY={pressureY(-15.8)}
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_2_5", pin2: "net.IBIAS_SET" }}
       />
       <resistor
         name="R21"
         schSectionName={pressureSectionName ?? props.schSectionName}
+        schSheetName={sensorSheetName}
         resistance="4.99k"
         footprint="0603"
-        schX={-23}
-        schY={-18.2}
+        schX={pressureX(-23)}
+        schY={pressureY(-18.2)}
         schOrientation="vertical"
         connections={{ pin1: "net.IBIAS_SET", pin2: "net.GND" }}
       />
       <port
+        {...({ schSheetName: sensorSheetName } as Record<string, unknown>)}
         name="SENSOR_DRIVE"
-        schX={originX - 18.5}
-        schY={originY - 16.5}
+        schX={originX + pressureX(-18.5)}
+        schY={originY + pressureY(-16.5)}
         direction="right"
         connectsTo="net.SENSOR_DRIVE"
       />
@@ -384,6 +415,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: 0,
             schY: 5,
             direction: "up",
+            schSheetName: props.schSheetName,
           },
           {
             name: "GND",
@@ -391,14 +423,16 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: 0,
             schY: -5.5,
             direction: "down",
+            schSheetName: props.schSheetName,
           },
           {
             name: "VREF_2_5",
             connectsTo: [".R4 > .pin1", ".R18 > .pin1"],
             inlineLabelConnectsTo: ".R18 > .pin1",
-            schX: 1.5,
-            schY: 16.1,
+            schX: inputX(1.5),
+            schY: inputY(16.1),
             direction: "left",
+            schSheetName: inputSheetName,
           },
           {
             name: "VREF_1_25",
@@ -411,9 +445,10 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".U2C > .pin5",
             ],
             inlineLabelConnectsTo: [".U2 > .IN_POS_B", ".U2 > .IN_POS_C"],
-            schX: 5,
-            schY: 15,
+            schX: inputX(5),
+            schY: inputY(15),
             direction: "left",
+            schSheetName: inputSheetName,
           },
           {
             name: "PRESSURE",
@@ -421,6 +456,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: -8,
             schY: 0.6,
             direction: "left",
+            schSheetName: props.schSheetName,
           },
           {
             name: "FILTER_1_HP",
@@ -429,6 +465,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: -6,
             schY: 0.6,
             direction: "left",
+            schSheetName: props.schSheetName,
           },
           {
             name: "FILTER_1_INV",
@@ -443,6 +480,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: -3,
             schY: 1,
             direction: "left",
+            schSheetName: props.schSheetName,
           },
           {
             name: "FILTER_1_OUT",
@@ -457,6 +495,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: 2.4,
             schY: 1,
             direction: "right",
+            schSheetName: props.schSheetName,
           },
           {
             name: "FILTER_2_HP",
@@ -465,6 +504,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: 4.2,
             schY: 0.3,
             direction: "right",
+            schSheetName: props.schSheetName,
           },
           {
             name: "FILTER_2_INV",
@@ -479,6 +519,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: 5.5,
             schY: 1,
             direction: "right",
+            schSheetName: props.schSheetName,
           },
           {
             name: "OSCILLATIONS",
@@ -491,20 +532,23 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             schX: 8.5,
             schY: 1,
             direction: "right",
+            schSheetName: props.schSheetName,
           },
           {
             name: "IBIAS_FB",
             connectsTo: ".U2 > .IN_NEG_D",
-            schX: -19.6,
-            schY: -16.4,
+            schX: pressureX(-19.6),
+            schY: pressureY(-16.4),
             direction: "left",
+            schSheetName: sensorSheetName,
           },
           {
             name: "IBIAS_SET",
             connectsTo: [".U2 > .IN_POS_D", ".R18 > .pin2", ".R21 > .pin1"],
-            schX: -19.6,
-            schY: -16.7,
+            schX: pressureX(-19.6),
+            schY: pressureY(-16.7),
             direction: "left",
+            schSheetName: sensorSheetName,
           },
         ]}
       />

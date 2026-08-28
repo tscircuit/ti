@@ -10,6 +10,7 @@ export type TIDA010266InlineNetPort = {
   schX: number;
   schY: number;
   direction?: "left" | "right" | "up" | "down";
+  schSheetName?: string;
 };
 
 /**
@@ -36,6 +37,7 @@ export const TIDA010266InlineNetPorts = ({
         schX,
         schY,
         direction,
+        schSheetName,
       }) => {
         const selectedLabelTargets: string | string[] | false =
           inlineLabelConnectsTo ?? connectsTo;
@@ -49,6 +51,7 @@ export const TIDA010266InlineNetPorts = ({
         return (
           <Fragment key={name}>
             <port
+              {...({ schSheetName } as Record<string, unknown>)}
               name={name}
               schX={originX + schX}
               schY={originY + schY}
