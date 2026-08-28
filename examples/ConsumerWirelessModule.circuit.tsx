@@ -45,6 +45,7 @@ export default () => (
     <schematicsheet name="sensors" displayName="Sensors" sheetIndex={6} />
 
     <net name="VBUS_IN" isPowerNet />
+    <net name="LOGIC_IN" />
     <net name="CONNECTOR_P" />
     <net name="CONNECTOR_N" />
     <net name="I2C_SCL" />
@@ -89,7 +90,6 @@ export default () => (
     <LogicBuffer_SN74LVC1G34
       name="logic_control"
       schSheetName="logic_control"
-      noConnectInput
       pcbX={-2}
       pcbY={-7}
       pcbPositionMode="relative_to_board_anchor"
@@ -152,6 +152,7 @@ export default () => (
     />
 
     {/* Buffered control feeds one LVDS channel and its protected connector. */}
+    <trace from=".logic_control > net.MCU_OR_LOGIC_IN" to="net.LOGIC_IN" />
     <trace
       from=".logic_control > net.MCU_OR_LOGIC_OUT"
       to=".io_connection > .U1 > .IN1"
