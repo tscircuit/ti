@@ -351,6 +351,59 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
   expectStemOnEdge(6, [pathPoints[0], pathPoints[1]]);
   expectStemOnEdge(2, [pathPoints[1], pathPoints[2]]);
 
+  const u1SourceComponent = component(circuitJson, "U1");
+  const u1SchematicPorts = circuitJson.filter(
+    (element) =>
+      element.type === "schematic_port" &&
+      element.schematic_component_id === u1Schematic.schematic_component_id,
+  );
+  const schematicTraces = circuitJson.filter(
+    (element) => element.type === "schematic_trace",
+  );
+  const schematicNetLabels = circuitJson.filter(
+    (element) => element.type === "schematic_net_label",
+  );
+  const floatingU1Pins = u1SchematicPorts
+    .filter((schematicPort) => {
+      const center = schematicPort.center as { x: number; y: number };
+      const traceTerminatesAtPort = schematicTraces.some((trace) =>
+        (
+          trace.edges as Array<{
+            from: { x: number; y: number };
+            to: { x: number; y: number };
+          }>
+        ).some(
+          (edge) =>
+            (Math.abs(edge.from.x - center.x) < 1e-6 &&
+              Math.abs(edge.from.y - center.y) < 1e-6) ||
+            (Math.abs(edge.to.x - center.x) < 1e-6 &&
+              Math.abs(edge.to.y - center.y) < 1e-6),
+        ),
+      );
+      const displayLabelTerminatesAtPort = schematicNetLabels.some((label) => {
+        const anchor = label.anchor_position as { x: number; y: number };
+        return (
+          Math.abs(anchor.x - center.x) < 1e-6 &&
+          Math.abs(anchor.y - center.y) < 1e-6
+        );
+      });
+      return !traceTerminatesAtPort && !displayLabelTerminatesAtPort;
+    })
+    .map((schematicPort) =>
+      circuitJson.find(
+        (element) =>
+          element.type === "source_port" &&
+          element.source_component_id ===
+            u1SourceComponent.source_component_id &&
+          element.source_port_id === schematicPort.source_port_id,
+      ),
+    )
+    .map((sourcePort) => sourcePort?.pin_number);
+  expect(
+    floatingU1Pins,
+    "all U1 traces or inline labels terminate at their ports",
+  ).toEqual([]);
+
   const renderedNetLabels = circuitJson
     .filter((element) => element.type === "schematic_net_label")
     .map((element) => element.text);

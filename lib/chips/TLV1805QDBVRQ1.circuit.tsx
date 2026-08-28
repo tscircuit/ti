@@ -32,26 +32,26 @@ export const TLV1805QDBVRQ1 = (
       <symbol>
         <schematicpath
           points={[
-            { x: -0.4, y: 0.42 },
-            { x: 0.45, y: 0 },
-            { x: -0.4, y: -0.42 },
-            { x: -0.4, y: 0.42 },
+            { x: -0.4, y: 0.4 },
+            { x: 0.4, y: 0 },
+            { x: -0.4, y: -0.4 },
+            { x: -0.4, y: 0.4 },
           ]}
           strokeWidth={0.04}
         />
         <schematictext
           text="{NAME}"
-          schX={0.55}
-          schY={0.42}
-          fontSize={0.16}
-          anchor="left"
+          schX={-0.13}
+          schY={0.13}
+          fontSize={0.075}
+          anchor="center"
         />
         <schematictext
           text="TLV1805-Q1"
-          schX={0.55}
-          schY={0.24}
-          fontSize={0.12}
-          anchor="left"
+          schX={-0.1}
+          schY={-0.12}
+          fontSize={0.055}
+          anchor="center"
         />
         <port
           name="pin5"
@@ -83,29 +83,29 @@ export const TLV1805QDBVRQ1 = (
         <port
           name="pin1"
           pinNumber={1}
-          schX={0.7}
+          schX={0.65}
           schY={0}
           direction="right"
           schStemLength={0.25}
-          schPinLabelFontSize={0.1}
+          schPinLabelFontSize={0.075}
         />
         <port
           name="pin6"
           pinNumber={6}
-          schX={0}
-          schY={0.472353}
+          schX={0.2}
+          schY={0.45}
           direction="up"
-          schStemLength={0.25}
-          schPinLabelFontSize={0.1}
+          schStemLength={0.35}
+          schPinLabelFontSize={0.065}
         />
         <port
           name="pin2"
           pinNumber={2}
-          schX={0}
-          schY={-0.472353}
+          schX={0.2}
+          schY={-0.45}
           direction="down"
-          schStemLength={0.25}
-          schPinLabelFontSize={0.1}
+          schStemLength={0.35}
+          schPinLabelFontSize={0.065}
         />
       </symbol>
     }
