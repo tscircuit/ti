@@ -185,12 +185,8 @@ describe("TIDA-01389 position feedback extraction", () => {
     }
   });
 
-  test("uses inline labels and native trace-to-ground connections", () => {
-    for (const [name, label] of [
-      ["U6_GND", "GND"],
-      ["U5_GND", "GND"],
-      ["J4_VBAT", "V_BAT"],
-    ] as const) {
+  test("uses an inline V_BAT label and native trace-to-ground connections", () => {
+    for (const [name, label] of [["J4_VBAT", "V_BAT"]] as const) {
       const sourceTrace = circuitJson.find(
         (element) => element.type === "source_trace" && element.name === name,
       );
@@ -208,7 +204,14 @@ describe("TIDA-01389 position feedback extraction", () => {
       ).toBeTrue();
     }
 
-    for (const name of ["J2_GND", "J4_GND"]) {
+    for (const name of [
+      "U6_GND",
+      "C13_GND",
+      "U5_GND",
+      "C14_GND",
+      "J2_GND",
+      "J4_GND",
+    ]) {
       const sourceTrace = circuitJson.find(
         (element) => element.type === "source_trace" && element.name === name,
       );
@@ -226,11 +229,11 @@ describe("TIDA-01389 position feedback extraction", () => {
     }
 
     expect(
-      circuitJson.some(
+      circuitJson.filter(
         (element) =>
           element.type === "schematic_net_label" && element.text === "GND",
       ),
-    ).toBeTrue();
+    ).toHaveLength(5);
     expect(
       circuitJson.some(
         (element) =>

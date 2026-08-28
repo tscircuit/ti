@@ -61,8 +61,8 @@ type HallSensorChannelProps = SubcircuitProps & {
 };
 
 /**
- * A local schematic scope keeps each two-pin ground wire physically routed
- * while its GND port still joins the shared parent ground electrically.
+ * Each Hall-device and decoupling-capacitor ground pin uses an ordinary trace
+ * to the local ground net so tscircuit renders its native ground symbol.
  */
 const HallSensorChannel = ({
   sensorName,
@@ -75,8 +75,8 @@ const HallSensorChannel = ({
   outputNetName,
   ...props
 }: HallSensorChannelProps) => (
-  <subcircuit schMaxTraceDistance="12mm" routingDisabled {...props}>
-    <net name="GND" isGroundNet={false} />
+  <subcircuit schMaxTraceDistance="1mm" routingDisabled {...props}>
+    <net name="GND" isGroundNet />
     <net name="VCC" isPowerNet />
     <net name={outputNetName} />
 
@@ -112,10 +112,11 @@ const HallSensorChannel = ({
       ]}
     />
     <trace from={`${capacitorName}.pin1`} to="net.VCC" />
+    <trace name={`${sensorName}_GND`} from={`${sensorName}.GND`} to="net.GND" />
     <trace
-      name={`${sensorName}_GND`}
-      path={[`${capacitorName}.pin2`, `${sensorName}.GND`, "net.GND"]}
-      schDisplayLabel="GND"
+      name={`${capacitorName}_GND`}
+      from={`${capacitorName}.pin2`}
+      to="net.GND"
     />
     <trace
       name={`${outputNetName}_PULLUP_NODE`}

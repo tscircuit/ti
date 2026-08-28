@@ -337,9 +337,10 @@ The TIDA-01389 BOM identifies U5/U6 as `DRV5013ADQDBZRQ1`, C13/C14 as
 `CRCW06030000Z0EA`, J1/J2 as `SSQ-110-01-T-S`, and J4 as Wurth Elektronik
 `691214310002`. Following repository convention, passive and connector MPNs
 are documented here instead of being rendered as schematic component values.
-Hall-channel GND and V_BAT use ordinary traces with `schDisplayLabel`, while
-J2/J4 use ordinary traces to `net.GND` so tscircuit generates the native ground
-net labels. No passive or net-label component has a custom schematic size.
+Hall-channel and connector GND pins use ordinary traces to `net.GND` so
+tscircuit generates native ground symbols; V_BAT alone uses `schDisplayLabel`
+as an inline trace label. No passive or net-label component has a custom
+schematic size.
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.
