@@ -525,7 +525,7 @@ export const createSystemBlockExamples = (
   },
   {
     id: "tida-010266-blood-pressure-monitor",
-    title: "TIDA-010266 Blood Pressure Monitor",
+    title: "Blood Pressure Monitor",
     sourcePath:
       "examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx",
     graph: createBloodPressureMonitorDesign(catalog),

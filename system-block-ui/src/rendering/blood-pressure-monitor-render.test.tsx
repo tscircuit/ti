@@ -80,10 +80,10 @@ test("renders every reusable TIDA-010266 monitor block", async () => {
 
   expect(evaluated.sheets.map(({ title }) => title)).toEqual([
     "System Diagram",
-    "TIDA-010266 LMV324A Analog Front End",
-    "TIDA-010266 MSPM0L1306 Microcontroller",
-    "TIDA-010266 DRV8210 Pump and Valve Driver",
-    "TIDA-010266 3.3 V Power Management",
-    "TIDA-010266 2.5 V Voltage Reference",
+    "LMV324A Analog Front End",
+    "MSPM0L1306 Microcontroller",
+    "DRV8210 Pump and Valve Driver",
+    "TPS7A2433 3.3 V Power Management",
+    "ATL431LI 2.5 V Voltage Reference",
   ]);
 }, 30_000);

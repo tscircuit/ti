@@ -1452,7 +1452,7 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
   }),
   adapter({
     id: "power-management-tps7a2433-tida010266",
-    title: "TIDA-010266 3.3 V Power Management",
+    title: "TPS7A2433 3.3 V Power Management",
     description:
       "TPS7A2433 input regulator stage for the blood-pressure and heart-rate monitor.",
     category: "Power",
@@ -1483,7 +1483,7 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
   }),
   adapter({
     id: "voltage-reference-atl431li-tida010266",
-    title: "TIDA-010266 2.5 V Voltage Reference",
+    title: "ATL431LI 2.5 V Voltage Reference",
     description:
       "ATL431LI precision 2.5 V reference for the monitor analog signal chain.",
     category: "Power",
@@ -1514,7 +1514,7 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
   }),
   adapter({
     id: "analog-front-end-lmv324a-tida010266",
-    title: "TIDA-010266 LMV324A Analog Front End",
+    title: "LMV324A Analog Front End",
     description:
       "Pressure-sensor bias, reference buffer, and oscillometric band-pass filter.",
     category: "Sensors",
@@ -1554,7 +1554,7 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
   }),
   adapter({
     id: "microcontroller-mspm0l1306-tida010266",
-    title: "TIDA-010266 MSPM0L1306 Microcontroller",
+    title: "MSPM0L1306 Microcontroller",
     description:
       "Monitor controller with ADC inputs and pump/valve control outputs.",
     category: "Processors",
@@ -1596,7 +1596,7 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
   }),
   adapter({
     id: "motor-driver-drv8210-tida010266",
-    title: "TIDA-010266 DRV8210 Pump and Valve Driver",
+    title: "DRV8210 Pump and Valve Driver",
     description:
       "Dual-control motor-driver stage for the monitor pump and release valve.",
     category: "Motor Control",
