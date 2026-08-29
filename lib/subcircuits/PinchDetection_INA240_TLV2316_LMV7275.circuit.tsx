@@ -40,7 +40,7 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
     <net name="TIMER" />
     <PinchDetectionSignalChain_INA240_TLV2316_LMV7275
       name="signalChain"
-      renderAmplifierRailLabels={false}
+      renderLocalRailLabels={false}
       {...tida01421Position(
         TIDA01421_SIGNAL_CHAIN_ORIGIN.x,
         TIDA01421_SIGNAL_CHAIN_ORIGIN.y,
@@ -58,45 +58,57 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
 
     <trace from=".signalChain > .V_PLUS" to="net.V_PLUS" />
     <trace from=".signalChain > .V_MINUS" to="net.V_MINUS" />
-    {/* Rendering all six powered-triangle rail symbols in the wrapper lets the
-        automatically exposed child V5/GND traces reuse a native endpoint
-        instead of adding Ux_GND labels over another projection. Standalone
+    {/* Rendering the U2 and powered-triangle rail symbols in the wrapper lets
+        automatically exposed child V5/GND connections reuse native endpoints
+        instead of adding generated Ux_GND/U2_VS labels over them. Standalone
         signal-chain rendering still emits the same labels inside the child. */}
+    <netlabel
+      net="V5"
+      connection=".signalChain > .U2 > .VS"
+      anchorSide="bottom"
+      {...p(452.142857, 910.714286)}
+    />
+    <netlabel
+      net="V5"
+      connection=".signalChain > .U2 > .REF1"
+      anchorSide="left"
+      {...p(587.857143, 903.571429)}
+    />
     <netlabel
       net="V5"
       connection=".signalChain > .U3A > .pin5"
       anchorSide="bottom"
-      {...p(788.965517, 938.275862)}
+      {...p(788.928571, 938.928571)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U3A > .pin3"
       anchorSide="top"
-      {...p(789.310345, 911.37931)}
+      {...p(789.285714, 911.071429)}
     />
     <netlabel
       net="V5"
       connection=".signalChain > .U3B > .pin5"
       anchorSide="bottom"
-      {...p(1078.965517, 911.965517)}
+      {...p(1078.928571, 912.285714)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U3B > .pin3"
       anchorSide="top"
-      {...p(1079.310345, 885.068965)}
+      {...p(1079.285714, 884.428572)}
     />
     <netlabel
       net="V5"
       connection=".signalChain > .U1Symbol > .pin5"
       anchorSide="bottom"
-      {...p(1278.965517, 916.448276)}
+      {...p(1278.928571, 916.928571)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U1Symbol > .pin3"
       anchorSide="top"
-      {...p(1279.310345, 889.551724)}
+      {...p(1279.285714, 889.071429)}
     />
   </subcircuit>
 );

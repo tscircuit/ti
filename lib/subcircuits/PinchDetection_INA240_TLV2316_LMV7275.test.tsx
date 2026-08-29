@@ -234,10 +234,10 @@ const expectOneNet = (
 };
 
 test("uses the authoritative devices, values, and one coordinate transform", () => {
-  expect(TIDA01421_ALTIUM_SCALE).toBe(0.029);
+  expect(TIDA01421_ALTIUM_SCALE).toBe(0.028);
   expect(tida01421Position(1280, 910, TIDA01421_SIGNAL_CHAIN_ORIGIN)).toEqual({
-    schX: 13.34,
-    schY: 2.03,
+    schX: 12.88,
+    schY: 1.96,
   });
 
   expect(getComponent(signalJson, "J1").manufacturer_part_number).toBe(
@@ -278,9 +278,9 @@ test("preserves Altium placements with documented native-symbol projection offse
     C10: [750, 640],
     C7: [660, 920],
     R3: [720, 920],
-    U3A: [790, 924.827586],
-    U3B: [1080, 898.517241],
-    C1: [780, 1040],
+    U3A: [790, 925],
+    U3B: [1080, 898.357143],
+    C1: [790, 1040],
     R1: [790, 1000],
     C5: [860, 1000],
     C6: [890, 1000],
@@ -296,8 +296,8 @@ test("preserves Altium placements with documented native-symbol projection offse
     R15: [1200, 830],
     R18: [1200, 780],
     R16: [1300, 800],
-    R4: [1400, 919.896552],
-    C15: [1460, 882.655172],
+    R4: [1400, 920.5],
+    C15: [1460, 881.928571],
   } as const;
   const powerCenters = {
     U4: [790, 440],
@@ -445,6 +445,52 @@ test("keeps the horizontally connected analog stages on straight routes", () => 
   const u1Output = getProjectedSchematicPort(signalJson, "U1Symbol", 4);
   const r4TimerPin = getSchematicPort(signalJson, "R4", 1);
   const c15TimerPin = getSchematicPort(signalJson, "C15", 1);
+
+  expect(
+    nearlyEqual(
+      getSchematicComponent(signalJson, "C1").center.x,
+      getSchematicComponent(signalJson, "R1").center.x,
+    ),
+  ).toBe(true);
+  expect(
+    nearlyEqual(
+      getSchematicPort(signalJson, "C1", 1).center.x,
+      getSchematicPort(signalJson, "R1", 2).center.x,
+    ),
+  ).toBe(true);
+  expect(
+    nearlyEqual(
+      getSchematicPort(signalJson, "C1", 2).center.x,
+      getSchematicPort(signalJson, "R1", 1).center.x,
+    ),
+  ).toBe(true);
+
+  for (const [first, second] of [
+    ["C3", "C4"],
+    ["C5", "C6"],
+    ["C9", "R10"],
+  ] as const) {
+    expect(
+      nearlyEqual(
+        getSchematicComponent(signalJson, first).center.y,
+        getSchematicComponent(signalJson, second).center.y,
+      ),
+    ).toBe(true);
+  }
+
+  for (const [first, second] of [
+    ["R11", "R17"],
+    ["R8", "R9"],
+    ["R15", "R18"],
+    ["U1Symbol", "C2"],
+  ] as const) {
+    expect(
+      nearlyEqual(
+        getSchematicComponent(signalJson, first).center.x,
+        getSchematicComponent(signalJson, second).center.x,
+      ),
+    ).toBe(true);
+  }
 
   expect(nearlyEqual(r3Output.center.y, u3aInMinus.center.y)).toBe(true);
   expect(nearlyEqual(u3bOutput.center.y, u1InMinus.center.y)).toBe(true);
@@ -767,13 +813,31 @@ test("uses on-trace labels for the source signal names", () => {
     .map((trace) => trace.name)
     .filter(Boolean)
     .sort();
-  expect(namedSignalTraces).toEqual([
-    "ADCMOTOR",
-    "BIAS-A",
-    "BIAS-B",
-    "TIMER",
-    "U2-REF1-V5",
-    "U2-V5",
+  expect(namedSignalTraces).toEqual(["ADCMOTOR", "BIAS-A", "BIAS-B", "TIMER"]);
+
+  expect(
+    signalJson.filter(
+      (element): element is SchematicText =>
+        element.type === "schematic_text" &&
+        Boolean(element.source_trace_id) &&
+        element.text === "V5",
+    ),
+  ).toEqual([]);
+
+  const u2V5Labels = signalJson.filter(
+    (element): element is SchematicNetLabel =>
+      element.type === "schematic_net_label" &&
+      element.text === "V5" &&
+      [
+        getSchematicPort(signalJson, "U2", 6).center.x,
+        getSchematicPort(signalJson, "U2", 7).center.x,
+      ].includes(element.anchor_position?.x ?? Number.NaN),
+  );
+  expect(
+    u2V5Labels.map((label) => [label.anchor_side, label.symbol_name]),
+  ).toEqual([
+    ["bottom", "rail_up"],
+    ["left", undefined],
   ]);
 
   const traceOwnedSignalLabels = signalJson.filter(
@@ -837,7 +901,8 @@ test("joins the child power rails in the composite without circuit errors", () =
     compositeJson.filter(
       (element) =>
         element.type === "schematic_net_label" &&
-        /(?:^|[_-])(?:U\d+[A-Z]?[_-])?(?:V5|GND)$/.test(element.text) &&
+        (/(?:^|[_-])(?:U\d+[A-Z]?[_-])?(?:V5|GND)$/.test(element.text) ||
+          element.text === "U2_VS") &&
         !["V5", "GND"].includes(element.text),
     ),
   ).toEqual([]);

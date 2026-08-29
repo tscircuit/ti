@@ -9,11 +9,11 @@ import {
 } from "../tida01421-coordinates.ts";
 
 type PinchDetectionSignalChainProps = SubcircuitProps & {
-  renderAmplifierRailLabels?: boolean;
+  renderLocalRailLabels?: boolean;
 };
 
-const withoutAmplifierRailLabelProp = ({
-  renderAmplifierRailLabels: _renderAmplifierRailLabels,
+const withoutLocalRailLabelProp = ({
+  renderLocalRailLabels: _renderLocalRailLabels,
   ...subcircuitProps
 }: PinchDetectionSignalChainProps): SubcircuitProps => subcircuitProps;
 
@@ -69,7 +69,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
     schAutoLayoutEnabled={false}
     schMaxTraceDistance="8mm"
     routingDisabled
-    {...withoutAmplifierRailLabelProp(props)}
+    {...withoutLocalRailLabelProp(props)}
   >
     <net name="V5" isPowerNet />
     {/* Net selectors reject periods, so V3.3 is normalized internally. The
@@ -175,7 +175,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         decorative connection. */}
     <TLV2316QDGKRQ1 name="U3" noSchematicRepresentation />
     {/* Native U3A places IN- 0.14 units below its center, while Altium's
-        triangle places that pin on R3's centerline. The +14.827586 source-grid
+        triangle places that pin on R3's centerline. The +15 source-grid
         projection offset aligns the authoritative R3-to-IN- connection. */}
     <schematicsymbol
       name="U3A"
@@ -189,7 +189,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         "V+": "U3.V_PLUS",
         "V-": "U3.V_MINUS",
       }}
-      {...p(790, 924.827586)}
+      {...p(790, 925)}
     />
     <schematicsymbol
       name="U3B"
@@ -203,7 +203,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         "V+": "U3.V_PLUS",
         "V-": "U3.V_MINUS",
       }}
-      {...p(1080, 898.517241)}
+      {...p(1080, 898.357143)}
     />
     <schematictext
       text="TLV2316QDGKRQ1"
@@ -216,7 +216,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       capacitance="3300pF"
       footprint="0603"
       schOrientation="pos_right"
-      {...p(780, 1040)}
+      {...p(790, 1040)}
     />
     <resistor
       name="R1"
@@ -277,14 +277,16 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
 
     <trace from="U2.OUT" to="C7.pin2" />
     <trace from="C7.pin1" to="R3.pin1" />
-    <trace path={["R3.pin2", "U3.IN_MINUS_A", "R1.pin1", "C1.pin2"]} />
-    <trace path={["U3.OUT_A", "R1.pin2", "C1.pin1", "R8.pin1", "R9.pin1"]} />
+    {/* Route to the visible native projections. Each projected pin is mapped
+        above to its authoritative physical U3 package pin. */}
+    <trace path={["R3.pin2", "U3A.pin2", "R1.pin1", "C1.pin2"]} />
+    <trace path={["U3A.pin4", "R1.pin2", "C1.pin1", "R8.pin1", "R9.pin1"]} />
     <trace from="R11.pin1" to="R17.pin2" />
-    <trace from="R11.pin1" to="U3.IN_PLUS_A" />
-    <trace path={["R8.pin2", "U3.IN_MINUS_B", "R2.pin1"]} />
-    <trace path={["R9.pin2", "U3.IN_PLUS_B", "C9.pin1", "R10.pin2"]} />
-    <trace from="R2.pin2" to="U3.OUT_B" />
-    <trace from="U3.OUT_B" to="U1.IN_MINUS" />
+    <trace from="R11.pin1" to="U3A.pin1" />
+    <trace path={["R8.pin2", "U3B.pin2", "R2.pin1"]} />
+    <trace path={["R9.pin2", "U3B.pin1", "C9.pin1", "R10.pin2"]} />
+    <trace from="R2.pin2" to="U3B.pin4" />
+    <trace from="U3B.pin4" to="U1.IN_MINUS" />
     <trace from="C5.pin1" to="C6.pin1" />
     <trace from="C5.pin2" to="C6.pin2" />
 
@@ -343,7 +345,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       resistance="10kohm"
       footprint="0603"
       schOrientation="pos_bottom"
-      {...p(1400, 919.896552)}
+      {...p(1400, 920.5)}
     />
     <capacitor
       name="C15"
@@ -351,7 +353,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       footprint="0603"
       schOrientation="vertical"
       doNotPlace
-      {...p(1460, 882.655172)}
+      {...p(1460, 881.928571)}
     />
 
     <trace path={["R15.pin1", "R18.pin2", "U1.IN_PLUS", "R16.pin1"]} />
@@ -361,8 +363,6 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       schDisplayLabel="TIMER"
     />
     <trace from="R4.pin1" to="net.TIMER" />
-    <trace name="U2-V5" from="U2.VS" to="net.V5" schDisplayLabel="V5" />
-    <trace name="U2-REF1-V5" from="U2.REF1" to="net.V5" schDisplayLabel="V5" />
     {/* The TI sheet uses local rail symbols rather than sheet-wide V5/GND
         buses. Explicitly placed native rail labels preserve that topology;
         signal names continue to use schDisplayLabel on their real traces. */}
@@ -371,47 +371,67 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         keeping one transform for source centers and native-symbol projections.
         U3A/U3B share the same physical TLV2316 supply pins, while each visual
         projection retains its own source-authentic V5/GND endpoint. */}
-    {props.renderAmplifierRailLabels !== false && (
+    {props.renderLocalRailLabels !== false && (
       <>
+        {/* The source gives U2 pin 6 a vertical V5 power port and pin 7 a
+            left-pointing V5 endpoint. Native labels are anchored to the real
+            pin centers so neither one crosses the adjacent signal trace. */}
+        <netlabel
+          net="V5"
+          connection="U2.VS"
+          anchorSide="bottom"
+          {...p(452.142857, 910.714286)}
+        />
+        <netlabel
+          net="V5"
+          connection="U2.REF1"
+          anchorSide="left"
+          {...p(587.857143, 903.571429)}
+        />
         <netlabel
           net="V5"
           connection="U3A.pin5"
           anchorSide="bottom"
-          {...p(788.965517, 938.275862)}
+          {...p(788.928571, 938.928571)}
         />
         <netlabel
           net="GND"
           connection="U3A.pin3"
           anchorSide="top"
-          {...p(789.310345, 911.37931)}
+          {...p(789.285714, 911.071429)}
         />
         <netlabel
           net="V5"
           connection="U3B.pin5"
           anchorSide="bottom"
-          {...p(1078.965517, 911.965517)}
+          {...p(1078.928571, 912.285714)}
         />
         <netlabel
           net="GND"
           connection="U3B.pin3"
           anchorSide="top"
-          {...p(1079.310345, 885.068965)}
+          {...p(1079.285714, 884.428572)}
         />
         <netlabel
           net="V5"
           connection="U1Symbol.pin5"
           anchorSide="bottom"
-          {...p(1278.965517, 916.448276)}
+          {...p(1278.928571, 916.928571)}
         />
         <netlabel
           net="GND"
           connection="U1Symbol.pin3"
           anchorSide="top"
-          {...p(1279.310345, 889.551724)}
+          {...p(1279.285714, 889.071429)}
         />
       </>
     )}
-    <netlabel net="GND" connection="U2.GND" anchorSide="top" {...p(570, 840)} />
+    <netlabel
+      net="GND"
+      connection="U2.GND"
+      anchorSide="top"
+      {...p(587.857143, 840)}
+    />
     <netlabel
       net="V5"
       connection="C3.pin1"
