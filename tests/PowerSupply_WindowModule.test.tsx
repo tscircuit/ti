@@ -712,7 +712,7 @@ test("composite joins only the shared TI sheet nets", async () => {
       sheet_index: 0,
       sheet_size: "ansi_b",
       sheet_width: 431.8,
-      sheet_height: 330,
+      sheet_height: 279.4,
     },
     {
       name: "watchdog_and_vref",

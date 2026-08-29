@@ -30,10 +30,9 @@ const MAIN_SUPPLY_SHEET_Y_OFFSET = 6.2;
  * thresholds, timing, dividers, or grounding arrangements.
  *
  * Both sheet frames use native ANSI-B sizing, matching the released Altium
- * title block. Main Supply extends only the native frame height to 330 mm so
- * the unscaled, exact-coordinate regulator section remains inside its drawing
- * area. A uniform +6.2-mm parent translation centers the complete source
- * layout vertically; no child geometry is scaled or independently moved.
+ * title blocks. A uniform +6.2-mm parent translation centers the complete
+ * Main Supply source layout vertically; no child geometry is scaled or
+ * independently moved.
  */
 export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
@@ -42,7 +41,6 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
       displayName="Main Supply"
       sheetIndex={0}
       sheetSize="ANSI_B"
-      sheetHeight="330mm"
     />
     <schematicsheet
       name="watchdog_and_vref"
