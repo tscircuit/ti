@@ -15,7 +15,11 @@ const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
  * Coordinate transform: Altium positions are converted from mil to mm using
  * x_mm = x_mil * 0.0254 and y_mm = y_mil * 0.0254. This child then applies the
  * pure translation (x_tsx, y_tsx) = (x_mm - 21.716, y_mm - 19.812). There is
- * no scaling, rotation, reflection, or re-layout.
+ * no scaling or reflection. Small, documented native-symbol alignment deltas
+ * keep the Altium wires orthogonal despite different tscircuit pin anchors:
+ * TP2/TP7/C24 use x=6.604 mm, R14 uses x=3.9497 mm, R1/R2 use y=19.431 mm,
+ * and D4/R3 use x=18.742 mm. C24 rotates 90 degrees and TP7 rotates 270
+ * degrees so the capacitor column and its two test points connect end-on.
  *
  * The released schematic displays Q1 as SQJ465EP, while TI's released BOM
  * specifies the fitted manufacturer part number SQJ461EP. The component keeps
@@ -55,7 +59,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       displayName="VBATT"
       manufacturerPartNumber="5010"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(7.112)}
+      schX={sx(6.604)}
       schY={sy(22.4536)}
       schRotation={90}
     />
@@ -64,9 +68,9 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       displayName="GND"
       manufacturerPartNumber="5011"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(7.112)}
+      schX={sx(6.604)}
       schY={sy(17.6276)}
-      schRotation={90}
+      schRotation={270}
     />
 
     <led
@@ -85,7 +89,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       tolerance="1%"
       footprint="0402"
       manufacturerPartNumber="CRCW04022K20FKED"
-      schX={sx(4.064)}
+      schX={sx(3.9497)}
       schY={sy(19.558)}
       schRotation={90}
     />
@@ -105,9 +109,9 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="50V"
       footprint="0603"
       manufacturerPartNumber="CGA3E3X7R1H224K080AB"
-      schX={sx(7.239)}
+      schX={sx(6.604)}
       schY={sy(20.574)}
-      schOrientation="horizontal"
+      schRotation={90}
     />
     <capacitor
       name="C25"
@@ -138,7 +142,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       footprint="0402"
       manufacturerPartNumber="ERJ-2GEJ103X"
       schX={sx(9.652)}
-      schY={sy(19.558)}
+      schY={sy(19.431)}
       schRotation={180}
     />
     <BAT46W_E3_08 name="D3" schX={sx(11.938)} schY={sy(18.1864)} />
@@ -170,12 +174,12 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       footprint="0402"
       manufacturerPartNumber="CRCW040247R0JNED"
       schX={sx(22.098)}
-      schY={sy(19.304)}
+      schY={sy(19.431)}
       schOrientation="horizontal"
     />
     <BAT46W_E3_08
       name="D4"
-      schX={sx(18.542)}
+      schX={sx(18.742)}
       schY={sy(16.3576)}
       schRotation={180}
     />
@@ -185,7 +189,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       tolerance="1%"
       footprint="1206"
       manufacturerPartNumber="RC1206FR-07560RL"
-      schX={sx(18.542)}
+      schX={sx(18.742)}
       schY={sy(15.24)}
       schRotation={90}
     />
@@ -297,14 +301,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
         ".C24 > .pin2",
       ]}
     />
-    <trace
-      from=".D2 > .pin2"
-      to=".R14 > .pin2"
-      schematicRouteHints={[
-        { x: sx(3.9497), y: sy(20.447) },
-        { x: sx(4.064), y: sy(20.193) },
-      ]}
-    />
+    <trace from=".D2 > .pin2" to=".R14 > .pin2" />
     <trace path={[".C24 > .pin1", ".C25 > .pin1"]} />
     <trace
       name="VIN2"

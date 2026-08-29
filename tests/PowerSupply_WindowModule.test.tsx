@@ -74,6 +74,35 @@ const port = (
   return match!;
 };
 
+const schematicPort = (
+  circuitJson: CircuitElement[],
+  componentName: string,
+  pinNumber: number,
+  schematicComponentName = componentName,
+) => {
+  const schematicComponent = schematicComponentFor(
+    circuitJson,
+    schematicComponentName,
+  );
+  const sourcePortId = port(
+    circuitJson,
+    componentName,
+    pinNumber,
+  ).source_port_id;
+  const match = circuitJson.find(
+    (element) =>
+      element.type === "schematic_port" &&
+      element.schematic_component_id ===
+        schematicComponent.schematic_component_id &&
+      element.source_port_id === sourcePortId,
+  );
+  expect(
+    match,
+    `schematic port ${schematicComponentName}.${pinNumber}`,
+  ).toBeDefined();
+  return match!;
+};
+
 const subcircuitPort = (
   circuitJson: CircuitElement[],
   subcircuitName: string,
@@ -435,6 +464,65 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
   expect(d4Schematic.symbol_name).toBe("schottky_diode_down");
   const d3SchematicId = String(d3Schematic.schematic_component_id);
   const d4SchematicId = String(d4Schematic.schematic_component_id);
+
+  const pinCenter = (
+    componentName: string,
+    pinNumber: number,
+    schematicComponentName = componentName,
+  ) =>
+    schematicPort(circuitJson, componentName, pinNumber, schematicComponentName)
+      .center as { x: number; y: number };
+  const expectAlignedX = (
+    label: string,
+    pins: Array<
+      [
+        componentName: string,
+        pinNumber: number,
+        schematicComponentName?: string,
+      ]
+    >,
+  ) => {
+    const xCoordinates = pins.map(([name, pinNumber, schematicName]) =>
+      pinCenter(name, pinNumber, schematicName).x.toFixed(6),
+    );
+    expect(new Set(xCoordinates).size, label).toBe(1);
+  };
+
+  expectAlignedX("TP2/C24/C25/TP7 vertical column", [
+    ["TP2", 1],
+    ["C24", 2],
+    ["C24", 1],
+    ["C25", 1],
+    ["C25", 2],
+    ["TP7", 1],
+  ]);
+  expect(
+    schematicPort(circuitJson, "TP2", 1).facing_direction,
+    "upper VBATT test point faces the trace column",
+  ).toBe("down");
+  expect(
+    schematicPort(circuitJson, "TP7", 1).facing_direction,
+    "lower GND test point faces the trace column",
+  ).toBe("up");
+  expectAlignedX("D2 and R14", [
+    ["D2", 2],
+    ["R14", 2],
+  ]);
+  expect(pinCenter("R1", 1).y, "R1 to U1 pin 3").toBeCloseTo(
+    pinCenter("U1", 3).y,
+    6,
+  );
+  expect(pinCenter("U1", 1).y, "U1 pin 1 to R2").toBeCloseTo(
+    pinCenter("R2", 1).y,
+    6,
+  );
+  expectAlignedX("U1/D4/R3 vertical stack", [
+    ["U1", 2],
+    ["D4", 1, "D4_SCHEMATIC"],
+    ["D4", 2, "D4_SCHEMATIC"],
+    ["R3", 2],
+    ["R3", 1],
+  ]);
 
   const schematicPinY = (
     componentName: string,
