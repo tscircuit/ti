@@ -4,7 +4,7 @@ import { BQ294700DSG } from "../chips/BQ294700DSG.circuit.tsx";
 import { BQ40Z60RHB } from "../chips/BQ40Z60RHB.circuit.tsx";
 
 export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit routingDisabled schX={1.5} schY={-2} {...props}>
     <net name="GND" isGroundNet />
     <net name="PGND" isGroundNet />
     <net name={"\u200B4P"} isPowerNet />
@@ -20,6 +20,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     <net name="GPIO1" />
 
     <capacitor
+      footprint="0603"
       name="C3"
       capacitance="0.1uF"
       schX={-12.4}
@@ -27,6 +28,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C6"
       capacitance="0.1uF"
       schX={-12.4}
@@ -34,6 +36,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C8"
       capacitance="0.1uF"
       schX={-12.4}
@@ -41,6 +44,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C9"
       capacitance="0.1uF"
       schX={-12.4}
@@ -48,6 +52,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C11"
       capacitance="0.1uF"
       schX={-12.4}
@@ -55,6 +60,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C4"
       capacitance="0.1uF"
       schX={-5.8}
@@ -62,6 +68,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C10"
       capacitance="0.1uF"
       schX={-6.2}
@@ -69,6 +76,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C1"
       capacitance="0.1uF"
       schX={1.9}
@@ -76,6 +84,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <capacitor
+      footprint="0603"
       name="C2"
       capacitance="0.1uF"
       schX={3}
@@ -83,6 +92,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C21"
       capacitance="0.1uF"
       schX={-10.4}
@@ -90,6 +100,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C22"
       capacitance="0.1uF"
       schX={-10.4}
@@ -97,6 +108,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C23"
       capacitance="0.1uF"
       schX={-10.4}
@@ -104,6 +116,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C26"
       capacitance="0.1uF"
       schX={-11.4}
@@ -111,6 +124,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C20"
       capacitance="2.2uF"
       schX={1.4}
@@ -118,6 +132,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <capacitor
+      footprint="0603"
       name="C27"
       capacitance="1.5uF"
       schX={1}
@@ -125,6 +140,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C18"
       capacitance="1uF"
       schX={1.4}
@@ -132,6 +148,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <capacitor
+      footprint="0603"
       name="C19"
       capacitance="0.1uF"
       schX={-10.4}
@@ -139,6 +156,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <capacitor
+      footprint="0603"
       name="C36"
       capacitance="100pF"
       schX={-10.2}
@@ -146,6 +164,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R12"
       resistance="1k"
       schX={-14.5}
@@ -153,6 +172,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R13"
       resistance="1k"
       schX={-14.5}
@@ -160,6 +180,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R16"
       resistance="1k"
       schX={-14.5}
@@ -167,6 +188,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R19"
       resistance="1k"
       schX={-14.5}
@@ -174,6 +196,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R4"
       resistance="100"
       schX={-14.5}
@@ -181,6 +204,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R5"
       resistance="5.1k"
       schX={-7}
@@ -188,6 +212,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R11"
       resistance="5.1k"
       schX={2.2}
@@ -195,6 +220,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R10"
       resistance="5.1k"
       schX={0.1}
@@ -202,6 +228,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R2"
       resistance="10M"
       schX={-0.8}
@@ -209,6 +236,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R3"
       resistance="10M"
       schX={3.2}
@@ -216,6 +244,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R25"
       resistance="10"
       schX={-9.8}
@@ -223,14 +252,23 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="2512"
       name="R43"
       resistance="0.005"
       schX={-14}
       schY={-5.4}
       schRotation={270}
     />
-    <resistor name="R30" resistance="100" schX={-12} schY={1} schRotation={0} />
     <resistor
+      footprint="0603"
+      name="R30"
+      resistance="100"
+      schX={-12}
+      schY={1}
+      schRotation={0}
+    />
+    <resistor
+      footprint="0603"
       name="R32"
       resistance="100"
       schX={-12}
@@ -238,6 +276,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R35"
       resistance="100"
       schX={-12}
@@ -245,6 +284,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R37"
       resistance="100"
       schX={-12}
@@ -252,6 +292,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R33"
       resistance="100"
       schX={6.6}
@@ -259,6 +300,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R42"
       resistance="100"
       schX={7.7}
@@ -266,6 +308,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R41"
       resistance="100"
       schX={6.5}
@@ -273,6 +316,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R34"
       resistance="1k"
       schX={7.8}
@@ -280,6 +324,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R40"
       resistance="100"
       schX={5.6}
@@ -287,6 +332,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R39"
       resistance="100"
       schX={4.4}
@@ -294,6 +340,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R22"
       resistance="5.1k"
       schX={-6.6}
@@ -301,6 +348,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R26"
       resistance="26.1k"
       schX={5.2}
@@ -308,6 +356,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R27"
       resistance="9.53k"
       schX={6.2}
@@ -315,6 +364,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R28"
       resistance="20.5k"
       schX={7.2}
@@ -322,6 +372,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R29"
       resistance="78.7k"
       schX={8.2}
@@ -329,6 +380,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R1"
       resistance="20"
       schX={-2.8}
@@ -336,6 +388,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R9"
       resistance="1M"
       schX={-1.4}
@@ -343,6 +396,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R17"
       resistance="499k"
       schX={-1.4}
@@ -350,6 +404,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="R18"
       resistance="20k"
       schX={-5.4}
@@ -357,6 +412,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R38"
       resistance="0"
       schX={-12.8}
@@ -364,6 +420,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="R44"
       resistance="0"
       schX={-12.8}
@@ -371,6 +428,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <diode
+      footprint="sod323"
       name="D2"
       manufacturerPartNumber="MMSZ5232BS-7-F"
       variant="zener"
@@ -379,6 +437,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <diode
+      footprint="sod323"
       name="D5"
       manufacturerPartNumber="MMSZ5232BS-7-F"
       variant="zener"
@@ -387,6 +446,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <diode
+      footprint="sod323"
       name="D4"
       manufacturerPartNumber="MMSZ5232BS-7-F"
       variant="zener"
@@ -395,6 +455,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <diode
+      footprint="sod323"
       name="D1"
       manufacturerPartNumber="BAT54HT1G"
       variant="schottky"
@@ -403,6 +464,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <mosfet
+      footprint="sot23"
       name="Q7"
       manufacturerPartNumber="BSS138"
       channelType="n"
@@ -414,6 +476,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schY={5.4}
     />
     <mosfet
+      footprint="sot23"
       name="Q2"
       manufacturerPartNumber="CSD17308Q3"
       channelType="n"
@@ -425,6 +488,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schY={8.53}
     />
     <mosfet
+      footprint="sot23"
       name="Q3"
       manufacturerPartNumber="CSD17308Q3"
       channelType="n"
@@ -436,6 +500,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schY={8.53}
     />
     <mosfet
+      footprint="sot23"
       name="Q1"
       manufacturerPartNumber="FDN358P"
       channelType="p"
@@ -447,6 +512,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schY={9.53}
     />
     <mosfet
+      footprint="sot23"
       name="Q6"
       manufacturerPartNumber="BSS138"
       channelType="n"
@@ -460,6 +526,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     <chip
       name="J3"
       manufacturerPartNumber="J3"
+      footprint="pinrow5"
       pinLabels={{ pin5: "5", pin4: "4", pin1: "1", pin2: "2", pin3: "3" }}
       schPinArrangement={{
         rightSide: { pins: [1, 2, 3, 4, 5], direction: "top-to-bottom" },
@@ -473,6 +540,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     <chip
       name="J6"
       manufacturerPartNumber="J6"
+      footprint="pinrow4"
       pinLabels={{ pin4: "4", pin1: "1", pin2: "2", pin3: "3" }}
       schPinArrangement={{
         leftSide: { pins: [4, 3, 2, 1], direction: "top-to-bottom" },
@@ -486,6 +554,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     <chip
       name="J4"
       manufacturerPartNumber="J4"
+      footprint="pinrow6"
       pinLabels={{
         pin1: "1",
         pin2: "2",
@@ -527,6 +596,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     <chip
       name="F1"
       manufacturerPartNumber="SFH-1412B"
+      footprint="soic4"
       pinLabels={{ pin1: "Fuse", pin4: "Heater", pin3: "Fuse", pin2: "2" }}
       schPinArrangement={{
         leftSide: { pins: [1], direction: "top-to-bottom" },
@@ -575,6 +645,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
     <chip
       name="J7"
       manufacturerPartNumber="J7"
+      footprint="pinrow2"
       pinLabels={{ pin1: "1", pin2: "2" }}
       schPinArrangement={{
         leftSide: { pins: [1, 2], direction: "top-to-bottom" },
@@ -586,6 +657,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schY={-0.9}
     />
     <resistor
+      footprint="0603"
       name="RT4"
       manufacturerPartNumber="RT4"
       resistance="10k"
@@ -595,6 +667,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="RT1"
       manufacturerPartNumber="RT1"
       resistance="10k"
@@ -604,6 +677,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="RT2"
       manufacturerPartNumber="RT2"
       resistance="10k"
@@ -613,6 +687,7 @@ export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="RT3"
       manufacturerPartNumber="RT3"
       resistance="10k"
