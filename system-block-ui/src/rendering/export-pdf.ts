@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import { svg2pdf } from "svg2pdf.js";
 import { downloadBlob } from "./download-blob";
+import { normalizeTextBaselinesForSvg2Pdf } from "./normalize-text-baselines-for-svg2pdf";
 
 export { downloadBlob } from "./download-blob";
 
@@ -344,6 +345,7 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
       throw new TypeError(`Schematic sheet ${index + 1} has no SVG content`);
     }
     const element = parseSvg(sheet.svg);
+    normalizeTextBaselinesForSvg2Pdf(element.querySelectorAll("text, tspan"));
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
     normalizeSvgPaintForPdf(element);
