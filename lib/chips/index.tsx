@@ -60,6 +60,7 @@ export {
 } from "./MSPM0L1306QRHBRQ1.circuit.tsx";
 export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";
 export { MSPM0G3507 } from "./MSPM0G3507.circuit.tsx";
+export { OPT3004 } from "./OPT3004.circuit.tsx";
 export { OPT3001, OPT3001IDNPRQ1 } from "./OPT3001IDNPRQ1.circuit.tsx";
 export { SN65HVD1473 } from "./SN65HVD1473.circuit.tsx";
 export {
@@ -86,6 +87,7 @@ export {
   TMP103AYFF_PIN_LABELS,
 } from "./TMP103AYFF.circuit.tsx";
 export { TMP1827 } from "./TMP1827.circuit.tsx";
+export { TMP116 } from "./TMP116.circuit.tsx";
 export { TMP1075 } from "./TMP1075.circuit.tsx";
 export { TMP390Q1 } from "./TMP390Q1.circuit.tsx";
 export {
@@ -153,10 +155,12 @@ export { MSP430F5229IRGCR } from "./MSP430F5229IRGCR.circuit.tsx";
 export { MSPM0L1306SRHBR } from "../../imports/MSPM0L1306SRHBR.tsx";
 export { MSP430G2332IPW20 } from "./MSP430G2332IPW20.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
+export { OPT3004DNPR } from "./OPT3004DNPR.circuit.tsx";
 export { SN65HVD1473DGSR } from "./SN65HVD1473DGSR.circuit.tsx";
 export { SMPP2_03 } from "./SMPP2_03.circuit.tsx";
 export { TLIN10283DDARQ1 } from "./TLIN10283DDARQ1.circuit.tsx";
 export { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
+export { TMP116NAIDRVR } from "./TMP116NAIDRVR.circuit.tsx";
 export {
   TMP390AQDRLRQ1,
   TMP390AQDRLRQ1_PIN_LABELS,
