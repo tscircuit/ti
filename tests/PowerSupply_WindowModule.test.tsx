@@ -784,6 +784,34 @@ test("supervisor/watchdog child preserves the TIDA-050008 sheet-3 netlist", asyn
     ["C12", 2],
   ]);
 
+  const schematicLabels = circuitJson.filter(
+    (element) => element.type === "schematic_net_label",
+  );
+  expect(
+    schematicLabels.filter((label) => label.text === "V3_3"),
+    "separate V3_3 power symbols for C11, C13, R21, and both LED groups",
+  ).toHaveLength(5);
+  expect(
+    schematicLabels.filter((label) => label.text === "GND"),
+    "separate ground symbols for C11, C12, C13, J1, and U3 GND/PAD",
+  ).toHaveLength(5);
+
+  const expectAlignedX = (
+    label: string,
+    first: [componentName: string, pinNumber: number],
+    second: [componentName: string, pinNumber: number],
+  ) => {
+    const firstCenter = schematicPort(circuitJson, ...first).center as {
+      x: number;
+    };
+    const secondCenter = schematicPort(circuitJson, ...second).center as {
+      x: number;
+    };
+    expect(firstCenter.x, label).toBeCloseTo(secondCenter.x, 6);
+  };
+  expectAlignedX("R16/D9 straight vertical trace", ["R16", 2], ["D9", 2]);
+  expectAlignedX("R15/D8 straight vertical trace", ["R15", 2], ["D8", 2]);
+
   expect(component(circuitJson, "U3").manufacturer_part_number).toBe(
     "TPS3850H33QDRCRQ1",
   );

@@ -13,8 +13,10 @@ const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
  *
  * Coordinate transform: Altium mil coordinates are converted to millimeters
  * with 0.0254 mm/mil, then translated as
- * (x_tsx, y_tsx) = (x_mm - 22.606, y_mm - 19.050). No scale, reflection,
- * rotation, or component re-layout is applied.
+ * (x_tsx, y_tsx) = (x_mm - 22.606, y_mm - 19.050). No scale or reflection is
+ * applied. D9/D8 use x=26.416/28.702 mm instead of their Altium origins
+ * x=26.5303/28.8163 mm so the native LED pin anchors align exactly with
+ * R16/R15 and preserve the source's straight vertical traces.
  */
 export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
   <subcircuit schMaxTraceDistance="20mm" routingDisabled {...props}>
@@ -108,7 +110,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="led0402"
       manufacturerPartNumber="SML-P12UTT86"
       pinLabels={{ pin1: "K", pin2: "A" }}
-      schX={sx(26.5303)}
+      schX={sx(26.416)}
       schY={sy(21.336)}
       schRotation={90}
     />
@@ -138,7 +140,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="led0402"
       manufacturerPartNumber="SML-P12UTT86"
       pinLabels={{ pin1: "K", pin2: "A" }}
-      schX={sx(28.8163)}
+      schX={sx(28.702)}
       schY={sy(21.336)}
       schRotation={90}
     />
@@ -171,24 +173,18 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schRotation={90}
     />
 
+    <netlabel net="V3_3" connectsTo=".C11 > .pin1" />
+    <netlabel net="V3_3" connectsTo=".C13 > .pin1" />
+    <netlabel net="V3_3" connectsTo=".R21 > .pin2" />
+    <netlabel net="V3_3" connectsTo=".R5 > .pin2" />
+    <netlabel net="V3_3" connectsTo=".R6 > .pin2" />
+
     <trace
-      name="V3_3"
-      schDisplayLabel="+3.3V"
-      path={[
-        ".U3 > .pin1",
-        ".U3 > .pin3",
-        ".U3 > .pin10",
-        ".C11 > .pin1",
-        ".C13 > .pin1",
-        ".J1 > .pin1",
-        ".R21 > .pin2",
-        ".R5 > .pin2",
-        ".R16 > .pin1",
-        ".R6 > .pin2",
-        ".R15 > .pin1",
-        "net.V3_3",
-      ]}
+      path={[".U3 > .pin1", ".U3 > .pin3", ".C11 > .pin1", ".J1 > .pin1"]}
     />
+    <trace path={[".U3 > .pin10", ".C13 > .pin1"]} />
+    <trace path={[".R5 > .pin2", ".R16 > .pin1"]} />
+    <trace path={[".R6 > .pin2", ".R15 > .pin1"]} />
     <trace
       name="CWD"
       schDisplayLabel="CWD"
@@ -212,29 +208,26 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
     <trace
       name="WDO"
       schDisplayLabel="WDO"
-      path={[".U3 > .pin8", ".R5 > .pin1", ".D9 > .pin1", ".TP8 > .pin1"]}
+      from=".U3 > .pin8"
+      to=".TP8 > .pin1"
     />
+    <trace path={[".U3 > .pin8", ".R5 > .pin1", ".D9 > .pin1"]} />
     <trace path={[".R16 > .pin2", ".D9 > .pin2"]} />
     <trace
       name="RESET_3V3"
       schDisplayLabel="3.3RESET"
-      path={[".U3 > .pin9", ".R6 > .pin1", ".D8 > .pin1", ".TP6 > .pin1"]}
+      from=".U3 > .pin9"
+      to=".TP6 > .pin1"
     />
+    <trace path={[".U3 > .pin9", ".R6 > .pin1", ".D8 > .pin1"]} />
     <trace path={[".R15 > .pin2", ".D8 > .pin2"]} />
-    <trace
-      name="GND"
-      path={[
-        ".U3 > .pin5",
-        ".U3 > .pin11",
-        ".C11 > .pin2",
-        ".C13 > .pin2",
-        ".J1 > .pin3",
-        ".C12 > .pin2",
-        "net.GND",
-      ]}
-    />
+    <trace name="GND" path={[".U3 > .pin5", ".U3 > .pin11", "net.GND"]} />
+    <trace name="GND" from=".C11 > .pin2" to="net.GND" />
+    <trace name="GND" from=".C13 > .pin2" to="net.GND" />
+    <trace name="GND" from=".J1 > .pin3" to="net.GND" />
+    <trace name="GND" from=".C12 > .pin2" to="net.GND" />
 
-    <port name="V3_3" direction="left" connectsTo="U3.VDD" />
+    <port name="V3_3" direction="left" connectsTo="C11.pin1" />
     <port name="GND" direction="left" connectsTo="U3.GND" />
     <port name="WDI" direction="right" connectsTo="TP1.pin1" />
     <port name="WDO" direction="right" connectsTo="TP8.pin1" />
