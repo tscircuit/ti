@@ -174,15 +174,16 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       {...p(660, 920)}
     />
     <resistor name="R3" resistance="30kohm" footprint="0603" {...p(720, 920)} />
-    {/* Two native symbol projections share the exact physical U3 package.
-        The inverting-top native variant comes from schematic-symbols#464;
-        no custom triangle or decorative sign overlay is used. */}
+    {/* Two published native symbol projections share the exact physical U3
+        package. In the native symbol contract inp1 is the visible + port and
+        inp2 is the visible - port; these connections map each one directly to
+        the authoritative physical package pin. */}
     <TLV2316QDGKRQ1 name="U3" noSchematicRepresentation />
     <schematicsymbol
       name="U3A"
       displayName="U3A"
       chipRef=".U3"
-      symbolName="opamp_with_power_inverting_top_right"
+      symbolName="opamp_with_power_right"
       connections={{
         inp1: "U3.IN_PLUS_A",
         inp2: "U3.IN_MINUS_A",
@@ -196,7 +197,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       name="U3B"
       displayName="U3B"
       chipRef=".U3"
-      symbolName="opamp_with_power_inverting_top_right"
+      symbolName="opamp_with_power_right"
       connections={{
         inp1: "U3.IN_PLUS_B",
         inp2: "U3.IN_MINUS_B",
@@ -300,7 +301,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       name="U1Symbol"
       displayName="U1"
       chipRef=".U1"
-      symbolName="opamp_with_power_inverting_top_right"
+      symbolName="opamp_with_power_right"
       connections={{
         inp1: "U1.IN_PLUS",
         inp2: "U1.IN_MINUS",

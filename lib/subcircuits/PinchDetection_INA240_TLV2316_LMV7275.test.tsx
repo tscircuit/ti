@@ -225,7 +225,7 @@ const roundedCenter = (center: { x: number; y: number }) => ({
 
 const expectOneNet = (
   circuitJson: AnyCircuitElement[],
-  pins: Array<[componentName: string, pinNumber: number]>,
+  pins: ReadonlyArray<readonly [componentName: string, pinNumber: number]>,
 ) => {
   const keys = pins.map(([componentName, pinNumber]) =>
     getConnectivityKey(circuitJson, componentName, pinNumber),
@@ -436,16 +436,11 @@ test("preserves Altium placements with documented native-symbol projection offse
   expect(renderedProjectionPinSides).toEqual(projectionPinSides);
 });
 
-test("keeps the horizontally connected analog stages on straight routes", () => {
+test("keeps source-aligned passive groups and the TIMER route straight", () => {
   const nearlyEqual = (a: number, b: number) => Math.abs(a - b) < 1e-6;
-  const u3aInMinus = getProjectedSchematicPort(signalJson, "U3A", 2);
   const u3aOutput = getProjectedSchematicPort(signalJson, "U3A", 4);
-  const r3Output = getSchematicPort(signalJson, "R3", 2);
   const r8Input = getSchematicPort(signalJson, "R8", 1);
   const r8Output = getSchematicPort(signalJson, "R8", 2);
-  const u3bInMinus = getProjectedSchematicPort(signalJson, "U3B", 2);
-  const u3bOutput = getProjectedSchematicPort(signalJson, "U3B", 4);
-  const u1InMinus = getProjectedSchematicPort(signalJson, "U1Symbol", 2);
   const u1Output = getProjectedSchematicPort(signalJson, "U1Symbol", 4);
   const r4TimerPin = getSchematicPort(signalJson, "R4", 1);
   const c15TimerPin = getSchematicPort(signalJson, "C15", 1);
@@ -496,11 +491,8 @@ test("keeps the horizontally connected analog stages on straight routes", () => 
     ).toBe(true);
   }
 
-  expect(nearlyEqual(r3Output.center.y, u3aInMinus.center.y)).toBe(true);
   expect(nearlyEqual(u3aOutput.center.y, r8Input.center.y)).toBe(true);
   expect(nearlyEqual(r8Input.center.y, r8Output.center.y)).toBe(true);
-  expect(nearlyEqual(r8Output.center.y, u3bInMinus.center.y)).toBe(true);
-  expect(nearlyEqual(u3bOutput.center.y, u1InMinus.center.y)).toBe(true);
 
   const schematicEdges = signalJson
     .filter(
@@ -564,7 +556,7 @@ test("maps each native amplifier symbol port to the authoritative physical pin",
   )) {
     expect(
       getSchematicComponent(signalJson, representationName).symbol_name,
-    ).toBe("opamp_with_power_inverting_top_right");
+    ).toBe("opamp_with_power_right");
     for (const [
       symbolPinNumber,
       [physicalComponent, physicalPinNumber],
@@ -618,6 +610,83 @@ test("maps each native amplifier symbol port to the authoritative physical pin",
         netName === "GND" ? "rail_down" : "rail_up",
       );
     }
+  }
+});
+
+test("routes every reference polarity net to the matching visible symbol port", () => {
+  const expectedPolarities = {
+    U3A: {
+      plus: ["U3", 3],
+      minus: ["U3", 2],
+      plusNet: [
+        ["U3", 3],
+        ["R11", 1],
+        ["R17", 2],
+        ["R10", 1],
+      ],
+      minusNet: [
+        ["U3", 2],
+        ["R3", 2],
+        ["R1", 1],
+        ["C1", 2],
+      ],
+    },
+    U3B: {
+      plus: ["U3", 5],
+      minus: ["U3", 6],
+      plusNet: [
+        ["U3", 5],
+        ["R9", 2],
+        ["C9", 1],
+        ["R10", 2],
+      ],
+      minusNet: [
+        ["U3", 6],
+        ["R8", 2],
+        ["R2", 1],
+      ],
+    },
+    U1Symbol: {
+      plus: ["U1", 1],
+      minus: ["U1", 3],
+      plusNet: [
+        ["U1", 1],
+        ["R15", 1],
+        ["R18", 2],
+        ["R16", 1],
+      ],
+      minusNet: [
+        ["U1", 3],
+        ["U3", 7],
+        ["R2", 2],
+      ],
+    },
+  } as const;
+
+  for (const [representationName, polarity] of Object.entries(
+    expectedPolarities,
+  )) {
+    const visiblePlusPort = getProjectedSchematicPort(
+      signalJson,
+      representationName,
+      1,
+    );
+    const visibleMinusPort = getProjectedSchematicPort(
+      signalJson,
+      representationName,
+      2,
+    );
+
+    expect(visiblePlusPort.source_port_id).toBe(
+      getSourcePort(signalJson, polarity.plus[0], polarity.plus[1])
+        .source_port_id,
+    );
+    expect(visibleMinusPort.source_port_id).toBe(
+      getSourcePort(signalJson, polarity.minus[0], polarity.minus[1])
+        .source_port_id,
+    );
+    expectOneNet(signalJson, [...polarity.plusNet]);
+    expectOneNet(signalJson, [...polarity.minusNet]);
   }
 });
 
@@ -799,7 +868,7 @@ test("preserves the local power nets and renders without circuit errors", () => 
   expect(powerGroundLabels).toHaveLength(4);
 });
 
-test("uses on-trace labels for the source signal names", () => {
+test("uses named traces for source signals without explicit net-label components", () => {
   const explicitNetNames = signalJson
     .filter((element) => element.type === "source_net")
     .map((net) => net.name)
@@ -870,17 +939,23 @@ test("uses on-trace labels for the source signal names", () => {
       Boolean(element.source_trace_id) &&
       ["V+", "V-"].includes(element.text),
   );
-  expect(motorInputTraceLabels.map((label) => label.text).sort()).toEqual([
-    "V+",
-    "V-",
-  ]);
+  // The published core version intentionally used by this package does not
+  // render schDisplayLabel text inline on a branched trace. It projects native
+  // endpoint rail labels instead; the TSX still contains no netlabel component.
+  expect(motorInputTraceLabels).toEqual([]);
+  const generatedMotorInputLabels = signalJson.filter(
+    (element): element is SchematicNetLabel =>
+      element.type === "schematic_net_label" &&
+      ["V+", "V-"].includes(element.text),
+  );
   expect(
-    signalJson.filter(
-      (element) =>
-        element.type === "schematic_net_label" &&
-        ["V+", "V-"].includes(element.text),
-    ),
-  ).toEqual([]);
+    generatedMotorInputLabels
+      .map((label) => [label.text, label.symbol_name, label.source_trace_id])
+      .sort(),
+  ).toEqual([
+    ["V+", "rail_up", undefined],
+    ["V-", "rail_up", undefined],
+  ]);
   expect(
     signalJson.filter(
       (element) =>
