@@ -262,12 +262,6 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       "R19",
       "R20",
       "R21",
-      "SH_JP5",
-      "SH_JP6",
-      "SH_JP7",
-      "SH_JP8",
-      "SH_JP9",
-      "SH_JP10",
       "SW2",
       "SW3",
       "SW4",
@@ -302,13 +296,6 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       "R11",
       "R12",
       "R13",
-      "SH_J1",
-      "SH_JP1",
-      "SH_JP2",
-      "SH_JP3",
-      "SH_JP4",
-      "SH_JP11",
-      "SH_JP12",
       "SW1",
       "TP5",
       "TP6",
@@ -334,8 +321,6 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       "R15",
       "R18",
       "R22",
-      "SH_JP13",
-      "SH_JP14",
     ],
   } as const;
 
@@ -416,14 +401,45 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     "TP4",
     "TP5",
     "TP6",
-    "SH_J1",
-    ...Array.from({ length: 14 }, (_, index) => `SH_JP${index + 1}`),
     ...Array.from({ length: 16 }, (_, index) => `C${index + 1}`),
     ...Array.from({ length: 22 }, (_, index) => `R${index + 1}`),
   ];
 
   for (const componentName of figureB78ComponentNames) {
     findSourceComponent(circuitJson, componentName);
+  }
+
+  const installedShuntRefdesByHeader = {
+    J1: "SH-J1",
+    JP1: "SH-JP1",
+    JP2: "SH-JP2",
+    JP3: "SH-JP3",
+    JP4: "SH-JP4",
+    JP5: "SH-JP5",
+    JP6: "SH-JP6",
+    JP7: "SH-JP7",
+    JP8: "SH-JP8",
+    JP9: "SH-JP9",
+    JP10: "SH-JP10",
+    JP11: "SH-JP11",
+    JP12: "SH-JP12",
+    JP13: "SH-JP13",
+    JP14: "SH-JP14",
+  } as const;
+  for (const [headerName, shuntRefdes] of Object.entries(
+    installedShuntRefdesByHeader,
+  )) {
+    const header = findSourceComponent(circuitJson, headerName);
+    assert(
+      "display_name" in header && header.display_name?.includes(shuntRefdes),
+      `${headerName} does not document installed shunt ${shuntRefdes}`,
+    );
+    assert(
+      !circuitJson.some(
+        (element) => "name" in element && element.name === shuntRefdes,
+      ),
+      `${shuntRefdes} must be an internal native-jumper state, not a floating schematic component`,
+    );
   }
 
   const schematicBodiesAndLabels = circuitJson.filter(
@@ -545,6 +561,53 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
         `${endpoint[0]}.pin${endpoint[1]} is not connected to ${first[0]}.pin${first[1]}`,
       );
     }
+  };
+
+  const assertDirectTrace = (
+    traceName: string,
+    first: [string, number],
+    second: [string, number],
+  ) => {
+    const firstPort = findSourcePort(circuitJson, ...first);
+    const secondPort = findSourcePort(circuitJson, ...second);
+    const trace = circuitJson.find(
+      (element) =>
+        element.type === "source_trace" && element.name === traceName,
+    );
+    assert(trace?.type === "source_trace", `Missing direct trace ${traceName}`);
+    assert(
+      trace.connected_source_port_ids.length === 2 &&
+        trace.connected_source_port_ids.includes(firstPort.source_port_id) &&
+        trace.connected_source_port_ids.includes(secondPort.source_port_id),
+      `${traceName} does not directly connect ${first[0]}.pin${first[1]} to ${second[0]}.pin${second[1]}`,
+    );
+    assert(
+      (() => {
+        const firstCenter = findSchematicPortCenter(circuitJson, ...first);
+        const secondCenter = findSchematicPortCenter(circuitJson, ...second);
+        const matchesCenter = (
+          point: { x: number; y: number },
+          center: { x: number; y: number },
+        ) =>
+          Math.abs(point.x - center.x) < 1e-6 &&
+          Math.abs(point.y - center.y) < 1e-6;
+
+        return circuitJson.some(
+          (element) =>
+            element.type === "schematic_trace" &&
+            element.subcircuit_connectivity_map_key ===
+              trace.subcircuit_connectivity_map_key &&
+            element.edges.some(
+              ({ from, to }) =>
+                (matchesCenter(from, firstCenter) &&
+                  matchesCenter(to, secondCenter)) ||
+                (matchesCenter(from, secondCenter) &&
+                  matchesCenter(to, firstCenter)),
+            ),
+        );
+      })(),
+      `${traceName} has no rendered native schematic route`,
+    );
   };
 
   const connectorNames = ["J3", "J4", "J5", "J6"] as const;
@@ -696,6 +759,31 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   assertSameNet(["R20", 2], ["JTAG", 12]);
   assertSameNet(["IC1", 17], ["R19", 1]);
   assertSameNet(["R19", 2], ["JTAG", 14]);
+  assertSameNet(["IC1", 15], ["R21", 1]);
+  assertSameNet(["R21", 2], ["JTAG", 10]);
+  assertDirectTrace("R19_JTAG_BSL_RX", ["R19", 2], ["JTAG", 14]);
+  assertDirectTrace("R20_JTAG_BSL_TX", ["R20", 2], ["JTAG", 12]);
+  assertDirectTrace("R21_JTAG_BSL_SCL", ["R21", 2], ["JTAG", 10]);
+
+  for (const [headerName, firstPin, secondPin] of [
+    ["J1", 1, 2],
+    ["JP1", 1, 2],
+    ["JP2", 1, 2],
+    ["JP3", 1, 2],
+    ["JP4", 1, 2],
+    ["JP5", 2, 3],
+    ["JP6", 2, 3],
+    ["JP7", 2, 3],
+    ["JP8", 2, 3],
+    ["JP9", 2, 3],
+    ["JP10", 2, 3],
+    ["JP11", 1, 2],
+    ["JP12", 1, 2],
+    ["JP13", 1, 2],
+    ["JP14", 1, 2],
+  ] as const) {
+    assertSameNet([headerName, firstPin], [headerName, secondPin]);
+  }
   assertSameNet(["IC1", 15], ["SW4", 1], ["R16", 2]);
   assertSameNet(["IC1", 14], ["SW4", 3], ["R17", 2]);
   assertSameNet(["BSL", 9], ["SW4", 2], ["TP1", 1]);
