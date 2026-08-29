@@ -114,10 +114,16 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       {...p(550, 1000)}
     />
 
-    <trace from="J1.V_PLUS" to="R5.pin1" schDisplayLabel="V+" />
-    <trace from="R6.pin2" to="R5.pin1" />
-    <trace from="J1.V_MINUS" to="R7.pin1" schDisplayLabel="V-" />
-    <trace from="R6.pin1" to="R7.pin1" />
+    <trace
+      name="V-PLUS-INPUT"
+      path={["J1.V_PLUS", "R6.pin2", "R5.pin1"]}
+      schDisplayLabel="V+"
+    />
+    <trace
+      name="V-MINUS-INPUT"
+      path={["J1.V_MINUS", "R6.pin1", "R7.pin1"]}
+      schDisplayLabel="V-"
+    />
     <trace from="R5.pin2" to="C8.pin1" />
     <trace from="C8.pin1" to="U2.IN_PLUS" />
     <trace from="R7.pin2" to="C8.pin2" />
@@ -169,19 +175,14 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
     />
     <resistor name="R3" resistance="30kohm" footprint="0603" {...p(720, 920)} />
     {/* Two native symbol projections share the exact physical U3 package.
-        The native right-facing powered op-amp currently has + above -, while
-        the TI symbol has - above +. The datasheet-correct pin mapping is kept,
-        so the U3B input traces cross instead of swapping pins or using a
-        decorative connection. */}
+        The inverting-top native variant comes from schematic-symbols#464;
+        no custom triangle or decorative sign overlay is used. */}
     <TLV2316QDGKRQ1 name="U3" noSchematicRepresentation />
-    {/* Native U3A places IN- 0.14 units below its center, while Altium's
-        triangle places that pin on R3's centerline. The +15 source-grid
-        projection offset aligns the authoritative R3-to-IN- connection. */}
     <schematicsymbol
       name="U3A"
       displayName="U3A"
       chipRef=".U3"
-      symbolName="opamp_with_power_right"
+      symbolName="opamp_with_power_inverting_top_right"
       connections={{
         inp1: "U3.IN_PLUS_A",
         inp2: "U3.IN_MINUS_A",
@@ -189,13 +190,13 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         "V+": "U3.V_PLUS",
         "V-": "U3.V_MINUS",
       }}
-      {...p(790, 925)}
+      {...p(790, 915.357143)}
     />
     <schematicsymbol
       name="U3B"
       displayName="U3B"
       chipRef=".U3"
-      symbolName="opamp_with_power_right"
+      symbolName="opamp_with_power_inverting_top_right"
       connections={{
         inp1: "U3.IN_PLUS_B",
         inp2: "U3.IN_MINUS_B",
@@ -203,7 +204,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         "V+": "U3.V_PLUS",
         "V-": "U3.V_MINUS",
       }}
-      {...p(1080, 898.357143)}
+      {...p(1080, 910.357143)}
     />
     <schematictext
       text="TLV2316QDGKRQ1"
@@ -252,7 +253,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       schOrientation="pos_bottom"
       {...p(670, 790)}
     />
-    <resistor name="R8" resistance="20kohm" footprint="0603" {...p(930, 910)} />
+    <resistor name="R8" resistance="20kohm" footprint="0603" {...p(930, 915)} />
     <resistor name="R9" resistance="20kohm" footprint="0603" {...p(930, 890)} />
     <capacitor
       name="C9"
@@ -299,7 +300,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       name="U1Symbol"
       displayName="U1"
       chipRef=".U1"
-      symbolName="opamp_with_power_right"
+      symbolName="opamp_with_power_inverting_top_right"
       connections={{
         inp1: "U1.IN_PLUS",
         inp2: "U1.IN_MINUS",
@@ -307,7 +308,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         "V+": "U1.V_PLUS",
         "V-": "U1.V_MINUS",
       }}
-      {...p(1280, 903)}
+      {...p(1280, 905.357143)}
     />
     <capacitor
       name="C2"
@@ -345,7 +346,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       resistance="10kohm"
       footprint="0603"
       schOrientation="pos_bottom"
-      {...p(1400, 920.5)}
+      {...p(1400, 922.857143)}
     />
     <capacitor
       name="C15"
@@ -353,7 +354,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       footprint="0603"
       schOrientation="vertical"
       doNotPlace
-      {...p(1460, 881.928571)}
+      {...p(1460, 884.285714)}
     />
 
     <trace path={["R15.pin1", "R18.pin2", "U1.IN_PLUS", "R16.pin1"]} />
@@ -392,37 +393,37 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
           net="V5"
           connection="U3A.pin5"
           anchorSide="bottom"
-          {...p(788.928571, 938.928571)}
+          {...p(788.928571, 929.285714)}
         />
         <netlabel
           net="GND"
           connection="U3A.pin3"
           anchorSide="top"
-          {...p(789.285714, 911.071429)}
+          {...p(789.285714, 901.428571)}
         />
         <netlabel
           net="V5"
           connection="U3B.pin5"
           anchorSide="bottom"
-          {...p(1078.928571, 912.285714)}
+          {...p(1078.928571, 924.285714)}
         />
         <netlabel
           net="GND"
           connection="U3B.pin3"
           anchorSide="top"
-          {...p(1079.285714, 884.428572)}
+          {...p(1079.285714, 896.428571)}
         />
         <netlabel
           net="V5"
           connection="U1Symbol.pin5"
           anchorSide="bottom"
-          {...p(1278.928571, 916.928571)}
+          {...p(1278.928571, 919.285714)}
         />
         <netlabel
           net="GND"
           connection="U1Symbol.pin3"
           anchorSide="top"
-          {...p(1279.285714, 889.071429)}
+          {...p(1279.285714, 891.428571)}
         />
       </>
     )}
@@ -508,19 +509,17 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       net="V3_3"
       connection="R4.pin2"
       anchorSide="bottom"
-      {...p(1400, 950)}
+      {...p(1400, 952.357143)}
     />
     <netlabel
       net="GND"
       connection="C15.pin2"
       anchorSide="top"
-      {...p(1460, 840)}
+      {...p(1460, 842.357143)}
     />
-    {/* The source-authentic motor-current inputs terminate at child ports.
-        ADCMOTOR/TIMER are exposed named nets and keep their display text on
-        their real internal traces. */}
-    <port name="V_PLUS" direction="left" connectsTo="J1.V_PLUS" />
-    <port name="V_MINUS" direction="left" connectsTo="J1.V_MINUS" />
+    {/* J1 itself is the source-authentic motor-current interface. V+ and V-
+        are display names owned by the two real input traces above, not
+        separate child ports or net-label components. */}
   </subcircuit>
 );
 

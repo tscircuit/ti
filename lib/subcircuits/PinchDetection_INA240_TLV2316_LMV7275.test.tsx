@@ -278,26 +278,26 @@ test("preserves Altium placements with documented native-symbol projection offse
     C10: [750, 640],
     C7: [660, 920],
     R3: [720, 920],
-    U3A: [790, 925],
-    U3B: [1080, 898.357143],
+    U3A: [790, 915.357143],
+    U3B: [1080, 910.357143],
     C1: [790, 1040],
     R1: [790, 1000],
     C5: [860, 1000],
     C6: [890, 1000],
     R11: [670, 840],
     R17: [670, 790],
-    R8: [930, 910],
+    R8: [930, 915],
     R9: [930, 890],
     C9: [980, 860],
     R10: [1010, 860],
     R2: [1050, 980],
-    U1Symbol: [1280, 903],
+    U1Symbol: [1280, 905.357143],
     C2: [1280, 1010],
     R15: [1200, 830],
     R18: [1200, 780],
     R16: [1300, 800],
-    R4: [1400, 920.5],
-    C15: [1460, 881.928571],
+    R4: [1400, 922.857143],
+    C15: [1460, 884.285714],
   } as const;
   const powerCenters = {
     U4: [790, 440],
@@ -439,7 +439,11 @@ test("preserves Altium placements with documented native-symbol projection offse
 test("keeps the horizontally connected analog stages on straight routes", () => {
   const nearlyEqual = (a: number, b: number) => Math.abs(a - b) < 1e-6;
   const u3aInMinus = getProjectedSchematicPort(signalJson, "U3A", 2);
+  const u3aOutput = getProjectedSchematicPort(signalJson, "U3A", 4);
   const r3Output = getSchematicPort(signalJson, "R3", 2);
+  const r8Input = getSchematicPort(signalJson, "R8", 1);
+  const r8Output = getSchematicPort(signalJson, "R8", 2);
+  const u3bInMinus = getProjectedSchematicPort(signalJson, "U3B", 2);
   const u3bOutput = getProjectedSchematicPort(signalJson, "U3B", 4);
   const u1InMinus = getProjectedSchematicPort(signalJson, "U1Symbol", 2);
   const u1Output = getProjectedSchematicPort(signalJson, "U1Symbol", 4);
@@ -493,6 +497,9 @@ test("keeps the horizontally connected analog stages on straight routes", () => 
   }
 
   expect(nearlyEqual(r3Output.center.y, u3aInMinus.center.y)).toBe(true);
+  expect(nearlyEqual(u3aOutput.center.y, r8Input.center.y)).toBe(true);
+  expect(nearlyEqual(r8Input.center.y, r8Output.center.y)).toBe(true);
+  expect(nearlyEqual(r8Output.center.y, u3bInMinus.center.y)).toBe(true);
   expect(nearlyEqual(u3bOutput.center.y, u1InMinus.center.y)).toBe(true);
 
   const schematicEdges = signalJson
@@ -557,7 +564,7 @@ test("maps each native amplifier symbol port to the authoritative physical pin",
   )) {
     expect(
       getSchematicComponent(signalJson, representationName).symbol_name,
-    ).toBe("opamp_with_power_right");
+    ).toBe("opamp_with_power_inverting_top_right");
     for (const [
       symbolPinNumber,
       [physicalComponent, physicalPinNumber],
@@ -813,7 +820,14 @@ test("uses on-trace labels for the source signal names", () => {
     .map((trace) => trace.name)
     .filter(Boolean)
     .sort();
-  expect(namedSignalTraces).toEqual(["ADCMOTOR", "BIAS-A", "BIAS-B", "TIMER"]);
+  expect(namedSignalTraces).toEqual([
+    "ADCMOTOR",
+    "BIAS-A",
+    "BIAS-B",
+    "TIMER",
+    "V-MINUS-INPUT",
+    "V-PLUS-INPUT",
+  ]);
 
   expect(
     signalJson.filter(
@@ -849,6 +863,24 @@ test("uses on-trace labels for the source signal names", () => {
   expect(
     [...new Set(traceOwnedSignalLabels.map((label) => label.text))].sort(),
   ).toEqual(["ADCMOTOR", "BIAS", "TIMER"]);
+
+  const motorInputTraceLabels = signalJson.filter(
+    (element): element is SchematicText =>
+      element.type === "schematic_text" &&
+      Boolean(element.source_trace_id) &&
+      ["V+", "V-"].includes(element.text),
+  );
+  expect(motorInputTraceLabels.map((label) => label.text).sort()).toEqual([
+    "V+",
+    "V-",
+  ]);
+  expect(
+    signalJson.filter(
+      (element) =>
+        element.type === "schematic_net_label" &&
+        ["V+", "V-"].includes(element.text),
+    ),
+  ).toEqual([]);
   expect(
     signalJson.filter(
       (element) =>

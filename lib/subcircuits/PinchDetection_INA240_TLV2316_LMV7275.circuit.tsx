@@ -25,7 +25,7 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
   props: SubcircuitProps,
 ) => (
   <subcircuit
-    exposedNets={["PWR", "V_PLUS", "V_MINUS", "GND", "ADCMOTOR", "TIMER"]}
+    exposedNets={["PWR", "GND", "ADCMOTOR", "TIMER"]}
     schAutoLayoutEnabled={false}
     routingDisabled
     {...props}
@@ -34,8 +34,6 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
     <net name="PWR" isPowerNet />
     <net name="V5" isPowerNet />
     <net name="V3_3" isPowerNet />
-    <net name="V_PLUS" />
-    <net name="V_MINUS" />
     <net name="ADCMOTOR" />
     <net name="TIMER" />
     <PinchDetectionSignalChain_INA240_TLV2316_LMV7275
@@ -56,8 +54,6 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
       )}
     />
 
-    <trace from=".signalChain > .V_PLUS" to="net.V_PLUS" />
-    <trace from=".signalChain > .V_MINUS" to="net.V_MINUS" />
     {/* Rendering the U2 and powered-triangle rail symbols in the wrapper lets
         automatically exposed child V5/GND connections reuse native endpoints
         instead of adding generated Ux_GND/U2_VS labels over them. Standalone
@@ -78,37 +74,37 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
       net="V5"
       connection=".signalChain > .U3A > .pin5"
       anchorSide="bottom"
-      {...p(788.928571, 938.928571)}
+      {...p(788.928571, 929.285714)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U3A > .pin3"
       anchorSide="top"
-      {...p(789.285714, 911.071429)}
+      {...p(789.285714, 901.428571)}
     />
     <netlabel
       net="V5"
       connection=".signalChain > .U3B > .pin5"
       anchorSide="bottom"
-      {...p(1078.928571, 912.285714)}
+      {...p(1078.928571, 924.285714)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U3B > .pin3"
       anchorSide="top"
-      {...p(1079.285714, 884.428572)}
+      {...p(1079.285714, 896.428571)}
     />
     <netlabel
       net="V5"
       connection=".signalChain > .U1Symbol > .pin5"
       anchorSide="bottom"
-      {...p(1278.928571, 916.928571)}
+      {...p(1278.928571, 919.285714)}
     />
     <netlabel
       net="GND"
       connection=".signalChain > .U1Symbol > .pin3"
       anchorSide="top"
-      {...p(1279.285714, 889.071429)}
+      {...p(1279.285714, 891.428571)}
     />
   </subcircuit>
 );
