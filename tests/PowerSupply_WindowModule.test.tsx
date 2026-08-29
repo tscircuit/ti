@@ -487,6 +487,41 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
     );
     expect(new Set(xCoordinates).size, label).toBe(1);
   };
+  const expectHorizontalExit = (
+    label: string,
+    from: [componentName: string, pinNumber: number],
+    to: [componentName: string, pinNumber: number],
+  ) => {
+    const fromPort = schematicPort(circuitJson, ...from);
+    const toPort = schematicPort(circuitJson, ...to);
+    const fromPortId = String(fromPort.schematic_port_id);
+    const toPortId = String(toPort.schematic_port_id);
+    const trace = circuitJson.find(
+      (element) =>
+        element.type === "schematic_trace" &&
+        String(element.source_trace_id).includes(fromPortId) &&
+        String(element.source_trace_id).includes(toPortId),
+    );
+    expect(trace, label).toBeDefined();
+    const fromCenter = fromPort.center as { x: number; y: number };
+    const attachedEdge = (
+      trace!.edges as Array<{
+        from: { x: number; y: number };
+        to: { x: number; y: number };
+      }>
+    ).find(
+      (edge) =>
+        (Math.abs(edge.from.x - fromCenter.x) < 1e-6 &&
+          Math.abs(edge.from.y - fromCenter.y) < 1e-6) ||
+        (Math.abs(edge.to.x - fromCenter.x) < 1e-6 &&
+          Math.abs(edge.to.y - fromCenter.y) < 1e-6),
+    );
+    expect(attachedEdge, `${label} reaches the test point`).toBeDefined();
+    expect(
+      Math.abs(Number(attachedEdge!.from.y) - Number(attachedEdge!.to.y)),
+      `${label} leaves the test point horizontally`,
+    ).toBeLessThan(1e-6);
+  };
 
   expectAlignedX("TP2/C24/C25/TP7 vertical column", [
     ["TP2", 1],
@@ -504,6 +539,16 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
     schematicPort(circuitJson, "TP7", 1).facing_direction,
     "lower GND test point faces the trace column",
   ).toBe("up");
+  expect(
+    schematicPort(circuitJson, "P1", 1).facing_direction,
+    "left VBATT test point faces its outgoing trace",
+  ).toBe("right");
+  expect(
+    schematicPort(circuitJson, "P2", 1).facing_direction,
+    "left GND test point faces its outgoing trace",
+  ).toBe("right");
+  expectHorizontalExit("P1 to VBATT trace", ["P1", 1], ["D2", 1]);
+  expectHorizontalExit("P2 to GND trace", ["P2", 1], ["R14", 1]);
   expectAlignedX("D2 and R14", [
     ["D2", 2],
     ["R14", 2],

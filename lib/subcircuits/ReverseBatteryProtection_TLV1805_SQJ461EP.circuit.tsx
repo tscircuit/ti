@@ -17,9 +17,10 @@ const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
  * pure translation (x_tsx, y_tsx) = (x_mm - 21.716, y_mm - 19.812). There is
  * no scaling or reflection. Small, documented native-symbol alignment deltas
  * keep the Altium wires orthogonal despite different tscircuit pin anchors:
- * TP2/TP7/C24 use x=6.604 mm, R14 uses x=3.9497 mm, R1/R2 use y=19.431 mm,
- * and D4/R3 use x=18.742 mm. C24 rotates 90 degrees and TP7 rotates 270
- * degrees so the capacitor column and its two test points connect end-on.
+ * P1/P2 rotate 180 degrees and use y=21.822/19.058 mm, TP2/TP7/C24 use
+ * x=6.604 mm, R14 uses x=3.9497 mm, R1/R2 use y=19.431 mm, and D4/R3 use
+ * x=18.742 mm. C24 rotates 90 degrees and TP7 rotates 270 degrees so the
+ * capacitor column and its two test points connect end-on.
  *
  * The released schematic displays Q1 as SQJ465EP, while TI's released BOM
  * specifies the fitted manufacturer part number SQJ461EP. The component keeps
@@ -44,7 +45,8 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       manufacturerPartNumber="6091"
       footprint="kicad:TestPoint/TestPoint_Plated_Hole_D3.0mm"
       schX={sx(3.048)}
-      schY={sy(22.098)}
+      schY={sy(21.822)}
+      schRotation={180}
     />
     <testpoint
       name="P2"
@@ -52,7 +54,8 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       manufacturerPartNumber="6092"
       footprint="kicad:TestPoint/TestPoint_Plated_Hole_D3.0mm"
       schX={sx(3.048)}
-      schY={sy(19.05)}
+      schY={sy(19.058)}
+      schRotation={180}
     />
     <testpoint
       name="TP2"
