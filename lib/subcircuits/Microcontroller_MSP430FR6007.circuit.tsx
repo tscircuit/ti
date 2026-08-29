@@ -26,41 +26,43 @@ type MSP430FR6007ReferenceLayoutProps = SubcircuitProps & {
 const singleSheetCenterScale = 1.35;
 
 const twoPinJumperSize = {
-  schWidth: "0.5mm",
-  schHeight: "0.8mm",
+  schWidth: "0.45mm",
+  schHeight: "0.65mm",
 } as const;
 
 const threePinJumperSize = {
-  schWidth: "0.6mm",
-  schHeight: "1.2mm",
+  schWidth: "0.55mm",
+  schHeight: "1mm",
 } as const;
 
 /*
  * Figure B-78 names the removable 3M9580-ND shunts SH-J1 and SH-JP1 through
- * SH-JP14. Figure B-79 defines their installed electrical state. Representing
- * each populated header as one native <jumper> keeps that state in the
- * connectivity graph instead of drawing a second, electrically floating box.
+ * SH-JP14 separately from the headers they populate. Figure B-79 and Table
+ * B-40 define their installed electrical state. The header and removable
+ * shunt therefore remain separate native <jumper> components. Two native
+ * traces connect each shunt to the exact populated header pins; only the
+ * removable shunt contains the internal bridge. No custom schematic graphics
+ * are used.
  */
 const installedShunts = {
-  J1: { refdes: "SH-J1", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP1: { refdes: "SH-JP1", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP2: { refdes: "SH-JP2", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP3: { refdes: "SH-JP3", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP4: { refdes: "SH-JP4", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP5: { refdes: "SH-JP5", pins: [[2, 3]], partNumber: "3M9580-ND" },
-  JP6: { refdes: "SH-JP6", pins: [[2, 3]], partNumber: "3M9580-ND" },
-  JP7: { refdes: "SH-JP7", pins: [[2, 3]], partNumber: "3M9580-ND" },
-  JP8: { refdes: "SH-JP8", pins: [[2, 3]], partNumber: "3M9580-ND" },
-  JP9: { refdes: "SH-JP9", pins: [[2, 3]], partNumber: "3M9580-ND" },
-  JP10: { refdes: "SH-JP10", pins: [[2, 3]], partNumber: "3M9580-ND" },
-  JP11: { refdes: "SH-JP11", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP12: { refdes: "SH-JP12", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP13: { refdes: "SH-JP13", pins: [[1, 2]], partNumber: "3M9580-ND" },
-  JP14: { refdes: "SH-JP14", pins: [[1, 2]], partNumber: "3M9580-ND" },
-} satisfies Record<
-  string,
-  { refdes: string; pins: number[][]; partNumber: string }
->;
+  J1: { refdes: "SH-J1", pins: [[1, 2]] },
+  JP1: { refdes: "SH-JP1", pins: [[1, 2]] },
+  JP2: { refdes: "SH-JP2", pins: [[1, 2]] },
+  JP3: { refdes: "SH-JP3", pins: [[1, 2]] },
+  JP4: { refdes: "SH-JP4", pins: [[1, 2]] },
+  JP5: { refdes: "SH-JP5", pins: [[2, 3]] },
+  JP6: { refdes: "SH-JP6", pins: [[2, 3]] },
+  JP7: { refdes: "SH-JP7", pins: [[2, 3]] },
+  JP8: { refdes: "SH-JP8", pins: [[2, 3]] },
+  JP9: { refdes: "SH-JP9", pins: [[2, 3]] },
+  JP10: { refdes: "SH-JP10", pins: [[2, 3]] },
+  JP11: { refdes: "SH-JP11", pins: [[1, 2]] },
+  JP12: { refdes: "SH-JP12", pins: [[1, 2]] },
+  JP13: { refdes: "SH-JP13", pins: [[1, 2]] },
+  JP14: { refdes: "SH-JP14", pins: [[1, 2]] },
+} satisfies Record<string, { refdes: string; pins: number[][] }>;
+
+const shuntPartNumber = "3M9580-ND";
 
 const sheetNames = {
   mcuSocket: "mcu_socket",
@@ -79,6 +81,12 @@ const programmingDebugComponents = new Set([
   "JP8",
   "JP9",
   "JP10",
+  "SH-JP5",
+  "SH-JP6",
+  "SH-JP7",
+  "SH-JP8",
+  "SH-JP9",
+  "SH-JP10",
   "R3",
   "R4",
   "R7",
@@ -107,6 +115,8 @@ const clocksChannelsComponents = new Set([
   "C15",
   "JP13",
   "JP14",
+  "SH-JP13",
+  "SH-JP14",
   "Q1",
   "Q2",
   "Q3",
@@ -169,7 +179,13 @@ const mcuToTargetSocketLinks = Array.from({ length: 100 }, (_, index) => {
   return { mcuPin, connector, connectorPin, sourcePinLabel };
 });
 
-const targetSocketNetBreakouts = [
+const targetSocketNetBreakouts: ReadonlyArray<{
+  connector: (typeof targetSocketNames)[number];
+  connectorPin: number;
+  net: string;
+  traceName?: string;
+  displayLabel?: string;
+}> = [
   { connector: "J3", connectorPin: 5, net: "AVSS" },
   { connector: "J3", connectorPin: 6, net: "LFXIN" },
   { connector: "J3", connectorPin: 7, net: "LFXOUT" },
@@ -179,9 +195,21 @@ const targetSocketNetBreakouts = [
   { connector: "J3", connectorPin: 11, net: "AVSS" },
   { connector: "J3", connectorPin: 3, net: "P1_0" },
   { connector: "J3", connectorPin: 4, net: "P1_1" },
-  { connector: "J3", connectorPin: 14, net: "BSL_SDA" },
+  {
+    connector: "J3",
+    connectorPin: 14,
+    net: "BSL_SDA",
+    traceName: "J3_PIN14_BSL_SDA",
+    displayLabel: "BSL_SDA",
+  },
   { connector: "J3", connectorPin: 15, net: "BSL_SCL" },
-  { connector: "J3", connectorPin: 16, net: "BSL_TX" },
+  {
+    connector: "J3",
+    connectorPin: 16,
+    net: "BSL_TX",
+    traceName: "J3_PIN16_BSL_TX",
+    displayLabel: "BSL_TX",
+  },
   { connector: "J3", connectorPin: 17, net: "BSL_RX" },
   { connector: "J3", connectorPin: 19, net: "P1_3" },
   { connector: "J3", connectorPin: 20, net: "TEST_SBWTCK" },
@@ -190,11 +218,11 @@ const targetSocketNetBreakouts = [
   { connector: "J3", connectorPin: 23, net: "TDI" },
   { connector: "J3", connectorPin: 24, net: "TMS" },
   { connector: "J3", connectorPin: 25, net: "TCK" },
-  { connector: "J4", connectorPin: 1, net: "GND" },
+  { connector: "J4", connectorPin: 1, net: "DVSS" },
   { connector: "J4", connectorPin: 2, net: "DVCC" },
-  { connector: "J5", connectorPin: 1, net: "GND" },
+  { connector: "J5", connectorPin: 1, net: "DVSS" },
   { connector: "J5", connectorPin: 2, net: "DVCC" },
-  { connector: "J5", connectorPin: 25, net: "GND" },
+  { connector: "J5", connectorPin: 25, net: "DVSS" },
   { connector: "J5", connectorPin: 24, net: "LCDCAP" },
   { connector: "J6", connectorPin: 1, net: "DVCC" },
   { connector: "J6", connectorPin: 10, net: "CH1_IN" },
@@ -207,7 +235,13 @@ const targetSocketNetBreakouts = [
   { connector: "J6", connectorPin: 23, net: "USSXTOUT" },
   { connector: "J6", connectorPin: 24, net: "AVSS" },
   { connector: "J6", connectorPin: 25, net: "AVCC" },
-] as const;
+];
+
+const singleSheetDirectEndpoints = new Set([
+  "JTAG.pin2",
+  "JTAG.pin4",
+  "J1.pin1",
+]);
 
 const supportNetTraces: ReadonlyArray<{
   component: string;
@@ -225,19 +259,19 @@ const supportNetTraces: ReadonlyArray<{
   { component: "C13", pin: 1, net: "PVCC" },
   { component: "C13", pin: 2, net: "PVSS", name: "C13_PVSS" },
   { component: "C4", pin: 1, net: "DVCC" },
-  { component: "C4", pin: 2, net: "GND" },
-  { component: "R11", pin: 1, net: "PVSS" },
-  { component: "R11", pin: 2, net: "GND" },
+  { component: "C4", pin: 2, net: "DVSS" },
+  { component: "R11", pin: 1, net: "GND" },
+  { component: "R11", pin: 2, net: "PVSS" },
   { component: "R12", pin: 1, net: "GND" },
   { component: "R12", pin: 2, net: "AVSS" },
   { component: "R10", pin: 1, net: "GND" },
-  { component: "R10", pin: 2, net: "GND" },
+  { component: "R10", pin: 2, net: "DVSS" },
   { component: "C10", pin: 1, net: "DVCC" },
-  { component: "C10", pin: 2, net: "GND" },
+  { component: "C10", pin: 2, net: "DVSS" },
   { component: "C7", pin: 1, net: "DVCC" },
-  { component: "C7", pin: 2, net: "GND" },
+  { component: "C7", pin: 2, net: "DVSS" },
   { component: "C6", pin: 1, net: "DVCC" },
-  { component: "C6", pin: 2, net: "GND" },
+  { component: "C6", pin: 2, net: "DVSS" },
   { component: "R7", pin: 1, net: "DVCC", name: "R7_DVCC" },
   {
     component: "R7",
@@ -251,11 +285,11 @@ const supportNetTraces: ReadonlyArray<{
     net: "RESET",
     name: "C5_RESET_SBWTDIO",
   },
-  { component: "C5", pin: 2, net: "GND" },
+  { component: "C5", pin: 2, net: "DVSS" },
   { component: "SW2", pin: 1, net: "RESET" },
-  { component: "SW2", pin: 2, net: "GND" },
+  { component: "SW2", pin: 2, net: "DVSS" },
   { component: "SW2", pin: 3, net: "RESET" },
-  { component: "SW2", pin: 4, net: "GND" },
+  { component: "SW2", pin: 4, net: "DVSS" },
   { component: "Q1", pin: 1, net: "LFXOUT" },
   { component: "Q1", pin: 2, net: "LFXIN" },
   { component: "C1", pin: 1, net: "LFXOUT" },
@@ -277,30 +311,35 @@ const supportNetTraces: ReadonlyArray<{
   { component: "R8", pin: 1, net: "HFXIN" },
   { component: "R8", pin: 2, net: "HFXIN_ext" },
   { component: "R19", pin: 1, net: "BSL_RX" },
-  { component: "R20", pin: 1, net: "BSL_TX" },
+  {
+    component: "R20",
+    pin: 1,
+    net: "BSL_TX",
+    displayLabel: "BSL_TX",
+  },
   { component: "R21", pin: 1, net: "BSL_SCL" },
   { component: "JTAG", pin: 1, net: "JTAG_TDO_SBWTDIO" },
-  { component: "JTAG", pin: 2, net: "VCC_TOOL" },
+  { component: "JTAG", pin: 2, net: "VCC_TOOL", displayLabel: " " },
   { component: "JTAG", pin: 3, net: "JTAG_TDI" },
-  { component: "JTAG", pin: 4, net: "VCC" },
+  { component: "JTAG", pin: 4, net: "VCC", displayLabel: " " },
   { component: "JTAG", pin: 5, net: "JTAG_TMS" },
   { component: "JTAG", pin: 7, net: "JTAG_TCK_SBWTCK" },
   {
     component: "JTAG",
     pin: 8,
     net: "JTAG_TEST_SBWTCK",
-    displayLabel: "TEST/SBWTCK",
+    displayLabel: " ",
   },
-  { component: "JTAG", pin: 9, net: "GND" },
+  { component: "JTAG", pin: 9, net: "GND", displayLabel: " " },
   { component: "JTAG", pin: 11, net: "JTAG_RST_NMI" },
-  { component: "J1", pin: 1, net: "VCC_TOOL" },
+  { component: "J1", pin: 1, net: "VCC_TOOL", displayLabel: " " },
   { component: "J1", pin: 2, net: "VCC" },
-  { component: "J1", pin: 3, net: "EXT_PWR" },
-  { component: "J2", pin: 1, net: "GND" },
+  { component: "J1", pin: 3, net: "EXT_PWR", displayLabel: " " },
+  { component: "J2", pin: 1, net: "VCC" },
   { component: "J2", pin: 2, net: "EXT_PWR" },
-  { component: "J2", pin: 3, net: "EXT_PWR" },
-  { component: "JP1", pin: 1, net: "VCC_MEAS" },
-  { component: "JP1", pin: 2, net: "VCC" },
+  { component: "J2", pin: 3, net: "GND" },
+  { component: "JP1", pin: 1, net: "VCC" },
+  { component: "JP1", pin: 2, net: "VCC_MEAS" },
   { component: "JP2", pin: 1, net: "DVCC" },
   { component: "JP2", pin: 2, net: "VCC_MEAS" },
   { component: "JP3", pin: 1, net: "AVCC" },
@@ -321,12 +360,12 @@ const supportNetTraces: ReadonlyArray<{
   { component: "JP8", pin: 1, net: "NC_JP8_1", displayLabel: "NC" },
   {
     component: "JP9",
-    pin: 1,
+    pin: 3,
     net: "JTAG_TEST_SBWTCK",
     displayLabel: "TEST/SBWTCK",
   },
   { component: "JP9", pin: 2, net: "TEST_SBWTCK" },
-  { component: "JP9", pin: 3, net: "JTAG_TCK_SBWTCK" },
+  { component: "JP9", pin: 1, net: "JTAG_TCK_SBWTCK" },
   { component: "JP10", pin: 1, net: "JTAG_TDO_SBWTDIO" },
   { component: "JP10", pin: 2, net: "RESET" },
   { component: "JP10", pin: 3, net: "JTAG_RST_NMI" },
@@ -334,13 +373,13 @@ const supportNetTraces: ReadonlyArray<{
   { component: "BSL", pin: 2, net: "GND" },
   { component: "BSL", pin: 3, net: "BSL_RX_CONN" },
   { component: "BSL", pin: 4, net: "RESET" },
-  { component: "BSL", pin: 5, net: "BSL_SDA_CONN" },
-  { component: "BSL", pin: 6, net: "BSL_VCC" },
+  { component: "BSL", pin: 6, net: "BSL_TOOL_VCC" },
   { component: "BSL", pin: 7, net: "TEST_SBWTCK" },
+  { component: "BSL", pin: 8, net: "BSL_TARGET_VCC" },
   { component: "BSL", pin: 9, net: "BSL_SCL_CONN" },
-  { component: "R3", pin: 1, net: "BSL_VCC" },
+  { component: "R3", pin: 1, net: "BSL_TOOL_VCC" },
   { component: "R3", pin: 2, net: "VCC" },
-  { component: "R4", pin: 1, net: "BSL_VCC" },
+  { component: "R4", pin: 1, net: "BSL_TARGET_VCC" },
   { component: "R4", pin: 2, net: "VCC" },
   { component: "SW4", pin: 1, net: "BSL_SCL" },
   {
@@ -353,7 +392,7 @@ const supportNetTraces: ReadonlyArray<{
   {
     component: "SW4",
     pin: 4,
-    net: "BSL_SDA_CONN",
+    net: "BSL_TX_CONN",
     displayLabel: "BSL_SDA",
   },
   { component: "SW5", pin: 1, net: "BSL_RX" },
@@ -397,7 +436,7 @@ const supportNetTraces: ReadonlyArray<{
   {
     component: "TP2",
     pin: 1,
-    net: "BSL_SDA_CONN",
+    net: "BSL_TX_CONN",
     displayLabel: "BSL_SDA",
   },
   {
@@ -412,21 +451,21 @@ const supportNetTraces: ReadonlyArray<{
     net: "BSL_TX_CONN",
     displayLabel: "BSL_TX",
   },
-  { component: "TP5", pin: 1, net: "GND" },
+  { component: "TP5", pin: 1, net: "DVSS" },
   { component: "TP6", pin: 1, net: "GND" },
   { component: "R13", pin: 1, net: "DVCC" },
   { component: "R13", pin: 2, net: "P1_3" },
   { component: "SW1", pin: 1, net: "P1_3" },
-  { component: "SW1", pin: 2, net: "GND" },
+  { component: "SW1", pin: 2, net: "DVSS" },
   { component: "SW1", pin: 3, net: "P1_3" },
-  { component: "SW1", pin: 4, net: "GND" },
+  { component: "SW1", pin: 4, net: "DVSS" },
   { component: "D1", pin: 1, net: "LED1_A" },
-  { component: "D1", pin: 2, net: "GND" },
+  { component: "D1", pin: 2, net: "DVSS" },
   { component: "R1", pin: 1, net: "LED1_A" },
   { component: "R1", pin: 2, net: "P1_0_LED" },
   { component: "JP11", pin: 1, net: "P1_0_LED" },
   { component: "JP11", pin: 2, net: "P1_0" },
-  { component: "D2", pin: 1, net: "GND" },
+  { component: "D2", pin: 1, net: "DVSS" },
   { component: "D2", pin: 2, net: "LED2_A" },
   { component: "R2", pin: 1, net: "LED2_A" },
   { component: "R2", pin: 2, net: "P1_1_LED" },
@@ -446,9 +485,9 @@ const supportNetTraces: ReadonlyArray<{
   { component: "R15", pin: 1, net: "USSXTOUT" },
   { component: "R15", pin: 2, net: "USSXTOUT_EXT" },
   { component: "R18", pin: 1, net: "LCDCAP" },
-  { component: "R18", pin: 2, net: "GND" },
+  { component: "R18", pin: 2, net: "DVSS" },
   { component: "C12", pin: 1, net: "LCDCAP" },
-  { component: "C12", pin: 2, net: "GND" },
+  { component: "C12", pin: 2, net: "DVSS" },
   { component: "JP14", pin: 1, net: "PVSS" },
   { component: "JP14", pin: 2, net: "CH0_IN" },
   { component: "JP13", pin: 1, net: "PVSS" },
@@ -519,6 +558,7 @@ export const MSP430FR6007ReferenceLayout = ({
       {...props}
     >
       <net name="GND" isGroundNet />
+      <net name="DVSS" />
       <net name="AVSS" />
       <net name="PVSS" />
       <net name="AVCC" isPowerNet />
@@ -647,16 +687,18 @@ export const MSP430FR6007ReferenceLayout = ({
             ),
           )}
 
-          {targetSocketNetBreakouts.map(({ connector, connectorPin, net }) => (
-            <Fragment key={`${connector}-pin${connectorPin}-${net}`}>
-              <trace
-                name={`${connector}_PIN${connectorPin}_${net}`}
-                from={`${connector}.pin${connectorPin}`}
-                to={`net.${net}`}
-                schDisplayLabel={net}
-              />
-            </Fragment>
-          ))}
+          {targetSocketNetBreakouts.map(
+            ({ connector, connectorPin, net, traceName, displayLabel }) => (
+              <Fragment key={`${connector}-pin${connectorPin}-${net}`}>
+                <trace
+                  name={traceName ?? `${connector}_PIN${connectorPin}_${net}`}
+                  from={`${connector}.pin${connectorPin}`}
+                  to={`net.${net}`}
+                  schDisplayLabel={displayLabel ?? net}
+                />
+              </Fragment>
+            ),
+          )}
         </group>
 
         <group name="minimum_system_source_layout">
@@ -669,16 +711,25 @@ export const MSP430FR6007ReferenceLayout = ({
             {/* Figure B-78 power selection, measurement, and rail headers. */}
             <jumper
               name="J1"
-              displayName={`${installedShunts.J1.refdes}: 1-2`}
               manufacturerPartNumber="TSW-103-07-G-S"
               footprint="pinrow3_p2.54_nopinlabels"
               pinCount={3}
               pinLabels={{ pin1: "INT", pin2: "VCC", pin3: "EXT" }}
-              internallyConnectedPins={installedShunts.J1.pins}
               schX={layoutX(isMultiSheet ? -20.0 : -21.0)}
               schY={layoutY(isMultiSheet ? 7.2 : 8.2)}
               schDirection="right"
               {...threePinJumperSize}
+            />
+            <jumper
+              name="SH-J1"
+              displayName="J1:1-2"
+              manufacturerPartNumber={shuntPartNumber}
+              pinCount={2}
+              internallyConnectedPins={[[1, 2]]}
+              schX={layoutX(isMultiSheet ? -22.2 : -18.8)}
+              schY={layoutY(isMultiSheet ? 5.8 : 7.5)}
+              schDirection="right"
+              {...twoPinJumperSize}
             />
             <pinheader
               name="J2"
@@ -688,7 +739,7 @@ export const MSP430FR6007ReferenceLayout = ({
               pinCount={3}
               gender="male"
               pitch="2.54mm"
-              pinLabels={{ pin1: "GND", pin2: "EXT_PWR", pin3: "VCC" }}
+              pinLabels={{ pin1: "VCC", pin2: "EXT_PWR", pin3: "GND" }}
               schX={layoutX(-4.7)}
               schY={layoutY(9.2)}
               schFacingDirection="left"
@@ -697,12 +748,21 @@ export const MSP430FR6007ReferenceLayout = ({
             />
             <jumper
               name="JP1"
-              displayName={`${installedShunts.JP1.refdes}: 1-2`}
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
-              internallyConnectedPins={installedShunts.JP1.pins}
               schX={layoutX(-20.7)}
+              schY={layoutY(4.2)}
+              schDirection="right"
+              {...twoPinJumperSize}
+            />
+            <jumper
+              name="SH-JP1"
+              displayName="JP1:1-2"
+              manufacturerPartNumber={shuntPartNumber}
+              pinCount={2}
+              internallyConnectedPins={[[1, 2]]}
+              schX={layoutX(isMultiSheet ? -17.2 : -19.2)}
               schY={layoutY(4.2)}
               schDirection="right"
               {...twoPinJumperSize}
@@ -715,14 +775,23 @@ export const MSP430FR6007ReferenceLayout = ({
               <Fragment key={name}>
                 <jumper
                   name={name}
-                  displayName={`${installedShunts[name as keyof typeof installedShunts].refdes}: 1-2`}
                   manufacturerPartNumber="TSW-102-07-G-S"
                   footprint="pinrow2_p2.54_nopinlabels"
                   pinCount={2}
-                  internallyConnectedPins={
-                    installedShunts[name as keyof typeof installedShunts].pins
-                  }
                   schX={layoutX(-20.7)}
+                  schY={layoutY(schY)}
+                  schDirection="right"
+                  {...twoPinJumperSize}
+                />
+                <jumper
+                  name={
+                    installedShunts[name as keyof typeof installedShunts].refdes
+                  }
+                  displayName={`${name}:1-2`}
+                  manufacturerPartNumber={shuntPartNumber}
+                  pinCount={2}
+                  internallyConnectedPins={[[1, 2]]}
+                  schX={layoutX(-18.2)}
                   schY={layoutY(schY)}
                   schDirection="right"
                   {...twoPinJumperSize}
@@ -759,17 +828,26 @@ export const MSP430FR6007ReferenceLayout = ({
               <Fragment key={name}>
                 <jumper
                   name={name}
-                  displayName={`${installedShunts[name as keyof typeof installedShunts].refdes}: 2-3`}
                   manufacturerPartNumber="TSW-103-07-G-S"
                   footprint="pinrow3_p2.54_nopinlabels"
                   pinCount={3}
-                  internallyConnectedPins={
-                    installedShunts[name as keyof typeof installedShunts].pins
-                  }
                   schX={layoutX(schX)}
                   schY={layoutY(isMultiSheet ? 3.5 : 5.5)}
                   schDirection="right"
                   {...threePinJumperSize}
+                />
+                <jumper
+                  name={
+                    installedShunts[name as keyof typeof installedShunts].refdes
+                  }
+                  displayName={`${name}:2-3`}
+                  manufacturerPartNumber={shuntPartNumber}
+                  pinCount={2}
+                  internallyConnectedPins={[[1, 2]]}
+                  schX={layoutX(schX)}
+                  schY={layoutY(isMultiSheet ? 1.8 : 4.1)}
+                  schDirection="right"
+                  {...twoPinJumperSize}
                 />
               </Fragment>
             ))}
@@ -779,21 +857,11 @@ export const MSP430FR6007ReferenceLayout = ({
               name="BSL"
               manufacturerPartNumber="AWHW-10G-0202-T"
               footprint="pinrow10_p2.54_nopinlabels_rows2"
-              noConnect={["pin8", "pin10"]}
+              noConnect={["pin5", "pin10"]}
               schX={layoutX(-1.2)}
               schY={layoutY(9.4)}
-              schWidth="0.9mm"
-              schHeight="4.5mm"
-              schPinStyle={{
-                pin9: { marginBottom: "0.8mm" },
-                pin7: { marginBottom: "0.8mm" },
-                pin5: { marginBottom: "0.8mm" },
-                pin3: { marginBottom: "0.8mm" },
-                pin10: { marginTop: "0.8mm" },
-                pin8: { marginTop: "0.8mm" },
-                pin6: { marginTop: "0.8mm" },
-                pin4: { marginTop: "0.8mm" },
-              }}
+              schWidth="1.8mm"
+              schHeight="2.8mm"
               schPinArrangement={{
                 leftSide: {
                   direction: "top-to-bottom",
@@ -890,11 +958,9 @@ export const MSP430FR6007ReferenceLayout = ({
             {/* USS channel-input headers and documented shunts. */}
             <jumper
               name="JP14"
-              displayName={`${installedShunts.JP14.refdes}: 1-2`}
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
-              internallyConnectedPins={installedShunts.JP14.pins}
               schX={layoutX(8.5)}
               schY={layoutY(3.0)}
               schDirection="right"
@@ -902,16 +968,31 @@ export const MSP430FR6007ReferenceLayout = ({
             />
             <jumper
               name="JP13"
-              displayName={`${installedShunts.JP13.refdes}: 1-2`}
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
-              internallyConnectedPins={installedShunts.JP13.pins}
               schX={layoutX(11.5)}
               schY={layoutY(3.0)}
               schDirection="left"
               {...twoPinJumperSize}
             />
+            {[
+              { header: "JP14", shunt: "SH-JP14", schX: 8.5 },
+              { header: "JP13", shunt: "SH-JP13", schX: 11.5 },
+            ].map(({ header, shunt, schX }) => (
+              <jumper
+                key={shunt}
+                name={shunt}
+                displayName={`${header}:1-2`}
+                manufacturerPartNumber={shuntPartNumber}
+                pinCount={2}
+                internallyConnectedPins={[[1, 2]]}
+                schX={layoutX(schX)}
+                schY={layoutY(1.7)}
+                schDirection="right"
+                {...twoPinJumperSize}
+              />
+            ))}
           </group>
 
           <group
@@ -1046,12 +1127,21 @@ export const MSP430FR6007ReferenceLayout = ({
             />
             <jumper
               name="JP12"
-              displayName={`${installedShunts.JP12.refdes}: 1-2`}
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
-              internallyConnectedPins={installedShunts.JP12.pins}
               schX={layoutX(-15.0)}
+              schY={layoutY(-9.0)}
+              schDirection="right"
+              {...twoPinJumperSize}
+            />
+            <jumper
+              name="SH-JP12"
+              displayName="JP12:1-2"
+              manufacturerPartNumber={shuntPartNumber}
+              pinCount={2}
+              internallyConnectedPins={[[1, 2]]}
+              schX={layoutX(isMultiSheet ? -11.5 : -13.2)}
               schY={layoutY(-9.0)}
               schDirection="right"
               {...twoPinJumperSize}
@@ -1075,12 +1165,21 @@ export const MSP430FR6007ReferenceLayout = ({
             />
             <jumper
               name="JP11"
-              displayName={`${installedShunts.JP11.refdes}: 1-2`}
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
-              internallyConnectedPins={installedShunts.JP11.pins}
               schX={layoutX(-15.0)}
+              schY={layoutY(-10.2)}
+              schDirection="right"
+              {...twoPinJumperSize}
+            />
+            <jumper
+              name="SH-JP11"
+              displayName="JP11:1-2"
+              manufacturerPartNumber={shuntPartNumber}
+              pinCount={2}
+              internallyConnectedPins={[[1, 2]]}
+              schX={layoutX(isMultiSheet ? -11.5 : -13.2)}
               schY={layoutY(-10.2)}
               schDirection="right"
               {...twoPinJumperSize}
@@ -1328,21 +1427,21 @@ export const MSP430FR6007ReferenceLayout = ({
               name="R19"
               resistance="0"
               footprint="0805"
-              schX={layoutX(-18.85)}
+              schX={layoutX(-20.2)}
               schY={layoutY(9.3) + 3}
             />
             <resistor
               name="R20"
               resistance="0"
               footprint="0805"
-              schX={layoutX(-18.85)}
+              schX={layoutX(-20.2)}
               schY={layoutY(9.3) + 2}
             />
             <resistor
               name="R21"
               resistance="0"
               footprint="0805"
-              schX={layoutX(-18.85)}
+              schX={layoutX(-20.2)}
               schY={layoutY(9.3) + 1}
             />
 
@@ -1357,22 +1456,8 @@ export const MSP430FR6007ReferenceLayout = ({
               noConnect={["pin6", "pin13"]}
               schX={layoutX(-17.7)}
               schY={layoutY(9.3)}
-              schWidth="0.9mm"
-              schHeight="7mm"
-              schPinStyle={{
-                pin14: { marginBottom: "0.8mm" },
-                pin12: { marginBottom: "0.8mm" },
-                pin10: { marginBottom: "0.8mm" },
-                pin8: { marginBottom: "0.8mm" },
-                pin6: { marginBottom: "0.8mm" },
-                pin4: { marginBottom: "0.8mm" },
-                pin13: { marginTop: "0.8mm" },
-                pin11: { marginTop: "0.8mm" },
-                pin9: { marginTop: "0.8mm" },
-                pin7: { marginTop: "0.8mm" },
-                pin5: { marginTop: "0.8mm" },
-                pin3: { marginTop: "0.8mm" },
-              }}
+              schWidth="1.8mm"
+              schHeight="3.6mm"
               schPinArrangement={{
                 leftSide: {
                   direction: "top-to-bottom",
@@ -1388,21 +1473,43 @@ export const MSP430FR6007ReferenceLayout = ({
               name="R19_JTAG_BSL_RX"
               from="R19.pin2"
               to="JTAG.pin14"
-              schDisplayLabel="BSL_RX"
+              schDisplayLabel=" "
             />
             <trace
               name="R20_JTAG_BSL_TX"
               from="R20.pin2"
               to="JTAG.pin12"
-              schDisplayLabel="BSL_TX"
+              schDisplayLabel=" "
             />
             <trace
               name="R21_JTAG_BSL_SCL"
               from="R21.pin2"
               to="JTAG.pin10"
-              schDisplayLabel="BSL_SCL"
+              schDisplayLabel=" "
             />
           </group>
+
+          {/*
+           * Figure B-79/Table B-40 installed shunts. Keep the removable shunt
+           * as the only internal bridge and wire it to the selected numbered
+           * pins on its separate header component.
+           */}
+          {Object.entries(installedShunts).map(([header, shunt]) => (
+            <Fragment key={`${shunt.refdes}_installed_connection`}>
+              <trace
+                name={`${shunt.refdes}_HEADER_SIDE_A`}
+                from={`${header}.pin${shunt.pins[0][0]}`}
+                to={`${shunt.refdes}.pin1`}
+                schDisplayLabel=" "
+              />
+              <trace
+                name={`${shunt.refdes}_HEADER_SIDE_B`}
+                from={`${header}.pin${shunt.pins[0][1]}`}
+                to={`${shunt.refdes}.pin2`}
+                schDisplayLabel=" "
+              />
+            </Fragment>
+          ))}
 
           {/* Repository-standard net names are carried by native traces. */}
           {[
@@ -1417,8 +1524,12 @@ export const MSP430FR6007ReferenceLayout = ({
             >
               {supportNetTraces
                 .filter(
-                  ({ component }) =>
-                    supportSheetForComponent(component) === sheetName,
+                  ({ component, pin }) =>
+                    supportSheetForComponent(component) === sheetName &&
+                    (isMultiSheet ||
+                      !singleSheetDirectEndpoints.has(
+                        `${component}.pin${pin}`,
+                      )),
                 )
                 .map(({ component, pin, net, name, displayLabel }) => (
                   <Fragment key={`${component}-pin${pin}-${net}`}>
@@ -1432,6 +1543,23 @@ export const MSP430FR6007ReferenceLayout = ({
                 ))}
             </group>
           ))}
+
+          {!isMultiSheet && (
+            <>
+              <trace
+                name="JTAG_PIN2_J1_PIN1_VCC_TOOL"
+                from="JTAG.pin2"
+                to="J1.pin1"
+                schDisplayLabel=" "
+              />
+              <trace
+                name="JTAG_PIN4_J1_PIN2_VCC"
+                from="JTAG.pin4"
+                to="J1.pin2"
+                schDisplayLabel="VCC"
+              />
+            </>
+          )}
         </group>
       </group>
 
@@ -1439,6 +1567,7 @@ export const MSP430FR6007ReferenceLayout = ({
       <port name="DVCC" direction="left" connectsTo="net.DVCC" />
       <port name="PVCC" direction="left" connectsTo="net.PVCC" />
       <port name="GND" direction="left" connectsTo="net.GND" />
+      <port name="DVSS" direction="left" connectsTo="net.DVSS" />
       <port name="RESET" direction="left" connectsTo="net.RESET" />
       <port name="BSL_TX" direction="left" connectsTo="net.BSL_TX" />
       <port name="BSL_RX" direction="left" connectsTo="net.BSL_RX" />

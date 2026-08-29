@@ -187,11 +187,11 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     "J3_PIN23_TDI",
     "J3_PIN24_TMS",
     "J3_PIN25_TCK",
-    "J4_PIN1_GND",
+    "J4_PIN1_DVSS",
     "J4_PIN2_DVCC",
-    "J5_PIN1_GND",
+    "J5_PIN1_DVSS",
     "J5_PIN2_DVCC",
-    "J5_PIN25_GND",
+    "J5_PIN25_DVSS",
     "J5_PIN24_LCDCAP",
     "J6_PIN1_DVCC",
     "J6_PIN10_CH1_IN",
@@ -254,6 +254,12 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       "JP8",
       "JP9",
       "JP10",
+      "SH-JP5",
+      "SH-JP6",
+      "SH-JP7",
+      "SH-JP8",
+      "SH-JP9",
+      "SH-JP10",
       "R3",
       "R4",
       "R7",
@@ -299,6 +305,13 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       "SW1",
       "TP5",
       "TP6",
+      "SH-J1",
+      "SH-JP1",
+      "SH-JP2",
+      "SH-JP3",
+      "SH-JP4",
+      "SH-JP11",
+      "SH-JP12",
     ],
     clocks_channels: [
       "C1",
@@ -321,6 +334,8 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       "R15",
       "R18",
       "R22",
+      "SH-JP13",
+      "SH-JP14",
     ],
   } as const;
 
@@ -403,6 +418,8 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     "TP6",
     ...Array.from({ length: 16 }, (_, index) => `C${index + 1}`),
     ...Array.from({ length: 22 }, (_, index) => `R${index + 1}`),
+    "SH-J1",
+    ...Array.from({ length: 14 }, (_, index) => `SH-JP${index + 1}`),
   ];
 
   for (const componentName of figureB78ComponentNames) {
@@ -426,21 +443,97 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     JP13: "SH-JP13",
     JP14: "SH-JP14",
   } as const;
+  const installedShuntPinsByHeader = {
+    J1: [1, 2],
+    JP1: [1, 2],
+    JP2: [1, 2],
+    JP3: [1, 2],
+    JP4: [1, 2],
+    JP5: [2, 3],
+    JP6: [2, 3],
+    JP7: [2, 3],
+    JP8: [2, 3],
+    JP9: [2, 3],
+    JP10: [2, 3],
+    JP11: [1, 2],
+    JP12: [1, 2],
+    JP13: [1, 2],
+    JP14: [1, 2],
+  } as const;
   for (const [headerName, shuntRefdes] of Object.entries(
     installedShuntRefdesByHeader,
   )) {
     const header = findSourceComponent(circuitJson, headerName);
+    const shunt = findSourceComponent(circuitJson, shuntRefdes);
     assert(
-      "display_name" in header && header.display_name?.includes(shuntRefdes),
-      `${headerName} does not document installed shunt ${shuntRefdes}`,
+      "manufacturer_part_number" in shunt &&
+        shunt.manufacturer_part_number === "3M9580-ND",
+      `${shuntRefdes} does not preserve the TI shunt part number`,
     );
     assert(
-      !circuitJson.some(
-        (element) => "name" in element && element.name === shuntRefdes,
-      ),
-      `${shuntRefdes} must be an internal native-jumper state, not a floating schematic component`,
+      !("display_name" in header) ||
+        !header.display_name?.includes(shuntRefdes),
+      `${headerName} must remain separate from ${shuntRefdes}`,
+    );
+    const shuntPin1 = findSourcePort(circuitJson, shuntRefdes, 1);
+    const shuntPin2 = findSourcePort(circuitJson, shuntRefdes, 2);
+    assert(
+      connectivityMap.getNetConnectedToId(shuntPin1.source_port_id) ===
+        connectivityMap.getNetConnectedToId(shuntPin2.source_port_id),
+      `${shuntRefdes} is not internally bridged`,
+    );
+    const selectedHeaderPins =
+      installedShuntPinsByHeader[
+        headerName as keyof typeof installedShuntPinsByHeader
+      ];
+    const selectedHeaderPin1 = findSourcePort(
+      circuitJson,
+      headerName,
+      selectedHeaderPins[0],
+    );
+    const selectedHeaderPin2 = findSourcePort(
+      circuitJson,
+      headerName,
+      selectedHeaderPins[1],
+    );
+    assert(
+      connectivityMap.getNetConnectedToId(selectedHeaderPin1.source_port_id) ===
+        connectivityMap.getNetConnectedToId(shuntPin1.source_port_id),
+      `${shuntRefdes}.pin1 is not connected to ${headerName}.pin${selectedHeaderPins[0]}`,
+    );
+    assert(
+      connectivityMap.getNetConnectedToId(selectedHeaderPin2.source_port_id) ===
+        connectivityMap.getNetConnectedToId(shuntPin2.source_port_id),
+      `${shuntRefdes}.pin2 is not connected to ${headerName}.pin${selectedHeaderPins[1]}`,
     );
   }
+
+  for (const [componentName, pinNumbers] of [
+    ["JTAG", [6, 13]],
+    ["BSL", [5, 10]],
+  ] as const) {
+    for (const pinNumber of pinNumbers) {
+      assert(
+        findSourcePort(circuitJson, componentName, pinNumber).do_not_connect,
+        `${componentName}.pin${pinNumber} must preserve the Figure B-78 no-connect`,
+      );
+    }
+  }
+
+  const physicalSourceComponentNames = circuitJson
+    .filter((element) => element.type === "source_component")
+    .map((element) => element.name)
+    .sort();
+  assert(
+    physicalSourceComponentNames.length === 92,
+    `Expected the 92 Figure B-78 physical components, got ${physicalSourceComponentNames.length}: ${physicalSourceComponentNames.join(", ")}`,
+  );
+  assert(
+    [...figureB78ComponentNames]
+      .sort()
+      .every((name, index) => physicalSourceComponentNames[index] === name),
+    "The rendered component inventory does not exactly match Figure B-78 and Table B-40",
+  );
 
   const schematicBodiesAndLabels = circuitJson.filter(
     (element) =>
@@ -493,19 +586,79 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     }
   }
 
-  const r17 = findSourceComponent(circuitJson, "R17");
-  const r22 = findSourceComponent(circuitJson, "R22");
-  const c12 = findSourceComponent(circuitJson, "C12");
-  const c14 = findSourceComponent(circuitJson, "C14");
-  assert("resistance" in r17 && r17.resistance === 4700, "R17 must be 4.7k");
-  assert("resistance" in r22 && r22.resistance === 22, "R22 must be 22 ohm");
+  const expectedCapacitances = {
+    C1: 12e-12,
+    C2: 12e-12,
+    C3: 1e-6,
+    C4: 0.1e-6,
+    C5: 1100e-12,
+    C6: 0.1e-6,
+    C7: 1e-6,
+    C8: 22e-12,
+    C9: 22e-12,
+    C10: 0.1e-6,
+    C11: 0.1e-6,
+    C12: 4.7e-6,
+    // Figure B-78 values are authoritative for the replicated schematic;
+    // Table B-40 conflicts on C13 and C16.
+    C13: 0.1e-6,
+    C14: 27e-12,
+    C15: 27e-12,
+    C16: 1e-6,
+  } as const;
+  for (const [name, capacitance] of Object.entries(expectedCapacitances)) {
+    const component = findSourceComponent(circuitJson, name);
+    assert(
+      "capacitance" in component && component.capacitance === capacitance,
+      `${name} does not match the Figure B-78 capacitance`,
+    );
+  }
+
+  const expectedResistances = {
+    R1: 330,
+    R2: 200,
+    R3: 0,
+    R4: 0,
+    R5: 0,
+    R6: 0,
+    R7: 47_000,
+    R8: 0,
+    R9: 0,
+    R10: 0,
+    R11: 0,
+    R12: 0,
+    R13: 47_000,
+    R14: 0,
+    R15: 0,
+    R16: 4_700,
+    R17: 4_700,
+    R18: 0,
+    R19: 0,
+    R20: 0,
+    R21: 0,
+    R22: 22,
+  } as const;
+  for (const [name, resistance] of Object.entries(expectedResistances)) {
+    const component = findSourceComponent(circuitJson, name);
+    assert(
+      "resistance" in component && component.resistance === resistance,
+      `${name} does not match the Figure B-78 resistance`,
+    );
+  }
+
+  const jtagBody = findSchematicComponent(circuitJson, "JTAG");
+  const bslBody = findSchematicComponent(circuitJson, "BSL");
   assert(
-    "capacitance" in c12 && c12.capacitance === 4.7e-6,
-    "C12 must be 4.7uF",
+    Math.abs(jtagBody.size.width / jtagBody.size.height - 0.5) < 0.02,
+    "JTAG body must preserve the approximately 1:2 Figure B-78 aspect ratio",
   );
   assert(
-    "capacitance" in c14 && c14.capacitance === 27e-12,
-    "C14 must be 27pF",
+    jtagBody.size.height <= 3.6,
+    "JTAG body is taller than the compact native reference geometry",
+  );
+  assert(
+    Math.abs(bslBody.size.width / bslBody.size.height - 0.64) < 0.02,
+    "BSL body must preserve the Figure B-78 aspect ratio",
   );
 
   const icCenter = findSchematicCenter(circuitJson, "IC1");
@@ -530,6 +683,32 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       channelCenter.x > icCenter.x,
       "Figure B-78 places channel headers right of IC1",
     );
+
+    for (const [upper, lower] of [
+      ["J1", "JP1"],
+      ["JP1", "JP2"],
+      ["JP2", "JP3"],
+      ["JP3", "JP4"],
+    ] as const) {
+      assert(
+        findSchematicCenter(circuitJson, upper).y >
+          findSchematicCenter(circuitJson, lower).y,
+        `Figure B-78 places ${upper} above ${lower}`,
+      );
+    }
+    for (const [left, right] of [
+      ["JP9", "JP10"],
+      ["JP10", "JP5"],
+      ["JP5", "JP6"],
+      ["JP6", "JP7"],
+      ["JP7", "JP8"],
+    ] as const) {
+      assert(
+        findSchematicCenter(circuitJson, left).x <
+          findSchematicCenter(circuitJson, right).x,
+        `Figure B-78 places ${left} left of ${right}`,
+      );
+    }
   }
 
   const socketCenters = Object.fromEntries(
@@ -592,18 +771,21 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
           Math.abs(point.x - center.x) < 1e-6 &&
           Math.abs(point.y - center.y) < 1e-6;
 
-        return circuitJson.some(
-          (element) =>
-            element.type === "schematic_trace" &&
-            element.subcircuit_connectivity_map_key ===
-              trace.subcircuit_connectivity_map_key &&
-            element.edges.some(
-              ({ from, to }) =>
-                (matchesCenter(from, firstCenter) &&
-                  matchesCenter(to, secondCenter)) ||
-                (matchesCenter(from, secondCenter) &&
-                  matchesCenter(to, firstCenter)),
-            ),
+        const points = circuitJson
+          .filter(
+            (element) =>
+              element.type === "schematic_trace" &&
+              element.subcircuit_connectivity_map_key ===
+                trace.subcircuit_connectivity_map_key,
+          )
+          .flatMap((element) =>
+            element.type === "schematic_trace"
+              ? element.edges.flatMap(({ from, to }) => [from, to])
+              : [],
+          );
+        return (
+          points.some((point) => matchesCenter(point, firstCenter)) &&
+          points.some((point) => matchesCenter(point, secondCenter))
         );
       })(),
       `${traceName} has no rendered native schematic route`,
@@ -752,8 +934,8 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   assertSameNet(["JTAG", 1], ["JP5", 3], ["JP10", 1]);
   assertSameNet(["JTAG", 3], ["JP6", 3]);
   assertSameNet(["JTAG", 5], ["JP7", 3]);
-  assertSameNet(["JTAG", 7], ["JP8", 3], ["JP9", 3]);
-  assertSameNet(["JTAG", 8], ["JP9", 1]);
+  assertSameNet(["JTAG", 7], ["JP8", 3], ["JP9", 1]);
+  assertSameNet(["JTAG", 8], ["JP9", 3]);
   assertSameNet(["JTAG", 11], ["JP10", 3]);
   assertSameNet(["IC1", 16], ["R20", 1]);
   assertSameNet(["R20", 2], ["JTAG", 12]);
@@ -787,11 +969,15 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   assertSameNet(["IC1", 15], ["SW4", 1], ["R16", 2]);
   assertSameNet(["IC1", 14], ["SW4", 3], ["R17", 2]);
   assertSameNet(["BSL", 9], ["SW4", 2], ["TP1", 1]);
-  assertSameNet(["BSL", 5], ["SW4", 4], ["TP2", 1]);
+  assertSameNet(["BSL", 1], ["SW4", 4], ["SW5", 4], ["TP2", 1], ["TP4", 1]);
   assertSameNet(["IC1", 17], ["SW5", 1]);
   assertSameNet(["BSL", 3], ["SW5", 2], ["TP3", 1]);
   assertSameNet(["IC1", 16], ["SW5", 3]);
-  assertSameNet(["BSL", 1], ["SW5", 4], ["TP4", 1]);
+  assertSameNet(["BSL", 6], ["R3", 1]);
+  assertSameNet(["BSL", 8], ["R4", 1]);
+  assertSameNet(["R3", 2], ["R4", 2], ["J1", 2], ["J2", 1]);
+  assertSameNet(["J1", 3], ["J2", 2]);
+  assertSameNet(["J2", 3], ["BSL", 2], ["JTAG", 9]);
   assertSameNet(["IC1", 3], ["JP11", 2]);
   assertSameNet(["IC1", 4], ["JP12", 2]);
   assertSameNet(["IC1", 19], ["R13", 2], ["SW1", 1]);
@@ -806,7 +992,8 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     AVCC: ["IC1", 100],
     DVCC: ["IC1", 27],
     PVCC: ["IC1", 88],
-    GND: ["IC1", 26],
+    GND: ["R10", 1],
+    DVSS: ["IC1", 26],
     RESET: ["IC1", 21],
     BSL_TX: ["IC1", 16],
     BSL_RX: ["IC1", 17],
@@ -854,8 +1041,17 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
       `IC1.pin${groundPin} is not on PVSS`,
     );
   }
-  assertSameNet(["IC1", 87], ["R11", 1]);
-  assertSameNet(["IC1", 26], ["R11", 2], ["R12", 1]);
+  assertSameNet(["IC1", 87], ["R11", 2]);
+  assertSameNet(["R10", 1], ["R11", 1], ["R12", 1], ["TP6", 1]);
+  assertSameNet(
+    ["IC1", 26],
+    ["R10", 2],
+    ["C4", 2],
+    ["C10", 2],
+    ["C6", 2],
+    ["C7", 2],
+    ["TP5", 1],
+  );
   assertSameNet(["IC1", 5], ["R12", 2]);
 
   assert(
