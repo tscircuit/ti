@@ -40,8 +40,9 @@ audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
 The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.circuit.tsx)
-example composes the TIDEP-01024 AWR1843AoP radar SoC, 40 MHz clock, and QSPI
-flash into the radar front-end and processing subsystem.
+example is intentionally minimal: it composes the reusable `SystemPowerSupply`
+with the TIDEP-01024 AWR1843AoP radar SoC, 40 MHz clock, and QSPI flash through
+the `RadarFrontEndProcessing` composite.
 
 The
 [`BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx`](examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx)
@@ -372,6 +373,13 @@ The package currently exports these subcircuit components:
 - `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
+- `PmicPowerStage_LP87524B` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC sheet)
+- `PmicSequencer` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C PMIC control sections)
+- `LdoRegulator1V8_TPS7A8101` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C 1.8 V LDO sheet)
+- `DualLdoRegulator1V3_TPS7A8801` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C dual 1.3 V LDO sheet)
+- `VppLdoRegulator_TPS79601` ([TIDEP-0092](https://www.ti.com/tool/TIDEP-0092), Rev C VPP sheet)
+- `PrecisionVoltageReference_LM4060A33` ([LM4060 datasheet](https://www.ti.com/lit/ds/symlink/lm4060.pdf), Figure 9-1 and Section 9.2.2; datasheet-derived, not a TIDEP-0092 board section)
+- `SystemPowerSupply` (reusable composite used by the [Obstacle Detection Sensor subsystem 21584](https://www.ti.com/solution/obstacle-detection-sensor?variantid=35081&subsystemid=21584#block-diagram))
 
 ## Exported Chips
 
@@ -402,11 +410,13 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM4060A33EDBZR` | `sot23_3` | `LM4060A33EDBZR` |
 | `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
+| `LP87524BRNFRQ1` | `qfn26_w4.5mm_h4mm_p0.5mm_pw0.25mm_pl0.7mm_thermalpad3.2mmx2.7mm` | `LP87524BRNFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
@@ -436,6 +446,9 @@ chip is listed individually below, including whether it supports a
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPS7A20` | `sot_23_5` | `TPS7A2018PDBVR`, `TPS7A2033PDBVR` |
+| `TPS79601DRBR` | `son8_w3mm_h3mm_p0.65mm_pl0.7mm_pw0.3mm_ep_epw1.6mm_eph2.4mm` | `TPS79601DRBR` |
+| `TPS7A8101QDRBRQ1` | `son8_w3mm_h3mm_p0.65mm_pl0.7mm_pw0.3mm_ep_epw1.6mm_eph2.4mm` | `TPS7A8101QDRBRQ1` |
+| `TPS7A8801RTJR` | `qfn20_w4mm_h4mm_p0.5mm_pw0.28mm_pl0.75mm_thermalpad2.65mmx2.65mm` | `TPS7A8801RTJR` |
 | `TPS7E81Q1` | `-` | `TPS7E8133QDBVRQ1` |
 | `TPS92638` | `-` | `TPS92638QPWPRQ1` |
 | `TPS7A2028PDBVR` | `-` | `TPS7A2028PDBVR` |

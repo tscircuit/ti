@@ -44,6 +44,8 @@ export {
   LM74202QPWPRQ1,
   LM74202QPWPRQ1_PIN_LABELS,
 } from "./LM74202QPWPRQ1.circuit.tsx";
+export { LM4060A33EDBZR } from "./LM4060A33EDBZR.circuit.tsx";
+export { LP87524BRNFRQ1 } from "./LP87524BRNFRQ1.circuit.tsx";
 export {
   LM5050Q1,
   LM5050Q1MKX_1_NOPB,
@@ -111,6 +113,9 @@ export { TPS63802 } from "./TPS63802.circuit.tsx";
 export { TRF7960RHB } from "./TRF7960RHB.circuit.tsx";
 export { TPS7A02 } from "./TPS7A02.circuit.tsx";
 export { TPS7A20 } from "./TPS7A20.circuit.tsx";
+export { TPS79601DRBR } from "./TPS79601DRBR.circuit.tsx";
+export { TPS7A8101QDRBRQ1 } from "./TPS7A8101QDRBRQ1.circuit.tsx";
+export { TPS7A8801RTJR } from "./TPS7A8801RTJR.circuit.tsx";
 export { TPS7A24 } from "./TPS7A24.circuit.tsx";
 export {
   TPS7E81Q1,

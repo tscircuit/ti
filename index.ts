@@ -31,12 +31,14 @@ import {
   INA237,
   INA350,
   ISOW7841,
+  LM4060A33EDBZR,
   LM5050Q1,
   LM74202Q1,
   LM50HVQ1,
   LMK1C1104,
   LMV324A,
   LP5892Q1,
+  LP87524BRNFRQ1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
@@ -77,6 +79,9 @@ import {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS79601DRBR,
+  TPS7A8101QDRBRQ1,
+  TPS7A8801RTJR,
   TPS7A24,
   TPS7E81Q1,
   TPS78230DRVR,
@@ -158,6 +163,13 @@ import { PowerSupply_LM5050_TIDA00992 } from "./lib/subcircuits/PowerSupply_LM50
 import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
 import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
+import { DualLdoRegulator1V3_TPS7A8801 } from "./lib/subcircuits/DualLdoRegulator1V3_TPS7A8801.circuit.tsx";
+import { LdoRegulator1V8_TPS7A8101 } from "./lib/subcircuits/LdoRegulator1V8_TPS7A8101.circuit.tsx";
+import { PmicPowerStage_LP87524B } from "./lib/subcircuits/PmicPowerStage_LP87524B.circuit.tsx";
+import { PmicSequencer } from "./lib/subcircuits/PmicSequencer.circuit.tsx";
+import { PrecisionVoltageReference_LM4060A33 } from "./lib/subcircuits/PrecisionVoltageReference_LM4060A33.circuit.tsx";
+import { SystemPowerSupply } from "./lib/subcircuits/SystemPowerSupply.circuit.tsx";
+import { VppLdoRegulator_TPS79601 } from "./lib/subcircuits/VppLdoRegulator_TPS79601.circuit.tsx";
 import { LogicBuffer_SN74LVC1G34 } from "./lib/subcircuits/LogicBuffer_SN74LVC1G34.circuit.tsx";
 import { WirelessAntenna_W3006_TIDCWL1837MODCOM8I } from "./lib/subcircuits/WirelessAntenna_W3006_TIDCWL1837MODCOM8I.circuit.tsx";
 import { WirelessConnectivity_CC2540_TIDCCC2540BLEUSB } from "./lib/subcircuits/WirelessConnectivity_CC2540_TIDCCC2540BLEUSB.circuit.tsx";
@@ -256,6 +268,13 @@ export {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
+  DualLdoRegulator1V3_TPS7A8801,
+  LdoRegulator1V8_TPS7A8101,
+  PmicPowerStage_LP87524B,
+  PmicSequencer,
+  PrecisionVoltageReference_LM4060A33,
+  SystemPowerSupply,
+  VppLdoRegulator_TPS79601,
   LogicBuffer_SN74LVC1G34,
   WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
   WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
@@ -309,11 +328,13 @@ export const TiChipComponents = {
   INA237,
   INA350,
   ISOW7841,
+  LM4060A33EDBZR,
   LM5050Q1,
   LM74202Q1,
   LM50HVQ1,
   LMK1C1104,
   LP5892Q1,
+  LP87524BRNFRQ1,
   MSP430G2230ID,
   MSP430G2332IPW20,
   MSP430F5229,
@@ -353,6 +374,9 @@ export const TiChipComponents = {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS79601DRBR,
+  TPS7A8101QDRBRQ1,
+  TPS7A8801RTJR,
   TPS7E81Q1,
   TPS78230DRVR,
   TPS92638,
@@ -434,6 +458,13 @@ export const TiSubcircuitComponents = {
   ElectrochromicMirrorDriver_TIDA01539,
   LampDriver_TPS92638_TIDA00356,
   LightSensor_OPT3001_TIDA01539,
+  DualLdoRegulator1V3_TPS7A8801,
+  LdoRegulator1V8_TPS7A8101,
+  PmicPowerStage_LP87524B,
+  PmicSequencer,
+  PrecisionVoltageReference_LM4060A33,
+  SystemPowerSupply,
+  VppLdoRegulator_TPS79601,
   LogicBuffer_SN74LVC1G34,
   WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
   WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
