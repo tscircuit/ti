@@ -20,7 +20,6 @@ interface OutputPanelProps {
   tsx: string;
   hasSchematic: boolean;
   schematicSheetCount: number;
-  isRendering: boolean;
   onDownloadSchematicPdf: () => void | Promise<void>;
   onDownloadCircuitJson: () => void | Promise<void>;
   onDownloadTscircuitTsxZip: () => void | Promise<void>;
@@ -36,8 +35,6 @@ type DownloadKind =
   | "altium";
 
 interface DownloadAvailability {
-  hasSchematic: boolean;
-  isRendering: boolean;
   isBusy: boolean;
 }
 
@@ -73,19 +70,16 @@ export function getNextDownloadMenuIndex(
 }
 
 export function isDownloadOptionAvailable(
-  kind: DownloadKind,
-  { hasSchematic, isRendering, isBusy }: DownloadAvailability,
+  _kind: DownloadKind,
+  { isBusy }: DownloadAvailability,
 ): boolean {
-  if (isBusy) return false;
-  if (kind === "tscircuit-tsx") return true;
-  return hasSchematic && !isRendering;
+  return !isBusy;
 }
 
 export function OutputPanel({
   tsx,
   hasSchematic,
   schematicSheetCount,
-  isRendering,
   onDownloadSchematicPdf,
   onDownloadCircuitJson,
   onDownloadTscircuitTsxZip,
@@ -101,8 +95,6 @@ export function OutputPanel({
   const downloadItemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const downloadsDisabled = activeDownload !== undefined;
   const downloadAvailability: DownloadAvailability = {
-    hasSchematic,
-    isRendering,
     isBusy: downloadsDisabled,
   };
 

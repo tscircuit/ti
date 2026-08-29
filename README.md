@@ -39,6 +39,10 @@ example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
+The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.circuit.tsx)
+example composes the TIDEP-01024 AWR1843AoP radar SoC, 40 MHz clock, and QSPI
+flash into the radar front-end and processing subsystem.
+
 The
 [`BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx`](examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx)
 example reproduces TI's TIDA-010266 blood-pressure and heart-rate monitor from
@@ -89,9 +93,10 @@ exact tscircuit selectors. The app generates example-style TSX and can evaluate
 it with PCB and routing work disabled to produce a schematic preview and
 downloadable PDF.
 
-The default editor graph is the same seven-block Consumer wireless module, so
-its high-level Power, GPIO, and LVDS edges generate the same reviewed internal
-selectors as the complete example.
+The default editor graph uses the six implementation-ready blocks from the
+Consumer wireless module. The antenna is temporarily omitted because it is not
+working properly in the editor. Its high-level Power, GPIO, and LVDS edges
+generate the same reviewed internal selectors as the complete example.
 
 [Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
 
@@ -352,6 +357,7 @@ The package currently exports these subcircuit components:
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LogicBuffer_SN74LVC1G34` ([SN74LVC1G34 typical application](https://www.ti.com/lit/gpn/SN74LVC1G34))
 - `WirelessAntenna_W3006_TIDCWL1837MODCOM8I` ([TIDC-WL1837MODCOM8I](https://www.ti.com/tool/TIDC-WL1837MODCOM8I))
+- `WirelessConnectivity_CC2540_TIDCCC2540BLEUSB` ([TIDC-CC2540-BLE-USB](https://www.ti.com/tool/TIDC-CC2540-BLE-USB))
 - `InputOutputProtection_TPD2E009_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `BuckConverter_TPS62086_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `InputPowerProtection_TPS25910_TIDA00890` ([TIDA-00890](https://www.ti.com/tool/TIDA-00890))

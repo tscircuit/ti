@@ -18,6 +18,14 @@ type CirclePad = readonly [
   radius: number,
 ];
 
+type MappedRectPad = readonly [
+  portHints: readonly string[],
+  pcbX: number,
+  pcbY: number,
+  width: number,
+  height: number,
+];
+
 const createRectPadFootprint = (pads: readonly RectPad[]) => (
   <footprint>
     {pads.map(([pin, pcbX, pcbY, width, height, shape, radius]) =>
@@ -59,6 +67,26 @@ const createCirclePadFootprint = (pads: readonly CirclePad[]) => (
           pcbY={pcbY}
           radius={radius}
           shape="circle"
+        />
+      </Fragment>
+    ))}
+  </footprint>
+);
+
+const createMappedRectPadFootprint = (
+  pads: readonly MappedRectPad[],
+  insertionDirection?: "from_above",
+) => (
+  <footprint insertionDirection={insertionDirection}>
+    {pads.map(([portHints, pcbX, pcbY, width, height], index) => (
+      <Fragment key={`${portHints.join("-")}-${index}`}>
+        <smtpad
+          portHints={[...portHints]}
+          pcbX={pcbX}
+          pcbY={pcbY}
+          width={width}
+          height={height}
+          shape="rect"
         />
       </Fragment>
     ))}
@@ -133,6 +161,59 @@ export const SN74LVC1G34DBVR_FOOTPRINT = createRectPadFootprint([
   [5, -1.100074, -0.950087, 0.999998, 0.5999988, "rect"],
 ]);
 
+/** Exact WQFN-40-EP copper imported from JLCPCB C22649. */
+export const CC2540F256RHAR_FOOTPRINT = createRectPadFootprint([
+  [1, -2.999994, 2.249932, 0.7999984, 0.2800096, "rect"],
+  [2, -2.999994, 1.75006, 0.7999984, 0.2800096, "rect"],
+  [3, -2.999994, 1.249934, 0.7999984, 0.2800096, "rect"],
+  [4, -2.999994, 0.750062, 0.7999984, 0.2800096, "rect"],
+  [5, -2.999994, 0.249936, 0.7999984, 0.2800096, "rect"],
+  [6, -2.999994, -0.249936, 0.7999984, 0.2800096, "rect"],
+  [7, -2.999994, -0.750062, 0.7999984, 0.2800096, "rect"],
+  [8, -2.999994, -1.249934, 0.7999984, 0.2800096, "rect"],
+  [9, -2.999994, -1.75006, 0.7999984, 0.2800096, "rect"],
+  [10, -2.999994, -2.249932, 0.7999984, 0.2800096, "rect"],
+  [11, -2.249932, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [12, -1.75006, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [13, -1.249934, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [14, -0.750062, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [15, -0.249936, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [16, 0.249936, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [17, 0.750062, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [18, 1.249934, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [19, 1.75006, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [20, 2.249932, -2.999994, 0.2800096, 0.7999984, "rect"],
+  [21, 2.999994, -2.249932, 0.7999984, 0.2800096, "rect"],
+  [22, 2.999994, -1.75006, 0.7999984, 0.2800096, "rect"],
+  [23, 2.999994, -1.249934, 0.7999984, 0.2800096, "rect"],
+  [24, 2.999994, -0.750062, 0.7999984, 0.2800096, "rect"],
+  [25, 2.999994, -0.249936, 0.7999984, 0.2800096, "rect"],
+  [26, 2.999994, 0.249936, 0.7999984, 0.2800096, "rect"],
+  [27, 2.999994, 0.750062, 0.7999984, 0.2800096, "rect"],
+  [28, 2.999994, 1.249934, 0.7999984, 0.2800096, "rect"],
+  [29, 2.999994, 1.75006, 0.7999984, 0.2800096, "rect"],
+  [30, 2.999994, 2.249932, 0.7999984, 0.2800096, "rect"],
+  [31, 2.249932, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [32, 1.75006, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [33, 1.249934, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [34, 0.750062, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [35, 0.249936, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [36, -0.249936, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [37, -0.750062, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [38, -1.249934, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [39, -1.75006, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [40, -2.249932, 2.999994, 0.2800096, 0.7999984, "rect"],
+  [41, 0, 0, 4.5999908, 4.5999908, "rect"],
+]);
+
+/** Exact EasyEDA copper imported from JLCPCB C2650941. */
+export const LFB212G45SG8C341_FOOTPRINT = createRectPadFootprint([
+  [1, 0, 0.5750306, 1.5999968, 0.350012, "rect"],
+  [2, 0.899922, -0.000127, 0.350012, 0.2999994, "rect"],
+  [3, 0, -0.5750306, 1.5999968, 0.350012, "rect"],
+  [4, -0.899922, -0.000127, 0.350012, 0.2999994, "rect"],
+]);
+
 /** Exact EasyEDA copper imported from JLCPCB C165141. */
 export const TMP103AYFF_FOOTPRINT = createCirclePadFootprint([
   [1, 0.1998853, -0.199898, 0.0900049],
@@ -158,3 +239,36 @@ export const ESD5Z6_0T1G_FOOTPRINT = createRectPadFootprint([
   [1, -0.7112, 0.0050038, 0.6096, 0.4826, "rect"],
   [2, 0.7112, -0.0050038, 0.6096, 0.4826, "rect"],
 ]);
+
+/**
+ * Exact EasyEDA copper imported from JLCPCB C2863837.
+ *
+ * Logical MOSFET ports follow TI's DQK package assignment: gate pad 3,
+ * source pads 4 and 7, and drain pads 1, 2, 5, 6 and 8.
+ */
+export const CSD17313Q2_FOOTPRINT = createMappedRectPadFootprint([
+  [["pin1", "drain"], -0.974979, 0.650113, 0.4500118, 0.350012],
+  [["pin1", "drain"], -0.974979, 0.000127, 0.4500118, 0.350012],
+  [["pin3", "gate"], -0.974979, -0.650113, 0.4500118, 0.350012],
+  [["pin2", "source"], 0.974979, -0.650113, 0.4500118, 0.350012],
+  [["pin1", "drain"], 0.974979, 0.000381, 0.4500118, 0.350012],
+  [["pin1", "drain"], 0.974979, 0.650113, 0.4500118, 0.350012],
+  [["pin2", "source"], 0.094869, -0.650113, 0.7500112, 0.2999994],
+  [["pin1", "drain"], -0.000127, 0.324993, 0.999998, 0.9500108],
+]);
+
+/**
+ * Exact EasyEDA copper imported from JLCPCB C88373.
+ *
+ * The existing reference schematic numbers the center contact as pin 1 and
+ * the two shell contacts as pins 2 and 3, so those logical pins are mapped to
+ * Hirose's SIG and GND lands respectively.
+ */
+export const U_FL_R_SMT_1_10_FOOTPRINT = createMappedRectPadFootprint(
+  [
+    [["pin1"], -0.79996665, 0.001143, 1.499997, 1.0999978],
+    [["pin2"], 0.44996735, 1.499997, 2.1999956, 1.0999978],
+    [["pin3"], 0.44996735, -1.499997, 2.1999956, 1.0999978],
+  ],
+  "from_above",
+);

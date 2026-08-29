@@ -7,6 +7,10 @@ export { BQ25895 } from "./BQ25895.circuit.tsx";
 export { BQ27441G1 } from "./BQ27441G1.circuit.tsx";
 export { BQ32002 } from "./BQ32002.circuit.tsx";
 export { CC2340R5 } from "./CC2340R5.circuit.tsx";
+export {
+  CC2540F256RHAR,
+  CC2540F256RHAR_PIN_LABELS,
+} from "./CC2540F256RHAR.circuit.tsx";
 export { CC2564C } from "./CC2564C.circuit.tsx";
 export { CC2745R10 } from "./CC2745R10.circuit.tsx";
 export { CC3235SF } from "./CC3235SF.circuit.tsx";
@@ -63,7 +67,10 @@ export {
   SN65LVDS31D,
   SN65LVDS31D_PIN_LABELS,
 } from "./SN65LVDS31D.circuit.tsx";
-export { SN74LVC1G34DBVR } from "./SN74LVC1G34DBVR.circuit.tsx";
+export {
+  SN74LVC1G34DBVR,
+  SN74LVC1G34DBVR_PIN_LABELS,
+} from "./SN74LVC1G34DBVR.circuit.tsx";
 export { NTR5198NLT1G } from "./NTR5198NLT1G.circuit.tsx";
 export { SQJ858AEP_T1_GE3 } from "./SQJ858AEP_T1_GE3.circuit.tsx";
 export { TAS2505 } from "./TAS2505.circuit.tsx";
@@ -172,3 +179,14 @@ export { TPS61288RQQR } from "./TPS61288RQQR.circuit.tsx";
 export { TPS78230DRVR } from "./TPS78230DRVR.circuit.tsx";
 export { TXB0104RGYR } from "./TXB0104RGYR.circuit.tsx";
 export { TXS0102DCUR } from "./TXS0102DCUR.circuit.tsx";
+export {
+  AWR1843ARBGALPQ1,
+  AWR1843ARBGALPQ1_BALLS,
+  AWR1843ARBGALPQ1_PIN_LABELS,
+} from "./AWR1843ARBGALPQ1.circuit.tsx";
+export { CHS01TA } from "./CHS01TA.circuit.tsx";
+export { FW4000044Q } from "./FW4000044Q.circuit.tsx";
+export {
+  MX25V1635FZNQ,
+  MX25V1635FZNQ_PIN_LABELS,
+} from "./MX25V1635FZNQ.circuit.tsx";

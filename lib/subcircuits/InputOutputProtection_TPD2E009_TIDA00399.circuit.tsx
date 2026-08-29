@@ -14,6 +14,8 @@ export const InputOutputProtection_TPD2E009_TIDA00399 = (
       name="UESD"
       schX={0}
       schY={0}
+      pcbX={0}
+      pcbY={0}
       connections={{
         pin1: "net.SATA_P",
         pin2: "net.SATA_N",

@@ -6,16 +6,17 @@ blocks. The graph uses broad, readable connections such as **Power** and
 **Data**, then resolves them to the concrete tscircuit selectors needed by the
 generated TSX.
 
-The starter graph reproduces TI's seven-block Consumer wireless module using
-the reviewed input-protection, 3.3 V buck, LVDS, antenna, I/O-protection, logic,
-and temperature-sensor subcircuits. Six semantic connections describe its
-power distribution and logic-to-LVDS signal path; the external RF and I2C
-interfaces remain available at their source subcircuits.
+The starter graph reproduces the implementation-ready portion of TI's Consumer
+wireless module using the reviewed input-protection, 3.3 V buck, LVDS,
+I/O-protection, logic, and temperature-sensor subcircuits. The antenna is
+temporarily omitted because it is not working properly in the editor. Six
+semantic connections describe its power distribution and logic-to-LVDS signal
+path; the external I2C interface remains available at its source subcircuit.
 
 Use **Load Example** in the canvas's upper-left corner to replace the current
 graph with an editable diagram backed by a complete circuit in [`../examples`](../examples).
-The menu includes the Consumer wireless module and Bluetooth speaker examples;
-reset restores whichever example was loaded most recently.
+The menu includes the repository's reviewed complete-circuit examples; reset
+restores whichever example was loaded most recently.
 
 ## Run with schematic evaluation
 
@@ -96,14 +97,16 @@ with an explanation instead of guessing.
 The generated main file, `GeneratedSystem.circuit.tsx`, mirrors the TSX under
 `../examples`: it imports selected subcircuits from `@tsci/tscircuit.ti`,
 default-exports a `<board routingDisabled>`, places named block instances, and
-adds resolved traces. Its schematic sheets contain only the individual block
-circuits in deterministic order.
+adds resolved traces. Its first schematic sheet is always a **System Diagram**
+containing a generated overview through `<schematicgraphic
+svgContent={SYSTEM_DIAGRAM_SVG} />`; the individual block schematics follow it
+in deterministic order.
 
-The block-level overview is a documentation artifact rather than an electrical
-schematic sheet. **tscircuit TSX (ZIP)** therefore includes it separately as
-`GeneratedSystem.system-diagram.svg`; the TSX neither imports nor evaluates the
-SVG. The diagram preserves the block positions from the editor and shows every
-Power and Data connection without adding a graphic-only sheet to Circuit JSON.
+To keep the generated TSX readable, `SYSTEM_DIAGRAM_SVG` is imported from the
+sibling `GeneratedSystem.system-diagram.ts` module instead of being embedded in
+the main file. **tscircuit TSX (ZIP)** downloads both required files in one
+archive. The system diagram preserves the block positions from the editor and
+shows every Power and Data connection.
 
 The right panel always shows the syntax-highlighted main TSX; it does not switch
 to a schematic preview. **Render** evaluates that default export through
@@ -123,10 +126,10 @@ The CAD ZIPs include PCB components and pad geometry for source components that
 specify a footprint. Components whose subcircuits have not selected a physical
 package are retained as footprint placeholders so schematic preview and export
 remain available. The board is neither placed nor routed. The direct
-`GeneratedSystem.circuit.json` download retains these PCB records and contains
-only the editable detail sheets. ECAD exporters still defensively omit any
-graphic-only sheet supplied by external Circuit JSON because native KiCad and
-Altium converters do not support `schematic_graphic`.
+`GeneratedSystem.circuit.json` download retains these PCB records and the System
+Diagram `schematic_graphic`. The SVG-only System Diagram overview is omitted
+from the KiCad and Altium archives because those native converters do not
+support `schematic_graphic`; all editable detail sheets are retained.
 
 The Consumer Wireless Module's seven packaged chips include exact copper pad
 geometry and LCSC supplier IDs imported from JLCPCB. Its resistors and RF
@@ -136,17 +139,19 @@ SOD-523 protection diode also use exact JLCPCB-imported copper. Its MOSFET and
 U.FL connector still require explicit package selections.
 
 `circuit-json-to-altium` is temporarily pinned to the official repository's
-exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has
+exact commit `a9b522ba982805bb7051065453d2bcc706f1b7e1` because that converter has
 not published its first npm release yet. The pin should become an exact npm
 version once one is available; it does not use a preview registry or floating
 Git branch. Its nested `altiumts` dependency is overridden to the equivalent
 published `altiumts@0.0.32` release so installs do not need to resolve another
 Git dependency.
 
-Evaluation uses the same self-contained canonical TSX shown in the panel and
-included in the source ZIP. The system-diagram SVG stays outside the evaluator,
-so it cannot become a schematic sheet. The nested package pins
-`@tscircuit/eval` 0.0.1294 and `@tscircuit/core` 0.0.1785.
+Evaluation uses the same canonical TSX shown in the panel and included in the
+source ZIP, with the generated system-diagram module supplied to the evaluator's
+virtual filesystem. The nested package pins `@tscircuit/eval` 0.0.1294 and
+`@tscircuit/core` 0.0.1785 so the worker evaluates the native
+`schematicgraphic` element directly; no host-side Circuit JSON compatibility
+step is required.
 
 For evaluation, the selected subcircuits and their relative source
 dependencies are loaded from the local checkout into a minimal virtual

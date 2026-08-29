@@ -21,6 +21,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
     <net name="VINT" isPowerNet />
     <net name="TEST" />
     <capacitor
+      footprint="0603"
       name="C16"
       capacitance="1uF"
       schX={-0.7}
@@ -28,6 +29,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C8"
       capacitance="1uF"
       schX={-11.7}
@@ -35,6 +37,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C9"
       capacitance="1uF"
       schX={-7.9}
@@ -42,6 +45,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C14"
       capacitance="1uF"
       schX={-5.6}
@@ -49,6 +53,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C15"
       capacitance="1uF"
       schX={-8.5}
@@ -56,6 +61,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C12"
       capacitance="1uF"
       schX={-8.1}
@@ -63,6 +69,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C11"
       capacitance="1uF"
       schX={-11.1}
@@ -70,6 +77,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <capacitor
+      footprint="0603"
       name="C13"
       capacitance="1uF"
       schX={-7.1}
@@ -77,6 +85,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R10"
       resistance="1k"
       schX={2.9}
@@ -84,6 +93,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R11"
       resistance="1k"
       schX={-13.2}
@@ -91,6 +101,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R15"
       resistance="1k"
       schX={-8.9}
@@ -98,6 +109,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R19"
       resistance="1k"
       schX={2.5}
@@ -105,6 +117,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="R20"
       resistance="1k"
       schX={-0.7}
@@ -112,6 +125,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R12"
       resistance="1k"
       schX={2.9}
@@ -119,6 +133,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R16"
       resistance="1k"
       schX={2.9}
@@ -126,6 +141,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R17"
       resistance="1k"
       schX={2.9}
@@ -133,6 +149,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R14"
       resistance="1k"
       schX={-12}
@@ -140,6 +157,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R13"
       resistance="1k"
       schX={-9.3}
@@ -147,6 +165,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <resistor
+      footprint="0603"
       name="R18"
       resistance="1k"
       schX={-7.7}
@@ -155,6 +174,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
     />
 
     <diode
+      footprint="sod323"
       name="D2"
       manufacturerPartNumber="D2"
       schX={4.1}
@@ -162,6 +182,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <diode
+      footprint="sod323"
       name="D1"
       manufacturerPartNumber="D1"
       schX={4.1}
@@ -169,6 +190,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <diode
+      footprint="sod323"
       name="D4"
       manufacturerPartNumber="D4"
       schX={4.1}
@@ -176,6 +198,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
       schRotation={0}
     />
     <diode
+      footprint="sod323"
       name="D3"
       manufacturerPartNumber="D3"
       schX={4.1}
@@ -184,6 +207,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
     />
 
     <transistor
+      footprint="sot23"
       name="Q5"
       manufacturerPartNumber="Q5"
       type="npn"
@@ -232,6 +256,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
     <chip
       name="J6"
       manufacturerPartNumber="J6"
+      footprint="pinrow2"
       pinLabels={{ pin1: "1", pin2: "2" }}
       schPinArrangement={{
         rightSide: { pins: [2, 1], direction: "top-to-bottom" },
@@ -245,6 +270,7 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
     <chip
       name="RT1"
       manufacturerPartNumber="RT1"
+      footprint="0603"
       pinLabels={{ pin2: "2", pin1: "1" }}
       schPinArrangement={{
         topSide: { pins: [2], direction: "left-to-right" },
