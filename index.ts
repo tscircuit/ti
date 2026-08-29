@@ -46,6 +46,7 @@ import {
   MSPM0G3507,
   MX25V1635FZNQ,
   OPT3001,
+  OPT3004,
   PGA300ARHHR,
   SN65HVD1473,
   SMPP2_03,
@@ -59,6 +60,7 @@ import {
   TLV755P,
   TLV9152IDR,
   TMP103AYFF,
+  TMP116,
   TMP1827,
   TMP1075,
   TMP390Q1,
@@ -119,6 +121,7 @@ import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MS
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
 import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "./lib/subcircuits/OutputUserInterface_LEDMatrix_LP5892_Q1.circuit.tsx";
+import { Sensors_TMP116_OPT3004 } from "./lib/subcircuits/Sensors_TMP116_OPT3004.circuit.tsx";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
 import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
 import {
@@ -220,6 +223,7 @@ export {
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
   OutputUserInterface_LEDMatrix_LP5892_Q1,
+  Sensors_TMP116_OPT3004,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   MotorThermalProtection_TMP390,
@@ -319,6 +323,7 @@ export const TiChipComponents = {
   MSPM0G3507,
   MX25V1635FZNQ,
   OPT3001,
+  OPT3004,
   PGA300ARHHR,
   SN65HVD1473,
   SN65LVDS31D,
@@ -331,6 +336,7 @@ export const TiChipComponents = {
   TLV755P,
   TLV9152IDR,
   TMP103AYFF,
+  TMP116,
   TMP1827,
   TMP1075,
   TMP390Q1,
@@ -397,6 +403,7 @@ export const TiSubcircuitComponents = {
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
   OutputUserInterface_LEDMatrix_LP5892_Q1,
+  Sensors_TMP116_OPT3004,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   MotorThermalProtection_TMP390,

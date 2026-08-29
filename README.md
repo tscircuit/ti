@@ -83,6 +83,15 @@ the LVDS interface, logic buffer, and temperature sensor; the logic signal then
 flows through the LVDS driver and two-channel I/O protection. The antenna feed,
 I2C bus, and protected differential pair remain explicit parent-level ports.
 
+The [`IndustrialAutomation_FlatPanel.circuit.tsx`](examples/IndustrialAutomation_FlatPanel.circuit.tsx)
+example implements an initial reusable subset of TI's
+[Flat panel solution](https://www.ti.com/solution/flat-panel). It connects the
+LP5892-Q1 output-user-interface block, TMP116/OPT3004 sensor block, and TLV755P
+3.3 V supply through public subcircuit nets. A host header supplies the serial
+and I2C interfaces, while dedicated headers expose all 48 RGB current sinks and
+16 scan lines. The controller and physical panel remain explicit boundaries;
+the example does not imply an unmodeled processor or display-interface circuit.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
@@ -327,6 +336,7 @@ The package currently exports these subcircuit components:
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
 - `OutputUserInterface_LEDMatrix_LP5892_Q1`
+- `Sensors_TMP116_OPT3004`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
 - `MotorThermalProtection_TMP390` (datasheet-derived; not an exact Window Module reference design)
@@ -402,6 +412,7 @@ chip is listed individually below, including whether it supports a
 | `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
+| `OPT3004` | `uson_6_ep_2x2` | `OPT3004DNPR` |
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `SN65LVDS31D` | `-` | `SN65LVDS31D` |
@@ -412,6 +423,7 @@ chip is listed individually below, including whether it supports a
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP103AYFF` | `-` | `TMP103AYFF` |
+| `TMP116` | `wson_6_ep_2x2` | `TMP116NAIDRVR` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TMP390Q1` | `-` | `TMP390AQDRLRQ1` |
