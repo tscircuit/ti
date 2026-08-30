@@ -30,10 +30,6 @@ export default () => (
 
 ## Complete Examples
 
-The [`AutomotiveWindowModule_PowerSupply.circuit.tsx`](examples/AutomotiveWindowModule_PowerSupply.circuit.tsx)
-example is intentionally thin: it imports and places the verified
-`PowerSupply_WindowModule` composite without duplicating its TI-derived wiring.
-
 The [`BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx`](examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx)
 example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
@@ -375,35 +371,6 @@ The package also exports:
 - `TiSubcircuitName`: a TypeScript union of keys in `TiSubcircuitComponents`.
 - `TiSubcircuitComponent`: a TypeScript type for any exported subcircuit
   component.
-
-## Automotive Window Module Power Supply
-
-`PowerSupply_WindowModule` composes three independently renderable sections
-from TI reference design TIDA-050008:
-
-- `ReverseBatteryProtection_TLV1805_SQJ461EP` reproduces the TLV1805-Q1,
-  P-channel MOSFET, transient-protection, and system EMI-input section.
-- `VoltageRegulator_LM73605` reproduces the off-battery 3.3-V system supply.
-- `SupervisorWatchdog_TPS3850` reproduces the combined 3.3-V voltage
-  supervisor and programmable window-watchdog section.
-
-The native Altium source is TI archive `TIDRXT8`; the matching schematic and
-BOM are `TIDRXU1` and `TIDRXT7`. TIDA-01389 was also reviewed because it is a
-window/sunroof motor reference, but it contains only reverse-battery protection
-and a TPS7B6933-Q1 LDO, so it is not used to invent a cross-reference composite.
-
-All four functions on TI's high-level Power Supply block are covered: reverse
-battery protection, voltage regulation, supply supervision, and watchdog. The
-source net names `+3.3V`, `SS/TRK`, and `3.3RESET` map to the selector-safe
-native TSX net/interface names `V3_3`, `SS_TRK`, and `RESET_3V3`, because
-tscircuit net selectors cannot contain the source punctuation characters.
-
-The TI window-module page's uncited product recommendations (LM74500-Q1,
-TPS7B4255-Q1, TPS7B63-Q1, TPS7B68-Q1, TPS7E81-Q1, and TPS7E82-Q1) are not
-implemented because that subsystem has no attached reference design or CAD.
-TIDA-050008's separate 5-V CAN supply, 1.2-V core supply, TPS3890/TPS3703
-supervisors, and 2.5-V reference are also intentionally outside this focused
-window-module power composite.
 
 ## Key Directories
 
