@@ -327,6 +327,10 @@ The package currently exports these subcircuit components:
 - `InstrumentationAmplifier_INA350`
 - `PressureTransmitter_PGA300`
 - `IsolatedRS485_ISOW7841`
+- `PowerSupply_WindowModule`
+- `ReverseBatteryProtection_TLV1805_SQJ461EP`
+- `VoltageRegulator_LM73605`
+- `SupervisorWatchdog_TPS3850`
 - `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
@@ -402,8 +406,9 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
-| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
+| `LM73605` | `wqfn_30_rnp_4x6` | `LM73605QRNPRQ1` |
+| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
@@ -421,6 +426,7 @@ chip is listed individually below, including whether it supports a
 | `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
+| `TLV1805` | `sot_23_6` | `TLV1805QDBVRQ1` |
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP103AYFF` | `-` | `TMP103AYFF` |
 | `TMP116` | `wson_6_ep_2x2` | `TMP116NAIDRVR` |
@@ -430,6 +436,7 @@ chip is listed individually below, including whether it supports a
 | `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS25910RSA` | `-` | `TPS25910RSA` |
+| `TPS3850` | `vson_10_drc_3x3` | `TPS3850H33QDRCRQ1` |
 | `TPS62086RLTR` | `-` | `TPS62086RLTR` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
