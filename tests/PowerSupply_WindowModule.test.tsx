@@ -433,11 +433,29 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
     "all U1 traces or inline labels terminate at their ports",
   ).toEqual([]);
 
-  const renderedNetLabels = circuitJson
-    .filter((element) => element.type === "schematic_net_label")
-    .map((element) => element.text);
+  const allSchematicNetLabels = circuitJson.filter(
+    (element) => element.type === "schematic_net_label",
+  );
+  const renderedNetLabels = allSchematicNetLabels.map(
+    (element) => element.text,
+  );
   expect(renderedNetLabels).toContain("P_Gate");
-  expect(renderedNetLabels).toContain("VIN2");
+  const d6Vin2Anchor = schematicPort(circuitJson, "D6", 1).center as {
+    x: number;
+    y: number;
+  };
+  expect(
+    allSchematicNetLabels.some((label) => {
+      const anchor = label.anchor_position as { x: number; y: number };
+      return (
+        label.text === "VIN2" &&
+        label.symbol_name === "rail_up" &&
+        Math.abs(anchor.x - d6Vin2Anchor.x) < 1e-6 &&
+        Math.abs(anchor.y - d6Vin2Anchor.y) < 1e-6
+      );
+    }),
+    "D6 VIN2 is a native upward voltage-source symbol anchored to pin 1",
+  ).toBe(true);
   expect(renderedNetLabels).not.toContain("LOAD_SENS_PCH");
   expect(renderedNetLabels).not.toContain("D2_A");
 
@@ -909,7 +927,10 @@ test("composite joins only the shared TI sheet nets", async () => {
     y: number;
   };
   expect(u1Center.y).toBeCloseTo(5.819, 6);
-  expect(u2Center.y).toBeCloseTo(-5.992, 6);
+  expect(
+    u2Center.y,
+    "3.3-V System Supply is packed 1.6 mm toward Reverse Battery Protection",
+  ).toBeCloseTo(-4.392, 6);
 
   const childGroups = circuitJson.filter(
     (element) =>

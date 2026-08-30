@@ -4,11 +4,11 @@ import { ReverseBatteryProtection_TLV1805_SQJ461EP } from "./ReverseBatteryProte
 import { SupervisorWatchdog_TPS3850 } from "./SupervisorWatchdog_TPS3850.circuit.tsx";
 import { VoltageRegulator_LM73605 } from "./VoltageRegulator_LM73605.circuit.tsx";
 
-// Both sheet-2 children use source-relative coordinates. Reapply the exact
-// difference between their documented Altium origins so their relationship on
-// the Main Supply sheet remains unchanged: (22.225, 7.620) -
-// (21.716, 19.812) = (0.509, -12.192) mm.
-const REGULATOR_SHEET_2_OFFSET = { x: 0.509, y: -12.192 } as const;
+// Both sheet-2 children use source-relative coordinates. Their documented
+// Altium-origin difference is (0.509, -12.192) mm. Keep the source X offset and
+// add a documented +1.6-mm native-sheet Y packing translation to bring the
+// complete 3.3-V System Supply section closer to Reverse Battery Protection.
+const REGULATOR_SHEET_2_OFFSET = { x: 0.509, y: -10.592 } as const;
 
 // Uniformly place the complete source layout in the vertical center of the
 // enlarged native sheet frame. This parent-only translation preserves every
@@ -30,9 +30,9 @@ const MAIN_SUPPLY_SHEET_Y_OFFSET = 6.2;
  * thresholds, timing, dividers, or grounding arrangements.
  *
  * Both sheet frames use native ANSI-B sizing, matching the released Altium
- * title blocks. A uniform +6.2-mm parent translation centers the complete
- * Main Supply source layout vertically; no child geometry is scaled or
- * independently moved.
+ * title blocks. A uniform +6.2-mm parent translation centers the Main Supply
+ * layout vertically. The regulator child additionally receives the documented
+ * +1.6-mm Y packing translation above; no child geometry is scaled.
  */
 export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>

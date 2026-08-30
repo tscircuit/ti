@@ -5,6 +5,10 @@ import { TPS3850H33QDRCRQ1 } from "../chips/TPS3850H33QDRCRQ1.circuit.tsx";
 const SOURCE_ORIGIN = { x: 22.606, y: 19.05 } as const;
 const sx = (x: number) => Number((x - SOURCE_ORIGIN.x).toFixed(6));
 const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
+const leftSectionX = (x: number) => sx(x + 2);
+const senseCapX = (x: number) => sx(x + 1);
+const indicatorSectionX = (x: number) => sx(x - 1);
+const testpointSectionX = (x: number) => sx(x - 2);
 
 /**
  * 3.3-V supply-supervisor and window-watchdog section from sheet 3 of TI
@@ -14,9 +18,13 @@ const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
  * Coordinate transform: Altium mil coordinates are converted to millimeters
  * with 0.0254 mm/mil, then translated as
  * (x_tsx, y_tsx) = (x_mm - 22.606, y_mm - 19.050). No scale or reflection is
- * applied. D9/D8 use x=26.416/28.702 mm instead of their Altium origins
- * x=26.5303/28.8163 mm so the native LED pin anchors align exactly with
- * R16/R15 and preserve the source's straight vertical traces.
+ * applied. To compensate for native-symbol size, the intact left timing/header
+ * section is translated +2 mm, C13 is translated +1 mm, the intact indicator
+ * section is translated -1 mm, and the test-point group is translated -2 mm
+ * in X. D9/D8 use the translated R16/R15 X coordinates instead of their
+ * Altium origins x=26.5303/28.8163 mm so the native LED pin anchors align
+ * exactly with the resistors and preserve the source's straight vertical
+ * traces. All Y coordinates and orientations remain source-derived.
  */
 export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
   <subcircuit schMaxTraceDistance="20mm" routingDisabled {...props}>
@@ -37,7 +45,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       maxVoltageRating="16V"
       footprint="0603"
       manufacturerPartNumber="GRM188R71C104KA01D"
-      schX={sx(17.78)}
+      schX={leftSectionX(17.78)}
       schY={sy(22.225)}
       schRotation={270}
     />
@@ -47,7 +55,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       maxVoltageRating="16V"
       footprint="0603"
       manufacturerPartNumber="GRM188R71C103KA01D"
-      schX={sx(19.558)}
+      schX={senseCapX(19.558)}
       schY={sy(17.399)}
       schRotation={270}
     />
@@ -58,7 +66,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       pitch="2.54mm"
       manufacturerPartNumber="PEC03SAAN"
       footprint="pinrow3_p2.54"
-      schX={sx(16.002)}
+      schX={leftSectionX(16.002)}
       schY={sy(19.05)}
       schFacingDirection="right"
       pinLabels={["V3_3", "SET1", "GND"]}
@@ -70,7 +78,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="0603"
       manufacturerPartNumber="GRM188R71C104KA01D"
       doNotPlace
-      schX={sx(14.224)}
+      schX={leftSectionX(14.224)}
       schY={sy(19.685)}
       schRotation={270}
     />
@@ -79,7 +87,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       resistance="100kohm"
       footprint="0603"
       doNotPlace
-      schX={sx(14.986)}
+      schX={leftSectionX(14.986)}
       schY={sy(17.018)}
       schRotation={90}
     />
@@ -90,7 +98,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       manufacturerPartNumber="CRCW0603100KFKEA"
-      schX={sx(25.4)}
+      schX={indicatorSectionX(25.4)}
       schY={sy(22.098)}
       schRotation={90}
     />
@@ -100,7 +108,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0402"
       manufacturerPartNumber="CRCW04021K00FKED"
-      schX={sx(26.416)}
+      schX={indicatorSectionX(26.416)}
       schY={sy(22.86)}
       schRotation={270}
     />
@@ -110,7 +118,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="led0402"
       manufacturerPartNumber="SML-P12UTT86"
       pinLabels={{ pin1: "K", pin2: "A" }}
-      schX={sx(26.416)}
+      schX={indicatorSectionX(26.416)}
       schY={sy(21.336)}
       schRotation={90}
     />
@@ -120,7 +128,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       manufacturerPartNumber="CRCW0603100KFKEA"
-      schX={sx(27.686)}
+      schX={indicatorSectionX(27.686)}
       schY={sy(22.098)}
       schRotation={90}
     />
@@ -130,7 +138,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0402"
       manufacturerPartNumber="CRCW04021K00FKED"
-      schX={sx(28.702)}
+      schX={indicatorSectionX(28.702)}
       schY={sy(22.86)}
       schRotation={270}
     />
@@ -140,7 +148,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       footprint="led0402"
       manufacturerPartNumber="SML-P12UTT86"
       pinLabels={{ pin1: "K", pin2: "A" }}
-      schX={sx(28.702)}
+      schX={indicatorSectionX(28.702)}
       schY={sy(21.336)}
       schRotation={90}
     />
@@ -150,7 +158,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       displayName="3.3RST"
       manufacturerPartNumber="5014"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(30.988)}
+      schX={testpointSectionX(30.988)}
       schY={sy(20.6756)}
       schRotation={90}
     />
@@ -159,7 +167,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       displayName="WDI"
       manufacturerPartNumber="5127"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(31.75)}
+      schX={testpointSectionX(31.75)}
       schY={sy(19.9136)}
       schRotation={90}
     />
@@ -168,7 +176,7 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       displayName="WDO"
       manufacturerPartNumber="5013"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(32.512)}
+      schX={testpointSectionX(32.512)}
       schY={sy(19.4056)}
       schRotation={90}
     />

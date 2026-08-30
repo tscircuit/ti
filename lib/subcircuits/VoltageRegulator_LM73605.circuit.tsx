@@ -5,6 +5,12 @@ import { LM73605QRNPRQ1 } from "../chips/LM73605QRNPRQ1.circuit.tsx";
 const SOURCE_ORIGIN = { x: 22.225, y: 7.62 } as const;
 const sx = (x: number) => Number((x - SOURCE_ORIGIN.x).toFixed(6));
 const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
+const inputSectionX = (x: number) => sx(x + 2.5);
+const leftControlSectionX = (x: number) => sx(x + 1.5);
+const outputSectionX = (x: number) => sx(x - 1.2);
+const feedbackSectionX = (x: number) => sx(x + 0.8);
+const biasSectionX = (x: number) => sx(x - 1.5);
+const outputConnectorX = (x: number) => sx(x - 2.5);
 
 const NetTie = () => (
   <>
@@ -32,8 +38,13 @@ const NetTie = () => (
  *
  * Coordinate transform: Altium mil coordinates are converted to millimeters
  * with 0.0254 mm/mil, then translated as
- * (x_tsx, y_tsx) = (x_mm - 22.225, y_mm - 7.620). No scale, reflection,
- * rotation, or component re-layout is applied.
+ * (x_tsx, y_tsx) = (x_mm - 22.225, y_mm - 7.620). No scale or reflection is
+ * applied. Native-symbol packing translations preserve every source Y
+ * coordinate and every component's orientation: the input bank is +2.5 mm,
+ * left controls are +1.5 mm, the switch/output bank is -1.2 mm, the complete
+ * FB1 feedback network is +0.8 mm, the bias branch is -1.5 mm, and the output
+ * connectors are -2.5 mm in X. These section-level translations bring the
+ * larger native symbols together while keeping each source circuit intact.
  */
 export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
   <subcircuit schMaxTraceDistance="25mm" routingDisabled {...props}>
@@ -54,7 +65,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       footprint="kicad:Capacitor_SMD/CP_Elec_10x10"
       manufacturerPartNumber="HHXB500ARA101MJA0G"
-      schX={sx(9.398)}
+      schX={inputSectionX(9.398)}
       schY={sy(9.3599)}
       schRotation={270}
     />
@@ -64,7 +75,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       footprint="0805"
       manufacturerPartNumber="GRM21BR71H474KA88L"
-      schX={sx(10.922)}
+      schX={inputSectionX(10.922)}
       schY={sy(9.271)}
       schRotation={90}
     />
@@ -74,7 +85,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       footprint="1210"
       manufacturerPartNumber="GRM32ER71H106KA12L"
-      schX={sx(11.938)}
+      schX={inputSectionX(11.938)}
       schY={sy(9.271)}
       schRotation={90}
     />
@@ -84,7 +95,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       footprint="0805"
       manufacturerPartNumber="C2012X5R1H225K125AB"
-      schX={sx(12.954)}
+      schX={inputSectionX(12.954)}
       schY={sy(9.271)}
       schRotation={270}
     />
@@ -94,7 +105,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       footprint="0805"
       manufacturerPartNumber="C2012X5R1H225K125AB"
-      schX={sx(13.97)}
+      schX={inputSectionX(13.97)}
       schY={sy(9.271)}
       schRotation={270}
     />
@@ -107,7 +118,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="25V"
       footprint="0603"
       manufacturerPartNumber="GRM188R61E474KA12D"
-      schX={sx(22.606)}
+      schX={outputSectionX(22.606)}
       schY={sy(10.16)}
       schOrientation="horizontal"
     />
@@ -116,7 +127,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       inductance="2.2uH"
       footprint="kicad:Inductor_SMD/L_Coilcraft_XAL5030-XXX"
       manufacturerPartNumber="XAL5030-222MEB"
-      schX={sx(24.892)}
+      schX={outputSectionX(24.892)}
       schY={sy(10.4775)}
       schOrientation="horizontal"
     />
@@ -126,7 +137,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       footprint="0805"
       manufacturerPartNumber="GRM21BR71H474KA88L"
-      schX={sx(26.289)}
+      schX={outputSectionX(26.289)}
       schY={sy(9.525)}
       schRotation={90}
     />
@@ -144,7 +155,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
         maxVoltageRating="16V"
         footprint="1210"
         manufacturerPartNumber="GRM32ER71C226KE18L"
-        schX={sx(Number(x))}
+        schX={outputSectionX(Number(x))}
         schY={sy(9.525)}
         schRotation={270}
       />
@@ -156,7 +167,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="10V"
       footprint="0603"
       manufacturerPartNumber="GRM188C81A225KE34D"
-      schX={sx(14.224)}
+      schX={leftControlSectionX(14.224)}
       schY={sy(6.731)}
       schRotation={270}
     />
@@ -166,7 +177,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       manufacturerPartNumber="CRCW060317K4FKEA"
-      schX={sx(15.748)}
+      schX={leftControlSectionX(15.748)}
       schY={sy(7.112)}
       schRotation={270}
     />
@@ -186,7 +197,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       manufacturerPartNumber="CRCW0603100KFKEA"
-      schX={sx(24.13)}
+      schX={outputSectionX(24.13)}
       schY={sy(8.128)}
       schOrientation="horizontal"
     />
@@ -196,7 +207,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="50V"
       footprint="0603"
       manufacturerPartNumber="06035A4R7CAT2A"
-      schX={sx(25.908)}
+      schX={feedbackSectionX(25.908)}
       schY={sy(6.223)}
       schRotation={270}
     />
@@ -206,7 +217,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       manufacturerPartNumber="CRCW0603100KFKEA"
-      schX={sx(27.178)}
+      schX={feedbackSectionX(27.178)}
       schY={sy(6.096)}
       schRotation={90}
     />
@@ -216,7 +227,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       manufacturerPartNumber="CRCW060343K2FKEA"
-      schX={sx(27.178)}
+      schX={feedbackSectionX(27.178)}
       schY={sy(4.318)}
       schRotation={90}
     />
@@ -226,7 +237,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       tolerance="1%"
       footprint="0603"
       manufacturerPartNumber="CRCW0603562KFKEA"
-      schX={sx(28.956)}
+      schX={feedbackSectionX(28.956)}
       schY={sy(4.572)}
       schRotation={90}
     />
@@ -236,7 +247,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       maxVoltageRating="16V"
       footprint="0603"
       manufacturerPartNumber="GCM188R71C104KA37J"
-      schX={sx(32.512)}
+      schX={biasSectionX(32.512)}
       schY={sy(4.953)}
       schRotation={270}
     />
@@ -246,7 +257,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       tolerance="5%"
       footprint="0402"
       manufacturerPartNumber="CRCW04023R00JNED"
-      schX={sx(33.401)}
+      schX={biasSectionX(33.401)}
       schY={sy(6.096)}
       schOrientation="horizontal"
     />
@@ -257,7 +268,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       displayName="V_CTRL1"
       manufacturerPartNumber="5012"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(30.48)}
+      schX={feedbackSectionX(30.48)}
       schY={sy(3.4036)}
       schRotation={90}
     />
@@ -266,7 +277,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       displayName="3.3V"
       manufacturerPartNumber="5010"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(36.83)}
+      schX={outputConnectorX(36.83)}
       schY={sy(10.5156)}
       schRotation={90}
     />
@@ -275,7 +286,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       displayName="GND"
       manufacturerPartNumber="5011"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(36.83)}
+      schX={outputConnectorX(36.83)}
       schY={sy(8.9916)}
       schRotation={90}
     />
@@ -284,7 +295,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       displayName="3.3Vout"
       manufacturerPartNumber="6091"
       footprint="kicad:TestPoint/TestPoint_Plated_Hole_D3.0mm"
-      schX={sx(37.592)}
+      schX={outputConnectorX(37.592)}
       schY={sy(10.16)}
     />
     <testpoint
@@ -292,7 +303,7 @@ export const VoltageRegulator_LM73605 = (props: SubcircuitProps) => (
       displayName="GND"
       manufacturerPartNumber="6092"
       footprint="kicad:TestPoint/TestPoint_Plated_Hole_D3.0mm"
-      schX={sx(37.592)}
+      schX={outputConnectorX(37.592)}
       schY={sy(8.636)}
     />
 

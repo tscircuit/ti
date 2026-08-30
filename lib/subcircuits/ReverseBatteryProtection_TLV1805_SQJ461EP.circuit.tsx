@@ -7,6 +7,8 @@ import { TLV1805QDBVRQ1 } from "../chips/TLV1805QDBVRQ1.circuit.tsx";
 const SOURCE_ORIGIN = { x: 21.716, y: 19.812 } as const;
 const sx = (x: number) => Number((x - SOURCE_ORIGIN.x).toFixed(6));
 const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
+const reverseSectionX = (x: number) => sx(x + 4);
+const emiFilterSectionX = (x: number) => sx(x + 1);
 
 /**
  * Reverse-battery, transient-protection, and EMI-input section from sheet 2 of
@@ -20,7 +22,13 @@ const sy = (y: number) => Number((y - SOURCE_ORIGIN.y).toFixed(6));
  * P1/P2 rotate 180 degrees and use y=21.822/19.058 mm, TP2/TP7/C24 use
  * x=6.604 mm, R14 uses x=3.9497 mm, R1/R2 use y=19.431 mm, and D4/R3 use
  * x=18.742 mm. C24 rotates 90 degrees and TP7 rotates 270 degrees so the
- * capacitor column and its two test points connect end-on.
+ * capacitor column and its two test points connect end-on. To compensate for
+ * the larger native tscircuit symbols while keeping the two source sections
+ * intact, the reverse/protection section is translated +4 mm in X and the
+ * complete System EMI Input Filter section is translated +1 mm in X. This
+ * moves the full drawing right and reduces the otherwise oversized D6-to-CF1
+ * empty span by exactly 3 mm; all Y coordinates and within-section offsets
+ * remain those of the Altium source.
  *
  * The released schematic displays Q1 as SQJ465EP, while TI's released BOM
  * specifies the fitted manufacturer part number SQJ461EP. The component keeps
@@ -34,7 +42,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
 
     <schematictext
       text="Reverse Battery Protection and System EMI Input Filter"
-      schX={sx(21.716)}
+      schX={sx(24.216)}
       schY={sy(24.638)}
       fontSize={0.3}
     />
@@ -44,7 +52,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       displayName="VBATT"
       manufacturerPartNumber="6091"
       footprint="kicad:TestPoint/TestPoint_Plated_Hole_D3.0mm"
-      schX={sx(3.048)}
+      schX={reverseSectionX(3.048)}
       schY={sy(21.822)}
       schRotation={180}
     />
@@ -53,7 +61,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       displayName="GND"
       manufacturerPartNumber="6092"
       footprint="kicad:TestPoint/TestPoint_Plated_Hole_D3.0mm"
-      schX={sx(3.048)}
+      schX={reverseSectionX(3.048)}
       schY={sy(19.058)}
       schRotation={180}
     />
@@ -62,7 +70,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       displayName="VBATT"
       manufacturerPartNumber="5010"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(6.604)}
+      schX={reverseSectionX(6.604)}
       schY={sy(22.4536)}
       schRotation={90}
     />
@@ -71,7 +79,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       displayName="GND"
       manufacturerPartNumber="5011"
       footprint="kicad:TestPoint/TestPoint_Keystone_5010-5014_Multipurpose"
-      schX={sx(6.604)}
+      schX={reverseSectionX(6.604)}
       schY={sy(17.6276)}
       schRotation={270}
     />
@@ -82,7 +90,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       footprint="led0402"
       manufacturerPartNumber="SML-P12UTT86"
       pinLabels={{ pin1: "K", pin2: "A" }}
-      schX={sx(3.9497)}
+      schX={reverseSectionX(3.9497)}
       schY={sy(21.082)}
       schOrientation="vertical"
     />
@@ -92,7 +100,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       tolerance="1%"
       footprint="0402"
       manufacturerPartNumber="CRCW04022K20FKED"
-      schX={sx(3.9497)}
+      schX={reverseSectionX(3.9497)}
       schY={sy(19.558)}
       schRotation={90}
     />
@@ -102,7 +110,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       pinLabels={{ pin1: "1", pin2: "2" }}
       manufacturerPartNumber="SMAJ28CA"
       footprint="kicad:Diode_SMD/D_SMA"
-      schX={sx(5.588)}
+      schX={reverseSectionX(5.588)}
       schY={sy(20.574)}
       schOrientation="vertical"
     />
@@ -112,7 +120,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="50V"
       footprint="0603"
       manufacturerPartNumber="CGA3E3X7R1H224K080AB"
-      schX={sx(6.604)}
+      schX={reverseSectionX(6.604)}
       schY={sy(20.574)}
       schRotation={90}
     />
@@ -122,19 +130,19 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="50V"
       footprint="0603"
       manufacturerPartNumber="CGA3E3X7R1H224K080AB"
-      schX={sx(6.604)}
+      schX={reverseSectionX(6.604)}
       schY={sy(19.431)}
       schOrientation="vertical"
     />
 
-    <SQJ461EP name="Q1" schX={sx(10.033)} schY={sy(22.1869)} />
+    <SQJ461EP name="Q1" schX={reverseSectionX(10.033)} schY={sy(22.1869)} />
     <resistor
       name="R4"
       resistance="56kohm"
       tolerance="5%"
       footprint="0603"
       manufacturerPartNumber="RC0603JR-0756KL"
-      schX={sx(11.938)}
+      schX={reverseSectionX(11.938)}
       schY={sy(22.86)}
       schRotation={90}
     />
@@ -144,18 +152,18 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       tolerance="5%"
       footprint="0402"
       manufacturerPartNumber="ERJ-2GEJ103X"
-      schX={sx(9.652)}
+      schX={reverseSectionX(9.652)}
       schY={sy(19.431)}
       schRotation={180}
     />
-    <BAT46W_E3_08 name="D3" schX={sx(11.938)} schY={sy(18.1864)} />
+    <BAT46W_E3_08 name="D3" schX={reverseSectionX(11.938)} schY={sy(18.1864)} />
     <capacitor
       name="C4"
       capacitance="10uF"
       maxVoltageRating="35V"
       footprint="1206"
       manufacturerPartNumber="C3216X7R1V106M160AC"
-      schX={sx(15.748)}
+      schX={reverseSectionX(15.748)}
       schY={sy(21.209)}
       schOrientation="vertical"
     />
@@ -165,24 +173,28 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       pinLabels={{ pin1: "K", pin2: "A" }}
       manufacturerPartNumber="BZT52C15-7-F"
       footprint="kicad:Diode_SMD/D_SOD-123"
-      schX={sx(16.764)}
+      schX={reverseSectionX(16.764)}
       schY={sy(21.2598)}
       schOrientation="vertical"
     />
-    <TLV1805QDBVRQ1 name="U1" schX={sx(18.542)} schY={sy(19.431)} />
+    <TLV1805QDBVRQ1
+      name="U1"
+      schX={reverseSectionX(18.542)}
+      schY={sy(19.431)}
+    />
     <resistor
       name="R2"
       resistance="47ohm"
       tolerance="5%"
       footprint="0402"
       manufacturerPartNumber="CRCW040247R0JNED"
-      schX={sx(22.098)}
+      schX={reverseSectionX(22.098)}
       schY={sy(19.431)}
       schOrientation="horizontal"
     />
     <BAT46W_E3_08
       name="D4"
-      schX={sx(18.742)}
+      schX={reverseSectionX(18.742)}
       schY={sy(16.3576)}
       schRotation={180}
     />
@@ -192,7 +204,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       tolerance="1%"
       footprint="1206"
       manufacturerPartNumber="RC1206FR-07560RL"
-      schX={sx(18.742)}
+      schX={reverseSectionX(18.742)}
       schY={sy(15.24)}
       schRotation={90}
     />
@@ -201,7 +213,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       pinLabels={{ pin1: "K", pin2: "A" }}
       manufacturerPartNumber="DB2430100L"
       footprint="kicad:Diode_SMD/D_SOD-128"
-      schX={sx(23.876)}
+      schX={reverseSectionX(23.876)}
       schY={sy(20.9804)}
       schOrientation="vertical"
     />
@@ -212,7 +224,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="50V"
       footprint="1206"
       manufacturerPartNumber="C3216X7R1H475K160AC"
-      schX={sx(31.369)}
+      schX={emiFilterSectionX(31.369)}
       schY={sy(20.955)}
       schOrientation="vertical"
     />
@@ -222,7 +234,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="16V"
       footprint="0603"
       manufacturerPartNumber="GCM188R71C104KA37J"
-      schX={sx(32.385)}
+      schX={emiFilterSectionX(32.385)}
       schY={sy(20.955)}
       schOrientation="vertical"
     />
@@ -232,7 +244,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="16V"
       footprint="0603"
       manufacturerPartNumber="GCM188R71C104KA37J"
-      schX={sx(33.401)}
+      schX={emiFilterSectionX(33.401)}
       schY={sy(20.955)}
       schOrientation="vertical"
     />
@@ -241,13 +253,13 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       manufacturerPartNumber="HR2220V801R-10"
       footprint="kicad:Inductor_SMD/L_2220_5650Metric_Pad1.5x5.3mm_HandSolder"
       symbolName="inductor"
-      schX={sx(34.798)}
+      schX={emiFilterSectionX(34.798)}
       schY={sy(22.098)}
       pinLabels={{ pin1: "1", pin2: "2" }}
     />
     <schematictext
       text="800 ohm @ 100 MHz"
-      schX={sx(34.798)}
+      schX={emiFilterSectionX(34.798)}
       schY={sy(21.463)}
       fontSize={0.13}
     />
@@ -257,7 +269,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="50V"
       footprint="1206"
       manufacturerPartNumber="C3216X7R1H475K160AC"
-      schX={sx(36.195)}
+      schX={emiFilterSectionX(36.195)}
       schY={sy(20.955)}
       schOrientation="vertical"
     />
@@ -267,7 +279,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="16V"
       footprint="0603"
       manufacturerPartNumber="GCM188R71C104KA37J"
-      schX={sx(37.465)}
+      schX={emiFilterSectionX(37.465)}
       schY={sy(20.955)}
       schOrientation="vertical"
     />
@@ -277,7 +289,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       maxVoltageRating="16V"
       footprint="0603"
       manufacturerPartNumber="GCM188R71C104KA37J"
-      schX={sx(38.481)}
+      schX={emiFilterSectionX(38.481)}
       schY={sy(20.955)}
       schOrientation="vertical"
     />
@@ -286,7 +298,7 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
       inductance="600nH"
       footprint="kicad:Inductor_SMD/L_Coilcraft_XAL40xx"
       manufacturerPartNumber="XAL4020-601MEB"
-      schX={sx(39.624)}
+      schX={emiFilterSectionX(39.624)}
       schY={sy(22.4155)}
       schOrientation="horizontal"
     />
@@ -306,9 +318,8 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
     />
     <trace from=".D2 > .pin2" to=".R14 > .pin2" />
     <trace path={[".C24 > .pin1", ".C25 > .pin1"]} />
+    <netlabel net="VIN2" connectsTo=".D6 > .pin1" />
     <trace
-      name="VIN2"
-      schDisplayLabel="VIN2"
       path={[
         ".Q1 > .pin1",
         ".Q1 > .pin2",
