@@ -16,6 +16,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
     <net name="SW2" isPowerNet isGroundNet={false} />
     <net name="VSYS" isPowerNet isGroundNet={false} />
     <capacitor
+      footprint="0603"
       name="C1"
       capacitance="0.01uF"
       schRotation={180}
@@ -23,6 +24,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={2.62}
     />
     <capacitor
+      footprint="0603"
       name="C2"
       capacitance="0.01uF"
       schRotation={270}
@@ -30,6 +32,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.76}
     />
     <capacitor
+      footprint="0603"
       name="C3"
       capacitance="0.01uF"
       schRotation={270}
@@ -37,6 +40,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C4"
       capacitance="68uF"
       schRotation={270}
@@ -44,6 +48,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.31}
     />
     <capacitor
+      footprint="0603"
       name="C5"
       capacitance="0.018uF"
       schRotation={180}
@@ -51,6 +56,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={2.77}
     />
     <capacitor
+      footprint="0603"
       name="C6"
       capacitance="0.018uF"
       schRotation={180}
@@ -58,6 +64,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={1.58}
     />
     <capacitor
+      footprint="0805"
       name="C20"
       capacitance="10uF"
       schRotation={270}
@@ -65,6 +72,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="0603"
       name="C21"
       capacitance="1000pF"
       schRotation={270}
@@ -72,6 +80,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.76}
     />
     <capacitor
+      footprint="0603"
       name="C22"
       capacitance="0.047uF"
       schRotation={90}
@@ -79,6 +88,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.76}
     />
     <capacitor
+      footprint="0603"
       name="C23"
       capacitance="0.047uF"
       schRotation={90}
@@ -86,6 +96,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.76}
     />
     <capacitor
+      footprint="0603"
       name="C24"
       capacitance="1uF"
       schRotation={270}
@@ -93,6 +104,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.17}
     />
     <capacitor
+      footprint="0603"
       name="C25"
       capacitance="150pF"
       schRotation={180}
@@ -100,6 +112,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={5.43}
     />
     <capacitor
+      footprint="0603"
       name="C26"
       capacitance="150pF"
       schRotation={0}
@@ -107,6 +120,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={5.43}
     />
     <capacitor
+      footprint="0603"
       name="C27"
       capacitance="0.47uF"
       schRotation={270}
@@ -114,6 +128,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={4.1}
     />
     <capacitor
+      footprint="0603"
       name="C28"
       capacitance="0.033uF"
       schRotation={180}
@@ -121,6 +136,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={3.36}
     />
     <capacitor
+      footprint="0603"
       name="C29"
       capacitance="0.033uF"
       schRotation={270}
@@ -128,6 +144,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={2.91}
     />
     <capacitor
+      footprint="0603"
       name="C30"
       capacitance="0.068uF"
       schRotation={270}
@@ -135,6 +152,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={1.73}
     />
     <capacitor
+      footprint="0603"
       name="C31"
       capacitance="0.1uF"
       schRotation={180}
@@ -142,6 +160,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.02}
     />
     <capacitor
+      footprint="0603"
       name="C32"
       capacitance="1uF"
       schRotation={270}
@@ -149,6 +168,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={0.55}
     />
     <capacitor
+      footprint="0603"
       name="C33"
       capacitance="33pF"
       schRotation={0}
@@ -156,6 +176,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={0.1}
     />
     <capacitor
+      footprint="0603"
       name="C34"
       capacitance="2.2uF"
       schRotation={0}
@@ -163,6 +184,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={0.6}
     />
     <capacitor
+      footprint="0603"
       name="C35"
       capacitance="4700pF"
       schRotation={180}
@@ -170,6 +192,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-0.78}
     />
     <capacitor
+      footprint="0603"
       name="C36"
       capacitance="680pF"
       schRotation={0}
@@ -177,6 +200,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-0.34}
     />
     <capacitor
+      footprint="0603"
       name="C37"
       capacitance="15pF"
       schRotation={0}
@@ -184,6 +208,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-1.32}
     />
     <capacitor
+      footprint="0603"
       name="C38"
       capacitance="100pF"
       schRotation={90}
@@ -191,6 +216,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-1.82}
     />
     <capacitor
+      footprint="0603"
       name="C39"
       capacitance="100pF"
       schRotation={90}
@@ -198,6 +224,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-4.18}
     />
     <capacitor
+      footprint="0603"
       name="C40"
       capacitance="100pF"
       schRotation={90}
@@ -205,6 +232,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-4.18}
     />
     <capacitor
+      footprint="1210"
       name="C50"
       capacitance="22uF"
       schRotation={270}
@@ -212,6 +240,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C51"
       capacitance="22uF"
       schRotation={270}
@@ -219,6 +248,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C52"
       capacitance="22uF"
       schRotation={270}
@@ -226,6 +256,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C53"
       capacitance="22uF"
       schRotation={270}
@@ -233,6 +264,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C55"
       capacitance="22uF"
       schRotation={270}
@@ -240,6 +272,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C56"
       capacitance="22uF"
       schRotation={270}
@@ -247,6 +280,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C57"
       capacitance="22uF"
       schRotation={270}
@@ -254,6 +288,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C58"
       capacitance="22uF"
       schRotation={270}
@@ -261,6 +296,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.35}
     />
     <capacitor
+      footprint="1210"
       name="C100"
       capacitance="15uF"
       schRotation={270}
@@ -268,6 +304,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.72}
     />
     <resistor
+      footprint="2512"
       name="R1"
       resistance="0.005"
       schRotation={0}
@@ -275,6 +312,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.79}
     />
     <resistor
+      footprint="2512"
       name="R2"
       resistance="0.005"
       schRotation={0}
@@ -282,6 +320,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.79}
     />
     <resistor
+      footprint="0603"
       name="R3"
       resistance="1.80"
       schRotation={90}
@@ -289,6 +328,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.2}
     />
     <resistor
+      footprint="0603"
       name="R4"
       resistance="1.00"
       schRotation={0}
@@ -296,6 +336,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={4.84}
     />
     <resistor
+      footprint="0603"
       name="R5"
       resistance="4.99"
       schRotation={90}
@@ -303,6 +344,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={5.34}
     />
     <resistor
+      footprint="0603"
       name="R6"
       resistance="4.99"
       schRotation={90}
@@ -310,6 +352,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={3.95}
     />
     <resistor
+      footprint="0603"
       name="R7"
       resistance="10"
       schRotation={180}
@@ -317,6 +360,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={2.17}
     />
     <resistor
+      footprint="0603"
       name="R8"
       resistance="10.0"
       schRotation={0}
@@ -324,6 +368,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={0.99}
     />
     <resistor
+      footprint="0603"
       name="R9"
       resistance="10"
       schRotation={180}
@@ -331,6 +376,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={0.99}
     />
     <resistor
+      footprint="0603"
       name="R11"
       resistance="360k"
       schRotation={90}
@@ -338,6 +384,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-1.08}
     />
     <resistor
+      footprint="0603"
       name="R12"
       resistance="40.2k"
       schRotation={0}
@@ -345,6 +392,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-0.78}
     />
     <resistor
+      footprint="0603"
       name="R13"
       resistance="15.0k"
       schRotation={0}
@@ -352,6 +400,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-0.34}
     />
     <resistor
+      footprint="0603"
       name="R14"
       resistance="220k"
       schRotation={90}
@@ -359,6 +408,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-2.26}
     />
     <resistor
+      footprint="0603"
       name="R15"
       resistance="100k"
       schRotation={90}
@@ -366,6 +416,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-4.63}
     />
     <resistor
+      footprint="0603"
       name="R16"
       resistance="191k"
       schRotation={90}
@@ -373,6 +424,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-4.18}
     />
     <resistor
+      footprint="0603"
       name="R17"
       resistance="30.1k"
       schRotation={270}
@@ -380,6 +432,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-4.92}
     />
     <resistor
+      footprint="0603"
       name="R18"
       resistance="360k"
       schRotation={90}
@@ -387,6 +440,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-2.26}
     />
     <resistor
+      footprint="0603"
       name="R20"
       resistance="100k"
       schRotation={0}
@@ -394,6 +448,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-3.59}
     />
     <resistor
+      footprint="0603"
       name="R110"
       resistance="383k"
       schRotation={0}
@@ -401,6 +456,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-0.49}
     />
     <inductor
+      footprint="2512"
       name="L1"
       inductance="4.7uH"
       schRotation={0}
@@ -408,6 +464,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.79}
     />
     <mosfet
+      footprint="sot23"
       name="Q1"
       manufacturerPartNumber="CSD18511Q5AR"
       channelType="n"
@@ -420,6 +477,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={7.57}
     />
     <mosfet
+      footprint="sot23"
       name="Q2"
       manufacturerPartNumber="CSD18511Q5AR"
       channelType="n"
@@ -429,6 +487,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={8.02}
     />
     <mosfet
+      footprint="sot23"
       name="Q3"
       manufacturerPartNumber="CSD18511Q5AR"
       channelType="n"
@@ -438,6 +497,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.91}
     />
     <mosfet
+      footprint="sot23"
       name="Q4"
       manufacturerPartNumber="CSD18511Q5AR"
       channelType="n"
@@ -450,6 +510,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={6.91}
     />
     <solderjumper
+      footprint="0603"
       name="P1"
       pinCount={2}
       schRotation={90}
@@ -457,6 +518,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       schY={-0.64}
     />
     <solderjumper
+      footprint="0603"
       name="P3"
       pinCount={2}
       schRotation={0}

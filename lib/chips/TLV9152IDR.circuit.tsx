@@ -10,6 +10,7 @@ export const TLV9152IDR = ({
   <opamp
     name={name}
     manufacturerPartNumber="TLV9152IDR"
+    footprint="soic8"
     symbolName="opamp_with_power"
     {...props}
   />

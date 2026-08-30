@@ -1,31 +1,21 @@
-import { useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import type { SubcircuitDefinition } from "../model/types";
-import { PlusIcon, SearchIcon } from "./Icons";
+import { SearchIcon } from "./Icons";
 
 export const SYSTEM_BLOCK_DRAG_MIME =
   "application/x-tscircuit-system-block-definition";
 
 interface BlockPaletteProps {
+  children?: ReactNode;
   definitions: readonly SubcircuitDefinition[];
   onInsert: (definitionId: string) => void;
 }
 
-const abbreviation = (definition: SubcircuitDefinition): string => {
-  const partNumber = definition.componentName.match(
-    /(?:_|^)([A-Z]{2,}[A-Z0-9-]*\d[A-Z0-9-]*)$/,
-  )?.[1];
-  if (partNumber) return partNumber.slice(0, 3);
-
-  return definition.title
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
-};
-
-export function BlockPalette({ definitions, onInsert }: BlockPaletteProps) {
+export function BlockPalette({
+  children,
+  definitions,
+  onInsert,
+}: BlockPaletteProps) {
   const [query, setQuery] = useState("");
 
   const groups = useMemo(() => {
@@ -60,6 +50,7 @@ export function BlockPalette({ definitions, onInsert }: BlockPaletteProps) {
 
   return (
     <aside className="palette-panel" aria-label="Subcircuit palette">
+      {children}
       <div className="panel-heading">
         <h2 className="panel-title">Subcircuits</h2>
         <span className="count-badge">{definitions.length}</span>
@@ -118,25 +109,8 @@ export function BlockPalette({ definitions, onInsert }: BlockPaletteProps) {
                   }
                   type="button"
                 >
-                  <span className="block-glyph">
-                    {abbreviation(definition)}
-                  </span>
                   <span className="block-copy">
                     <span className="block-title">{definition.title}</span>
-                    <span className="block-meta">
-                      {reviewedPortCount > 0
-                        ? definition.ports
-                            .map((port) => port.protocol ?? port.kind)
-                            .filter(
-                              (value, index, values) =>
-                                values.indexOf(value) === index,
-                            )
-                            .join(" · ")
-                        : "placement only"}
-                    </span>
-                  </span>
-                  <span className="port-count" title="Reviewed interfaces">
-                    {reviewedPortCount || <PlusIcon height={10} width={10} />}
                   </span>
                 </button>
               );

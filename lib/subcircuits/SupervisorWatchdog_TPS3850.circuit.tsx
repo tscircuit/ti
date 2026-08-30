@@ -229,11 +229,12 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
     />
     <trace path={[".U3 > .pin9", ".R6 > .pin1", ".D8 > .pin1"]} />
     <trace path={[".R15 > .pin2", ".D8 > .pin2"]} />
-    <trace name="GND" path={[".U3 > .pin5", ".U3 > .pin11", "net.GND"]} />
-    <trace name="GND" from=".C11 > .pin2" to="net.GND" />
-    <trace name="GND" from=".C13 > .pin2" to="net.GND" />
-    <trace name="GND" from=".J1 > .pin3" to="net.GND" />
-    <trace name="GND" from=".C12 > .pin2" to="net.GND" />
+    <trace path={[".U3 > .pin5", ".U3 > .pin11"]} />
+    <netlabel net="GND" connectsTo=".U3 > .pin5" />
+    <netlabel net="GND" connectsTo=".C11 > .pin2" />
+    <netlabel net="GND" connectsTo=".C13 > .pin2" />
+    <netlabel net="GND" connectsTo=".J1 > .pin3" />
+    <netlabel net="GND" connectsTo=".C12 > .pin2" />
 
     <port name="V3_3" direction="left" connectsTo="C11.pin1" />
     <port name="GND" direction="left" connectsTo="U3.GND" />
