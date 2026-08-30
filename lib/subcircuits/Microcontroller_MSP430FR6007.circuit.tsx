@@ -310,16 +310,16 @@ const supportNetTraces: ReadonlyArray<{
   { component: "R9", pin: 2, net: "HFXOUT_ext" },
   { component: "R8", pin: 1, net: "HFXIN" },
   { component: "R8", pin: 2, net: "HFXIN_ext" },
-  { component: "R19", pin: 1, net: "BSL_RX" },
+  { component: "R19", pin: 1, net: "BSL_RX", displayLabel: " " },
   {
     component: "R20",
     pin: 1,
     net: "BSL_TX",
-    displayLabel: "BSL_TX",
+    displayLabel: " ",
   },
-  { component: "R21", pin: 1, net: "BSL_SCL" },
+  { component: "R21", pin: 1, net: "BSL_SCL", displayLabel: " " },
   { component: "JTAG", pin: 1, net: "JTAG_TDO_SBWTDIO" },
-  { component: "JTAG", pin: 2, net: "VCC_TOOL", displayLabel: " " },
+  { component: "JTAG", pin: 2, net: "INT", displayLabel: " " },
   { component: "JTAG", pin: 3, net: "JTAG_TDI" },
   { component: "JTAG", pin: 4, net: "VCC", displayLabel: " " },
   { component: "JTAG", pin: 5, net: "JTAG_TMS" },
@@ -332,7 +332,7 @@ const supportNetTraces: ReadonlyArray<{
   },
   { component: "JTAG", pin: 9, net: "GND", displayLabel: " " },
   { component: "JTAG", pin: 11, net: "JTAG_RST_NMI" },
-  { component: "J1", pin: 1, net: "VCC_TOOL", displayLabel: " " },
+  { component: "J1", pin: 1, net: "INT", displayLabel: " " },
   { component: "J1", pin: 2, net: "VCC" },
   { component: "J1", pin: 3, net: "EXT_PWR", displayLabel: " " },
   { component: "J2", pin: 1, net: "VCC" },
@@ -1427,22 +1427,28 @@ export const MSP430FR6007ReferenceLayout = ({
               name="R19"
               resistance="0"
               footprint="0805"
-              schX={layoutX(-20.2)}
-              schY={layoutY(9.3) + 3}
+              symbolName="resistor"
+              schSize="xs"
+              schX={layoutX(-21.5)}
+              schY={layoutY(9.3) + 1.1}
             />
             <resistor
               name="R20"
               resistance="0"
               footprint="0805"
-              schX={layoutX(-20.2)}
-              schY={layoutY(9.3) + 2}
+              symbolName="resistor"
+              schSize="xs"
+              schX={layoutX(-21.5)}
+              schY={layoutY(9.3) + 0.4}
             />
             <resistor
               name="R21"
               resistance="0"
               footprint="0805"
-              schX={layoutX(-20.2)}
-              schY={layoutY(9.3) + 1}
+              symbolName="resistor"
+              schSize="xs"
+              schX={layoutX(-21.5)}
+              schY={layoutY(9.3) - 0.3}
             />
 
             {/*
@@ -1457,7 +1463,7 @@ export const MSP430FR6007ReferenceLayout = ({
               schX={layoutX(-17.7)}
               schY={layoutY(9.3)}
               schWidth="1.8mm"
-              schHeight="3.6mm"
+              schHeight="2.8mm"
               schPinArrangement={{
                 leftSide: {
                   direction: "top-to-bottom",
@@ -1473,19 +1479,19 @@ export const MSP430FR6007ReferenceLayout = ({
               name="R19_JTAG_BSL_RX"
               from="R19.pin2"
               to="JTAG.pin14"
-              schDisplayLabel=" "
+              schDisplayLabel="BSL_RX"
             />
             <trace
               name="R20_JTAG_BSL_TX"
               from="R20.pin2"
               to="JTAG.pin12"
-              schDisplayLabel=" "
+              schDisplayLabel="BSL_TX"
             />
             <trace
               name="R21_JTAG_BSL_SCL"
               from="R21.pin2"
               to="JTAG.pin10"
-              schDisplayLabel=" "
+              schDisplayLabel="BSL_SCL"
             />
           </group>
 
@@ -1547,7 +1553,7 @@ export const MSP430FR6007ReferenceLayout = ({
           {!isMultiSheet && (
             <>
               <trace
-                name="JTAG_PIN2_J1_PIN1_VCC_TOOL"
+                name="JTAG_PIN2_J1_PIN1_INT"
                 from="JTAG.pin2"
                 to="J1.pin1"
                 schDisplayLabel=" "

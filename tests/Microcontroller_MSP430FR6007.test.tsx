@@ -649,11 +649,11 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   const jtagBody = findSchematicComponent(circuitJson, "JTAG");
   const bslBody = findSchematicComponent(circuitJson, "BSL");
   assert(
-    Math.abs(jtagBody.size.width / jtagBody.size.height - 0.5) < 0.02,
-    "JTAG body must preserve the approximately 1:2 Figure B-78 aspect ratio",
+    Math.abs(jtagBody.size.width / jtagBody.size.height - 0.643) < 0.02,
+    "JTAG body must preserve the shortened Figure B-78 connector shape",
   );
   assert(
-    jtagBody.size.height <= 3.6,
+    jtagBody.size.height <= 2.8,
     "JTAG body is taller than the compact native reference geometry",
   );
   assert(
@@ -946,6 +946,47 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   assertDirectTrace("R19_JTAG_BSL_RX", ["R19", 2], ["JTAG", 14]);
   assertDirectTrace("R20_JTAG_BSL_TX", ["R20", 2], ["JTAG", 12]);
   assertDirectTrace("R21_JTAG_BSL_SCL", ["R21", 2], ["JTAG", 10]);
+  for (const [traceName, expectedLabel] of [
+    ["R19_JTAG_BSL_RX", "BSL_RX"],
+    ["R20_JTAG_BSL_TX", "BSL_TX"],
+    ["R21_JTAG_BSL_SCL", "BSL_SCL"],
+  ] as const) {
+    const sourceTrace = circuitJson.find(
+      (element) =>
+        element.type === "source_trace" && element.name === traceName,
+    );
+    assert(sourceTrace?.type === "source_trace", `Missing ${traceName}`);
+    assert(
+      circuitJson.some(
+        (element) =>
+          element.type === "schematic_text" &&
+          element.source_trace_id === sourceTrace.source_trace_id &&
+          element.text === expectedLabel &&
+          element.rotation === 0,
+      ),
+      `${traceName} must carry ${expectedLabel} above the resistor-to-JTAG trace`,
+    );
+  }
+  for (const traceName of [
+    "R19_PIN1_BSL_RX",
+    "R20_PIN1_BSL_TX",
+    "R21_PIN1_BSL_SCL",
+  ]) {
+    const sourceTrace = circuitJson.find(
+      (element) =>
+        element.type === "source_trace" && element.name === traceName,
+    );
+    assert(sourceTrace?.type === "source_trace", `Missing ${traceName}`);
+    assert(
+      !circuitJson.some(
+        (element) =>
+          element.type === "schematic_net_label" &&
+          element.source_trace_id === sourceTrace.source_trace_id &&
+          element.text.trim() !== "",
+      ),
+      `${traceName} must not use a free-standing net label outside R19-R21`,
+    );
+  }
 
   for (const [headerName, firstPin, secondPin] of [
     ["J1", 1, 2],
