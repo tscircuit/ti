@@ -1,17 +1,17 @@
 import {
-  ADCFilter_TIDA010266,
-  AnalogFrontEnd_LMV324A_TIDA010266,
-  BloodPressureMonitorInterfaces_TIDA010266,
+  AnalogSignalConditioning_LMV324A_TIDA010266,
   InstrumentationAmplifier_INA350,
-  IntegratedInstrumentationAmplifier_MSPM0_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,
-  PressureSensor_2SMPP03_TIDA010266,
-  ProgrammingInterface_MSPM0_TIDA010266,
   VoltageReference_ATL431LI_TIDA010266,
 } from "@tsci/tscircuit.ti";
 import "tscircuit";
+import { ADCFilterSection } from "./tida010266/ADCFilterSection.tsx";
+import { IntegratedInstrumentationAmplifierSection } from "./tida010266/IntegratedInstrumentationAmplifierSection.tsx";
+import { InterfacesSection } from "./tida010266/InterfacesSection.tsx";
+import { PressureSensorSection } from "./tida010266/PressureSensorSection.tsx";
+import { ProgrammingSection } from "./tida010266/ProgrammingSection.tsx";
 
 const SectionTitle = ({
   title,
@@ -166,7 +166,7 @@ export default () => (
       schX={-15}
       schY={17}
     />
-    <BloodPressureMonitorInterfaces_TIDA010266
+    <InterfacesSection
       name="interfaces"
       inputSectionName="input_reference"
       connectorSectionName="connectors"
@@ -176,7 +176,7 @@ export default () => (
       schX={-4}
       schY={17}
     />
-    <ProgrammingInterface_MSPM0_TIDA010266
+    <ProgrammingSection
       name="programming"
       schSectionName="programming"
       schX={21}
@@ -196,13 +196,13 @@ export default () => (
       schX={-25}
       schY={-2.5}
     />
-    <IntegratedInstrumentationAmplifier_MSPM0_TIDA010266
+    <IntegratedInstrumentationAmplifierSection
       name="integrated_ina"
       schSectionName="ina_filter"
       schX={-20}
       schY={3}
     />
-    <AnalogFrontEnd_LMV324A_TIDA010266
+    <AnalogSignalConditioning_LMV324A_TIDA010266
       name="analog_front_end"
       schSectionName="ina_filter"
       inputReferenceSectionName="input_reference"
@@ -217,13 +217,13 @@ export default () => (
       schY={2}
     />
 
-    <PressureSensor_2SMPP03_TIDA010266
+    <PressureSensorSection
       name="pressure_sensor"
       schSectionName="pressure_sensor"
       schX={-22}
       schY={-15}
     />
-    <ADCFilter_TIDA010266
+    <ADCFilterSection
       name="adc_filter"
       schSectionName="adc_filter"
       schX={-6}

@@ -55,10 +55,23 @@ export const CodeIcon = (props: IconProps) => (
   </Icon>
 );
 
-export const SparkIcon = (props: IconProps) => (
+export const HammerIcon = (props: IconProps) => (
   <Icon {...props}>
     <path
-      d="m13 2-2 7H5l5 3-2 8 9-11h-6l2-7Z"
+      d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+    <path
+      d="m18 15 4-4"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeWidth="1.8"
+    />
+    <path
+      d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -84,21 +97,37 @@ export const PdfIcon = (props: IconProps) => (
   </Icon>
 );
 
-export const CopyIcon = (props: IconProps) => (
+export const DownloadIcon = (props: IconProps) => (
   <Icon {...props}>
-    <rect
-      height="12"
-      rx="2"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      width="12"
-      x="8"
-      y="8"
-    />
     <path
-      d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"
+      d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14"
       stroke="currentColor"
       strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
+export const ArchiveIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="M4 7h16v14H4V7Zm-1-4h18v4H3V3Zm6 8h6"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
+export const ChevronDownIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="m7 9.5 5 5 5-5"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       strokeWidth="1.8"
     />
   </Icon>
@@ -132,23 +161,6 @@ export const PlusIcon = (props: IconProps) => (
   <Icon {...props}>
     <path
       d="M12 5v14M5 12h14"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeWidth="1.8"
-    />
-  </Icon>
-);
-
-export const WarningIcon = (props: IconProps) => (
-  <Icon {...props}>
-    <path
-      d="m12 3 10 18H2L12 3Z"
-      stroke="currentColor"
-      strokeLinejoin="round"
-      strokeWidth="1.8"
-    />
-    <path
-      d="M12 9v5m0 3h.01"
       stroke="currentColor"
       strokeLinecap="round"
       strokeWidth="1.8"

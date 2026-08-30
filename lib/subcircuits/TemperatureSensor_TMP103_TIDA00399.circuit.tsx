@@ -1,12 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-
-const TMP103_PIN_LABELS = {
-  pin1: ["SDA"],
-  pin2: ["SCL"],
-  pin3: ["GND"],
-  pin4: ["V_PLUS", "VCC"],
-} as const;
+import { TMP103AYFF } from "../chips/TMP103AYFF.circuit.tsx";
 
 /**
  * TMP103 temperature-sensing subcircuit from TI TIDA-00399, sheet 8.
@@ -15,19 +9,12 @@ const TMP103_PIN_LABELS = {
  */
 export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
-    <chip
+    <TMP103AYFF
       name="UTMP"
-      manufacturerPartNumber="TMP103AYFF"
-      pinLabels={TMP103_PIN_LABELS}
-      showPinAliases={false}
       schX={1.2}
       schY={0}
-      schWidth={1.4}
-      schHeight={0.6}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: ["SCL", "SDA"] },
-        rightSide: { direction: "top-to-bottom", pins: ["V_PLUS", "GND"] },
-      }}
+      pcbX={0}
+      pcbY={0}
       connections={{
         GND: "net.GND",
       }}
@@ -36,19 +23,27 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
     <resistor
       name="RPU1"
       resistance="10kohm"
+      footprint="0402"
       doNotPlace
       schX={-1.4}
       schY={2}
       schRotation={90}
+      pcbX={-0.7}
+      pcbY={1.4}
+      pcbRotation={90}
       connections={{ pin1: "UTMP.SCL", pin2: "RPU2.pin2" }}
     />
     <resistor
       name="RPU2"
       resistance="10kohm"
+      footprint="0402"
       doNotPlace
       schX={-0.2}
       schY={2}
       schRotation={90}
+      pcbX={0.7}
+      pcbY={1.4}
+      pcbRotation={90}
       connections={{
         pin1: "UTMP.SDA",
         pin2: ["UTMP.V_PLUS", "net.V3P3"],

@@ -5,12 +5,19 @@ import { TPS61236RWLR } from "../chips/TPS61236RWLR.circuit.tsx";
 const threeVoltNetName = "V3_0";
 
 export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
+  <subcircuit
+    routingDisabled
+    schAutoLayoutEnabled={false}
+    schX={5.5}
+    schY={-3.5}
+    {...props}
+  >
     <net name="GND" isGroundNet />
     <net name={threeVoltNetName} isPowerNet />
     <net name="VCUR" />
     <net name="VCOM" />
     <capacitor
+      footprint="0603"
       name="C2"
       capacitance="1uF"
       schX={-0.9}
@@ -18,6 +25,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C4"
       capacitance="1uF"
       schX={0.9}
@@ -25,6 +33,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C3"
       capacitance="1uF"
       schX={0.1}
@@ -32,6 +41,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C5"
       capacitance="1uF"
       schX={-2.7}
@@ -39,6 +49,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C1"
       capacitance="1uF"
       schX={-10.3}
@@ -46,6 +57,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C7"
       capacitance="1uF"
       schX={-11.5}
@@ -53,6 +65,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <capacitor
+      footprint="0603"
       name="C6"
       capacitance="1uF"
       schX={-9.7}
@@ -60,6 +73,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={270}
     />
     <resistor
+      footprint="0603"
       name="R4"
       resistance="1k"
       schX={-10.5}
@@ -67,6 +81,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R3"
       resistance="1k"
       schX={-11.5}
@@ -74,6 +89,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R2"
       resistance="1k"
       schX={-2.3}
@@ -81,6 +97,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={180}
     />
     <resistor
+      footprint="0603"
       name="R1"
       resistance="1k"
       schX={-3.5}
@@ -88,6 +105,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R6"
       resistance="1k"
       schX={-3.5}
@@ -95,6 +113,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R5"
       resistance="1k"
       connections={{ pin1: `net.${threeVoltNetName}` }}
@@ -103,6 +122,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <resistor
+      footprint="0603"
       name="R7"
       resistance="1k"
       schX={-11.5}
@@ -110,6 +130,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schRotation={90}
     />
     <inductor
+      footprint="1210"
       name="L1"
       inductance="1uH"
       schX={-6.7}
@@ -118,6 +139,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
     />
 
     <mosfet
+      footprint="sot23"
       name="Q2"
       manufacturerPartNumber="Q2"
       channelType="n"
@@ -130,6 +152,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       schY={1.38}
     />
     <mosfet
+      footprint="sot23"
       name="Q1"
       manufacturerPartNumber="Q1"
       channelType="n"
@@ -163,6 +186,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
     <chip
       name="J1"
       manufacturerPartNumber=""
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { rightSide: { pins: [1], direction: "top-to-bottom" } } as any
@@ -176,6 +200,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
     <chip
       name="J3"
       manufacturerPartNumber=""
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { rightSide: { pins: [1], direction: "top-to-bottom" } } as any
@@ -189,6 +214,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
     <chip
       name="J2"
       manufacturerPartNumber=""
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { leftSide: { pins: [1], direction: "top-to-bottom" } } as any
@@ -202,6 +228,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
     <chip
       name="J4"
       manufacturerPartNumber=""
+      footprint="pinrow1"
       pinLabels={{ pin1: "1" }}
       schPinArrangement={
         { leftSide: { pins: [1], direction: "top-to-bottom" } } as any
