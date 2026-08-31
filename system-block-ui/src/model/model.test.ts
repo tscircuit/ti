@@ -382,6 +382,7 @@ describe("catalog and TSX generation", () => {
     expect(examples.map(({ sourcePath }) => sourcePath)).toEqual([
       "examples/ConsumerWirelessModule.circuit.tsx",
       "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
+      "examples/PersonalElectronics_ConnectedPeripheralAndPrinters_Powerbank.circuit.tsx",
       "examples/RearviewMirrorModule.circuit.tsx",
       "examples/SeatPositionModule.circuit.tsx",
       "examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx",
@@ -409,6 +410,56 @@ describe("catalog and TSX generation", () => {
         ),
       ).toHaveLength(example.graph.connections.length);
     }
+  });
+
+  test("builds the Power Bank from all five application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "power-bank",
+    );
+    if (!example) throw new Error("Missing Power Bank example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "battery_management",
+      "battery_charging",
+      "system_power",
+      "microcontroller",
+      "usb_c_output",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(7);
+    expect(
+      resolved.find(({ id }) => id === "data_i2c_charger")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin14",
+          toSelector: ".U1 > .pin13",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin15",
+          toSelector: ".U1 > .pin12",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_boost_control")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin12",
+          toSelector: ".Q2 > .gate",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin13",
+          toSelector: ".Q1 > .gate",
+        }),
+      ]),
+    );
   });
 
   test("builds the Seat Position Module from all six application blocks", () => {
@@ -580,7 +631,7 @@ describe("catalog and TSX generation", () => {
     );
   });
 
-  test("builds the Consumer wireless module from all seven reviewed blocks", () => {
+  test("builds the Consumer wireless module with an active radio block", () => {
     const design = createConsumerWirelessModuleDesign(SUBCIRCUIT_CATALOG);
     expect(design.blocks.map(({ id }) => id)).toEqual([
       "input_power_protection",
@@ -603,6 +654,7 @@ describe("catalog and TSX generation", () => {
       "power_dc_dc_to_io_connection",
       "power_dc_dc_to_logic_control",
       "power_dc_dc_to_sensors",
+      "power_dc_dc_to_wireless_connectivity",
       "power_protection_to_dc_dc",
     ]);
     expect(
@@ -649,13 +701,16 @@ describe("catalog and TSX generation", () => {
       "InputPowerProtection_TPS25910_TIDA00890",
       "BuckConverter_TPS62086_TIDA00399",
       "LVDSDriver_SN65LVDS31_TIDA060017",
-      "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
+      "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB",
       "InputOutputProtection_TPD2E009_TIDA00399",
       "LogicBuffer_SN74LVC1G34",
       "TemperatureSensor_TMP103_TIDA00399",
     ]) {
       expect(artifacts.tsx).toContain(componentName);
     }
+    expect(artifacts.tsx).not.toContain(
+      "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
+    );
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="power_protection_to_dc_dc" data-kind="power"',
     );
@@ -731,13 +786,18 @@ describe("catalog and TSX generation", () => {
     expect(first).toBe(second);
     expect(first).toContain("<board routingDisabled>");
     expect(first).toContain("PowerManagement_TPS7A2018,");
-    expect(first).not.toContain("SYSTEM_DIAGRAM_SVG");
+    expect(first).toContain(
+      'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
+    );
+    expect(first).not.toContain("const SYSTEM_DIAGRAM_SVG");
     expect(first).not.toContain("<svg");
-    expect(first).not.toContain("<schematicgraphic");
-    expect(first).not.toContain('displayName="System Diagram"');
+    expect(first).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(first).toContain('displayName="System Diagram"');
     expect(first).toContain("sheetIndex={0}");
     expect(first).toContain("sheetIndex={1}");
-    expect(first).not.toContain("sheetIndex={2}");
+    expect(first).toContain("sheetIndex={2}");
     expect(first).toContain('from=".power_1v8 > .U1 > .VOUT"');
     expect(first).toContain('to=".audio_amplifier > .U1 > .IOVDD"');
   });
@@ -765,31 +825,45 @@ describe("catalog and TSX generation", () => {
     });
 
     expect(artifacts).toEqual(reversed);
-    expect(artifacts.systemDiagramFileName).toBe(
-      "GeneratedSystem.system-diagram.svg",
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram_2");
+    expect(artifacts.systemDiagramModuleFileName).toBe(
+      "GeneratedSystem.system-diagram.ts",
     );
-    expect(artifacts.tsx).toContain('name="system_diagram"');
-    expect(artifacts.tsx).not.toContain('displayName="System Diagram"');
-    expect(artifacts.tsx).not.toContain("<schematicgraphic");
+    expect(artifacts.tsx).toContain(
+      '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    >',
+    );
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="power" data-kind="power"',
     );
     expect(artifacts.systemDiagramSvg).not.toContain("__power-summary__");
+    expect(artifacts.systemDiagramModuleSource).toStartWith(
+      "export const SYSTEM_DIAGRAM_SVG = [",
+    );
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      'data-connection-id=\\"power\\" data-kind=\\"power\\"',
+    );
     expect(artifacts.tsx).not.toContain(artifacts.systemDiagramSvg);
   });
 
-  test("keeps an empty system overview outside the electrical TSX", () => {
+  test("always emits a first system diagram sheet for an empty design", () => {
     const artifacts = generateSystemDesignArtifacts({
       blocks: [],
       connections: [],
     });
 
-    expect(artifacts.systemDiagramFileName).toBe(
-      "GeneratedSystem.system-diagram.svg",
-    );
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram");
     expect(artifacts.systemDiagramSvg).toContain("No system blocks yet");
-    expect(artifacts.tsx).not.toContain("<schematicsheet");
-    expect(artifacts.tsx).not.toContain("<schematicgraphic");
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      "No system blocks yet",
+    );
+    expect(artifacts.tsx).toContain("sheetIndex={0}");
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(artifacts.tsx).not.toContain("sheetIndex={1}");
   });
 
   test("rejects explicit sheet names which collide with generated names", () => {

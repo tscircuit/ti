@@ -5,13 +5,13 @@ import {
   LogicBuffer_SN74LVC1G34,
   LVDSDriver_SN65LVDS31_TIDA060017,
   TemperatureSensor_TMP103_TIDA00399,
-  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
 } from "@tsci/tscircuit.ti";
 import "tscircuit";
 
 /** Consumer wireless module assembled from the seven reusable TI blocks. */
 export default () => (
-  <board routingDisabled>
+  <board width="84mm" height="38mm" routingDisabled>
     <schematicsheet
       name="input_power_protection"
       displayName="Input Power Protection"
@@ -50,33 +50,58 @@ export default () => (
     <net name="CONNECTOR_N" />
     <net name="I2C_SCL" />
     <net name="I2C_SDA" />
-    <net name="RF_ANT1" />
+    <net name="WIRELESS_USB_P" />
+    <net name="WIRELESS_USB_N" />
 
     <InputPowerProtection_TPS25910_TIDA00890
       name="input_power_protection"
       schSheetName="input_power_protection"
+      pcbX={-33}
+      pcbY={9}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <BuckConverter_TPS62086_TIDA00399
       name="dc_dc_power_supply"
       schSheetName="dc_dc_power_supply"
+      pcbX={-15}
+      pcbY={9}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <LVDSDriver_SN65LVDS31_TIDA060017
       name="io_connection"
       schSheetName="io_connection"
+      pcbX={8}
+      pcbY={8}
+      pcbPositionMode="relative_to_board_anchor"
     />
-    <WirelessAntenna_W3006_TIDCWL1837MODCOM8I
+    <WirelessConnectivity_CC2540_TIDCCC2540BLEUSB
       name="wireless_connectivity"
       schSheetName="wireless_connectivity"
+      pcbX={24}
+      pcbY={-9.5}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <InputOutputProtection_TPD2E009_TIDA00399
       name="io_protection"
       schSheetName="io_protection"
+      pcbX={24}
+      pcbY={8}
+      pcbPositionMode="relative_to_board_anchor"
     />
     <LogicBuffer_SN74LVC1G34
       name="logic_control"
       schSheetName="logic_control"
+      pcbX={-2}
+      pcbY={-7}
+      pcbPositionMode="relative_to_board_anchor"
     />
-    <TemperatureSensor_TMP103_TIDA00399 name="sensors" schSheetName="sensors" />
+    <TemperatureSensor_TMP103_TIDA00399
+      name="sensors"
+      schSheetName="sensors"
+      pcbX={10}
+      pcbY={-7}
+      pcbPositionMode="relative_to_board_anchor"
+    />
 
     {/* External protected-input source and 5 V rail into the buck stage. */}
     <trace from=".input_power_protection > .R25 > .pin1" to="net.VBUS_IN" />
@@ -126,6 +151,14 @@ export default () => (
       from=".dc_dc_power_supply > .U3P3 > .GND"
       to=".io_connection > .U1 > .ENABLE_NOT"
     />
+    <trace
+      from=".dc_dc_power_supply > .L3P3 > .pin2"
+      to=".wireless_connectivity > .L1 > .pin2"
+    />
+    <trace
+      from=".dc_dc_power_supply > .U3P3 > .GND"
+      to=".wireless_connectivity > .U1 > .GND"
+    />
 
     {/* Buffered control feeds one LVDS channel and its protected connector. */}
     <trace from=".logic_control > net.MCU_OR_LOGIC_IN" to="net.LOGIC_IN" />
@@ -148,13 +181,16 @@ export default () => (
     <trace from=".io_protection > .UESD > .D1" to="net.CONNECTOR_P" />
     <trace from=".io_protection > .UESD > .D2" to="net.CONNECTOR_N" />
 
-    {/* External sensor bus and radio feed complete the module interfaces. */}
+    {/* External sensor bus and USB radio interface complete the module I/O. */}
     <trace from=".sensors > .UTMP > .SCL" to="net.I2C_SCL" />
     <trace from=".sensors > .UTMP > .SDA" to="net.I2C_SDA" />
     <trace
-      from=".dc_dc_power_supply > .U3P3 > .GND"
-      to=".wireless_connectivity > net.GND"
+      from=".wireless_connectivity > .U1 > .USB_P"
+      to="net.WIRELESS_USB_P"
     />
-    <trace from=".wireless_connectivity > .C5 > .pin1" to="net.RF_ANT1" />
+    <trace
+      from=".wireless_connectivity > .U1 > .USB_N"
+      to="net.WIRELESS_USB_N"
+    />
   </board>
 );

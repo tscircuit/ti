@@ -25,7 +25,7 @@ export const PREVIEW_EVALUATION_PLATFORM = {
   routingDisabled: true,
   partsEngineDisabled: true,
   drcChecksDisabled: true,
-  spiceDisabled: true,
+  analogSimulationDisabled: true,
 } as const;
 
 const NON_FATAL_PREVIEW_ERROR_TYPES = ["pcb_missing_footprint_error"] as const;

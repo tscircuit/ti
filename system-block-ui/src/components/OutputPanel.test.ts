@@ -27,42 +27,19 @@ describe("download menu keyboard navigation", () => {
 });
 
 describe("download option availability", () => {
-  test("keeps the tscircuit TSX ZIP available before and during rendering", () => {
+  test("keeps every format available before the project is built", () => {
     expect(
       isDownloadOptionAvailable("tscircuit-tsx", {
-        hasSchematic: false,
-        isRendering: false,
         isBusy: false,
       }),
     ).toBe(true);
-    expect(
-      isDownloadOptionAvailable("tscircuit-tsx", {
-        hasSchematic: false,
-        isRendering: true,
-        isBusy: false,
-      }),
-    ).toBe(true);
-  });
-
-  test("requires a current evaluated schematic for rendered formats", () => {
     expect(
       isDownloadOptionAvailable("pdf", {
-        hasSchematic: false,
-        isRendering: false,
         isBusy: false,
       }),
-    ).toBe(false);
+    ).toBe(true);
     expect(
-      isDownloadOptionAvailable("circuit-json", {
-        hasSchematic: true,
-        isRendering: true,
-        isBusy: false,
-      }),
-    ).toBe(false);
-    expect(
-      isDownloadOptionAvailable("altium", {
-        hasSchematic: true,
-        isRendering: false,
+      isDownloadOptionAvailable("kicad", {
         isBusy: false,
       }),
     ).toBe(true);
@@ -71,15 +48,11 @@ describe("download option availability", () => {
   test("blocks every format while another download is active", () => {
     expect(
       isDownloadOptionAvailable("tscircuit-tsx", {
-        hasSchematic: true,
-        isRendering: false,
         isBusy: true,
       }),
     ).toBe(false);
     expect(
       isDownloadOptionAvailable("kicad", {
-        hasSchematic: true,
-        isRendering: false,
         isBusy: true,
       }),
     ).toBe(false);

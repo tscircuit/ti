@@ -12,15 +12,19 @@ import { XFL4015_471MEC_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
  */
 export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props} schTraceAutoLabelEnabled={false}>
-    <TPS62086RLTR name="U3P3" schX={0} schY={0} />
+    <TPS62086RLTR name="U3P3" schX={0} schY={0} pcbX={0} pcbY={0} />
 
     <capacitor
       name="C1_3P3"
       capacitance="10uF"
       footprint="0805"
-      schX={-2.05}
-      schY={-0.2}
+      maxDecouplingTraceLength="12mm"
+      schX={-2}
+      schY={1}
       schOrientation="vertical"
+      pcbX={-3.5}
+      pcbY={0}
+      pcbRotation={90}
     />
     <inductor
       name="L3P3"
@@ -30,6 +34,9 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       inductance="470nH"
       schX={2.35}
       schY={0.5}
+      pcbX={4}
+      pcbY={0}
+      pcbRotation={180}
     />
     <resistor
       name="R3_3P3"
@@ -38,6 +45,9 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       schX={3.5}
       schY={-0.05}
       schRotation={270}
+      pcbX={-3.5}
+      pcbY={-3}
+      pcbRotation={90}
     />
     <capacitor
       name="C2_3P3"
@@ -46,6 +56,8 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       schX={4.85}
       schY={-0.2}
       schOrientation="vertical"
+      pcbX={8}
+      pcbY={0}
     />
     <resistor
       name="R3P3_BYP"
@@ -54,6 +66,8 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       doNotPlace
       schX={0.3}
       schY={1.55}
+      pcbX={-3.5}
+      pcbY={3}
     />
 
     {/* Input rail and local input bypass. */}
@@ -84,7 +98,14 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <netlabel net="V3P3_AON" connectsTo="R3P3_BYP.pin2" inline />
 
     {/* Power-good pull-up and exported status rail. */}
-    <trace from="U3P3.PG" to="R3_3P3.pin2" />
+    <trace
+      from="U3P3.PG"
+      to="R3_3P3.pin2"
+      pcbRouteHints={[
+        { x: -1.5, y: 0.25 },
+        { x: -2.4, y: -0.8 },
+      ]}
+    />
     <netlabel
       net="V3P3_PG"
       connectsTo="R3_3P3.pin2"

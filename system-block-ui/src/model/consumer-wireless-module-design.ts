@@ -21,7 +21,7 @@ const componentId = (
   return definition.id;
 };
 
-/** Starter graph matching TI's Consumer wireless module block diagram. */
+/** Starter graph matching the implementation-ready Consumer wireless blocks. */
 export const createConsumerWirelessModuleDesign = (
   catalog: readonly SubcircuitDefinition[],
 ): ConsumerWirelessModuleDesign => ({
@@ -52,9 +52,9 @@ export const createConsumerWirelessModuleDesign = (
       name: "wireless_connectivity",
       definitionId: componentId(
         catalog,
-        "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
+        "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB",
       ),
-      position: { x: 40, y: 35 },
+      position: { x: 800, y: 0 },
     },
     {
       id: "io_protection",
@@ -101,6 +101,12 @@ export const createConsumerWirelessModuleDesign = (
       id: "power_dc_dc_to_sensors",
       fromBlockId: "dc_dc_power_supply",
       toBlockId: "sensors",
+      kind: "power",
+    },
+    {
+      id: "power_dc_dc_to_wireless_connectivity",
+      fromBlockId: "dc_dc_power_supply",
+      toBlockId: "wireless_connectivity",
       kind: "power",
     },
     {

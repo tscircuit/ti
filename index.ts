@@ -1,5 +1,6 @@
 import {
   AM62L32,
+  AWR1843ARBGALPQ1,
   ATL431LI,
   BQ24072,
   BQ24073,
@@ -11,9 +12,11 @@ import {
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2540F256RHAR,
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
   CSD19532Q5B,
   DAC101C081Q,
   DRV5013Q1,
@@ -21,6 +24,7 @@ import {
   DRV8833,
   DRV8876,
   DRV83053Q1,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
@@ -28,8 +32,9 @@ import {
   INA350,
   ISOW7841,
   LM5050Q1,
-  LM74202Q1,
   LM50HVQ1,
+  LM73605,
+  LM74202Q1,
   LMK1C1104,
   LMV324A,
   LP5892Q1,
@@ -40,7 +45,9 @@ import {
   MSPM0L1306Q1,
   MSPM33C3x,
   MSPM0G3507,
+  MX25V1635FZNQ,
   OPT3001,
+  OPT3004,
   PGA300ARHHR,
   SN65HVD1473,
   SMPP2_03,
@@ -52,14 +59,17 @@ import {
   TLIN1028,
   TLV316,
   TLV755P,
+  TLV1805,
   TLV9152IDR,
   TMP103AYFF,
+  TMP116,
   TMP1827,
   TMP1075,
   TMP390Q1,
   TPD2E009DRTR,
   TPS22919,
   TPS25910RSA,
+  TPS3850,
   TPS6293,
   TPS62086RLTR,
   TPS61222,
@@ -104,6 +114,10 @@ import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circu
 import { InstrumentationAmplifier_INA350 } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 import { PressureTransmitter_PGA300 } from "./lib/subcircuits/PressureTransmitter_PGA300.circuit.tsx";
 import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
+import { PowerSupply_WindowModule } from "./lib/subcircuits/PowerSupply_WindowModule.circuit.tsx";
+import { ReverseBatteryProtection_TLV1805_SQJ461EP } from "./lib/subcircuits/ReverseBatteryProtection_TLV1805_SQJ461EP.circuit.tsx";
+import { SupervisorWatchdog_TPS3850 } from "./lib/subcircuits/SupervisorWatchdog_TPS3850.circuit.tsx";
+import { VoltageRegulator_LM73605 } from "./lib/subcircuits/VoltageRegulator_LM73605.circuit.tsx";
 import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.circuit.tsx";
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
 import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
@@ -114,6 +128,7 @@ import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MS
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
 import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "./lib/subcircuits/OutputUserInterface_LEDMatrix_LP5892_Q1.circuit.tsx";
+import { Sensors_TMP116_OPT3004 } from "./lib/subcircuits/Sensors_TMP116_OPT3004.circuit.tsx";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
 import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
 import {
@@ -152,6 +167,7 @@ import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS9
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
 import { LogicBuffer_SN74LVC1G34 } from "./lib/subcircuits/LogicBuffer_SN74LVC1G34.circuit.tsx";
 import { WirelessAntenna_W3006_TIDCWL1837MODCOM8I } from "./lib/subcircuits/WirelessAntenna_W3006_TIDCWL1837MODCOM8I.circuit.tsx";
+import { WirelessConnectivity_CC2540_TIDCCC2540BLEUSB } from "./lib/subcircuits/WirelessConnectivity_CC2540_TIDCCC2540BLEUSB.circuit.tsx";
 import { InputOutputProtection_TPD2E009_TIDA00399 } from "./lib/subcircuits/InputOutputProtection_TPD2E009_TIDA00399.circuit.tsx";
 import { BuckConverter_TPS62086_TIDA00399 } from "./lib/subcircuits/BuckConverter_TPS62086_TIDA00399.circuit.tsx";
 import { InputPowerProtection_TPS25910_TIDA00890 } from "./lib/subcircuits/InputPowerProtection_TPS25910_TIDA00890.circuit.tsx";
@@ -159,6 +175,13 @@ import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/Temperatur
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
+import { RadarClock_FW4000044Q } from "./lib/subcircuits/RadarClock_FW4000044Q.circuit.tsx";
+import {
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing,
+} from "./lib/subcircuits/RadarFrontEndProcessing.circuit.tsx";
+import { RadarQspiFlash_MX25V1635FZNQ } from "./lib/subcircuits/RadarQspiFlash_MX25V1635FZNQ.circuit.tsx";
+import { RadarSoc_AWR1843ARBGALPQ1 } from "./lib/subcircuits/RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
 import { AnalogSignalConditioning_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogSignalConditioning_LMV324A_TIDA010266.circuit.tsx";
 import { InstrumentationAmplifier_INA350_TIDA010266 } from "./lib/subcircuits/InstrumentationAmplifier_INA350_TIDA010266.circuit.tsx";
 import { InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266 } from "./lib/subcircuits/InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266.circuit.tsx";
@@ -203,6 +226,10 @@ export {
   InstrumentationAmplifier_INA350,
   PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
+  PowerSupply_WindowModule,
+  ReverseBatteryProtection_TLV1805_SQJ461EP,
+  SupervisorWatchdog_TPS3850,
+  VoltageRegulator_LM73605,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
@@ -213,6 +240,7 @@ export {
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
   OutputUserInterface_LEDMatrix_LP5892_Q1,
+  Sensors_TMP116_OPT3004,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   MotorThermalProtection_TMP390,
@@ -247,6 +275,7 @@ export {
   LightSensor_OPT3001_TIDA01539,
   LogicBuffer_SN74LVC1G34,
   WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
   InputOutputProtection_TPD2E009_TIDA00399,
   BuckConverter_TPS62086_TIDA00399,
   InputPowerProtection_TPS25910_TIDA00890,
@@ -254,6 +283,11 @@ export {
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 };
 
 export const TiChipComponents = {
@@ -262,6 +296,7 @@ export const TiChipComponents = {
   SMPP2_03,
   TPS7A24,
   AM62L32,
+  AWR1843ARBGALPQ1,
   BQ24072,
   BQ24073,
   BQ24074,
@@ -272,9 +307,11 @@ export const TiChipComponents = {
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2540F256RHAR,
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
   CSD19532Q5B,
   DAC101C081Q,
   DRV5013Q1,
@@ -282,6 +319,7 @@ export const TiChipComponents = {
   DRV8833,
   DRV8876,
   DRV83053Q1,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
@@ -289,8 +327,9 @@ export const TiChipComponents = {
   INA350,
   ISOW7841,
   LM5050Q1,
-  LM74202Q1,
   LM50HVQ1,
+  LM73605,
+  LM74202Q1,
   LMK1C1104,
   LP5892Q1,
   MSP430G2230ID,
@@ -300,7 +339,9 @@ export const TiChipComponents = {
   MSPM0L1306Q1,
   MSPM33C3x,
   MSPM0G3507,
+  MX25V1635FZNQ,
   OPT3001,
+  OPT3004,
   PGA300ARHHR,
   SN65HVD1473,
   SN65LVDS31D,
@@ -311,14 +352,17 @@ export const TiChipComponents = {
   TLIN1028,
   TLV316,
   TLV755P,
+  TLV1805,
   TLV9152IDR,
   TMP103AYFF,
+  TMP116,
   TMP1827,
   TMP1075,
   TMP390Q1,
   TPD2E009DRTR,
   TPS22919,
   TPS25910RSA,
+  TPS3850,
   TPS6293,
   TPS62086RLTR,
   TPS61222,
@@ -372,6 +416,10 @@ export const TiSubcircuitComponents = {
   InstrumentationAmplifier_INA350,
   PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
+  PowerSupply_WindowModule,
+  ReverseBatteryProtection_TLV1805_SQJ461EP,
+  SupervisorWatchdog_TPS3850,
+  VoltageRegulator_LM73605,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
@@ -382,6 +430,7 @@ export const TiSubcircuitComponents = {
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
   OutputUserInterface_LEDMatrix_LP5892_Q1,
+  Sensors_TMP116_OPT3004,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
   MotorThermalProtection_TMP390,
@@ -414,6 +463,7 @@ export const TiSubcircuitComponents = {
   LightSensor_OPT3001_TIDA01539,
   LogicBuffer_SN74LVC1G34,
   WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
   InputOutputProtection_TPD2E009_TIDA00399,
   BuckConverter_TPS62086_TIDA00399,
   InputPowerProtection_TPS25910_TIDA00890,
@@ -421,6 +471,10 @@ export const TiSubcircuitComponents = {
   LVDSDriver_SN65LVDS31_TIDA060017,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RadarFrontEndProcessing,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

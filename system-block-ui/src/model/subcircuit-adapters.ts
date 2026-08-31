@@ -1366,6 +1366,39 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
     ],
   }),
   adapter({
+    id: "wireless-connectivity-cc2540-tidccc2540bleusb",
+    title: "CC2540 BLE Wireless Connectivity",
+    description:
+      "3.3 V CC2540 Bluetooth Low Energy radio, balun, and antenna from TI design TIDC-CC2540-BLE-USB.",
+    category: "Wireless",
+    componentName: "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB",
+    sourceFile: "WirelessConnectivity_CC2540_TIDCCC2540BLEUSB.circuit.tsx",
+    tags: ["wireless", "bluetooth", "ble", "2.4ghz", "radio", "usb"],
+    ports: [
+      powerPort({
+        id: "power-in",
+        label: "3.3 V Power",
+        role: "consumer",
+        voltage: { min: 2, max: 3.6, nominal: 3.3 },
+        positive: [".L1 > .pin2"],
+        ground: [".U1 > .GND"],
+      }),
+      {
+        id: "usb-device",
+        label: "USB Device",
+        kind: "data",
+        role: "device",
+        protocol: "usb",
+        requiredSignals: ["positive", "negative", "ground"],
+        signals: [
+          signal("positive", "bidirectional", [".U1 > .USB_P"]),
+          signal("negative", "bidirectional", [".U1 > .USB_N"]),
+          signal("ground", "passive", [".U1 > .DGND_USB"]),
+        ],
+      },
+    ],
+  }),
+  adapter({
     id: "input-output-protection-tpd2e009-tida00399",
     title: "TPD2E009 I/O Protection",
     description:

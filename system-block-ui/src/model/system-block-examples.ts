@@ -128,6 +128,96 @@ const createBluetoothSpeakerDesign = (
   ],
 });
 
+const createPowerBankDesign = (
+  catalog: readonly SubcircuitDefinition[],
+): SystemBlockExampleGraph => ({
+  blocks: [
+    {
+      id: "battery_management",
+      name: "battery_management",
+      definitionId: componentId(catalog, "BatteryManagement_2to4Cell_BQ40Z60"),
+      position: { x: 690, y: 585 },
+    },
+    {
+      id: "battery_charging",
+      name: "battery_charging",
+      definitionId: componentId(
+        catalog,
+        "BatteryCharging_2to5CellNVDCBuckBoost_BQ25731",
+      ),
+      position: { x: 630, y: 150 },
+    },
+    {
+      id: "system_power",
+      name: "system_power",
+      definitionId: componentId(catalog, "BoostConverter_TPS61236"),
+      position: { x: 430, y: 885 },
+    },
+    {
+      id: "microcontroller",
+      name: "microcontroller",
+      definitionId: componentId(catalog, "Microcontroller_MSP430G2332"),
+      position: { x: 0, y: 540 },
+    },
+    {
+      id: "usb_c_output",
+      name: "usb_c_output",
+      definitionId: componentId(
+        catalog,
+        "USBC_PowerDeliveryProgrammablePowerSupply_TPS61288",
+      ),
+      position: { x: 300, y: 110 },
+    },
+  ],
+  connections: [
+    {
+      id: "power_battery_management_to_charging",
+      fromBlockId: "battery_management",
+      toBlockId: "battery_charging",
+      kind: "power",
+    },
+    {
+      id: "power_charging_to_system_power",
+      fromBlockId: "battery_charging",
+      toBlockId: "system_power",
+      kind: "power",
+    },
+    {
+      id: "power_charging_to_usb_c_output",
+      fromBlockId: "battery_charging",
+      toBlockId: "usb_c_output",
+      kind: "power",
+    },
+    {
+      id: "power_system_power_to_microcontroller",
+      fromBlockId: "system_power",
+      toBlockId: "microcontroller",
+      kind: "power",
+    },
+    {
+      id: "data_i2c_charger",
+      fromBlockId: "microcontroller",
+      toBlockId: "battery_charging",
+      kind: "data",
+      protocol: "i2c",
+    },
+    {
+      id: "data_i2c_battery_management",
+      fromBlockId: "microcontroller",
+      toBlockId: "battery_management",
+      kind: "data",
+      protocol: "i2c",
+    },
+    {
+      id: "data_boost_control",
+      fromBlockId: "microcontroller",
+      toBlockId: "system_power",
+      kind: "data",
+      protocol: "gpio",
+    },
+  ],
+});
+
 const createRearviewMirrorDesign = (
   catalog: readonly SubcircuitDefinition[],
 ): SystemBlockExampleGraph => ({
@@ -306,7 +396,7 @@ const createSeatPositionModuleDesign = (
       id: "power_supply",
       name: "power_supply",
       definitionId: componentId(catalog, "PowerSupply_LM5050_TIDA00992"),
-      position: { x: 40, y: 100 },
+      position: { x: 820, y: 20 },
     },
     {
       id: "communication_interface",
@@ -315,7 +405,7 @@ const createSeatPositionModuleDesign = (
         catalog,
         "CommunicationInterface_TCAN1042_TIDA01428",
       ),
-      position: { x: 40, y: 390 },
+      position: { x: 840, y: 280 },
     },
     {
       id: "microcontroller",
@@ -324,25 +414,25 @@ const createSeatPositionModuleDesign = (
         catalog,
         "Microcontroller_MSPM0L1306Q1_TIDA020065",
       ),
-      position: { x: 410, y: 245 },
+      position: { x: 430, y: 295 },
     },
     {
       id: "motor_driver",
       name: "motor_driver",
       definitionId: componentId(catalog, "MotorDriver_DRV8305_TIDA01330"),
-      position: { x: 780, y: 25 },
+      position: { x: 1240, y: 570 },
     },
     {
       id: "position_feedback",
       name: "position_feedback",
       definitionId: componentId(catalog, "PositionFeedback_DRV5013_TIDA01389"),
-      position: { x: 780, y: 270 },
+      position: { x: 20, y: 310 },
     },
     {
       id: "light_driver",
       name: "light_driver",
       definitionId: componentId(catalog, "LightDriver_TIDA01330"),
-      position: { x: 780, y: 470 },
+      position: { x: 1220, y: 330 },
     },
   ],
   connections: [
@@ -579,6 +669,13 @@ export const createSystemBlockExamples = (
     title: "Bluetooth Speaker",
     sourcePath: "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
     graph: createBluetoothSpeakerDesign(catalog),
+  },
+  {
+    id: "power-bank",
+    title: "Power Bank",
+    sourcePath:
+      "examples/PersonalElectronics_ConnectedPeripheralAndPrinters_Powerbank.circuit.tsx",
+    graph: createPowerBankDesign(catalog),
   },
   {
     id: "rearview-mirror-module",

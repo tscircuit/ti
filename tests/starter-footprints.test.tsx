@@ -4,7 +4,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
 import ConsumerWirelessModule from "../examples/ConsumerWirelessModule.circuit.tsx";
+import { LFB212G45SG8C341_FOOTPRINT } from "../lib/chips/jlcpcb-footprints.tsx";
 import {
+  CC2540F256RHAR,
   SN65LVDS31D,
   SN74LVC1G34DBVR,
   TMP103AYFF,
@@ -22,6 +24,7 @@ const starterChips = [
   ["SN74LVC1G34DBVR", SN74LVC1G34DBVR, 5, "C840096"],
   ["TMP103AYFF", TMP103AYFF, 4, "C165141"],
   ["W3006", W3006, 2, "C5123155"],
+  ["CC2540F256RHAR", CC2540F256RHAR, 41, "C22649"],
 ] as const;
 
 const passiveComponentTypes = new Set([
@@ -62,6 +65,41 @@ for (const [name, Chip, expectedPadCount, lcscPartNumber] of starterChips) {
   });
 }
 
+test("LFB212G45SG8C341 renders its imported JLCPCB footprint", async () => {
+  const circuit = new Circuit({
+    platform: {
+      routingDisabled: true,
+      partsEngineDisabled: true,
+      drcChecksDisabled: true,
+    },
+  });
+  circuit.add(
+    <board width={20} height={20} routingDisabled>
+      <chip
+        name="FL1"
+        manufacturerPartNumber="LFB212G45SG8C341"
+        supplierPartNumbers={{ jlcpcb: ["C2650941"] }}
+        footprint={LFB212G45SG8C341_FOOTPRINT}
+        pinLabels={{ pin1: "GND", pin2: "OUT", pin3: "GND", pin4: "IN" }}
+      />
+    </board>,
+  );
+  await circuit.renderUntilSettled();
+
+  assert.deepEqual(
+    circuit
+      .getCircuitJson()
+      .filter((element) => element.type.endsWith("_error")),
+    [],
+  );
+  assert.equal(circuit.db.pcb_smtpad.list().length, 4);
+  assert.deepEqual(
+    circuit.db.source_component.getWhere({ name: "FL1" })
+      ?.supplier_part_numbers,
+    { jlcpcb: ["C2650941"] },
+  );
+});
+
 test("TMP103 ball numbers match the TI YFF pin assignment", async () => {
   const circuit = new Circuit({ platform: { pcbDisabled: true } });
   circuit.add(<TMP103AYFF name="U1" />);
@@ -80,6 +118,24 @@ test("TMP103 ball numbers match the TI YFF pin assignment", async () => {
   assert.equal(pinNumber("GND"), 4);
 });
 
+test("SN74LVC1G34 pins expose the TI logic aliases", async () => {
+  const circuit = new Circuit({ platform: { pcbDisabled: true } });
+  circuit.add(<SN74LVC1G34DBVR name="U1" />);
+  await circuit.renderUntilSettled();
+
+  const component = circuit.db.source_component.getWhere({ name: "U1" });
+  assert.ok(component);
+  const pinNumber = (label: string) =>
+    circuit.db.source_port
+      .list({ source_component_id: component.source_component_id })
+      .find((port) => port.port_hints?.includes(label))?.pin_number;
+
+  assert.equal(pinNumber("A"), 2);
+  assert.equal(pinNumber("GND"), 3);
+  assert.equal(pinNumber("Y"), 4);
+  assert.equal(pinNumber("VCC"), 5);
+});
+
 test("the Consumer Wireless Module carries chip and passive footprints into PCB data", async () => {
   const circuit = new Circuit({
     platform: {
@@ -91,7 +147,9 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
   circuit.add(<ConsumerWirelessModule />);
   await circuit.renderUntilSettled();
 
-  for (const [name, , expectedPadCount, lcscPartNumber] of starterChips) {
+  for (const [name, , expectedPadCount, lcscPartNumber] of starterChips.filter(
+    ([chipName]) => chipName !== "W3006",
+  )) {
     const sourceComponent = circuit.db.source_component
       .list()
       .find((component) =>
@@ -114,7 +172,7 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
   const passiveComponents = circuit.db.source_component
     .list()
     .filter((component) => passiveComponentTypes.has(component.ftype));
-  assert.equal(passiveComponents.length, 27);
+  assert.equal(passiveComponents.length, 41);
 
   for (const sourceComponent of passiveComponents) {
     const pcbComponent = circuit.db.pcb_component.getWhere({
@@ -133,15 +191,84 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
     );
   }
 
-  assert.equal(circuit.db.pcb_smtpad.list().length, 108);
+  assert.equal(circuit.db.pcb_smtpad.list().length, 193);
+
+  for (const [name, lcscPartNumber, expectedPadCount] of [
+    ["CSD17313Q2", "C2863837", 8],
+  ] as const) {
+    const sourceComponent = circuit.db.source_component
+      .list()
+      .find((component) =>
+        component.supplier_part_numbers?.jlcpcb?.includes(lcscPartNumber),
+      );
+    assert.ok(sourceComponent, `${name} is missing from the starter design`);
+    const pcbComponent = circuit.db.pcb_component.getWhere({
+      source_component_id: sourceComponent.source_component_id,
+    });
+    assert.ok(pcbComponent, `${name} did not produce a PCB component`);
+    assert.equal(
+      circuit.db.pcb_smtpad.list({
+        pcb_component_id: pcbComponent.pcb_component_id,
+      }).length,
+      expectedPadCount,
+    );
+  }
+
+  const csd17313q2 = circuit.db.source_component
+    .list()
+    .find((component) =>
+      component.supplier_part_numbers?.jlcpcb?.includes("C2863837"),
+    );
+  assert.ok(csd17313q2);
+  const mosfetPorts = circuit.db.source_port.list({
+    source_component_id: csd17313q2.source_component_id,
+  });
+  assert.equal(
+    mosfetPorts.filter((port) => port.port_hints?.includes("drain")).length,
+    5,
+  );
+  assert.equal(
+    mosfetPorts.filter((port) => port.port_hints?.includes("source")).length,
+    2,
+  );
+  assert.equal(
+    mosfetPorts.filter((port) => port.port_hints?.includes("gate")).length,
+    1,
+  );
+  assert.ok(
+    mosfetPorts.every(
+      (port) =>
+        !(
+          port.port_hints?.includes("drain") &&
+          port.port_hints?.includes("source")
+        ),
+    ),
+  );
 
   const missingFootprints = circuit
     .getCircuitJson()
     .filter((element) => element.type === "pcb_missing_footprint_error");
-  assert.equal(missingFootprints.length, 2);
-  const missingFootprintMessages = missingFootprints
-    .map((error) => error.message)
-    .join("\n");
-  assert.match(missingFootprintMessages, /Q1/);
-  assert.match(missingFootprintMessages, /J5/);
+  assert.equal(missingFootprints.length, 0);
+});
+
+test("the Consumer Wireless Module PCB is placed without autorouting", {
+  timeout: 30_000,
+}, async () => {
+  const circuit = new Circuit({
+    platform: {
+      partsEngineDisabled: true,
+    },
+  });
+  circuit.add(<ConsumerWirelessModule />);
+  await circuit.renderUntilSettled();
+
+  assert.deepEqual(
+    circuit
+      .getCircuitJson()
+      .filter((element) => element.type.endsWith("_error")),
+    [],
+  );
+  assert.equal(circuit.db.pcb_component.list().length, 52);
+  assert.equal(circuit.db.pcb_smtpad.list().length, 193);
+  assert.equal(circuit.db.pcb_trace.list().length, 0);
 });
