@@ -150,9 +150,11 @@ export { HDC2080DMBR } from "./HDC2080DMBR.circuit.tsx";
 export { HDC3020DEFR } from "./HDC3020DEFR.circuit.tsx";
 export { HDC3022DEJR } from "./HDC3022DEJR.circuit.tsx";
 export { INA237AQDGSRQ1 } from "./INA237AQDGSRQ1.circuit.tsx";
+export { INA240A1QDRQ1 } from "./INA240A1QDRQ1.circuit.tsx";
 export { INA350ABSIDSGR } from "./INA350ABSIDSGR.circuit.tsx";
 export { INA350CDSIDSGR } from "./INA350CDSIDSGR.circuit.tsx";
 export { ISOW7841DWR } from "./ISOW7841DWR.circuit.tsx";
+export { LMV7275IDCKRQ1 } from "./LMV7275IDCKRQ1.circuit.tsx";
 export {
   LM50HVQ1,
   LM50HVQDBZRQ1,
@@ -188,12 +190,18 @@ export { TPS7A2033PDBVR } from "./TPS7A2033PDBVR.circuit.tsx";
 export { TPS7A2433DBVR } from "./TPS7A2433DBVR.circuit.tsx";
 export { TLV75533PDBVR } from "./TLV75533PDBVR.circuit.tsx";
 export { TLV9152IDR } from "./TLV9152IDR.circuit.tsx";
+export { TLV2316QDGKRQ1 } from "./TLV2316QDGKRQ1.circuit.tsx";
 export { TLV1805QDBVRQ1 } from "./TLV1805QDBVRQ1.circuit.tsx";
 export { TPS3850H33QDRCRQ1 } from "./TPS3850H33QDRCRQ1.circuit.tsx";
 export { SQJ461EP } from "./SQJ461EP.circuit.tsx";
 export { TPS61236RWLR } from "./TPS61236RWLR.circuit.tsx";
 export { TPS61288RQQR } from "./TPS61288RQQR.circuit.tsx";
 export { TPS78230DRVR } from "./TPS78230DRVR.circuit.tsx";
+export {
+  TPS7B69QDBVRQ1,
+  TPS7B6933QDBVRQ1,
+  TPS7B6950QDBVRQ1,
+} from "./TPS7B69QDBVRQ1.circuit.tsx";
 export { TXB0104RGYR } from "./TXB0104RGYR.circuit.tsx";
 export { TXS0102DCUR } from "./TXS0102DCUR.circuit.tsx";
 export {

@@ -116,6 +116,9 @@ import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
+import { PinchDetectionPower_TPS7B69 } from "./lib/subcircuits/PinchDetectionPower_TPS7B69.circuit.tsx";
+import { PinchDetectionSignalChain_INA240_TLV2316_LMV7275 } from "./lib/subcircuits/PinchDetectionSignalChain_INA240_TLV2316_LMV7275.circuit.tsx";
+import { PinchDetection_INA240_TLV2316_LMV7275 } from "./lib/subcircuits/PinchDetection_INA240_TLV2316_LMV7275.circuit.tsx";
 import { InstrumentationAmplifier_INA350 } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 import { PressureTransmitter_PGA300 } from "./lib/subcircuits/PressureTransmitter_PGA300.circuit.tsx";
 import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
@@ -233,6 +236,9 @@ export {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  PinchDetectionPower_TPS7B69,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
+  PinchDetection_INA240_TLV2316_LMV7275,
   InstrumentationAmplifier_INA350,
   PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
@@ -430,6 +436,9 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  PinchDetectionPower_TPS7B69,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
+  PinchDetection_INA240_TLV2316_LMV7275,
   InstrumentationAmplifier_INA350,
   PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
