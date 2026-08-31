@@ -755,6 +755,20 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     }
   };
 
+  const assertDifferentNet = (
+    first: [string, number],
+    second: [string, number],
+  ) => {
+    const firstNet = netKey(...first);
+    const secondNet = netKey(...second);
+    assert(firstNet, `${first[0]}.pin${first[1]} has no connected net`);
+    assert(secondNet, `${second[0]}.pin${second[1]} has no connected net`);
+    assert(
+      firstNet !== secondNet,
+      `${first[0]}.pin${first[1]} must not be connected to ${second[0]}.pin${second[1]}`,
+    );
+  };
+
   const assertDirectTrace = (
     traceName: string,
     first: [string, number],
@@ -950,6 +964,11 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   assertSameNet(["JTAG", 7], ["JP8", 3], ["JP9", 1]);
   assertSameNet(["JTAG", 8], ["JP9", 3]);
   assertSameNet(["JTAG", 11], ["JP10", 3]);
+  assertSameNet(["JTAG", 8], ["JP9", 3], ["JP9", 2], ["IC1", 20]);
+  assertDifferentNet(["JP9", 1], ["JP9", 2]);
+  assertSameNet(["JTAG", 11], ["JP10", 3], ["JP10", 2], ["IC1", 21]);
+  assertSameNet(["JTAG", 1], ["JP10", 1]);
+  assertDifferentNet(["JP10", 1], ["JP10", 2]);
   assertSameNet(["IC1", 16], ["R20", 1]);
   assertSameNet(["R20", 2], ["JTAG", 12]);
   assertSameNet(["IC1", 17], ["R19", 1]);
@@ -962,6 +981,7 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   assertDirectTrace("BSL_PIN6_R3_PIN1_BSL_TOOL_VCC", ["BSL", 6], ["R3", 1]);
   assertDirectTrace("BSL_PIN8_R4_PIN1_BSL_TARGET_VCC", ["BSL", 8], ["R4", 1]);
   assertDirectTrace("D2_PIN2_R2_PIN1_LED2_A", ["D2", 2], ["R2", 1]);
+  assertDirectTrace("JTAG_PIN8_JP9_PIN3_TEST_SBWTCK", ["JTAG", 8], ["JP9", 3]);
   for (const [traceName, expectedLabel] of [
     ["R19_JTAG_BSL_RX", "BSL_RX"],
     ["R20_JTAG_BSL_TX", "BSL_TX"],
@@ -969,6 +989,7 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     ["BSL_PIN6_R3_PIN1_BSL_TOOL_VCC", "BSL_TOOL_VCC"],
     ["BSL_PIN8_R4_PIN1_BSL_TARGET_VCC", "BSL_TARGET_VCC"],
     ["D2_PIN2_R2_PIN1_LED2_A", "LED2_A"],
+    ["JTAG_PIN8_JP9_PIN3_TEST_SBWTCK", "JTAG"],
   ] as const) {
     const sourceTrace = circuitJson.find(
       (element) =>

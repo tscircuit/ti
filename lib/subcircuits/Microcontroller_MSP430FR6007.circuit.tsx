@@ -494,6 +494,8 @@ const supportNetTraces: ReadonlyArray<{
 ];
 
 const directSupportEndpoints = new Set([
+  "JTAG.pin8",
+  "JP9.pin3",
   "BSL.pin6",
   "BSL.pin8",
   "R3.pin1",
@@ -869,6 +871,9 @@ export const MSP430FR6007ReferenceLayout = ({
                   schX={layoutX(schX)}
                   schY={layoutY(isMultiSheet ? 3.5 : 5.5)}
                   schDirection="right"
+                  schPinStyle={
+                    name === "JP9" ? { pin3: { marginTop: 0.25 } } : undefined
+                  }
                   {...threePinJumperSize}
                 />
                 <jumper
@@ -1539,6 +1544,12 @@ export const MSP430FR6007ReferenceLayout = ({
             from="BSL.pin6"
             to="R3.pin1"
             schDisplayLabel="BSL_TOOL_VCC"
+          />
+          <trace
+            name="JTAG_PIN8_JP9_PIN3_TEST_SBWTCK"
+            from="JTAG.pin8"
+            to="JP9.pin3"
+            schDisplayLabel="JTAG"
           />
           <trace
             name="BSL_PIN8_R4_PIN1_BSL_TARGET_VCC"
