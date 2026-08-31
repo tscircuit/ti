@@ -7,6 +7,7 @@ import {
   SUBCIRCUIT_CATALOG,
 } from "../model";
 import { evaluateGeneratedTsx } from "./evaluate-schematic";
+import { getGeneratedSystemEvaluationFsMap } from "./generated-source-files";
 import { createLocalTiPackageEvaluationFsMap } from "./local-ti-package-files";
 
 const bloodPressureDefinitions = [
@@ -81,15 +82,19 @@ test("renders every reusable TIDA-010266 monitor block", async () => {
     boardName: "tida_010266_blood_pressure_monitor",
   });
   const evaluated = await evaluateGeneratedTsx(artifacts.tsx, {
-    fsMap: createLocalTiPackageEvaluationFsMap(
-      bloodPressureDefinitions,
-      sourceModules,
-    ),
+    fsMap: {
+      ...createLocalTiPackageEvaluationFsMap(
+        bloodPressureDefinitions,
+        sourceModules,
+      ),
+      ...getGeneratedSystemEvaluationFsMap(artifacts),
+    },
     mainComponentPath: "GeneratedSystem.circuit.tsx",
     timeoutMs: 90_000,
   });
 
   expect(evaluated.sheets.map(({ title }) => title)).toEqual([
+    "System Diagram",
     "LMV324A Analog Signal Conditioning",
     "INA350 Instrumentation Amplifier",
     "MSPM0L1306 Internal OPA Instrumentation Amplifier",
