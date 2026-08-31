@@ -26,56 +26,19 @@ type NetTieProps = {
   schY: number;
 };
 
-/**
- * tscircuit does not currently have a dedicated net-tie schematic primitive.
- * The TI source uses a two-pin box, so retain that topology with the repository's
- * standard generic chip symbol instead of drawing a replacement symbol.
- */
+/** Match the compact native two-pin chip used for NT1 in the DRV section. */
 const NetTie = ({ name, schX, schY }: NetTieProps) => (
-  <>
-    <chip
-      name={name}
-      schX={schX}
-      schY={schY}
-      footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
-      pinLabels={{ pin1: "1", pin2: "2" }}
-      internallyConnectedPins={[[1, 2]]}
-      symbol={
-        <symbol>
-          <schematicrect
-            schX={0}
-            schY={0}
-            width={0.4}
-            height={0.4}
-            strokeWidth={0.025}
-          />
-          <port
-            name="pin1"
-            schX={-0.365563}
-            schY={0}
-            direction="left"
-            schStemLength={0.165563}
-            pinNumber={1}
-          />
-          <port
-            name="pin2"
-            schX={0.365563}
-            schY={0}
-            direction="right"
-            schStemLength={0.165563}
-            pinNumber={2}
-          />
-        </symbol>
-      }
-    />
-    <schematictext schX={schX} schY={schY + 0.34} text={name} fontSize={0.12} />
-    <schematictext
-      schX={schX}
-      schY={schY - 0.34}
-      text="Net-Tie"
-      fontSize={0.1}
-    />
-  </>
+  <chip
+    name={name}
+    schX={schX}
+    schY={schY}
+    footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
+    pinLabels={{ pin1: "1", pin2: "2" }}
+    schWidth={0.25}
+    schHeight={0.2}
+    schPinArrangement={{ leftSide: [1], rightSide: [2] }}
+    internallyConnectedPins={[[1, 2]]}
+  />
 );
 
 /**
