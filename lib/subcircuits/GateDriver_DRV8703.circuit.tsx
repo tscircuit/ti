@@ -5,7 +5,7 @@ import { DRV8703QRHBRQ1 } from "../chips/DRV8703QRHBRQ1.circuit.tsx";
 type NetTieProps = { name: string; schX: number; schY: number };
 
 /**
- * C6 receives a small left/up clearance shift from its Altium center so the
+ * C6 receives a small left/down clearance shift from its Altium center so the
  * native autorouter can connect both charge-pump pins without label fallback.
  */
 const ChargePumpCapacitor = () => (
@@ -15,12 +15,12 @@ const ChargePumpCapacitor = () => (
     footprint="0402"
     manufacturerPartNumber="GCM155R71H104KE02D"
     schX={-5.9}
-    schY={0.3}
+    schY={0.2}
     schOrientation="vertical"
   />
 );
 
-/** A compact native two-pin chip represents the source net-tie. */
+/** A compact native horizontal two-pin chip represents the source net-tie. */
 const NetTie = ({ name, schX, schY }: NetTieProps) => (
   <chip
     name={name}
@@ -28,8 +28,8 @@ const NetTie = ({ name, schX, schY }: NetTieProps) => (
     schY={schY}
     footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
     pinLabels={{ pin1: "1", pin2: "2" }}
-    schWidth={0.1}
-    schHeight={0.35}
+    schWidth={0.25}
+    schHeight={0.2}
     schPinArrangement={{ leftSide: [1], rightSide: [2] }}
     internallyConnectedPins={[[1, 2]]}
   />
@@ -45,7 +45,8 @@ const NetTie = ({ name, schX, schY }: NetTieProps) => (
  */
 export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
   <subcircuit
-    schMaxTraceDistance="20mm"
+    // Keep the source sheet's local GND islands as native ground terminals.
+    schMaxTraceDistance="2mm"
     schTraceAutoLabelEnabled={false}
     // This block is schematic-only. routingDisabled skips PCB autorouting but
     // does not disable the native schematic autorouter.
@@ -67,7 +68,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       footprint="1206"
       manufacturerPartNumber="C3216X5R1H106K160AB"
       schX={-8.316553}
-      schY={1.37086}
+      schY={1.07086}
       schOrientation="vertical"
     />
     <capacitor
@@ -76,7 +77,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="GRM155R61H104ME14D"
       schX={-7.585427}
-      schY={1.37086}
+      schY={1.07086}
       schOrientation="vertical"
     />
     <capacitor
@@ -85,7 +86,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="C1005X5R1C105K050BC"
       schX={-6.305958}
-      schY={1.37086}
+      schY={1.07086}
       schOrientation="vertical"
     />
     <NetTie name="NT1" schX={-5.209269} schY={1.27947} />

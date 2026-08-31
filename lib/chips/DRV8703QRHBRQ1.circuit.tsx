@@ -65,9 +65,10 @@ export const DRV8703QRHBRQ1 = (
       pin12: { marginBottom: 0.165563 },
       pin28: { marginBottom: 0.165562 },
       pin27: { marginBottom: 0.165563 },
-      pin29: { marginBottom: 0.065563 },
-      pin30: { marginBottom: 0.548344 },
-      pin31: { marginBottom: 0.065563 },
+      // Separate the VCP, CPH and CPL autorouter lanes without shifting IN1/PH.
+      pin29: { marginBottom: 0.265563 },
+      pin30: { marginBottom: 0.448344 },
+      pin31: { marginBottom: -0.034437 },
       pin2: { marginBottom: 0.165563 },
       pin3: { marginBottom: 0.165562 },
       pin8: { marginBottom: 0.165563 },
