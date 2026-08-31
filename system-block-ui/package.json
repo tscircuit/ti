@@ -1,0 +1,56 @@
+{
+  "name": "@tscircuit/ti-system-block-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "bun run typecheck && vite build",
+    "build:standalone": "bun run typecheck && vite build --config vite.standalone.config.ts && bun run scripts/inline-standalone.ts",
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "format": "biome format --write .",
+    "format:check": "biome format ."
+  },
+  "dependencies": {
+    "@docx-editor.dev/fonts": "2.11.0",
+    "@tscircuit/alphabet": "0.0.26",
+    "@tscircuit/circuit-json-util": "0.0.111",
+    "@tscircuit/core": "0.0.1798",
+    "@tscircuit/eval": "0.0.1294",
+    "@tscircuit/props": "0.0.643",
+    "@xyflow/react": "12.11.5",
+    "circuit-json": "0.0.479",
+    "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#a9b522ba982805bb7051065453d2bcc706f1b7e1",
+    "circuit-json-to-kicad": "0.0.181",
+    "circuit-to-svg": "0.0.410",
+    "comlink": "4.4.2",
+    "earcut": "3.2.3",
+    "fflate": "0.8.3",
+    "format-si-unit": "0.0.12",
+    "jspdf": "4.2.1",
+    "kicadts": "0.0.53",
+    "polygon-clipping": "0.15.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hot-toast": "^2.6.0",
+    "schematic-symbols": "0.0.243",
+    "svg2pdf.js": "2.7.0",
+    "transformation-matrix": "3.1.0",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.10",
+    "@types/bun": "1.4.0",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@vitejs/plugin-react": "6.1.0",
+    "typescript": "5.9.3",
+    "vite": "8.2.2"
+  },
+  "overrides": {
+    "altiumts": "0.0.32"
+  }
+}

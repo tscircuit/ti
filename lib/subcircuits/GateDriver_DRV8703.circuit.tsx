@@ -14,8 +14,8 @@ const ChargePumpCapacitor = () => (
     capacitance="0.1uF"
     footprint="0402"
     manufacturerPartNumber="GCM155R71H104KE02D"
-    schX={-5.757614}
-    schY={0.55}
+    schX={-5.9}
+    schY={0.3}
     schOrientation="vertical"
   />
 );
@@ -143,8 +143,13 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
     {/* PVDD rail, local bypassing, and VDRAIN net tie. */}
     <trace
       from="C8.pin1"
-      to="C7.pin1"
+      to="net.PVDD"
       schDisplayLabel="PVDD"
+      schematicRouteHints={[{ x: -9.047678, y: 1.645032 }]}
+    />
+    <trace
+      from="C8.pin1"
+      to="C7.pin1"
       schematicRouteHints={[
         { x: -8.316553, y: 1.645032 },
         { x: -7.585427, y: 1.645032 },
@@ -205,12 +210,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
     <trace from="U1.IN1_PH" to="net.IN1_PH" schDisplayLabel="IN1_PH" />
     <trace from="U1.IN2_EN" to="net.IN2_EN" schDisplayLabel="IN2_EN" />
     <trace from="U1.nSLEEP" to="net.SLEEP" schDisplayLabel="SLEEP" />
-    <trace
-      from="U1.MODE"
-      to="net.GND"
-      schDisplayLabel="GND"
-      schematicRouteHints={[{ x: -5.940395, y: -1.462251 }]}
-    />
+    <trace from="U1.MODE" to="net.GND" />
     <trace
       from="U1.SCLK"
       to="net.SCLK"

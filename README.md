@@ -3,10 +3,14 @@
 This repo contains hand-curated tscircuit TSX schematics for Texas Instruments
 devices, reusable TI reference subcircuits, and raw TI chip definitions.
 
+- [View component library](https://ti.tscircuit.app/#file=lib%2Fchips%2FBQ24072.circuit.tsx)
+- [View System Block Editor](https://tiblocks.tscircuit.com/)
+
 The published package is `@tsci/tscircuit.ti`. It provides ready-to-use
 subcircuit components and low-level chip components that can be imported into a
 local tscircuit project, placed on a board, and connected to from the
 surrounding circuit. 
+
 
 ## Installation
 
@@ -34,6 +38,76 @@ The [`BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx`](examples/BluetoothSpeaker_C
 example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
+
+The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.circuit.tsx)
+example composes the TIDEP-01024 AWR1843AoP radar SoC, 40 MHz clock, and QSPI
+flash into the radar front-end and processing subsystem.
+
+The
+[`BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx`](examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx)
+example reproduces TI's TIDA-010266 blood-pressure and heart-rate monitor from
+the released schematic and BOM. It preserves reference designators U1-U7,
+R1-R23, C1-C18, J1-J10, TP1-TP7, and S1, including the DNP shutdown resistor
+and both selectable instrumentation-amplifier paths. The example composes these
+reusable modules:
+
+- `PowerManagement_TPS7A2433_TIDA010266`
+- `VoltageReference_ATL431LI_TIDA010266`
+- `InstrumentationAmplifier_INA350`
+- `AnalogSignalConditioning_LMV324A_TIDA010266`
+- `Microcontroller_MSPM0L1306_TIDA010266`
+- `MotorDriver_DRV8210_TIDA010266`
+
+Only blocks centered on imported TI chips are published as reusable library
+subcircuits. The ADC filters, connectors, jumpers, test points, programming
+header, internal-MCU amplifier network, and Omron pressure-sensor stage remain
+example-local sections used to compose the complete monitor.
+
+The newly modeled bare parts are available under the readable names
+`TPS7A24`, `ATL431LI`, `LMV324A`, and `SMPP2_03`. Exact-package exports for the
+TI devices remain available as `TPS7A2433DBVR`, `ATL431LIBIDBZR`, and
+`LMV324AIPWR`; `SMPP2_03` directly models Omron's `2SMPP03` package.
+The example is schematic-first (`routingDisabled`): place and route the PCB only
+after selecting the mechanical outline and validating medical-device safety
+requirements for the intended product.
+
+The [`SeatPositionModule.circuit.tsx`](examples/SeatPositionModule.circuit.tsx)
+example stays intentionally small: it composes and electrically connects the
+reusable reference subcircuits for the power supply, communication interface,
+light driver, MCU, position feedback, and motor driver blocks.
+
+The [`ConsumerWirelessModule.circuit.tsx`](examples/ConsumerWirelessModule.circuit.tsx)
+example assembles the seven reviewed references behind TI's Consumer wireless
+module diagram. Its protected 5 V input feeds a 3.3 V buck rail, which powers
+the LVDS interface, logic buffer, and temperature sensor; the logic signal then
+flows through the LVDS driver and two-channel I/O protection. The antenna feed,
+I2C bus, and protected differential pair remain explicit parent-level ports.
+
+The [`IndustrialAutomation_FlatPanel.circuit.tsx`](examples/IndustrialAutomation_FlatPanel.circuit.tsx)
+example implements an initial reusable subset of TI's
+[Flat panel solution](https://www.ti.com/solution/flat-panel). It connects the
+LP5892-Q1 output-user-interface block, TMP116/OPT3004 sensor block, and TLV755P
+3.3 V supply through public subcircuit nets. A host header supplies the serial
+and I2C interfaces, while dedicated headers expose all 48 RGB current sinks and
+16 scan lines. The controller and physical panel remain explicit boundaries;
+the example does not imply an unmodeled processor or display-interface circuit.
+
+## System Block Builder
+
+The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
+React Flow canvas for dragging these subcircuits into a system diagram.
+Connections stay at a readable system level—such as Power or Data—while a
+curated semantic catalog resolves compatible voltage rails and protocols into
+exact tscircuit selectors. The app generates example-style TSX and can evaluate
+it with PCB and routing work disabled to produce a schematic preview and
+downloadable PDF.
+
+The default editor graph uses the six implementation-ready blocks from the
+Consumer wireless module. The antenna is temporarily omitted because it is not
+working properly in the editor. Its high-level Power, GPIO, and LVDS edges
+generate the same reviewed internal selectors as the complete example.
+
+[Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
 
 ## Raw Chip Usage
 
@@ -95,6 +169,140 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 ## Exported Subcircuits
 
+### INA350 instrumentation amplifier
+
+`InstrumentationAmplifier_INA350` contains **only `INA350CDSIDSGR` and a 100 nF
+bypass capacitor**: the U5/C13 amplifier stage in
+[TI TIDA-010266, Figure 4-1](https://www.ti.com/lit/ug/tiduf53/tiduf53.pdf#page=17).
+It contains no pin headers, connectors, or gain-selection jumper. The
+usage example below also uses only named parent nets, with no header. J10 in
+TI's schematic is an optional parent-board gain jumper, not part of this module.
+
+The CDS variant provides gains **30/50 V/V**. `gain="external"` (default) exposes
+GS for the parent: low selects 30, high or unconnected selects 50. `gain={30}`
+or `gain={50}` straps GS internally to GND or VS. REF is **not grounded**; drive
+it from a low-impedance source such as the buffered 1.25 V reference in TIDA-010266.
+`shutdown="external"` (default) exposes SHDN; high or unconnected enables the
+amplifier, while low disables it. `shutdown="enabled"` ties SHDN to VS. Do not
+populate a pull-down on SHDN if the amplifier must remain enabled.
+
+```tsx
+import { InstrumentationAmplifier_INA350 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="12mm" height="10mm" routingDisabled>
+    <InstrumentationAmplifier_INA350 name="Amp" gain="external" />
+    <trace from=".Amp .U1 > .VS" to="net.V3_3" />
+    <trace from=".Amp .U1 > .V_NEG" to="net.GND" />
+    <trace from=".Amp .U1 > .IN_POS" to="net.INA_IN_POS" />
+    <trace from=".Amp .U1 > .IN_NEG" to="net.INA_IN_NEG" />
+    <trace from=".Amp .U1 > .OUT" to="net.INA_OUT" />
+    <trace from=".Amp .U1 > .REF" to="net.VREF_1_25" />
+    <trace from=".Amp .U1 > .GS" to="net.INA_GS" />
+  </board>
+)
+```
+
+The supply, reference generator, sensor, ADC/filter, and optional controls belong
+to the parent circuit. Named nets do not generate voltages or add physical
+terminals: the example disables routing until the parent supplies real endpoints.
+Connect an optional MCU shutdown signal to `.Amp .U1 > .SHDN`. REF, GS, and SHDN
+remain separate from ground unless explicitly wired otherwise by the parent or
+selected props. V- and the exposed pad are grounded, and C1 bypasses VS to GND.
+
+Supply VS with 1.8-5.5 V. Inputs need a DC bias-current return path and must meet
+the [INA350 datasheet's common-mode/output-swing limits](https://www.ti.com/lit/ds/symlink/ina350.pdf).
+The module uses 0.1 mm traces. Fixed gain 50 uses a bottom-layer strap and two vias
+to keep the SHDN escape clear; use at least two copper layers. Verify the completed
+parent board's routing and fabrication clearances. It has no analog simulation model and is not a validated
+medical-device design.
+
+`INA350` defaults to the raw `INA350CDSIDSGR` chip with
+`footprintVariant="wson_8_ep_2x2"`. The exact `INA350ABSIDSGR` export is also
+available for designs requiring gains 10/20. Both share the DSG0008A footprint
+and pinout, but their gain settings are not interchangeable. No supplier SKU or
+3D model is assumed.
+
+### DRV8210 PWM motor driver
+
+`MotorDriver_DRV8210` implements the full-bridge PWM application for the
+8-pin WSON `DRV8210DSGR`. The Controller and BDC motor use
+`group showAsSchematicBox` with real schematic signal ports, not PCB components.
+Their port-to-port traces use `schDisplayLabel` for inline PWM1/PWM2 and
+OUT1/OUT2 labels. Local bypass-capacitor ground labels keep ground wiring clear
+of those signals. The two PWM inputs drive IN1 and IN2; OUT1 and OUT2 connect
+to the motor.
+
+```tsx
+import { MotorDriver_DRV8210 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="16mm" height="12mm">
+    <MotorDriver_DRV8210 name="Driver" />
+  </board>
+)
+```
+
+Connect a parent circuit to `.Driver .U1 > .IN1`, `.Driver .U1 > .IN2`,
+`.Driver .U1 > .OUT1`, `.Driver .U1 > .OUT2`, `.Driver .U1 > .VM`,
+`.Driver .U1 > .VCC`, and `.Driver .U1 > .GND`. The schematic labels are
+PWM1, PWM2, OUT1, OUT2, VM, VCC, and GND respectively.
+
+Unlike the six-pin DRL reference diagram, the DSG device also requires a
+separate VCC supply and MODE selection. This subcircuit grounds MODE for PWM,
+grounds the exposed thermal pad, and includes 0.1 uF bypass capacitors on both
+VM and VCC. Keep VCC within 1.65–5.5 V and VM within the DSG operating range
+of 0–11 V; add VM bulk capacitance sized for your motor and supply.
+See the [TI pinout and supply requirements](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-F506A16B-1B46-4CAD-B811-DC3055E727BD),
+[PWM mode](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-2C006377-A449-4600-82B4-EA20AA948DEF),
+and [bulk capacitance guidance](https://www.ti.com/document-viewer/DRV8210/datasheet/GUID-AFD3F9A7-FA96-4E90-8B0B-C551CB6B7E0B).
+
+The raw chip is available as `DRV8210DSGR` or as
+`DRV8210` with `footprintVariant="wson_8_ep_2x2"`.
+
+### LP5892-Q1 LED matrix output interface
+
+`OutputUserInterface_LEDMatrix_LP5892_Q1` implements the 48-source,
+16-scan-line interface for a common-cathode 16-by-16 RGB LED matrix. It exposes
+the four supply domains (`VCC`, `VR`, `VG`, and `VB`), `GND`, the
+`SCLK`/`SIN`/`SOUT` serial interface, `R0`-`R15`, `G0`-`G15`, `B0`-`B15`, and
+`LINE0`-`LINE15` as public subcircuit nets. Connect from a parent circuit with
+selectors such as `.DisplayDriver > net.SCLK`, `.DisplayDriver > net.R0`, and
+`.DisplayDriver > net.GND`.
+
+```tsx
+import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="28mm" height="24mm" isViaInPadAllowed>
+    <OutputUserInterface_LEDMatrix_LP5892_Q1 name="DisplayDriver" />
+    <led
+      name="D_R0_LINE0"
+      color="red"
+      footprint="0603"
+      connections={{
+        anode: ".DisplayDriver > net.R0",
+        cathode: ".DisplayDriver > net.LINE0",
+      }}
+    />
+  </board>
+)
+```
+
+The internal 23 kohm IREF resistor matches TI's 3 mA, BC=`011` design example;
+firmware must configure the matching brightness/current registers. SCLK must
+run continuously and SIN should remain high while idle. VCC and VR may share a
+rail, as may VG and VB; use at least 3.5 V on VCC when operating at 20 mA or
+more per channel.
+
+The exposed-pad thermal-via array requires `isViaInPadAllowed` on the parent
+`board`. Follow TI's fabrication guidance by filling, plugging, or tenting the
+vias. The implementation follows the
+[LP5892-Q1 datasheet](https://www.ti.com/lit/ds/symlink/lp5892-q1.pdf) and the
+related [LP5891Q1EVM hardware guide](https://www.ti.com/lit/pdf/snvu836).
+
+### Available subcircuits
+
 The package currently exports these subcircuit components:
 
 - `BatteryManagement_BQ24072`
@@ -107,22 +315,38 @@ The package currently exports these subcircuit components:
 - `BluetoothController_CC2564C`
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
+- `MotorDriver_DRV8210`
 - `MotorDriver_DRV8703`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
+- `PositionFeedback_DRV5013`
+- `MotorDriver_DRV8305_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
 - `EnvironmentalSensor_HDC2080`
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
+- `InstrumentationAmplifier_INA350`
+- `PressureTransmitter_PGA300`
 - `IsolatedRS485_ISOW7841`
+- `PowerSupply_WindowModule`
+- `ReverseBatteryProtection_TLV1805_SQJ461EP`
+- `VoltageRegulator_LM73605`
+- `SupervisorWatchdog_TPS3850`
+- `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSPM0L1306Q1_TIDA020065` ([TIDA-020065](https://www.ti.com/tool/TIDA-020065))
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
+- `OutputUserInterface_LEDMatrix_LP5892_Q1`
+- `Sensors_TMP116_OPT3004`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
+- `MotorThermalProtection_TMP390` (datasheet-derived; not an exact Window Module reference design)
+- `TemperatureSensor_LM50HV_Q1` ([LM50-Q1/LM50HV-Q1 datasheet, Figure 8-3](https://www.ti.com/lit/ds/symlink/lm50-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
+- `PowerSupply_LM74202_TPS7E81_Q1` ([LM74202-Q1 datasheet, page-1 Simplified Schematic and Figure 39 values](https://www.ti.com/lit/ds/symlink/lm74202-q1.pdf) and [TPS7E81-Q1 datasheet, Figure 7-5](https://www.ti.com/lit/ds/symlink/tps7e81-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
 - `LoadSwitch_TPS22919`
 - `BuckConverter_TPS62933`
 - `BoostConverter_TPS61299X` (also exported as `TPS61299XBoostConverter`)
@@ -137,6 +361,22 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `CommunicationInterface_LIN_TLIN1028`
+- `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
+- `LightDriver_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
+- `PositionFeedback_DRV5013_TIDA01389` ([TIDA-01389](https://www.ti.com/tool/TIDA-01389))
+- `PowerSupply_LM5050_TIDA00992` ([TIDA-00992](https://www.ti.com/tool/TIDA-00992))
+- `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `LogicBuffer_SN74LVC1G34` ([SN74LVC1G34 typical application](https://www.ti.com/lit/gpn/SN74LVC1G34))
+- `WirelessAntenna_W3006_TIDCWL1837MODCOM8I` ([TIDC-WL1837MODCOM8I](https://www.ti.com/tool/TIDC-WL1837MODCOM8I))
+- `WirelessConnectivity_CC2540_TIDCCC2540BLEUSB` ([TIDC-CC2540-BLE-USB](https://www.ti.com/tool/TIDC-CC2540-BLE-USB))
+- `InputOutputProtection_TPD2E009_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
+- `BuckConverter_TPS62086_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
+- `InputPowerProtection_TPS25910_TIDA00890` ([TIDA-00890](https://www.ti.com/tool/TIDA-00890))
+- `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
+- `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
+- `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
 
 ## Exported Chips
 
@@ -154,32 +394,64 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `CSD19532Q5B` | `-` | `CSD19532Q5B` |
+| `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
+| `DRV5013Q1` | `-` | `DRV5013ADQDBZRQ1` |
+| `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
 | `DRV8703` | `vqfn_32_rhb_5x5` | `DRV8703QRHBRQ1` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
+| `DRV83053Q1` | `-` | `DRV83053QPHPQ1` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
+| `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
+| `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
+| `LM73605` | `wqfn_30_rnp_4x6` | `LM73605QRNPRQ1` |
+| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
+| `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
+| `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
+| `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
+| `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
+| `OPT3001` | `-` | `OPT3001IDNPRQ1` |
+| `OPT3004` | `uson_6_ep_2x2` | `OPT3004DNPR` |
+| `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
+| `SN65LVDS31D` | `-` | `SN65LVDS31D` |
+| `SN74LVC1G34DBVR` | `-` | `SN74LVC1G34DBVR` |
+| `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
+| `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
+| `TLV316` | `-` | `TLV316QDBVTQ1` |
+| `TLV1805` | `sot_23_6` | `TLV1805QDBVRQ1` |
 | `TAS2505` | `-` | `TAS2505` |
+| `TMP103AYFF` | `-` | `TMP103AYFF` |
+| `TMP116` | `wson_6_ep_2x2` | `TMP116NAIDRVR` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
+| `TMP390Q1` | `-` | `TMP390AQDRLRQ1` |
+| `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
+| `TPS25910RSA` | `-` | `TPS25910RSA` |
+| `TPS3850` | `vson_10_drc_3x3` | `TPS3850H33QDRCRQ1` |
+| `TPS62086RLTR` | `-` | `TPS62086RLTR` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
 | `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
 | `TPS7A20` | `sot_23_5` | `TPS7A2018PDBVR`, `TPS7A2033PDBVR` |
+| `TPS7E81Q1` | `-` | `TPS7E8133QDBVRQ1` |
+| `TPS92638` | `-` | `TPS92638QPWPRQ1` |
 | `TPS7A2028PDBVR` | `-` | `TPS7A2028PDBVR` |
 | `TPSM82823` | `-` | `TPSM82823` |
 | `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
 | `TXS0102` | `vssop_8` | `TXS0102DCUR` |
+| `W3006` | `-` | `W3006` |
 
 Rows with `-` are direct chip exports and do not currently expose a
 `footprintVariant` prop. For the wrapper exports, the underlying component
@@ -195,6 +467,18 @@ The package also exports:
 - `TiSubcircuitName`: a TypeScript union of keys in `TiSubcircuitComponents`.
 - `TiSubcircuitComponent`: a TypeScript type for any exported subcircuit
   component.
+
+### TMP390-Q1 Motor Thermal Protection Source Scope
+
+`MotorThermalProtection_TMP390` is derived from TMP390-Q1 datasheet Figure 7-1
+for topology and relative schematic placement, and Figure 8-3 plus Tables 7-1
+and 7-2 for component values and thresholds. It is **not** an exact TI Window
+Module reference design because TI does not attach schematic or CAD source to
+that subsystem.
+
+The fixed datasheet example exposes `VDD`, `VDDIO`, `GND`, `OUTA`, and `OUTB`.
+It selects a +90 C hot trip and -25 C cold trip with 10 C hysteresis. The
+active-low, open-drain outputs reset at +80 C and -15 C, respectively.
 
 ## Key Directories
 
@@ -223,8 +507,37 @@ For example, `PowerMonitor_INA237` comes from
 `lib/subcircuits/PowerMonitor_INA237.circuit.tsx` and can be imported from
 `@tsci/tscircuit.ti`.
 
+`PositionFeedback_DRV5013` extracts the Window Module "Position Feedback -
+Hall Effect Sensors" function from TI's TIDA-01389. The Window Module
+subsystem's own Reference Design tab currently lists no design, so TIDA-01389
+was selected from the closely related Motor Driver references: TI explicitly
+identifies it for sunroof and window-lift applications and implements motor
+position encoding with two DRV5013-Q1 latching Hall sensors. This extraction is
+independent of the DRV8703/H-bridge work in PR #116 and does not duplicate that
+motor-driver circuitry.
+
+The TIDA-01389 BOM identifies U5/U6 as `DRV5013ADQDBZRQ1`, C13/C14 as
+`GRM155R61H104ME14D`, R14/R15 as `CRCW040210K0JNED`, R9 as
+`CRCW06030000Z0EA`, J1/J2 as `SSQ-110-01-T-S`, and J4 as Wurth Elektronik
+`691214310002`. Following repository convention, passive and connector MPNs
+are documented here instead of being rendered as schematic component values.
+Hall-channel and connector GND pins use ordinary traces to `net.GND` so
+tscircuit generates native ground symbols; V_BAT alone uses `schDisplayLabel`
+as an inline trace label. No passive or net-label component has a custom
+schematic size.
+
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.
+
+### `lib/thirdparty-subcircuits`
+
+The `lib/thirdparty-subcircuits` directory contains application wiring circuits
+for blocks that do not provide a TI reference design. These circuits clearly
+identify the datasheet figure used as their source. For example,
+`TemperatureSensor_LM50HV_Q1` follows Figure 8-3 of the LM50-Q1/LM50HV-Q1
+datasheet, while `PowerSupply_LM74202_TPS7E81_Q1` combines the LM74202-Q1
+page-1 Simplified Schematic (with Figure 39 values) and the TPS7E81-Q1 Figure
+7-5 fixed-output LDO stage.
 
 ### `lib/simulations`
 

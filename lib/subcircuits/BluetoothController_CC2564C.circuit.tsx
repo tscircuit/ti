@@ -1,6 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { CC2564C } from "../chips/CC2564C.circuit.tsx";
+import { LFB212G45SG8C341_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
 
 const cc2564cNoConnectPins = [
   "pin1",
@@ -195,7 +196,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <testpoint
       name="TP1"
-      footprint="kicad:TestPoint/TestPoint_Plated_Hole_D1.0mm"
+      footprint="kicad:TestPoint/TestPoint_THTPad_D1.0mm_Drill0.5mm"
       schX={-5.2}
       schY={-2.05}
       connections={{ pin1: "net.TX_DBG" }}
@@ -216,8 +217,9 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <chip
       name="FL1"
-      footprint="kicad:Package_LGA/LGA-4_2x1.25mm_P0.65mm"
+      footprint={LFB212G45SG8C341_FOOTPRINT}
       manufacturerPartNumber="LFB212G45SG8C341"
+      supplierPartNumbers={{ jlcpcb: ["C2650941"] }}
       schX={8}
       schY={8.6}
       schWidth="1.5mm"

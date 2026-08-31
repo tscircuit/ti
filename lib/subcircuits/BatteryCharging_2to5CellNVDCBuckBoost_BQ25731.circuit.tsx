@@ -1,0 +1,712 @@
+import type { SubcircuitProps } from "@tscircuit/props";
+import "tscircuit";
+import { BQ25731RSN } from "../chips/BQ25731RSN.circuit.tsx";
+
+export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
+  props: SubcircuitProps,
+) => (
+  <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
+    <net name="GND" isPowerNet isGroundNet={true} />
+    <net name="BAT" isPowerNet isGroundNet={false} />
+    <net name="PPHV" isPowerNet isGroundNet={false} />
+    <net name="REGN" isPowerNet isGroundNet={false} />
+    <net name="VDDA" isPowerNet isGroundNet={false} />
+    <net name="VBUS" isPowerNet isGroundNet={false} />
+    <net name="SW1" isPowerNet isGroundNet={false} />
+    <net name="SW2" isPowerNet isGroundNet={false} />
+    <net name="VSYS" isPowerNet isGroundNet={false} />
+    <capacitor
+      footprint="0603"
+      name="C1"
+      capacitance="0.01uF"
+      schRotation={180}
+      schX={-10.99}
+      schY={2.62}
+    />
+    <capacitor
+      footprint="0603"
+      name="C2"
+      capacitance="0.01uF"
+      schRotation={270}
+      schX={-8.77}
+      schY={6.76}
+    />
+    <capacitor
+      footprint="0603"
+      name="C3"
+      capacitance="0.01uF"
+      schRotation={270}
+      schX={9.51}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C4"
+      capacitance="68uF"
+      schRotation={270}
+      schX={14.7}
+      schY={7.31}
+    />
+    <capacitor
+      footprint="0603"
+      name="C5"
+      capacitance="0.018uF"
+      schRotation={180}
+      schX={10.75}
+      schY={2.77}
+    />
+    <capacitor
+      footprint="0603"
+      name="C6"
+      capacitance="0.018uF"
+      schRotation={180}
+      schX={10.75}
+      schY={1.58}
+    />
+    <capacitor
+      footprint="0805"
+      name="C20"
+      capacitance="10uF"
+      schRotation={270}
+      schX={14}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="0603"
+      name="C21"
+      capacitance="1000pF"
+      schRotation={270}
+      schX={-7.82}
+      schY={6.76}
+    />
+    <capacitor
+      footprint="0603"
+      name="C22"
+      capacitance="0.047uF"
+      schRotation={90}
+      schX={-3.5}
+      schY={6.76}
+    />
+    <capacitor
+      footprint="0603"
+      name="C23"
+      capacitance="0.047uF"
+      schRotation={90}
+      schX={4.3}
+      schY={6.76}
+    />
+    <capacitor
+      footprint="0603"
+      name="C24"
+      capacitance="1uF"
+      schRotation={270}
+      schX={-14.2}
+      schY={6.17}
+    />
+    <capacitor
+      footprint="0603"
+      name="C25"
+      capacitance="150pF"
+      schRotation={180}
+      schX={-5.81}
+      schY={5.43}
+    />
+    <capacitor
+      footprint="0603"
+      name="C26"
+      capacitance="150pF"
+      schRotation={0}
+      schX={6.91}
+      schY={5.43}
+    />
+    <capacitor
+      footprint="0603"
+      name="C27"
+      capacitance="0.47uF"
+      schRotation={270}
+      schX={-8.33}
+      schY={4.1}
+    />
+    <capacitor
+      footprint="0603"
+      name="C28"
+      capacitance="0.033uF"
+      schRotation={180}
+      schX={-9.95}
+      schY={3.36}
+    />
+    <capacitor
+      footprint="0603"
+      name="C29"
+      capacitance="0.033uF"
+      schRotation={270}
+      schX={-12.76}
+      schY={2.91}
+    />
+    <capacitor
+      footprint="0603"
+      name="C30"
+      capacitance="0.068uF"
+      schRotation={270}
+      schX={5.25}
+      schY={1.73}
+    />
+    <capacitor
+      footprint="0603"
+      name="C31"
+      capacitance="0.1uF"
+      schRotation={180}
+      schX={13.4}
+      schY={6.02}
+    />
+    <capacitor
+      footprint="0603"
+      name="C32"
+      capacitance="1uF"
+      schRotation={270}
+      schX={-8.33}
+      schY={0.55}
+    />
+    <capacitor
+      footprint="0603"
+      name="C33"
+      capacitance="33pF"
+      schRotation={0}
+      schX={-5.52}
+      schY={0.1}
+    />
+    <capacitor
+      footprint="0603"
+      name="C34"
+      capacitance="2.2uF"
+      schRotation={0}
+      schX={6.82}
+      schY={0.6}
+    />
+    <capacitor
+      footprint="0603"
+      name="C35"
+      capacitance="4700pF"
+      schRotation={180}
+      schX={-6.4}
+      schY={-0.78}
+    />
+    <capacitor
+      footprint="0603"
+      name="C36"
+      capacitance="680pF"
+      schRotation={0}
+      schX={6.82}
+      schY={-0.34}
+    />
+    <capacitor
+      footprint="0603"
+      name="C37"
+      capacitance="15pF"
+      schRotation={0}
+      schX={5.63}
+      schY={-1.32}
+    />
+    <capacitor
+      footprint="0603"
+      name="C38"
+      capacitance="100pF"
+      schRotation={90}
+      schX={-13.35}
+      schY={-1.82}
+    />
+    <capacitor
+      footprint="0603"
+      name="C39"
+      capacitance="100pF"
+      schRotation={90}
+      schX={7.5}
+      schY={-4.18}
+    />
+    <capacitor
+      footprint="0603"
+      name="C40"
+      capacitance="100pF"
+      schRotation={90}
+      schX={6.02}
+      schY={-4.18}
+    />
+    <capacitor
+      footprint="1210"
+      name="C50"
+      capacitance="22uF"
+      schRotation={270}
+      schX={-13.4}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C51"
+      capacitance="22uF"
+      schRotation={270}
+      schX={-12.6}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C52"
+      capacitance="22uF"
+      schRotation={270}
+      schX={-11.8}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C53"
+      capacitance="22uF"
+      schRotation={270}
+      schX={-11}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C55"
+      capacitance="22uF"
+      schRotation={270}
+      schX={10.2}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C56"
+      capacitance="22uF"
+      schRotation={270}
+      schX={11}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C57"
+      capacitance="22uF"
+      schRotation={270}
+      schX={11.8}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C58"
+      capacitance="22uF"
+      schRotation={270}
+      schX={12.6}
+      schY={7.35}
+    />
+    <capacitor
+      footprint="1210"
+      name="C100"
+      capacitance="15uF"
+      schRotation={270}
+      schX={-15}
+      schY={6.72}
+    />
+    <resistor
+      footprint="2512"
+      name="R1"
+      resistance="0.005"
+      schRotation={0}
+      schX={-9.99}
+      schY={7.79}
+    />
+    <resistor
+      footprint="2512"
+      name="R2"
+      resistance="0.005"
+      schRotation={0}
+      schX={13.4}
+      schY={7.79}
+    />
+    <resistor
+      footprint="0603"
+      name="R3"
+      resistance="1.80"
+      schRotation={90}
+      schX={-14.2}
+      schY={7.2}
+    />
+    <resistor
+      footprint="0603"
+      name="R4"
+      resistance="1.00"
+      schRotation={0}
+      schX={-9.21}
+      schY={4.84}
+    />
+    <resistor
+      footprint="0603"
+      name="R5"
+      resistance="4.99"
+      schRotation={90}
+      schX={-10.4}
+      schY={5.34}
+    />
+    <resistor
+      footprint="0603"
+      name="R6"
+      resistance="4.99"
+      schRotation={90}
+      schX={-11.58}
+      schY={3.95}
+    />
+    <resistor
+      footprint="0603"
+      name="R7"
+      resistance="10"
+      schRotation={180}
+      schX={14.3}
+      schY={2.17}
+    />
+    <resistor
+      footprint="0603"
+      name="R8"
+      resistance="10.0"
+      schRotation={0}
+      schX={-12.17}
+      schY={0.99}
+    />
+    <resistor
+      footprint="0603"
+      name="R9"
+      resistance="10"
+      schRotation={180}
+      schX={14.6}
+      schY={0.99}
+    />
+    <resistor
+      footprint="0603"
+      name="R11"
+      resistance="360k"
+      schRotation={90}
+      schX={9.72}
+      schY={-1.08}
+    />
+    <resistor
+      footprint="0603"
+      name="R12"
+      resistance="40.2k"
+      schRotation={0}
+      schX={-4.48}
+      schY={-0.78}
+    />
+    <resistor
+      footprint="0603"
+      name="R13"
+      resistance="15.0k"
+      schRotation={0}
+      schX={5.19}
+      schY={-0.34}
+    />
+    <resistor
+      footprint="0603"
+      name="R14"
+      resistance="220k"
+      schRotation={90}
+      schX={-11.88}
+      schY={-2.26}
+    />
+    <resistor
+      footprint="0603"
+      name="R15"
+      resistance="100k"
+      schRotation={90}
+      schX={-4.48}
+      schY={-4.63}
+    />
+    <resistor
+      footprint="0603"
+      name="R16"
+      resistance="191k"
+      schRotation={90}
+      schX={8.83}
+      schY={-4.18}
+    />
+    <resistor
+      footprint="0603"
+      name="R17"
+      resistance="30.1k"
+      schRotation={270}
+      schX={5.18}
+      schY={-4.92}
+    />
+    <resistor
+      footprint="0603"
+      name="R18"
+      resistance="360k"
+      schRotation={90}
+      schX={11.05}
+      schY={-2.26}
+    />
+    <resistor
+      footprint="0603"
+      name="R20"
+      resistance="100k"
+      schRotation={0}
+      schX={10.31}
+      schY={-3.59}
+    />
+    <resistor
+      footprint="0603"
+      name="R110"
+      resistance="383k"
+      schRotation={0}
+      schX={-10.69}
+      schY={-0.49}
+    />
+    <inductor
+      footprint="2512"
+      name="L1"
+      inductance="4.7uH"
+      schRotation={0}
+      schX={0.4}
+      schY={7.79}
+    />
+    <mosfet
+      footprint="sot23"
+      name="Q1"
+      manufacturerPartNumber="CSD18511Q5AR"
+      channelType="n"
+      mosfetMode="enhancement"
+      symbolDrainSide="left"
+      symbolSourceSide="right"
+      symbolGateSide="bottom"
+      schRotation={270}
+      schX={-6.85}
+      schY={7.57}
+    />
+    <mosfet
+      footprint="sot23"
+      name="Q2"
+      manufacturerPartNumber="CSD18511Q5AR"
+      channelType="n"
+      mosfetMode="enhancement"
+      schRotation={90}
+      schX={8.03}
+      schY={8.02}
+    />
+    <mosfet
+      footprint="sot23"
+      name="Q3"
+      manufacturerPartNumber="CSD18511Q5AR"
+      channelType="n"
+      mosfetMode="enhancement"
+      schRotation={0}
+      schX={-5.18}
+      schY={6.91}
+    />
+    <mosfet
+      footprint="sot23"
+      name="Q4"
+      manufacturerPartNumber="CSD18511Q5AR"
+      channelType="n"
+      mosfetMode="enhancement"
+      symbolDrainSide="top"
+      symbolSourceSide="bottom"
+      symbolGateSide="right"
+      schRotation={0}
+      schX={6.27}
+      schY={6.91}
+    />
+    <solderjumper
+      footprint="0603"
+      name="P1"
+      pinCount={2}
+      schRotation={90}
+      schX={11.05}
+      schY={-0.64}
+    />
+    <solderjumper
+      footprint="0603"
+      name="P3"
+      pinCount={2}
+      schRotation={0}
+      schX={12.82}
+      schY={-3.59}
+    />
+    <BQ25731RSN
+      name="U1"
+      schPinArrangement={{
+        leftSide: {
+          pins: [30, 32, 29, 31, 1, 2, 3, 7, 6, 16, 11, 13, 12, 4, 5, 15, 14],
+          direction: "top-to-bottom",
+        },
+        rightSide: {
+          pins: [25, 23, 26, 24, 22, 21, 20, 19, 28, 17, 18, 8, 9, 10, 33, 27],
+          direction: "top-to-bottom",
+        },
+      }}
+      schPinStyle={{
+        pin32: { marginTop: 0.3 },
+        pin29: { marginTop: 0.3 },
+        pin31: { marginTop: 0.3 },
+        pin1: { marginTop: 0.3 },
+        pin2: { marginTop: 0.3 },
+        pin3: { marginTop: 0.3 },
+        pin7: { marginTop: 0.3 },
+        pin6: { marginTop: 0.8 },
+        pin16: { marginTop: 0.3 },
+        pin11: { marginTop: 0.6 },
+        pin13: { marginTop: 0.3 },
+        pin12: { marginTop: 0.3 },
+        pin4: { marginTop: 0.3 },
+        pin5: { marginTop: 0.3 },
+        pin15: { marginTop: 0.3 },
+        pin14: { marginTop: 0.3 },
+        pin23: { marginTop: 0.3 },
+        pin26: { marginTop: 0.3 },
+        pin24: { marginTop: 0.3 },
+        pin22: { marginTop: 0.3 },
+        pin21: { marginTop: 0.3 },
+        pin20: { marginTop: 0.3 },
+        pin19: { marginTop: 0.3 },
+        pin28: { marginTop: 0.6 },
+        pin17: { marginTop: 0.8 },
+        pin18: { marginTop: 0.8 },
+        pin8: { marginTop: 0.6 },
+        pin9: { marginTop: 0.3 },
+        pin10: { marginTop: 0.3 },
+        pin33: { marginTop: 0.3 },
+        pin27: { marginTop: 0.1 },
+      }}
+      schWidth={4}
+      schHeight={9.5}
+      schX={0.4}
+      schY={0.4}
+    />
+    <trace from=".C2 > .pin2" to=".C24 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C34 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C32 > .pin2" />
+    <trace from=".C2 > .pin2" to=".R17 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C21 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C36 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C33 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C37 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C26 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C3 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C28 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C29 > .pin2" />
+    <trace from=".C2 > .pin2" to=".U1 > .pin33" />
+    <trace from=".U1 > .pin27" to="net.GND" />
+    <trace from=".C2 > .pin2" to=".U1 > .pin14" />
+    <trace from=".C2 > .pin2" to=".C27 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C4 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C20 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C25 > .pin1" />
+    <trace from=".C2 > .pin2" to=".Q3 > .source" />
+    <trace from=".C2 > .pin2" to=".Q4 > .source" />
+    <trace from=".C2 > .pin2" to=".P3 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C52 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C51 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C50 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C53 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C55 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C56 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C57 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C58 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C39 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C40 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C38 > .pin1" />
+    <trace from=".C2 > .pin2" to=".R14 > .pin1" />
+    <trace from=".C2 > .pin2" to=".R15 > .pin1" />
+    <trace from=".C2 > .pin2" to=".R16 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C35 > .pin2" />
+    <trace from=".C2 > .pin2" to=".C5 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C6 > .pin1" />
+    <trace from=".C2 > .pin2" to=".C100 > .pin2" />
+    <trace from=".C31 > .pin1" to=".R9 > .pin1" />
+    <trace from=".C31 > .pin1" to=".C4 > .pin1" />
+    <trace from=".C31 > .pin1" to=".C20 > .pin1" />
+    <trace from=".C31 > .pin1" to=".R2 > .pin2" />
+    <trace from=".R9 > .pin2" to=".U1 > .pin19" />
+    <trace from=".R9 > .pin2" to=".C30 > .pin2" />
+    <trace from=".R9 > .pin2" to=".C6 > .pin2" />
+    <trace from=".R7 > .pin2" to=".U1 > .pin20" />
+    <trace from=".R7 > .pin2" to=".C30 > .pin1" />
+    <trace from=".R7 > .pin2" to=".C5 > .pin2" />
+    <trace from=".U1 > .pin5" to=".R15 > .pin2" />
+    <trace from=".U1 > .pin6" to=".C38 > .pin2" />
+    <trace from=".U1 > .pin6" to=".R14 > .pin2" />
+    <trace from=".U1 > .pin6" to=".R110 > .pin1" />
+    <trace from=".R1 > .pin1" to=".R6 > .pin2" />
+    <trace from=".R1 > .pin1" to=".R4 > .pin1" />
+    <trace from=".R1 > .pin1" to=".R3 > .pin2" />
+    <trace from=".R1 > .pin1" to=".C52 > .pin1" />
+    <trace from=".R1 > .pin1" to=".C51 > .pin1" />
+    <trace from=".R1 > .pin1" to=".C50 > .pin1" />
+    <trace from=".R1 > .pin1" to=".C53 > .pin1" />
+    <trace from=".R1 > .pin1" to=".C100 > .pin1" />
+    <trace from=".C34 > .pin1" to=".R8 > .pin1" />
+    <trace from=".C34 > .pin1" to=".U1 > .pin28" />
+    <trace from=".C32 > .pin1" to=".R8 > .pin2" />
+    <trace from=".C32 > .pin1" to=".U1 > .pin7" />
+    <trace from=".C32 > .pin1" to=".P1 > .pin2" />
+    <trace from=".C32 > .pin1" to=".R110 > .pin2" />
+    <trace from=".C32 > .pin1" to=".R11 > .pin2" />
+    <trace from=".C2 > .pin1" to=".R1 > .pin2" />
+    <trace from=".C2 > .pin1" to=".R5 > .pin2" />
+    <trace from=".C2 > .pin1" to=".C21 > .pin1" />
+    <trace from=".C2 > .pin1" to=".Q1 > .drain" />
+    <trace from=".C22 > .pin1" to=".U1 > .pin30" />
+    <trace from=".C22 > .pin2" to=".U1 > .pin32" />
+    <trace from=".C22 > .pin2" to=".Q1 > .source" />
+    <trace from=".C22 > .pin2" to=".Q3 > .drain" />
+    <trace from=".C22 > .pin2" to=".L1 > .pin1" />
+    <trace from=".C23 > .pin1" to=".U1 > .pin25" />
+    <trace from=".C23 > .pin2" to=".U1 > .pin23" />
+    <trace from=".C23 > .pin2" to=".Q2 > .source" />
+    <trace from=".C23 > .pin2" to=".Q4 > .drain" />
+    <trace from=".C23 > .pin2" to=".L1 > .pin2" />
+    <trace from=".C24 > .pin1" to=".R3 > .pin1" />
+    <trace from=".C26 > .pin2" to=".U1 > .pin26" />
+    <trace from=".C26 > .pin2" to=".Q4 > .gate" />
+    <trace from=".C31 > .pin2" to=".R7 > .pin1" />
+    <trace from=".C31 > .pin2" to=".C3 > .pin1" />
+    <trace from=".C31 > .pin2" to=".U1 > .pin22" />
+    <trace from=".C31 > .pin2" to=".Q2 > .drain" />
+    <trace from=".C31 > .pin2" to=".C55 > .pin1" />
+    <trace from=".C31 > .pin2" to=".C56 > .pin1" />
+    <trace from=".C31 > .pin2" to=".C57 > .pin1" />
+    <trace from=".C31 > .pin2" to=".C58 > .pin1" />
+    <trace from=".C31 > .pin2" to=".R2 > .pin1" />
+    <trace from=".C36 > .pin1" to=".R13 > .pin2" />
+    <trace from=".C37 > .pin1" to=".U1 > .pin17" />
+    <trace from=".C37 > .pin1" to=".R13 > .pin1" />
+    <trace from=".P1 > .pin1" to=".R18 > .pin2" />
+    <trace from=".R5 > .pin1" to=".C28 > .pin2" />
+    <trace from=".R5 > .pin1" to=".U1 > .pin2" />
+    <trace from=".R5 > .pin1" to=".C1 > .pin1" />
+    <trace from=".R6 > .pin1" to=".C29 > .pin1" />
+    <trace from=".R6 > .pin1" to=".U1 > .pin3" />
+    <trace from=".R6 > .pin1" to=".C1 > .pin2" />
+    <trace from=".R12 > .pin1" to=".C35 > .pin1" />
+    <trace from=".R12 > .pin2" to=".C33 > .pin2" />
+    <trace from=".R12 > .pin2" to=".U1 > .pin16" />
+    <trace from=".R17 > .pin1" to=".U1 > .pin10" />
+    <trace from=".R20 > .pin2" to=".P3 > .pin1" />
+    <trace from=".U1 > .pin1" to=".R4 > .pin2" />
+    <trace from=".U1 > .pin1" to=".C27 > .pin1" />
+    <trace from=".U1 > .pin8" to=".C39 > .pin2" />
+    <trace from=".U1 > .pin8" to=".R16 > .pin2" />
+    <trace from=".U1 > .pin9" to=".C40 > .pin2" />
+    <trace from=".U1 > .pin18" to=".R20 > .pin1" />
+    <trace from=".U1 > .pin18" to=".R18 > .pin1" />
+    <trace from=".U1 > .pin18" to=".R11 > .pin1" />
+    <trace from=".U1 > .pin24" to=".Q2 > .gate" />
+    <trace from=".U1 > .pin29" to=".C25 > .pin2" />
+    <trace from=".U1 > .pin29" to=".Q3 > .gate" />
+    <trace from=".U1 > .pin31" to=".Q1 > .gate" />
+    <trace from=".C2 > .pin2" to="net.GND" />
+    <trace from=".C31 > .pin1" to="net.BAT" />
+    <trace from=".R1 > .pin1" to="net.PPHV" />
+    <trace from=".C34 > .pin1" to="net.REGN" />
+    <trace from=".C32 > .pin1" to="net.VDDA" />
+    <trace from=".C2 > .pin1" to="net.VBUS" />
+    <trace from=".C22 > .pin2" to="net.SW1" />
+    <trace from=".C23 > .pin2" to="net.SW2" />
+    <trace from=".C31 > .pin2" to="net.VSYS" />
+  </subcircuit>
+);
+
+export default BatteryCharging_2to5CellNVDCBuckBoost_BQ25731;
