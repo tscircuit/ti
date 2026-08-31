@@ -173,7 +173,7 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
       schX={-2.741721}
-      schY={1.645032}
+      schY={1.545032}
     />
     <resistor
       name="R3"
@@ -181,7 +181,7 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
       schX={-2.741721}
-      schY={-0.731126}
+      schY={-0.831126}
     />
     <resistor
       name="R5"
@@ -189,7 +189,7 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
       schX={2.558939}
-      schY={1.645032}
+      schY={1.545032}
     />
     <resistor
       name="R4"
@@ -197,7 +197,7 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       footprint="0603"
       manufacturerPartNumber="CRCW06030000Z0EA"
       schX={2.558939}
-      schY={-0.731126}
+      schY={-0.831126}
     />
 
     <capacitor
@@ -258,14 +258,14 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       from="R2.pin1"
       to="net.GH1"
       schDisplayLabel="GH1"
-      schematicRouteHints={[{ x: -3.472847, y: 1.645032 }]}
+      schematicRouteHints={[{ x: -3.472847, y: 1.545032 }]}
     />
     <trace from="R2.pin2" to="Q1B.gate" />
     <trace
       from="R3.pin1"
       to="net.GL1"
       schDisplayLabel="GL1"
-      schematicRouteHints={[{ x: -3.472847, y: -0.731126 }]}
+      schematicRouteHints={[{ x: -3.472847, y: -0.831126 }]}
     />
     <trace from="R3.pin2" to="Q1A.gate" />
     <trace from="Q2A.gate" to="R5.pin1" />
@@ -273,37 +273,39 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
       from="R5.pin2"
       to="net.GH2"
       schDisplayLabel="GH2"
-      schematicRouteHints={[{ x: 3.472847, y: 1.645032 }]}
+      schematicRouteHints={[{ x: 3.472847, y: 1.545032 }]}
     />
     <trace
       from="Q2B.gate"
       to="R4.pin1"
-      schematicRouteHints={[{ x: 2.193376, y: -0.731126 }]}
+      schematicRouteHints={[{ x: 2.193376, y: -0.831126 }]}
     />
     <trace
       from="R4.pin2"
       to="net.GL2"
       schDisplayLabel="GL2"
-      schematicRouteHints={[{ x: 3.472847, y: -0.731126 }]}
+      schematicRouteHints={[{ x: 3.472847, y: -0.831126 }]}
     />
 
     {/* PVDD rail and the C1 decoupling branch. */}
     <trace from="Q1B.drain" to="Q2A.drain" />
     <trace
       from="C1.pin1"
-      to="Q1B.drain"
+      to="net.PVDD"
       schematicRouteHints={[
-        { x: -0.913907, y: 3.472846 },
-        { x: 0, y: 3.472846 },
-        { x: 0, y: 2.193377 },
+        { x: -0.913907, y: 3.778674 },
+        { x: 0.365563, y: 3.778674 },
       ]}
     />
-    <netlabel
-      net="PVDD"
-      connectsTo="Q1B.drain"
-      schX={0.365563}
-      schY={3.472846}
-      anchorSide="left"
+    <trace
+      from="Q1B.drain"
+      to="net.PVDD"
+      schDisplayLabel="PVDD"
+      schematicRouteHints={[
+        { x: 0, y: 2.395032 },
+        { x: 0, y: 3.778674 },
+        { x: 0.365563, y: 3.778674 },
+      ]}
     />
     <netlabel
       net="GND"

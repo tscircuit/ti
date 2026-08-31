@@ -46,7 +46,7 @@ const NetTie = ({ name, schX, schY }: NetTieProps) => (
 export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
   <subcircuit
     // Keep the source sheet's local GND islands as native ground terminals.
-    schMaxTraceDistance="2mm"
+    schMaxTraceDistance="2.5mm"
     schTraceAutoLabelEnabled={false}
     // This block is schematic-only. routingDisabled skips PCB autorouting but
     // does not disable the native schematic autorouter.
@@ -96,7 +96,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="GRM155R70J105MA12D"
       schX={-6.488739}
-      schY={2.85033}
+      schY={3.033111}
       schOrientation="vertical"
     />
     <capacitor
@@ -105,7 +105,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="GRM155R70J105MA12D"
       schX={-5.757613}
-      schY={2.85033}
+      schY={3.033111}
       schOrientation="vertical"
     />
     <ChargePumpCapacitor />
@@ -124,8 +124,8 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       from="C10.pin1"
       to="U1.AVDD"
       schematicRouteHints={[
-        { x: -6.488739, y: 3.124502 },
-        { x: -4.843707, y: 3.124502 },
+        { x: -6.488739, y: 3.672846 },
+        { x: -4.843707, y: 3.672846 },
         { x: -4.843707, y: 2.376158 },
       ]}
     />
@@ -133,13 +133,19 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       from="C9.pin1"
       to="U1.DVDD"
       schematicRouteHints={[
-        { x: -5.757613, y: 3.124502 },
-        { x: -5.209269, y: 3.124502 },
+        { x: -5.757613, y: 3.307283 },
+        { x: -5.209269, y: 3.307283 },
         { x: -5.209269, y: 2.010595 },
       ]}
     />
     <trace from="C10.pin2" to="C9.pin2" />
-    <trace from="C9.pin2" to="net.GND" schDisplayLabel="GND" />
+    <netlabel
+      net="GND"
+      connectsTo="C9.pin2"
+      schX={-5.757613}
+      schY={2.482781}
+      anchorSide="top"
+    />
 
     {/* PVDD rail, local bypassing, and VDRAIN net tie. */}
     <trace
