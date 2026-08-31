@@ -5,8 +5,8 @@ import { DRV8703QRHBRQ1 } from "../chips/DRV8703QRHBRQ1.circuit.tsx";
 type NetTieProps = { name: string; schX: number; schY: number };
 
 /**
- * C6 is shifted 0.365563 left from its Altium center so the native schematic
- * autorouter can connect both charge-pump pins without net-label fallback.
+ * C6 receives a small left/up clearance shift from its Altium center so the
+ * native autorouter can connect both charge-pump pins without label fallback.
  */
 const ChargePumpCapacitor = () => (
   <capacitor
@@ -15,68 +15,31 @@ const ChargePumpCapacitor = () => (
     footprint="0402"
     manufacturerPartNumber="GCM155R71H104KE02D"
     schX={-5.757614}
-    schY={0.274172}
+    schY={0.55}
     schOrientation="vertical"
   />
 );
 
-/**
- * tscircuit has no dedicated net-tie primitive. A generic two-pin chip keeps
- * the Altium connectivity, box size, and designator; the adjacent value text
- * reproduces the source symbol's "Net-Tie" annotation.
- */
+/** A compact native two-pin chip represents the source net-tie. */
 const NetTie = ({ name, schX, schY }: NetTieProps) => (
-  <>
-    <chip
-      name={name}
-      schX={schX}
-      schY={schY}
-      footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
-      pinLabels={{ pin1: "1", pin2: "2" }}
-      internallyConnectedPins={[[1, 2]]}
-      symbol={
-        <symbol>
-          <schematicrect
-            schX={0}
-            schY={0}
-            width={0.4}
-            height={0.4}
-            strokeWidth={0.025}
-          />
-          <port
-            name="pin1"
-            schX={-0.365563}
-            schY={0}
-            direction="left"
-            schStemLength={0.165563}
-            pinNumber={1}
-          />
-          <port
-            name="pin2"
-            schX={0.365563}
-            schY={0}
-            direction="right"
-            schStemLength={0.165563}
-            pinNumber={2}
-          />
-        </symbol>
-      }
-    />
-    <schematictext schX={schX} schY={schY + 0.34} text={name} fontSize={0.12} />
-    <schematictext
-      schX={schX}
-      schY={schY - 0.34}
-      text="Net-Tie"
-      fontSize={0.1}
-    />
-  </>
+  <chip
+    name={name}
+    schX={schX}
+    schY={schY}
+    footprint="kicad:NetTie/NetTie-2_SMD_Pad0.5mm"
+    pinLabels={{ pin1: "1", pin2: "2" }}
+    schWidth={0.1}
+    schHeight={0.35}
+    schPinArrangement={{ leftSide: [1], rightSide: [2] }}
+    internallyConnectedPins={[[1, 2]]}
+  />
 );
 
 /**
  * DRV8703-Q1 gate-driver section extracted from the TIDA-01389 Altium sheet.
- * Component centers, border, and label anchors use the normalized source
- * coordinates without re-layout. Native schematic traces are autorouted; the
- * source route points are supplied only as routing hints.
+ * Component centers and label anchors use the normalized source coordinates.
+ * The nearby passives only receive the small clearance shifts required by the
+ * native schematic autorouter; source route points remain routing hints.
  *
  * Reference: https://www.ti.com/tool/TIDA-01389
  */
@@ -91,38 +54,11 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
   >
     <net name="GND" isGroundNet />
 
-    <schematicbox
-      name="DRV8703_SECTION"
-      schX={-4.295363}
-      schY={0}
-      width={10.235757}
-      height={7.676818}
-    />
-    <schematictext
-      schX={-4.295363}
-      schY={-4.18}
-      text="DRV8703-Q1"
-      fontSize={0.3}
-    />
     <DRV8703QRHBRQ1
       name="U1"
       schX={-3.198674}
       schY={-0.182781}
       noConnect={["nWDFLT", "NC"]}
-    />
-    <schematictext
-      schX={-4.295363}
-      schY={2.94}
-      text="U1"
-      fontSize={0.16}
-      anchor="left"
-    />
-    <schematictext
-      schX={-4.295363}
-      schY={-3.23}
-      text="=PartNumber"
-      fontSize={0.14}
-      anchor="left"
     />
 
     <capacitor
@@ -159,7 +95,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="GRM155R70J105MA12D"
       schX={-6.488739}
-      schY={2.65033}
+      schY={2.85033}
       schOrientation="vertical"
     />
     <capacitor
@@ -168,7 +104,7 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       footprint="0402"
       manufacturerPartNumber="GRM155R70J105MA12D"
       schX={-5.757613}
-      schY={2.65033}
+      schY={2.85033}
       schOrientation="vertical"
     />
     <ChargePumpCapacitor />
@@ -187,8 +123,8 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       from="C10.pin1"
       to="U1.AVDD"
       schematicRouteHints={[
-        { x: -6.488739, y: 2.924502 },
-        { x: -4.843707, y: 2.924502 },
+        { x: -6.488739, y: 3.124502 },
+        { x: -4.843707, y: 3.124502 },
         { x: -4.843707, y: 2.376158 },
       ]}
     />
@@ -196,24 +132,19 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       from="C9.pin1"
       to="U1.DVDD"
       schematicRouteHints={[
-        { x: -5.757613, y: 2.924502 },
-        { x: -5.209269, y: 2.924502 },
+        { x: -5.757613, y: 3.124502 },
+        { x: -5.209269, y: 3.124502 },
         { x: -5.209269, y: 2.010595 },
       ]}
     />
     <trace from="C10.pin2" to="C9.pin2" />
-    <netlabel
-      net="GND"
-      connectsTo="C9.pin2"
-      schX={-5.757613}
-      schY={2.376158}
-      anchorSide="top"
-    />
+    <trace from="C9.pin2" to="net.GND" schDisplayLabel="GND" />
 
     {/* PVDD rail, local bypassing, and VDRAIN net tie. */}
     <trace
       from="C8.pin1"
       to="C7.pin1"
+      schDisplayLabel="PVDD"
       schematicRouteHints={[
         { x: -8.316553, y: 1.645032 },
         { x: -7.585427, y: 1.645032 },
@@ -236,13 +167,6 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
         { x: -4.660925, y: 1.645032 },
       ]}
     />
-    <netlabel
-      net="PVDD"
-      connectsTo="C8.pin1"
-      schX={-9.047678}
-      schY={1.645032}
-      anchorSide="right"
-    />
     <trace
       from="C8.pin2"
       to="C7.pin2"
@@ -253,27 +177,15 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
         { x: -7.585427, y: 1.096688 },
       ]}
     />
-    <netlabel
-      net="GND"
-      connectsTo="C7.pin2"
-      schX={-7.95099}
-      schY={0.913907}
-      anchorSide="top"
-    />
+    <trace from="C7.pin2" to="net.GND" schDisplayLabel="GND" />
     <trace
       from="C5.pin2"
       to="U1.VCP"
+      schDisplayLabel="VCP"
       schematicRouteHints={[
         { x: -6.305958, y: 0.913907 },
         { x: -4.660925, y: 0.913907 },
       ]}
-    />
-    <netlabel
-      net="VCP"
-      connectsTo="C5.pin2"
-      schX={-6.854302}
-      schY={0.913907}
-      anchorSide="right"
     />
     <trace
       from="C5.pin1"
@@ -290,30 +202,14 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
     <trace from="C6.pin1" to="U1.CPH" />
 
     {/* Driver inputs and control signals at their Altium label anchors. */}
+    <trace from="U1.IN1_PH" to="net.IN1_PH" schDisplayLabel="IN1_PH" />
+    <trace from="U1.IN2_EN" to="net.IN2_EN" schDisplayLabel="IN2_EN" />
+    <trace from="U1.nSLEEP" to="net.SLEEP" schDisplayLabel="SLEEP" />
     <trace
-      from="U1.IN1_PH"
-      to="net.IN1_PH"
-      schDisplayLabel="IN1_PH"
-      schematicRouteHints={[{ x: -5.392051, y: -0.365563 }]}
-    />
-    <trace
-      from="U1.IN2_EN"
-      to="net.IN2_EN"
-      schDisplayLabel="IN2_EN"
-      schematicRouteHints={[{ x: -5.392051, y: -0.731126 }]}
-    />
-    <trace
-      from="U1.nSLEEP"
-      to="net.SLEEP"
-      schDisplayLabel="SLEEP"
-      schematicRouteHints={[{ x: -5.392051, y: -1.096688 }]}
-    />
-    <netlabel
-      net="GND"
-      connectsTo="U1.MODE"
-      schX={-5.940395}
-      schY={-1.462251}
-      anchorSide="right"
+      from="U1.MODE"
+      to="net.GND"
+      schDisplayLabel="GND"
+      schematicRouteHints={[{ x: -5.940395, y: -1.462251 }]}
     />
     <trace
       from="U1.SCLK"
@@ -402,64 +298,32 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       schDisplayLabel="SO"
       schematicRouteHints={[{ x: -1.005298, y: -0.913907 }]}
     />
-    <netlabel
-      net="VCC"
-      connectsTo="U1.VREF"
-      schX={-1.005298}
-      schY={-1.27947}
-      anchorSide="left"
-    />
     <trace
       from="U1.nFAULT"
       to="R8.pin2"
+      schDisplayLabel="nFAULT"
       schematicRouteHints={[{ x: -0.274172, y: -1.645032 }]}
     />
     <trace
-      from="R8.pin2"
-      to="net.nFAULT"
-      schDisplayLabel="nFAULT"
-      schematicRouteHints={[{ x: 0.091391, y: -1.645032 }]}
-    />
-    <netlabel
-      net="VCC"
-      connectsTo="R8.pin1"
-      schX={-0.274172}
-      schY={-0.913907}
-      anchorSide="bottom"
+      from="U1.VREF"
+      to="R8.pin1"
+      schDisplayLabel="VCC"
+      schematicRouteHints={[{ x: -0.274172, y: -0.913907 }]}
     />
 
-    <netlabel
-      net="GND"
-      connectsTo="U1.pin1"
-      schX={-1.37086}
-      schY={-3.107283}
-      anchorSide="top"
-    />
-    <netlabel
-      net="GND"
-      connectsTo="U1.pin13"
-      schX={-1.37086}
-      schY={-3.107283}
-      anchorSide="top"
-    />
-    <netlabel
-      net="GND"
-      connectsTo="U1.pin17"
-      schX={-1.37086}
-      schY={-3.107283}
-      anchorSide="top"
-    />
-    <netlabel
-      net="GND"
-      connectsTo="U1.pin33"
-      schX={-1.37086}
-      schY={-3.107283}
-      anchorSide="top"
+    <trace from="U1.pin1" to="U1.pin13" />
+    <trace from="U1.pin13" to="U1.pin17" />
+    <trace from="U1.pin17" to="U1.pin33" />
+    <trace
+      from="U1.pin33"
+      to="net.GND"
+      schDisplayLabel="GND"
+      schematicRouteHints={[{ x: -1.37086, y: -3.107283 }]}
     />
 
-    <port name="PVDD" direction="left" connectsTo="net.PVDD" />
-    <port name="VCC" direction="left" connectsTo="net.VCC" />
-    <port name="VCP" direction="left" connectsTo="net.VCP" />
+    <port name="PVDD" direction="left" connectsTo="C8.pin1" />
+    <port name="VCC" direction="left" connectsTo="U1.VREF" />
+    <port name="VCP" direction="left" connectsTo="C5.pin2" />
     <port name="IN1_PH" direction="left" connectsTo="net.IN1_PH" />
     <port name="IN2_EN" direction="left" connectsTo="net.IN2_EN" />
     <port name="nSLEEP" direction="left" connectsTo="net.SLEEP" />
@@ -477,8 +341,8 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
     <port name="SP" direction="right" connectsTo="net.SP" />
     <port name="SN" direction="right" connectsTo="net.SN" />
     <port name="SO" direction="right" connectsTo="net.SO" />
-    <port name="nFAULT" direction="right" connectsTo="net.nFAULT" />
-    <port name="GND" direction="right" connectsTo="net.GND" />
+    <port name="nFAULT" direction="right" connectsTo="U1.nFAULT" />
+    <port name="GND" direction="right" connectsTo="U1.pin33" />
   </subcircuit>
 );
 
