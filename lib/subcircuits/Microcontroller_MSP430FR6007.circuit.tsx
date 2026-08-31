@@ -310,31 +310,31 @@ const supportNetTraces: ReadonlyArray<{
   { component: "R9", pin: 2, net: "HFXOUT_ext" },
   { component: "R8", pin: 1, net: "HFXIN" },
   { component: "R8", pin: 2, net: "HFXIN_ext" },
-  { component: "R19", pin: 1, net: "BSL_RX", displayLabel: " " },
+  { component: "R19", pin: 1, net: "BSL_RX", displayLabel: "BSL_RX" },
   {
     component: "R20",
     pin: 1,
     net: "BSL_TX",
-    displayLabel: " ",
+    displayLabel: "BSL_TX",
   },
-  { component: "R21", pin: 1, net: "BSL_SCL", displayLabel: " " },
+  { component: "R21", pin: 1, net: "BSL_SCL", displayLabel: "BSL_SCL" },
   { component: "JTAG", pin: 1, net: "JTAG_TDO_SBWTDIO" },
-  { component: "JTAG", pin: 2, net: "INT", displayLabel: " " },
+  { component: "JTAG", pin: 2, net: "INT", displayLabel: "INT" },
   { component: "JTAG", pin: 3, net: "JTAG_TDI" },
-  { component: "JTAG", pin: 4, net: "VCC", displayLabel: " " },
+  { component: "JTAG", pin: 4, net: "VCC", displayLabel: "VCC" },
   { component: "JTAG", pin: 5, net: "JTAG_TMS" },
   { component: "JTAG", pin: 7, net: "JTAG_TCK_SBWTCK" },
   {
     component: "JTAG",
     pin: 8,
     net: "JTAG_TEST_SBWTCK",
-    displayLabel: " ",
+    displayLabel: "TEST/SBWTCK",
   },
-  { component: "JTAG", pin: 9, net: "GND", displayLabel: " " },
+  { component: "JTAG", pin: 9, net: "GND", displayLabel: "GND" },
   { component: "JTAG", pin: 11, net: "JTAG_RST_NMI" },
-  { component: "J1", pin: 1, net: "INT", displayLabel: " " },
+  { component: "J1", pin: 1, net: "INT", displayLabel: "INT" },
   { component: "J1", pin: 2, net: "VCC" },
-  { component: "J1", pin: 3, net: "EXT_PWR", displayLabel: " " },
+  { component: "J1", pin: 3, net: "EXT_PWR", displayLabel: "EXT_PWR" },
   { component: "J2", pin: 1, net: "VCC" },
   { component: "J2", pin: 2, net: "EXT_PWR" },
   { component: "J2", pin: 3, net: "GND" },
@@ -493,6 +493,13 @@ const supportNetTraces: ReadonlyArray<{
   { component: "JP13", pin: 1, net: "PVSS" },
   { component: "JP13", pin: 2, net: "CH1_IN" },
 ];
+
+const supportNetByEndpoint = new Map(
+  supportNetTraces.map(({ component, pin, net }) => [
+    `${component}.pin${pin}`,
+    net,
+  ]),
+);
 
 /**
  * Native reproduction of TI's MSP-TS430PZ100E Figure B-78 target-socket
@@ -751,7 +758,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
-              schX={layoutX(-20.7)}
+              schX={layoutX(isMultiSheet ? -20.7 : -23.8)}
               schY={layoutY(4.2)}
               schDirection="right"
               {...twoPinJumperSize}
@@ -762,7 +769,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber={shuntPartNumber}
               pinCount={2}
               internallyConnectedPins={[[1, 2]]}
-              schX={layoutX(isMultiSheet ? -17.2 : -19.2)}
+              schX={layoutX(isMultiSheet ? -17.2 : -21.3)}
               schY={layoutY(4.2)}
               schDirection="right"
               {...twoPinJumperSize}
@@ -778,7 +785,7 @@ export const MSP430FR6007ReferenceLayout = ({
                   manufacturerPartNumber="TSW-102-07-G-S"
                   footprint="pinrow2_p2.54_nopinlabels"
                   pinCount={2}
-                  schX={layoutX(-20.7)}
+                  schX={layoutX(isMultiSheet ? -20.7 : -23.8)}
                   schY={layoutY(schY)}
                   schDirection="right"
                   {...twoPinJumperSize}
@@ -791,7 +798,7 @@ export const MSP430FR6007ReferenceLayout = ({
                   manufacturerPartNumber={shuntPartNumber}
                   pinCount={2}
                   internallyConnectedPins={[[1, 2]]}
-                  schX={layoutX(-18.2)}
+                  schX={layoutX(isMultiSheet ? -18.2 : -21.3)}
                   schY={layoutY(schY)}
                   schDirection="right"
                   {...twoPinJumperSize}
@@ -1506,13 +1513,17 @@ export const MSP430FR6007ReferenceLayout = ({
                 name={`${shunt.refdes}_HEADER_SIDE_A`}
                 from={`${header}.pin${shunt.pins[0][0]}`}
                 to={`${shunt.refdes}.pin1`}
-                schDisplayLabel=" "
+                schDisplayLabel={supportNetByEndpoint.get(
+                  `${header}.pin${shunt.pins[0][0]}`,
+                )}
               />
               <trace
                 name={`${shunt.refdes}_HEADER_SIDE_B`}
                 from={`${header}.pin${shunt.pins[0][1]}`}
                 to={`${shunt.refdes}.pin2`}
-                schDisplayLabel=" "
+                schDisplayLabel={supportNetByEndpoint.get(
+                  `${header}.pin${shunt.pins[0][1]}`,
+                )}
               />
             </Fragment>
           ))}
@@ -1556,7 +1567,7 @@ export const MSP430FR6007ReferenceLayout = ({
                 name="JTAG_PIN2_J1_PIN1_INT"
                 from="JTAG.pin2"
                 to="J1.pin1"
-                schDisplayLabel=" "
+                schDisplayLabel="INT"
               />
               <trace
                 name="JTAG_PIN4_J1_PIN2_VCC"

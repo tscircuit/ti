@@ -150,6 +150,15 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     );
   }
 
+  const emptyNetLabels = circuitJson.filter(
+    (element) =>
+      element.type === "schematic_net_label" && element.text.trim() === "",
+  );
+  assert(
+    emptyNetLabels.length === 0,
+    `${layoutVariant} renders ${emptyNetLabels.length} empty net-label bodies`,
+  );
+
   for (const traceName of [
     "C3_AVCC",
     "R7_DVCC",
