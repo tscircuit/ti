@@ -1,16 +1,16 @@
 import {
   AnalogSignalConditioning_LMV324A_TIDA010266,
-  InstrumentationAmplifier_INA350,
+  InstrumentationAmplifier_INA350_TIDA010266,
+  InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,
+  PressureSensor_2SMPP03_TIDA010266,
   VoltageReference_ATL431LI_TIDA010266,
 } from "@tsci/tscircuit.ti";
 import "tscircuit";
 import { ADCFilterSection } from "./tida010266/ADCFilterSection.tsx";
-import { IntegratedInstrumentationAmplifierSection } from "./tida010266/IntegratedInstrumentationAmplifierSection.tsx";
 import { InterfacesSection } from "./tida010266/InterfacesSection.tsx";
-import { PressureSensorSection } from "./tida010266/PressureSensorSection.tsx";
 import { ProgrammingSection } from "./tida010266/ProgrammingSection.tsx";
 
 const SectionTitle = ({
@@ -88,7 +88,7 @@ export default () => (
 
     {/* Continue native dividers from their exact endpoints to the sheet border. */}
     <schematicline
-      x1={33.9}
+      x1={29.9}
       y1={11.2125}
       x2={35.2}
       y2={11.2125}
@@ -97,7 +97,7 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={33.9}
+      x1={29.9}
       y1={-8.65}
       x2={35.2}
       y2={-8.65}
@@ -106,9 +106,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={4.7}
+      x1={3.025}
       y1={20.6}
-      x2={4.7}
+      x2={3.025}
       y2={21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -133,9 +133,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={6.85625}
+      x1={9.725}
       y1={-17.9}
-      x2={6.85625}
+      x2={9.725}
       y2={-21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -183,20 +183,13 @@ export default () => (
       schY={17}
     />
 
-    <InstrumentationAmplifier_INA350
+    <InstrumentationAmplifier_INA350_TIDA010266
       name="external_ina"
       schSectionName="ina_filter"
-      chipName="U5"
-      bypassCapacitorName="C13"
-      gain="external"
-      shutdown="external"
-      inlineNetLabels
-      schematicStyle="box"
-      supplyNetName="V3_3"
       schX={-25}
       schY={-2.5}
     />
-    <IntegratedInstrumentationAmplifierSection
+    <InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266
       name="integrated_ina"
       schSectionName="ina_filter"
       schX={-20}
@@ -217,7 +210,7 @@ export default () => (
       schY={2}
     />
 
-    <PressureSensorSection
+    <PressureSensor_2SMPP03_TIDA010266
       name="pressure_sensor"
       schSectionName="pressure_sensor"
       schX={-22}

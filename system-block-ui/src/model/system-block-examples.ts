@@ -488,6 +488,172 @@ const createSeatPositionModuleDesign = (
   ],
 });
 
+const createBloodPressureMonitorDesign = (
+  catalog: readonly SubcircuitDefinition[],
+): SystemBlockExampleGraph => ({
+  blocks: [
+    {
+      id: "power",
+      name: "power",
+      definitionId: componentId(
+        catalog,
+        "PowerManagement_TPS7A2433_TIDA010266",
+      ),
+      position: { x: 40, y: 300 },
+    },
+    {
+      id: "reference_2v5",
+      name: "reference_2v5",
+      definitionId: componentId(
+        catalog,
+        "VoltageReference_ATL431LI_TIDA010266",
+      ),
+      position: { x: 360, y: 40 },
+    },
+    {
+      id: "analog_front_end",
+      name: "analog_front_end",
+      definitionId: componentId(
+        catalog,
+        "AnalogSignalConditioning_LMV324A_TIDA010266",
+      ),
+      position: { x: 680, y: 40 },
+    },
+    {
+      id: "integrated_ina",
+      name: "integrated_ina",
+      definitionId: componentId(
+        catalog,
+        "InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266",
+      ),
+      position: { x: 1000, y: 40 },
+    },
+    {
+      id: "pressure_sensor",
+      name: "pressure_sensor",
+      definitionId: componentId(catalog, "PressureSensor_2SMPP03_TIDA010266"),
+      position: { x: 360, y: 380 },
+    },
+    {
+      id: "external_ina",
+      name: "external_ina",
+      definitionId: componentId(
+        catalog,
+        "InstrumentationAmplifier_INA350_TIDA010266",
+      ),
+      position: { x: 680, y: 380 },
+    },
+    {
+      id: "microcontroller",
+      name: "microcontroller",
+      definitionId: componentId(
+        catalog,
+        "Microcontroller_MSPM0L1306_TIDA010266",
+      ),
+      position: { x: 1000, y: 380 },
+    },
+    {
+      id: "motor_driver",
+      name: "motor_driver",
+      definitionId: componentId(catalog, "MotorDriver_DRV8210_TIDA010266"),
+      position: { x: 1320, y: 380 },
+    },
+  ],
+  connections: [
+    {
+      id: "power_3v3_to_reference",
+      fromBlockId: "power",
+      toBlockId: "reference_2v5",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_analog_front_end",
+      fromBlockId: "power",
+      toBlockId: "analog_front_end",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_external_ina",
+      fromBlockId: "power",
+      toBlockId: "external_ina",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_microcontroller",
+      fromBlockId: "power",
+      toBlockId: "microcontroller",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_motor_driver",
+      fromBlockId: "power",
+      toBlockId: "motor_driver",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "reference_2v5_to_analog_front_end",
+      fromBlockId: "reference_2v5",
+      toBlockId: "analog_front_end",
+      kind: "power",
+      protocol: "precision-reference-2v5",
+    },
+    {
+      id: "reference_2v5_to_microcontroller",
+      fromBlockId: "reference_2v5",
+      toBlockId: "microcontroller",
+      kind: "power",
+      protocol: "precision-reference-2v5",
+    },
+    {
+      id: "reference_1v25_to_external_ina",
+      fromBlockId: "analog_front_end",
+      toBlockId: "external_ina",
+      kind: "power",
+      protocol: "buffered-reference-1v25",
+    },
+    {
+      id: "reference_1v25_to_integrated_ina",
+      fromBlockId: "analog_front_end",
+      toBlockId: "integrated_ina",
+      kind: "data",
+      protocol: "buffered-reference-signal",
+    },
+    {
+      id: "analog_front_end_to_pressure_sensor",
+      fromBlockId: "analog_front_end",
+      toBlockId: "pressure_sensor",
+      kind: "data",
+      protocol: "pressure-sensor-bias",
+    },
+    {
+      id: "pressure_sensor_to_external_ina",
+      fromBlockId: "pressure_sensor",
+      toBlockId: "external_ina",
+      kind: "data",
+      protocol: "pressure-bridge",
+    },
+    {
+      id: "microcontroller_to_integrated_ina",
+      fromBlockId: "microcontroller",
+      toBlockId: "integrated_ina",
+      kind: "data",
+      protocol: "internal-opa",
+    },
+    {
+      id: "microcontroller_to_motor_driver",
+      fromBlockId: "microcontroller",
+      toBlockId: "motor_driver",
+      kind: "data",
+      protocol: "motor-control",
+    },
+  ],
+});
+
 /** Editable system diagrams backed by complete circuits in the root examples directory. */
 export const createSystemBlockExamples = (
   catalog: readonly SubcircuitDefinition[],
@@ -522,5 +688,12 @@ export const createSystemBlockExamples = (
     title: "Seat Position Module",
     sourcePath: "examples/SeatPositionModule.circuit.tsx",
     graph: createSeatPositionModuleDesign(catalog),
+  },
+  {
+    id: "tida-010266-blood-pressure-monitor",
+    title: "Blood Pressure Monitor",
+    sourcePath:
+      "examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx",
+    graph: createBloodPressureMonitorDesign(catalog),
   },
 ];

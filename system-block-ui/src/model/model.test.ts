@@ -385,6 +385,7 @@ describe("catalog and TSX generation", () => {
       "examples/PersonalElectronics_ConnectedPeripheralAndPrinters_Powerbank.circuit.tsx",
       "examples/RearviewMirrorModule.circuit.tsx",
       "examples/SeatPositionModule.circuit.tsx",
+      "examples/BloodPressureAndHeartRateMonitor_TIDA010266.circuit.tsx",
     ]);
     expect(
       examples

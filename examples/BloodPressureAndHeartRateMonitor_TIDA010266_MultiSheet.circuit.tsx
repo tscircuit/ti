@@ -1,16 +1,16 @@
 import {
   AnalogSignalConditioning_LMV324A_TIDA010266,
-  InstrumentationAmplifier_INA350,
+  InstrumentationAmplifier_INA350_TIDA010266,
+  InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,
+  PressureSensor_2SMPP03_TIDA010266,
   VoltageReference_ATL431LI_TIDA010266,
 } from "@tsci/tscircuit.ti";
 import "tscircuit";
 import { ADCFilterSection } from "./tida010266/ADCFilterSection.tsx";
-import { IntegratedInstrumentationAmplifierSection } from "./tida010266/IntegratedInstrumentationAmplifierSection.tsx";
 import { InterfacesSection } from "./tida010266/InterfacesSection.tsx";
-import { PressureSensorSection } from "./tida010266/PressureSensorSection.tsx";
 import { ProgrammingSection } from "./tida010266/ProgrammingSection.tsx";
 
 /**
@@ -155,20 +155,13 @@ export default () => (
     />
     <ProgrammingSection name="programming" schSheetName="programming" />
 
-    <InstrumentationAmplifier_INA350
+    <InstrumentationAmplifier_INA350_TIDA010266
       name="external_ina"
       schSheetName="ina_filter"
-      chipName="U5"
-      bypassCapacitorName="C13"
-      gain="external"
-      shutdown="external"
-      inlineNetLabels
-      schematicStyle="box"
-      supplyNetName="V3_3"
       schX={-8.5}
       schY={-2}
     />
-    <IntegratedInstrumentationAmplifierSection
+    <InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266
       name="integrated_ina"
       schSheetName="ina_filter"
       schX={-8}
@@ -193,10 +186,8 @@ export default () => (
       schX={3.5}
       schY={-1.5}
     />
-    <PressureSensorSection
+    <PressureSensor_2SMPP03_TIDA010266
       name="pressure_sensor"
-      subcircuit
-      schMaxTraceDistance="6mm"
       schSheetName="pressure_sensor"
       schX={-5.5}
     />

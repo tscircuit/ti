@@ -1,27 +1,23 @@
 import "tscircuit";
-import type { GroupProps } from "@tscircuit/props";
-import { TIDA010266InlineNetPorts } from "../../lib/utils/tida010266/TIDA010266InlineNetPorts.tsx";
-
-type IntegratedInstrumentationAmplifierSectionProps = GroupProps & {
-  schSectionName?: string;
-};
+import { TIDA010266InlineNetPorts } from "../utils/tida010266/TIDA010266InlineNetPorts.tsx";
+import type { TIDA010266SectionedSubcircuitProps } from "../utils/tida010266/TIDA010266.types.ts";
 
 /** TIDA-010266 R11-R15 network around the MSPM0 internal OPA0/OPA1. */
-export const IntegratedInstrumentationAmplifierSection = (
-  props: IntegratedInstrumentationAmplifierSectionProps,
+export const InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266 = (
+  props: TIDA010266SectionedSubcircuitProps,
 ) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
 
   return (
-    <group {...props}>
+    <subcircuit {...props}>
       <chip
         name="OPA0"
         manufacturerPartNumber="MSPM0 Internal OPA0"
         doNotPlace
         pinLabels={{
-          pin1: "+",
-          pin2: "-",
+          pin1: "IN_POS",
+          pin2: "IN_NEG",
           pin3: "OUT",
         }}
         schX={-2.2}
@@ -80,8 +76,8 @@ export const IntegratedInstrumentationAmplifierSection = (
         manufacturerPartNumber="MSPM0 Internal OPA1"
         doNotPlace
         pinLabels={{
-          pin1: "+",
-          pin2: "-",
+          pin1: "IN_POS",
+          pin2: "IN_NEG",
           pin3: "OUT",
         }}
         schX={3.2}
@@ -274,8 +270,8 @@ export const IntegratedInstrumentationAmplifierSection = (
           },
         ]}
       />
-    </group>
+    </subcircuit>
   );
 };
 
-export default IntegratedInstrumentationAmplifierSection;
+export default InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266;

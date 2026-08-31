@@ -30,6 +30,16 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
             direction: "top-to-bottom",
           },
         }}
+        schPinStyle={{
+          pin1: { marginBottom: 0.2 },
+          pin3: { marginBottom: 0.2 },
+          pin5: { marginBottom: 0.2 },
+          pin7: { marginBottom: 0.2 },
+          pin4: { marginTop: 0.2 },
+          pin6: { marginTop: 0.2 },
+          pin8: { marginTop: 0.2 },
+          pin10: { marginTop: 0.2 },
+        }}
         pinLabels={{
           pin1: ["V3_3"],
           pin2: ["SWDIO_HEADER"],
