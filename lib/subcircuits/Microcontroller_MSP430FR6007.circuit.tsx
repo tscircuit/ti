@@ -38,11 +38,11 @@ const threePinJumperSize = {
 /*
  * Figure B-78 names the removable 3M9580-ND shunts SH-J1 and SH-JP1 through
  * SH-JP14 separately from the headers they populate. Figure B-79 and Table
- * B-40 define their installed electrical state. The header and removable
- * shunt therefore remain separate native <jumper> components. Two native
- * traces connect each shunt to the exact populated header pins; only the
- * removable shunt contains the internal bridge. No custom schematic graphics
- * are used.
+ * B-40 define their installed electrical state. Figure B-78 draws each
+ * removable shunt as a separate assembly block rather than wiring that block
+ * back to its header. Preserve that visual convention with separate native
+ * <jumper> components, and apply the documented bridge to the selected pins on
+ * the actual header. No custom schematic graphics are used.
  */
 const installedShunts = {
   J1: { refdes: "SH-J1", pins: [[1, 2]] },
@@ -212,7 +212,12 @@ const targetSocketNetBreakouts: ReadonlyArray<{
   },
   { connector: "J3", connectorPin: 17, net: "BSL_RX" },
   { connector: "J3", connectorPin: 19, net: "P1_3" },
-  { connector: "J3", connectorPin: 20, net: "TEST_SBWTCK" },
+  {
+    connector: "J3",
+    connectorPin: 20,
+    net: "TEST_SBWTCK",
+    displayLabel: "TEST/SBWTCK",
+  },
   { connector: "J3", connectorPin: 21, net: "RESET" },
   { connector: "J3", connectorPin: 22, net: "TDO" },
   { connector: "J3", connectorPin: 23, net: "TDI" },
@@ -236,12 +241,6 @@ const targetSocketNetBreakouts: ReadonlyArray<{
   { connector: "J6", connectorPin: 24, net: "AVSS" },
   { connector: "J6", connectorPin: 25, net: "AVCC" },
 ];
-
-const singleSheetDirectEndpoints = new Set([
-  "JTAG.pin2",
-  "JTAG.pin4",
-  "J1.pin1",
-]);
 
 const supportNetTraces: ReadonlyArray<{
   component: string;
@@ -494,12 +493,33 @@ const supportNetTraces: ReadonlyArray<{
   { component: "JP13", pin: 2, net: "CH1_IN" },
 ];
 
-const supportNetByEndpoint = new Map(
-  supportNetTraces.map(({ component, pin, net }) => [
-    `${component}.pin${pin}`,
-    net,
-  ]),
-);
+const directSupportEndpoints = new Set([
+  "BSL.pin6",
+  "BSL.pin8",
+  "R3.pin1",
+  "R4.pin1",
+  "D2.pin2",
+  "R2.pin1",
+]);
+
+// Figure B-79's populated shunts make each pair below one electrical net.
+// Keep the source-side names as trace display labels while using one canonical
+// connectivity name per installed pair. This prevents the schematic renderer
+// from replacing the native named trace stubs with tag-shaped alias labels.
+const installedShuntCanonicalNet = new Map<string, string>([
+  ["INT", "VCC"],
+  ["JTAG_TDO_SBWTDIO", "TDO"],
+  ["JTAG_TDI", "TDI"],
+  ["JTAG_TMS", "TMS"],
+  ["JTAG_TCK_SBWTCK", "TCK"],
+  ["JTAG_TEST_SBWTCK", "TEST_SBWTCK"],
+  ["JTAG_RST_NMI", "RESET"],
+  ["P1_0_LED", "P1_0"],
+  ["P1_1_LED", "P1_1"],
+]);
+
+const canonicalNet = (net: string) =>
+  installedShuntCanonicalNet.get(net) ?? net;
 
 /**
  * Native reproduction of TI's MSP-TS430PZ100E Figure B-78 target-socket
@@ -565,9 +585,9 @@ export const MSP430FR6007ReferenceLayout = ({
       {...props}
     >
       <net name="GND" isGroundNet />
-      <net name="DVSS" />
+      <net name="DVSS" isGroundNet={!isMultiSheet} />
       <net name="AVSS" />
-      <net name="PVSS" />
+      <net name="PVSS" isGroundNet={!isMultiSheet} />
       <net name="AVCC" isPowerNet />
       <net name="DVCC" isPowerNet />
       <net name="PVCC" isPowerNet />
@@ -700,7 +720,7 @@ export const MSP430FR6007ReferenceLayout = ({
                 <trace
                   name={traceName ?? `${connector}_PIN${connectorPin}_${net}`}
                   from={`${connector}.pin${connectorPin}`}
-                  to={`net.${net}`}
+                  to={`net.${canonicalNet(net)}`}
                   schDisplayLabel={displayLabel ?? net}
                 />
               </Fragment>
@@ -721,6 +741,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber="TSW-103-07-G-S"
               footprint="pinrow3_p2.54_nopinlabels"
               pinCount={3}
+              internallyConnectedPins={installedShunts.J1.pins}
               pinLabels={{ pin1: "INT", pin2: "VCC", pin3: "EXT" }}
               schX={layoutX(isMultiSheet ? -20.0 : -21.0)}
               schY={layoutY(isMultiSheet ? 7.2 : 8.2)}
@@ -758,6 +779,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
+              internallyConnectedPins={installedShunts.JP1.pins}
               schX={layoutX(isMultiSheet ? -20.7 : -23.8)}
               schY={layoutY(4.2)}
               schDirection="right"
@@ -785,6 +807,9 @@ export const MSP430FR6007ReferenceLayout = ({
                   manufacturerPartNumber="TSW-102-07-G-S"
                   footprint="pinrow2_p2.54_nopinlabels"
                   pinCount={2}
+                  internallyConnectedPins={
+                    installedShunts[name as keyof typeof installedShunts].pins
+                  }
                   schX={layoutX(isMultiSheet ? -20.7 : -23.8)}
                   schY={layoutY(schY)}
                   schDirection="right"
@@ -838,6 +863,9 @@ export const MSP430FR6007ReferenceLayout = ({
                   manufacturerPartNumber="TSW-103-07-G-S"
                   footprint="pinrow3_p2.54_nopinlabels"
                   pinCount={3}
+                  internallyConnectedPins={
+                    installedShunts[name as keyof typeof installedShunts].pins
+                  }
                   schX={layoutX(schX)}
                   schY={layoutY(isMultiSheet ? 3.5 : 5.5)}
                   schDirection="right"
@@ -968,6 +996,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
+              internallyConnectedPins={installedShunts.JP14.pins}
               schX={layoutX(8.5)}
               schY={layoutY(3.0)}
               schDirection="right"
@@ -978,6 +1007,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
+              internallyConnectedPins={installedShunts.JP13.pins}
               schX={layoutX(11.5)}
               schY={layoutY(3.0)}
               schDirection="left"
@@ -1137,6 +1167,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
+              internallyConnectedPins={installedShunts.JP12.pins}
               schX={layoutX(-15.0)}
               schY={layoutY(-9.0)}
               schDirection="right"
@@ -1175,6 +1206,7 @@ export const MSP430FR6007ReferenceLayout = ({
               manufacturerPartNumber="TSW-102-07-G-S"
               footprint="pinrow2_p2.54_nopinlabels"
               pinCount={2}
+              internallyConnectedPins={installedShunts.JP11.pins}
               schX={layoutX(-15.0)}
               schY={layoutY(-10.2)}
               schDirection="right"
@@ -1502,32 +1534,30 @@ export const MSP430FR6007ReferenceLayout = ({
             />
           </group>
 
-          {/*
-           * Figure B-79/Table B-40 installed shunts. Keep the removable shunt
-           * as the only internal bridge and wire it to the selected numbered
-           * pins on its separate header component.
-           */}
-          {Object.entries(installedShunts).map(([header, shunt]) => (
-            <Fragment key={`${shunt.refdes}_installed_connection`}>
-              <trace
-                name={`${shunt.refdes}_HEADER_SIDE_A`}
-                from={`${header}.pin${shunt.pins[0][0]}`}
-                to={`${shunt.refdes}.pin1`}
-                schDisplayLabel={supportNetByEndpoint.get(
-                  `${header}.pin${shunt.pins[0][0]}`,
-                )}
-              />
-              <trace
-                name={`${shunt.refdes}_HEADER_SIDE_B`}
-                from={`${header}.pin${shunt.pins[0][1]}`}
-                to={`${shunt.refdes}.pin2`}
-                schDisplayLabel={supportNetByEndpoint.get(
-                  `${header}.pin${shunt.pins[0][1]}`,
-                )}
-              />
-            </Fragment>
-          ))}
+          <trace
+            name="BSL_PIN6_R3_PIN1_BSL_TOOL_VCC"
+            from="BSL.pin6"
+            to="R3.pin1"
+            schDisplayLabel="BSL_TOOL_VCC"
+          />
+          <trace
+            name="BSL_PIN8_R4_PIN1_BSL_TARGET_VCC"
+            from="BSL.pin8"
+            to="R4.pin1"
+            schDisplayLabel="BSL_TARGET_VCC"
+          />
+          <trace
+            name="D2_PIN2_R2_PIN1_LED2_A"
+            from="D2.pin2"
+            to="R2.pin1"
+            schDisplayLabel="LED2_A"
+          />
 
+          {/*
+           * Figure B-79/Table B-40 installed-shunt connectivity is applied on
+           * each header. The separately named 3M9580-ND assembly blocks remain
+           * visually detached exactly as Figure B-78 draws them.
+           */}
           {/* Repository-standard net names are carried by native traces. */}
           {[
             sheetNames.programmingDebug,
@@ -1543,40 +1573,20 @@ export const MSP430FR6007ReferenceLayout = ({
                 .filter(
                   ({ component, pin }) =>
                     supportSheetForComponent(component) === sheetName &&
-                    (isMultiSheet ||
-                      !singleSheetDirectEndpoints.has(
-                        `${component}.pin${pin}`,
-                      )),
+                    !directSupportEndpoints.has(`${component}.pin${pin}`),
                 )
                 .map(({ component, pin, net, name, displayLabel }) => (
                   <Fragment key={`${component}-pin${pin}-${net}`}>
                     <trace
                       name={name ?? `${component}_PIN${pin}_${net}`}
                       from={`${component}.pin${pin}`}
-                      to={`net.${net}`}
+                      to={`net.${canonicalNet(net)}`}
                       schDisplayLabel={displayLabel ?? net}
                     />
                   </Fragment>
                 ))}
             </group>
           ))}
-
-          {!isMultiSheet && (
-            <>
-              <trace
-                name="JTAG_PIN2_J1_PIN1_INT"
-                from="JTAG.pin2"
-                to="J1.pin1"
-                schDisplayLabel="INT"
-              />
-              <trace
-                name="JTAG_PIN4_J1_PIN2_VCC"
-                from="JTAG.pin4"
-                to="J1.pin2"
-                schDisplayLabel="VCC"
-              />
-            </>
-          )}
         </group>
       </group>
 

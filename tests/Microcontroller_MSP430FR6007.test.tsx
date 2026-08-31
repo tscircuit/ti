@@ -1,5 +1,5 @@
-import { Circuit } from "@tscircuit/core";
 import { getSchematicElementBounds } from "@tscircuit/circuit-json-util";
+import { Circuit } from "@tscircuit/core";
 import type { AnyCircuitElement } from "circuit-json";
 import { getFullConnectivityMapFromCircuitJson } from "circuit-json-to-connectivity-map";
 import { MSP430FR6007IPZ_PIN_LABELS } from "../lib/chips/MSP430FR6007IPZ.circuit.tsx";
@@ -147,6 +147,10 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     assert(
       !touchesComponent || Boolean(trace.name),
       `${trace.source_trace_id} touches a component but has no native trace name`,
+    );
+    assert(
+      !touchesComponent || Boolean(trace.display_name),
+      `${trace.name ?? trace.source_trace_id} touches a component but has no schDisplayLabel trace name`,
     );
   }
 
@@ -507,13 +511,13 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
     );
     assert(
       connectivityMap.getNetConnectedToId(selectedHeaderPin1.source_port_id) ===
-        connectivityMap.getNetConnectedToId(shuntPin1.source_port_id),
-      `${shuntRefdes}.pin1 is not connected to ${headerName}.pin${selectedHeaderPins[0]}`,
+        connectivityMap.getNetConnectedToId(selectedHeaderPin2.source_port_id),
+      `${headerName}.pin${selectedHeaderPins[0]} and ${headerName}.pin${selectedHeaderPins[1]} do not preserve the Figure B-79 installed-shunt state`,
     );
     assert(
-      connectivityMap.getNetConnectedToId(selectedHeaderPin2.source_port_id) ===
-        connectivityMap.getNetConnectedToId(shuntPin2.source_port_id),
-      `${shuntRefdes}.pin2 is not connected to ${headerName}.pin${selectedHeaderPins[1]}`,
+      connectivityMap.getNetConnectedToId(selectedHeaderPin1.source_port_id) !==
+        connectivityMap.getNetConnectedToId(shuntPin1.source_port_id),
+      `${shuntRefdes} must remain the separate Figure B-78 assembly block rather than creating an artificial schematic wire to ${headerName}`,
     );
   }
 
@@ -955,10 +959,16 @@ const testConnectivity = async (layoutVariant: LayoutVariant) => {
   assertDirectTrace("R19_JTAG_BSL_RX", ["R19", 2], ["JTAG", 14]);
   assertDirectTrace("R20_JTAG_BSL_TX", ["R20", 2], ["JTAG", 12]);
   assertDirectTrace("R21_JTAG_BSL_SCL", ["R21", 2], ["JTAG", 10]);
+  assertDirectTrace("BSL_PIN6_R3_PIN1_BSL_TOOL_VCC", ["BSL", 6], ["R3", 1]);
+  assertDirectTrace("BSL_PIN8_R4_PIN1_BSL_TARGET_VCC", ["BSL", 8], ["R4", 1]);
+  assertDirectTrace("D2_PIN2_R2_PIN1_LED2_A", ["D2", 2], ["R2", 1]);
   for (const [traceName, expectedLabel] of [
     ["R19_JTAG_BSL_RX", "BSL_RX"],
     ["R20_JTAG_BSL_TX", "BSL_TX"],
     ["R21_JTAG_BSL_SCL", "BSL_SCL"],
+    ["BSL_PIN6_R3_PIN1_BSL_TOOL_VCC", "BSL_TOOL_VCC"],
+    ["BSL_PIN8_R4_PIN1_BSL_TARGET_VCC", "BSL_TARGET_VCC"],
+    ["D2_PIN2_R2_PIN1_LED2_A", "LED2_A"],
   ] as const) {
     const sourceTrace = circuitJson.find(
       (element) =>
