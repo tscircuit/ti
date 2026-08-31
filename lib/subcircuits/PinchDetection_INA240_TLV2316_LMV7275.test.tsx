@@ -880,6 +880,8 @@ test("uses named traces for source signals without explicit net-label components
     "TIMER",
     "V3_3",
     "V5",
+    "V_MINUS",
+    "V_PLUS",
   ]);
 
   const namedSignalTraces = signalJson
@@ -897,6 +899,35 @@ test("uses named traces for source signals without explicit net-label components
     "V-MINUS-INPUT",
     "V-PLUS-INPUT",
   ]);
+
+  const motorInputNets = Object.fromEntries(
+    signalJson
+      .filter(
+        (element): element is SourceNet =>
+          element.type === "source_net" &&
+          ["V_PLUS", "V_MINUS"].includes(element.name),
+      )
+      .map((net) => [net.name, net]),
+  );
+  expect(motorInputNets.V_PLUS).toMatchObject({
+    is_power: true,
+  });
+  expect(motorInputNets.V_MINUS).toMatchObject({
+    is_ground: true,
+  });
+
+  for (const [traceName, netName] of [
+    ["V-PLUS-INPUT", "V_PLUS"],
+    ["V-MINUS-INPUT", "V_MINUS"],
+  ] as const) {
+    const trace = signalJson.find(
+      (element): element is SourceTrace =>
+        element.type === "source_trace" && element.name === traceName,
+    );
+    expect(trace?.connected_source_net_ids).toEqual([
+      motorInputNets[netName].source_net_id,
+    ]);
+  }
 
   expect(
     signalJson.filter(
@@ -940,21 +971,22 @@ test("uses named traces for source signals without explicit net-label components
       ["V+", "V-"].includes(element.text),
   );
   // The published core version intentionally used by this package does not
-  // render schDisplayLabel text inline on a branched trace. It projects native
-  // endpoint rail labels instead; the TSX still contains no netlabel component.
+  // render schDisplayLabel text inline on a branched trace. Once the required
+  // source-net metadata is present, it projects the selector-safe source-net
+  // names at the endpoints; the TSX still contains no netlabel component.
   expect(motorInputTraceLabels).toEqual([]);
   const generatedMotorInputLabels = signalJson.filter(
     (element): element is SchematicNetLabel =>
       element.type === "schematic_net_label" &&
-      ["V+", "V-"].includes(element.text),
+      ["V_PLUS", "V_MINUS"].includes(element.text),
   );
   expect(
     generatedMotorInputLabels
       .map((label) => [label.text, label.symbol_name, label.source_trace_id])
       .sort(),
   ).toEqual([
-    ["V+", "rail_up", undefined],
-    ["V-", "rail_up", undefined],
+    ["V_MINUS", "rail_down", undefined],
+    ["V_PLUS", "rail_up", undefined],
   ]);
   expect(
     signalJson.filter(
@@ -979,10 +1011,10 @@ test("uses named traces for source signals without explicit net-label components
     "BIAS",
     "GND",
     "TIMER",
-    "V+",
-    "V-",
     "V3_3",
     "V5",
+    "V_MINUS",
+    "V_PLUS",
   ]);
 });
 

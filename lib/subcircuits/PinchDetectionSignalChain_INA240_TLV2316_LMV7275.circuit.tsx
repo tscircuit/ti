@@ -76,6 +76,8 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
         output trace still requests the source spelling as its display label. */}
     <net name="V3_3" isPowerNet />
     <net name="GND" isGroundNet />
+    <net name="V_PLUS" isPowerNet />
+    <net name="V_MINUS" isGroundNet />
     <net name="BIAS" />
     <net name="ADCMOTOR" />
     <net name="TIMER" />
@@ -116,12 +118,12 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
 
     <trace
       name="V-PLUS-INPUT"
-      path={["J1.V_PLUS", "R6.pin2", "R5.pin1"]}
+      path={["net.V_PLUS", "J1.V_PLUS", "R6.pin2", "R5.pin1"]}
       schDisplayLabel="V+"
     />
     <trace
       name="V-MINUS-INPUT"
-      path={["J1.V_MINUS", "R6.pin1", "R7.pin1"]}
+      path={["net.V_MINUS", "J1.V_MINUS", "R6.pin1", "R7.pin1"]}
       schDisplayLabel="V-"
     />
     <trace from="R5.pin2" to="C8.pin1" />
@@ -132,8 +134,9 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
     <trace from="C3.pin1" to="C4.pin1" />
     <trace from="C3.pin2" to="C4.pin2" />
 
-    {/* The public TSX ports retain underscore-safe identifiers. The source's
-        exact V+ and V- text is carried electrically by the on-trace labels. */}
+    {/* The source's V+ and V- spellings remain on the real traces through
+        schDisplayLabel. The native source-net identifiers stay selector-safe
+        so they can also carry the required power/ground metadata. */}
     {/* ADCMOTOR is the source design's scaled DC-current interface. */}
     <resistor
       name="R12"
@@ -519,8 +522,8 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       {...p(1460, 842.357143)}
     />
     {/* J1 itself is the source-authentic motor-current interface. V+ and V-
-        are display names owned by the two real input traces above, not
-        separate child ports or net-label components. */}
+        remain display names owned by the two real input traces above, not
+        separate explicit net-label components. */}
   </subcircuit>
 );
 
