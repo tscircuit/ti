@@ -316,6 +316,7 @@ The package currently exports these subcircuit components:
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
 - `MotorDriver_DRV8210`
+- `MotorDriver_DRV8703`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
 - `PositionFeedback_DRV5013`
@@ -397,6 +398,7 @@ chip is listed individually below, including whether it supports a
 | `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
 | `DRV5013Q1` | `-` | `DRV5013ADQDBZRQ1` |
 | `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
+| `DRV8703` | `vqfn_32_rhb_5x5` | `DRV8703QRHBRQ1` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
 | `DRV83053Q1` | `-` | `DRV83053QPHPQ1` |
