@@ -337,6 +337,8 @@ The package currently exports these subcircuit components:
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSP430FR6007`
+- `Microcontroller_MSP430FR6007_MultiSheet`
 - `Microcontroller_MSPM0L1306Q1_TIDA020065` ([TIDA-020065](https://www.ti.com/tool/TIDA-020065))
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
@@ -416,6 +418,7 @@ chip is listed individually below, including whether it supports a
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
+| `MSP430FR6007` | `lqfp_100` | `MSP430FR6007IPZ` |
 | `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
