@@ -94,10 +94,10 @@ export const InterfacesSection = ({
       }
     : {
         TP1: { x: testPointX(-6), y: testPointY(-3.7) },
-        TP2: { x: testPointX(6.5), y: testPointY(-4.9) },
+        TP2: { x: testPointX(2.6875), y: testPointY(-4.9) },
         TP3: { x: testPointX(-6), y: testPointY(-4.9) },
         TP4: { x: testPointX(-6), y: testPointY(-6.1) },
-        TP5: { x: testPointX(6.5), y: testPointY(-7.3) },
+        TP5: { x: testPointX(2.6875), y: testPointY(-7.3) },
         TP6: { x: testPointX(-6), y: testPointY(-7.3) },
         TP7: { x: testPointX(-6), y: testPointY(-8.5) },
       };

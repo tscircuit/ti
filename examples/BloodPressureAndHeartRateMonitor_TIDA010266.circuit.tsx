@@ -89,9 +89,9 @@ export default () => (
     {/* Continue native dividers from their exact endpoints to the sheet border. */}
     <schematicline
       x1={29.9}
-      y1={12.7}
+      y1={11.2125}
       x2={35.2}
-      y2={12.7}
+      y2={11.2125}
       strokeWidth={0.02}
       color="#000000"
       isDashed
@@ -115,9 +115,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={9.525}
+      x1={9.725}
       y1={20.6}
-      x2={9.525}
+      x2={9.725}
       y2={21.65}
       strokeWidth={0.02}
       color="#000000"
@@ -133,9 +133,9 @@ export default () => (
       isDashed
     />
     <schematicline
-      x1={9.525}
+      x1={9.725}
       y1={-17.9}
-      x2={9.525}
+      x2={9.725}
       y2={-21.65}
       strokeWidth={0.02}
       color="#000000"
