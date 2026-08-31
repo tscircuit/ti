@@ -115,6 +115,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
   const pressureY = (y: number) =>
     y + pressureSchYOffset + compactPressureOffset.y;
   const filterX = (x: number) => x + filterSchXOffset;
+  const pressureBiasOpAmpY = -14.5;
 
   return (
     <subcircuit
@@ -292,7 +293,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         schSectionName={pressureSectionName ?? props.schSectionName}
         schSheetName={sensorSheetName}
         schX={pressureX(-19)}
-        schY={pressureY(-16.5)}
+        schY={pressureY(pressureBiasOpAmpY)}
         connections={{
           inp1: ".U2 > .IN_POS_D",
           inp2: ".U2 > .IN_NEG_D",
@@ -302,16 +303,16 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
       <group schSheetName={sensorSheetName}>
         <schematicline
           x1={pressureX(-19.03)}
-          y1={pressureY(-16.28)}
+          y1={pressureY(pressureBiasOpAmpY + 0.22)}
           x2={pressureX(-19.03)}
-          y2={pressureY(-15.55)}
+          y2={pressureY(pressureBiasOpAmpY + 0.95)}
           strokeWidth={0.025}
           color="#008000"
         />
         <schematictext
           text="3.3V"
           schX={pressureX(-19.03)}
-          schY={pressureY(-15.35)}
+          schY={pressureY(pressureBiasOpAmpY + 1.15)}
           fontSize={0.18}
           color="#840000"
         />
