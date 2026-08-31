@@ -2,9 +2,16 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { TLV755P } from "../chips/TLV755P.circuit.tsx";
 
+const EXPOSED_NETS = ["VIN", "GND", "EN", "VOUT_3V3"] as const;
+
 /** TLV755P 3.3 V LDO typical application with 1 uF input/output capacitors. */
 export const PowerManagement_TLV755P = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
+  <subcircuit exposedNets={[...EXPOSED_NETS]} {...props}>
+    <net name="VIN" isPowerNet />
+    <net name="GND" isGroundNet />
+    <net name="EN" />
+    <net name="VOUT_3V3" isPowerNet />
+
     <TLV755P
       name="U1"
       displayName="TLV755P"

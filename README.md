@@ -83,6 +83,15 @@ the LVDS interface, logic buffer, and temperature sensor; the logic signal then
 flows through the LVDS driver and two-channel I/O protection. The antenna feed,
 I2C bus, and protected differential pair remain explicit parent-level ports.
 
+The [`IndustrialAutomation_FlatPanel.circuit.tsx`](examples/IndustrialAutomation_FlatPanel.circuit.tsx)
+example implements an initial reusable subset of TI's
+[Flat panel solution](https://www.ti.com/solution/flat-panel). It connects the
+LP5892-Q1 output-user-interface block, TMP116/OPT3004 sensor block, and TLV755P
+3.3 V supply through public subcircuit nets. A host header supplies the serial
+and I2C interfaces, while dedicated headers expose all 48 RGB current sinks and
+16 scan lines. The controller and physical panel remain explicit boundaries;
+the example does not imply an unmodeled processor or display-interface circuit.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
@@ -321,6 +330,10 @@ The package currently exports these subcircuit components:
 - `InstrumentationAmplifier_INA350`
 - `PressureTransmitter_PGA300`
 - `IsolatedRS485_ISOW7841`
+- `PowerSupply_WindowModule`
+- `ReverseBatteryProtection_TLV1805_SQJ461EP`
+- `VoltageRegulator_LM73605`
+- `SupervisorWatchdog_TPS3850`
 - `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
@@ -330,6 +343,7 @@ The package currently exports these subcircuit components:
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
 - `OutputUserInterface_LEDMatrix_LP5892_Q1`
+- `Sensors_TMP116_OPT3004`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
 - `MotorThermalProtection_TMP390` (datasheet-derived; not an exact Window Module reference design)
@@ -395,8 +409,9 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
 | `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
-| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
+| `LM73605` | `wqfn_30_rnp_4x6` | `LM73605QRNPRQ1` |
+| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
 | `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
@@ -405,6 +420,7 @@ chip is listed individually below, including whether it supports a
 | `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
+| `OPT3004` | `uson_6_ep_2x2` | `OPT3004DNPR` |
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `SN65LVDS31D` | `-` | `SN65LVDS31D` |
@@ -413,14 +429,17 @@ chip is listed individually below, including whether it supports a
 | `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
+| `TLV1805` | `sot_23_6` | `TLV1805QDBVRQ1` |
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP103AYFF` | `-` | `TMP103AYFF` |
+| `TMP116` | `wson_6_ep_2x2` | `TMP116NAIDRVR` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
 | `TMP390Q1` | `-` | `TMP390AQDRLRQ1` |
 | `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS25910RSA` | `-` | `TPS25910RSA` |
+| `TPS3850` | `vson_10_drc_3x3` | `TPS3850H33QDRCRQ1` |
 | `TPS62086RLTR` | `-` | `TPS62086RLTR` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
