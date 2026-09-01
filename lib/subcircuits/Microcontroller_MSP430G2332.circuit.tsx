@@ -334,19 +334,17 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
     <trace from=".C13 > .pin2" to=".U4 > .pin4" />
     <trace from=".C9 > .pin2" to="net.GND" />
     <trace from=".U2 > .pin1" to={threeVoltNetSelector} />
-    <netlabel
-      net="TEST"
-      connectsTo=".U4 > .pin17"
-      schX={-4.5}
-      schY={-4.3}
-      anchorSide="right"
+    <trace
+      name="TEST_U4_pin17"
+      from=".U4 > .pin17"
+      to="net.TEST"
+      schDisplayLabel="TEST"
     />
-    <netlabel
-      net="TEST"
-      connectsTo=".J6 > .pin1"
-      schX={-2.25}
-      schY={-6.9}
-      anchorSide="left"
+    <trace
+      name="TEST_J6_pin1"
+      from=".J6 > .pin1"
+      to="net.TEST"
+      schDisplayLabel="TEST"
     />
   </subcircuit>
 );

@@ -103,10 +103,30 @@ export const MotorDriver_DRV8210_TIDA010266 = (
       <trace from=".U6 > .OUT2" to=".J9 > .PUMP_OUT" maxLength="100mm" />
       <trace from=".U6 > .EP" to=".U6 > .GND" maxLength="100mm" />
       <trace from=".J9 > .GND_1" to=".J9 > .GND_4" maxLength="100mm" />
-      <netlabel net="GND" connectsTo=".C15 > .pin2" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".C16 > .pin2" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".U6 > .GND" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".J9 > .GND_4" anchorSide="top" />
+      <trace
+        name="GND_C15_pin2"
+        from=".C15 > .pin2"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_C16_pin2"
+        from=".C16 > .pin2"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_U6_GND"
+        from=".U6 > .GND"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_J9_GND_4"
+        from=".J9 > .GND_4"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
       <TIDA010266InlineNetPorts
         originX={originX}
         originY={originY}

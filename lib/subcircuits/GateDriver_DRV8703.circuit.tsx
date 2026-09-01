@@ -139,12 +139,11 @@ export const GateDriver_DRV8703 = (props: SubcircuitProps) => (
       ]}
     />
     <trace from="C10.pin2" to="C9.pin2" />
-    <netlabel
-      net="GND"
-      connectsTo="C9.pin2"
-      schX={-5.757613}
-      schY={2.482781}
-      anchorSide="top"
+    <trace
+      name="GND_C9_pin2"
+      from="C9.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     {/* PVDD rail, local bypassing, and VDRAIN net tie. */}

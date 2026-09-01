@@ -244,8 +244,18 @@ export default () => (
       }}
     />
     <trace from=".external_ina > .SHDN" to="net.SHDN" />
-    <netlabel net="SHDN" connectsTo=".R23 > .pin1" inline />
-    <netlabel net="GND" connectsTo=".R23 > .pin2" anchorSide="top" />
+    <trace
+      name="SHDN_R23_pin1"
+      from=".R23 > .pin1"
+      to="net.SHDN"
+      schDisplayLabel="SHDN"
+    />
+    <trace
+      name="GND_R23_pin2"
+      from=".R23 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
+    />
 
     {/* Input, regulated rails, buffered references, and the common return. */}
     <trace from=".interfaces > .VIN" to=".power > .VIN" />

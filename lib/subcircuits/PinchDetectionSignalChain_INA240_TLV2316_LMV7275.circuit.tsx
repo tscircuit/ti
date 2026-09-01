@@ -9,11 +9,11 @@ import {
 } from "../tida01421-coordinates.ts";
 
 type PinchDetectionSignalChainProps = SubcircuitProps & {
-  renderLocalRailLabels?: boolean;
+  renderLocalRailConnections?: boolean;
 };
 
-const withoutLocalRailLabelProp = ({
-  renderLocalRailLabels: _renderLocalRailLabels,
+const withoutLocalRailConnectionProp = ({
+  renderLocalRailConnections: _renderLocalRailConnections,
   ...subcircuitProps
 }: PinchDetectionSignalChainProps): SubcircuitProps => subcircuitProps;
 
@@ -69,7 +69,7 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
     schAutoLayoutEnabled={false}
     schMaxTraceDistance="8mm"
     routingDisabled
-    {...withoutLocalRailLabelProp(props)}
+    {...withoutLocalRailConnectionProp(props)}
   >
     <net name="V5" isPowerNet />
     {/* Net selectors reject periods, so V3.3 is normalized internally. The
@@ -368,158 +368,126 @@ export const PinchDetectionSignalChain_INA240_TLV2316_LMV7275 = (
       schDisplayLabel="TIMER"
     />
     <trace from="R4.pin1" to="net.TIMER" />
-    {/* The TI sheet uses local rail symbols rather than sheet-wide V5/GND
-        buses. Explicitly placed native rail labels preserve that topology;
-        signal names continue to use schDisplayLabel on their real traces. */}
-    {/* Each rail symbol is placed at the exact native triangle-stem endpoint.
-        The fractional Altium-space coordinates below still pass through p(),
-        keeping one transform for source centers and native-symbol projections.
-        U3A/U3B share the same physical TLV2316 supply pins, while each visual
-        projection retains its own source-authentic V5/GND endpoint. */}
-    {props.renderLocalRailLabels !== false && (
+    {/* Native traces connect each visible amplifier projection to its rail.
+        U3A/U3B share physical TLV2316 supply pins, while each projection keeps
+        its own source-authentic V5/GND endpoint. */}
+    {props.renderLocalRailConnections !== false && (
       <>
-        {/* The source gives U2 pin 6 a vertical V5 power port and pin 7 a
-            left-pointing V5 endpoint. Native labels are anchored to the real
-            pin centers so neither one crosses the adjacent signal trace. */}
-        <netlabel
-          net="V5"
-          connection="U2.VS"
-          anchorSide="bottom"
-          {...p(452.142857, 910.714286)}
+        {/* U2 pin 6 is the V5 supply and pin 7 is its V5 reference endpoint. */}
+        <trace name="V5_U2_VS" from="U2.VS" to="net.V5" schDisplayLabel="V5" />
+        <trace
+          name="V5_U2_REF1"
+          from="U2.REF1"
+          to="net.V5"
+          schDisplayLabel="V5"
         />
-        <netlabel
-          net="V5"
-          connection="U2.REF1"
-          anchorSide="left"
-          {...p(587.857143, 903.571429)}
+        <trace
+          name="V5_U3A_pin5"
+          from="U3A.pin5"
+          to="net.V5"
+          schDisplayLabel="V5"
         />
-        <netlabel
-          net="V5"
-          connection="U3A.pin5"
-          anchorSide="bottom"
-          {...p(788.928571, 929.285714)}
+        <trace
+          name="GND_U3A_pin3"
+          from="U3A.pin3"
+          to="net.GND"
+          schDisplayLabel="GND"
         />
-        <netlabel
-          net="GND"
-          connection="U3A.pin3"
-          anchorSide="top"
-          {...p(789.285714, 901.428571)}
+        <trace
+          name="V5_U3B_pin5"
+          from="U3B.pin5"
+          to="net.V5"
+          schDisplayLabel="V5"
         />
-        <netlabel
-          net="V5"
-          connection="U3B.pin5"
-          anchorSide="bottom"
-          {...p(1078.928571, 924.285714)}
+        <trace
+          name="GND_U3B_pin3"
+          from="U3B.pin3"
+          to="net.GND"
+          schDisplayLabel="GND"
         />
-        <netlabel
-          net="GND"
-          connection="U3B.pin3"
-          anchorSide="top"
-          {...p(1079.285714, 896.428571)}
+        <trace
+          name="V5_U1Symbol_pin5"
+          from="U1Symbol.pin5"
+          to="net.V5"
+          schDisplayLabel="V5"
         />
-        <netlabel
-          net="V5"
-          connection="U1Symbol.pin5"
-          anchorSide="bottom"
-          {...p(1278.928571, 919.285714)}
-        />
-        <netlabel
-          net="GND"
-          connection="U1Symbol.pin3"
-          anchorSide="top"
-          {...p(1279.285714, 891.428571)}
+        <trace
+          name="GND_U1Symbol_pin3"
+          from="U1Symbol.pin3"
+          to="net.GND"
+          schDisplayLabel="GND"
         />
       </>
     )}
-    <netlabel
-      net="GND"
-      connection="U2.GND"
-      anchorSide="top"
-      {...p(587.857143, 840)}
+    <trace name="GND_U2_GND" from="U2.GND" to="net.GND" schDisplayLabel="GND" />
+    <trace name="V5_C3_pin1" from="C3.pin1" to="net.V5" schDisplayLabel="V5" />
+    <trace
+      name="GND_C3_pin2"
+      from="C3.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="V5"
-      connection="C3.pin1"
-      anchorSide="bottom"
-      {...p(520, 1040)}
+    <trace
+      name="GND_C10_pin2"
+      from="C10.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connection="C3.pin2"
-      anchorSide="top"
-      {...p(520, 970)}
+    <trace
+      name="V5_R11_pin2"
+      from="R11.pin2"
+      to="net.V5"
+      schDisplayLabel="V5"
     />
-    <netlabel
-      net="GND"
-      connection="C10.pin2"
-      anchorSide="top"
-      {...p(750, 610)}
+    <trace
+      name="GND_R17_pin1"
+      from="R17.pin1"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="V5"
-      connection="R11.pin2"
-      anchorSide="bottom"
-      {...p(670, 880)}
+    <trace name="V5_C5_pin1" from="C5.pin1" to="net.V5" schDisplayLabel="V5" />
+    <trace
+      name="GND_C5_pin2"
+      from="C5.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connection="R17.pin1"
-      anchorSide="top"
-      {...p(670, 750)}
+    <trace
+      name="GND_C9_pin2"
+      from="C9.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="V5"
-      connection="C5.pin1"
-      anchorSide="bottom"
-      {...p(860, 1040)}
+    <trace name="V5_C2_pin1" from="C2.pin1" to="net.V5" schDisplayLabel="V5" />
+    <trace
+      name="GND_C2_pin2"
+      from="C2.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connection="C5.pin2"
-      anchorSide="top"
-      {...p(860, 970)}
+    <trace
+      name="V5_R15_pin2"
+      from="R15.pin2"
+      to="net.V5"
+      schDisplayLabel="V5"
     />
-    <netlabel
-      net="GND"
-      connection="C9.pin2"
-      anchorSide="top"
-      {...p(980, 830)}
+    <trace
+      name="GND_R18_pin1"
+      from="R18.pin1"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="V5"
-      connection="C2.pin1"
-      anchorSide="bottom"
-      {...p(1280, 1050)}
+    <trace
+      name="V3_3_R4_pin2"
+      from="R4.pin2"
+      to="net.V3_3"
+      schDisplayLabel="V3_3"
     />
-    <netlabel
-      net="GND"
-      connection="C2.pin2"
-      anchorSide="top"
-      {...p(1280, 980)}
-    />
-    <netlabel
-      net="V5"
-      connection="R15.pin2"
-      anchorSide="bottom"
-      {...p(1200, 870)}
-    />
-    <netlabel
-      net="GND"
-      connection="R18.pin1"
-      anchorSide="top"
-      {...p(1200, 740)}
-    />
-    <netlabel
-      net="V3_3"
-      connection="R4.pin2"
-      anchorSide="bottom"
-      {...p(1400, 952.357143)}
-    />
-    <netlabel
-      net="GND"
-      connection="C15.pin2"
-      anchorSide="top"
-      {...p(1460, 842.357143)}
+    <trace
+      name="GND_C15_pin2"
+      from="C15.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
     {/* J1 itself is the source-authentic motor-current interface. V+ and V-
         remain display names owned by the two real input traces above, not

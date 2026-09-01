@@ -379,12 +379,11 @@ const OutputFixture = ({
           pcbPath={[`${firstResistor}.pin1`, `${firstResistor}.pin1`]}
         />
       ) : (
-        <netlabel
-          net={netName}
-          connectsTo={`${firstResistor}.pin1`}
-          schX={sheetPort.centerX + sheetPort.width / 2}
-          schY={sch.firstResistor[1]}
-          anchorSide="right"
+        <trace
+          name={[netName, `${firstResistor}.pin1`].join("-")}
+          from={`${firstResistor}.pin1`}
+          to={`net.${netName}`}
+          schDisplayLabel={netName}
         />
       )}
       <resistor
@@ -989,12 +988,11 @@ const ClockDevice = () => (
       const sheetPort = DEVICE_OUTPUT_SHEET_PORTS[index];
       return (
         <Fragment key={`U1-${netName}`}>
-          <netlabel
-            net={netName}
-            connectsTo={`U1.pin${pin}`}
-            schX={sheetPort.x - sheetPort.width / 2}
-            schY={sheetPort.y}
-            anchorSide="left"
+          <trace
+            name={[netName, `U1.pin${pin}`].join("-")}
+            from={`U1.pin${pin}`}
+            to={`net.${netName}`}
+            schDisplayLabel={netName}
           />
         </Fragment>
       );
@@ -1059,13 +1057,20 @@ const InputNetwork = () => (
     <trace from="R1.pin2" to="R2.pin2" />
     <trace from="R3.pin1" to="R2.pin2" />
     <trace from="J2.pin1" to="R2.pin1" schDisplayLabel={HIDDEN_ROUTE_LABEL} />
-    <netlabel
-      net="CLKIN"
-      connectsTo={["R2.pin2", "U1.pin1"]}
-      schX={-8.3}
-      schY={7.2}
-      anchorSide="right"
-    />
+    <>
+      <trace
+        name="CLKIN_R2_pin2"
+        from="R2.pin2"
+        to="net.CLKIN"
+        schDisplayLabel="CLKIN"
+      />
+      <trace
+        name="CLKIN_U1_pin1"
+        from="U1.pin1"
+        to="net.CLKIN"
+        schDisplayLabel="CLKIN"
+      />
+    </>
   </>
 );
 
@@ -1210,13 +1215,20 @@ const EnableNetwork = () => (
       pcbX={-8}
       pcbY={-7}
     />
-    <netlabel
-      net="OE"
-      connectsTo={["R4.pin1", "U1.pin2"]}
-      schX={-7.8596}
-      schY={3.4728}
-      anchorSide="right"
-    />
+    <>
+      <trace
+        name="OE_R4_pin1"
+        from="R4.pin1"
+        to="net.OE"
+        schDisplayLabel="OE"
+      />
+      <trace
+        name="OE_U1_pin2"
+        from="U1.pin2"
+        to="net.OE"
+        schDisplayLabel="OE"
+      />
+    </>
   </>
 );
 

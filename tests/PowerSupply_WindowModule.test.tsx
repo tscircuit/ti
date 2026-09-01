@@ -440,21 +440,12 @@ test("reverse-battery child preserves the TIDA-050008 sheet-2 netlist", async ()
     (element) => element.text,
   );
   expect(renderedNetLabels).toContain("P_Gate");
-  const d6Vin2Anchor = schematicPort(circuitJson, "D6", 1).center as {
-    x: number;
-    y: number;
-  };
   expect(
-    allSchematicNetLabels.some((label) => {
-      const anchor = label.anchor_position as { x: number; y: number };
-      return (
-        label.text === "VIN2" &&
-        label.symbol_name === "rail_up" &&
-        Math.abs(anchor.x - d6Vin2Anchor.x) < 1e-6 &&
-        Math.abs(anchor.y - d6Vin2Anchor.y) < 1e-6
-      );
-    }),
-    "D6 VIN2 is a native upward voltage-source symbol anchored to pin 1",
+    circuitJson.some(
+      (element) =>
+        element.type === "source_trace" && element.name === "VIN2_D6_pin1",
+    ),
+    "D6 VIN2 uses a named native trace instead of a manual net label",
   ).toBe(true);
   expect(renderedNetLabels).not.toContain("LOAD_SENS_PCH");
   expect(renderedNetLabels).not.toContain("D2_A");
@@ -802,17 +793,34 @@ test("supervisor/watchdog child preserves the TIDA-050008 sheet-3 netlist", asyn
     ["C12", 2],
   ]);
 
-  const schematicLabels = circuitJson.filter(
-    (element) => element.type === "schematic_net_label",
-  );
   expect(
-    schematicLabels.filter((label) => label.text === "V3_3"),
-    "separate V3_3 power symbols for C11, C13, R21, and both LED groups",
-  ).toHaveLength(5);
+    circuitJson
+      .filter((element) => element.type === "source_trace")
+      .map((trace) => trace.name)
+      .filter((name) => name?.startsWith("V3_3_"))
+      .sort(),
+    "V3_3 endpoints use named native traces",
+  ).toEqual([
+    "V3_3_C11_pin1",
+    "V3_3_C13_pin1",
+    "V3_3_R21_pin2",
+    "V3_3_R5_pin2",
+    "V3_3_R6_pin2",
+  ]);
   expect(
-    schematicLabels.filter((label) => label.text === "GND"),
-    "separate ground symbols for C11, C12, C13, J1, and U3 GND/PAD",
-  ).toHaveLength(5);
+    circuitJson
+      .filter((element) => element.type === "source_trace")
+      .map((trace) => trace.name)
+      .filter((name) => name?.startsWith("GND_"))
+      .sort(),
+    "ground endpoints use named native traces",
+  ).toEqual([
+    "GND_C11_pin2",
+    "GND_C12_pin2",
+    "GND_C13_pin2",
+    "GND_J1_pin3",
+    "GND_U3_pin5",
+  ]);
 
   const expectAlignedX = (
     label: string,

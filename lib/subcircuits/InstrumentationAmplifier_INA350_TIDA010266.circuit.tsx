@@ -12,7 +12,7 @@ export const InstrumentationAmplifier_INA350_TIDA010266 = (
     bypassCapacitorName="C13"
     gain="external"
     shutdown="external"
-    inlineNetLabels
+    renderInlineNetPorts
     schematicStyle="box"
     supplyNetName="V3_3"
   />

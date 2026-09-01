@@ -8,25 +8,11 @@ import {
 interface GroundTerminalProps {
   name: string;
   connection: string;
-  schX: number;
-  schY: number;
-  anchorSide?: "top" | "right" | "bottom" | "left";
 }
 
-/** A local schematic ground terminal tied directly to the shared GND net. */
-const GroundTerminal = ({
-  connection,
-  schX,
-  schY,
-  anchorSide = "top",
-}: GroundTerminalProps) => (
-  <netlabel
-    net="GND"
-    connectsTo={connection}
-    schX={schX}
-    schY={schY}
-    anchorSide={anchorSide}
-  />
+/** A native trace from a local endpoint to the shared GND net. */
+const GroundTerminal = ({ name, connection }: GroundTerminalProps) => (
+  <trace name={name} from={connection} to="net.GND" schDisplayLabel="GND" />
 );
 
 const iifaAntennaSymbol = (
@@ -310,75 +296,28 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         ]}
       />
     </group>
-    <netlabel
-      net="VCC"
-      connection="C4.pin1"
-      schX={10.3}
-      schY={7.65}
-      anchorSide="bottom"
+    <trace
+      name="VCC_C4_pin1"
+      from="C4.pin1"
+      to="net.VCC"
+      schDisplayLabel="VCC"
     />
-    <netlabel
-      net="V3P3_IN"
-      connection="L1.pin2"
-      schX={13.2}
-      schY={7.6}
-      anchorSide="left"
+    <trace
+      name="V3P3_IN_L1_pin2"
+      from="L1.pin2"
+      to="net.V3P3_IN"
+      schDisplayLabel="V3P3_IN"
     />
 
-    <GroundTerminal
-      name="GND_C101"
-      connection=".C101 > .pin2"
-      schX={-7.2}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C391"
-      connection=".C391 > .pin2"
-      schX={-5.5}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C41"
-      connection=".C41 > .pin2"
-      schX={-3.8}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C211"
-      connection=".C211 > .pin2"
-      schX={3.3}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C241"
-      connection=".C241 > .pin2"
-      schX={4.9}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C271"
-      connection=".C271 > .pin2"
-      schX={6.5}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C272"
-      connection=".C272 > .pin2"
-      schX={8.1}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C311"
-      connection=".C311 > .pin2"
-      schX={9.7}
-      schY={5.4}
-    />
-    <GroundTerminal
-      name="GND_C4"
-      connection=".C4 > .pin2"
-      schX={10.3}
-      schY={5.05}
-    />
+    <GroundTerminal name="GND_C101" connection=".C101 > .pin2" />
+    <GroundTerminal name="GND_C391" connection=".C391 > .pin2" />
+    <GroundTerminal name="GND_C41" connection=".C41 > .pin2" />
+    <GroundTerminal name="GND_C211" connection=".C211 > .pin2" />
+    <GroundTerminal name="GND_C241" connection=".C241 > .pin2" />
+    <GroundTerminal name="GND_C271" connection=".C271 > .pin2" />
+    <GroundTerminal name="GND_C272" connection=".C272 > .pin2" />
+    <GroundTerminal name="GND_C311" connection=".C311 > .pin2" />
+    <GroundTerminal name="GND_C4" connection=".C4 > .pin2" />
 
     <group schMaxTraceDistance="20mm">
       <trace
@@ -454,12 +393,7 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         ]}
       />
     </group>
-    <GroundTerminal
-      name="GND_U1"
-      connection=".U1 > .pin41"
-      schX={2.5}
-      schY={-2.8}
-    />
+    <GroundTerminal name="GND_U1" connection=".U1 > .pin41" />
 
     {/* Differential RF output, balun, matching capacitor, and PCB antenna. */}
     <chip
@@ -526,25 +460,9 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       <trace from=".C5 > .pin1" to=".R9 > .pin2" />
       <trace from=".R9 > .pin1" to=".A2 > .pin1" />
     </group>
-    <GroundTerminal
-      name="GND_B1"
-      connection=".B1 > .pin2"
-      schX={6.25}
-      schY={-0.3}
-    />
-    <GroundTerminal
-      name="GND_A2"
-      connection=".A2 > .pin2"
-      schX={6.9}
-      schY={1.7}
-      anchorSide="right"
-    />
-    <GroundTerminal
-      name="GND_C5"
-      connection=".C5 > .pin2"
-      schX={8.2}
-      schY={-0.85}
-    />
+    <GroundTerminal name="GND_B1" connection=".B1 > .pin2" />
+    <GroundTerminal name="GND_A2" connection=".A2 > .pin2" />
+    <GroundTerminal name="GND_C5" connection=".C5 > .pin2" />
 
     {/* RESET_N, RBIAS, DCOUPL, and 32 MHz crystal networks. */}
     <resistor
@@ -575,19 +493,13 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         schematicRouteHints={[{ x: -5.2, y: -3.72 }]}
       />
     </group>
-    <netlabel
-      net="RESET_N"
-      connectsTo=".R201 > .pin1"
-      schX={-6.7}
-      schY={-2.775}
-      anchorSide="right"
+    <trace
+      name="RESET_N_R201_pin1"
+      from=".R201 > .pin1"
+      to="net.RESET_N"
+      schDisplayLabel="RESET_N"
     />
-    <GroundTerminal
-      name="GND_C201"
-      connection=".C201 > .pin2"
-      schX={-5.2}
-      schY={-4.95}
-    />
+    <GroundTerminal name="GND_C201" connection=".C201 > .pin2" />
 
     <inductor
       name="L301"
@@ -619,12 +531,7 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
       />
       <trace from=".L301 > .pin2" to=".R301 > .pin1" />
     </group>
-    <GroundTerminal
-      name="GND_R301"
-      connection=".R301 > .pin2"
-      schX={3.3}
-      schY={-5.75}
-    />
+    <GroundTerminal name="GND_R301" connection=".R301 > .pin2" />
 
     <capacitor
       name="C401"
@@ -644,12 +551,7 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         schematicRouteHints={[{ x: 4.9, y: -1.7 }]}
       />
     </group>
-    <GroundTerminal
-      name="GND_C401"
-      connection=".C401 > .pin2"
-      schX={4.9}
-      schY={-4.05}
-    />
+    <GroundTerminal name="GND_C401" connection=".C401 > .pin2" />
 
     <crystal
       name="X1"
@@ -721,31 +623,10 @@ export const WirelessConnectivity_CC2540_TIDCCC2540BLEUSB = (
         ]}
       />
     </group>
-    <GroundTerminal
-      name="GND_X1_1"
-      connection=".X1 > .pin2"
-      schX={7.4}
-      schY={-4.35}
-    />
-    <GroundTerminal
-      name="GND_X1_2"
-      connection=".X1 > .pin4"
-      schX={8.2}
-      schY={-2.39}
-      anchorSide="left"
-    />
-    <GroundTerminal
-      name="GND_C231"
-      connection=".C231 > .pin2"
-      schX={6.2}
-      schY={-5.45}
-    />
-    <GroundTerminal
-      name="GND_C221"
-      connection=".C221 > .pin2"
-      schX={8.6}
-      schY={-5.45}
-    />
+    <GroundTerminal name="GND_X1_1" connection=".X1 > .pin2" />
+    <GroundTerminal name="GND_X1_2" connection=".X1 > .pin4" />
+    <GroundTerminal name="GND_C231" connection=".C231 > .pin2" />
+    <GroundTerminal name="GND_C221" connection=".C221 > .pin2" />
 
     <schematictext
       text="CC2540 USB DONGLE RF-PART — TIDC-CC2540-BLE-USB"

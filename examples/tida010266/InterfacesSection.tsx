@@ -377,11 +377,36 @@ export const InterfacesSection = ({
         direction="right"
       />
       <trace from=".J10 > .INA_GS" to=".INA_GS_PORT" schDisplayLabel="INA_GS" />
-      <netlabel net="GND" connectsTo=".J1 > .GND" anchorSide="bottom" />
-      <netlabel net="GND" connectsTo=".J3 > .GND" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".J10 > .GND" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".TP6 > .pin1" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".TP7 > .pin1" anchorSide="top" />
+      <trace
+        name="GND_J1_GND"
+        from=".J1 > .GND"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_J3_GND"
+        from=".J3 > .GND"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_J10_GND"
+        from=".J10 > .GND"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_TP6_pin1"
+        from=".TP6 > .pin1"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_TP7_pin1"
+        from=".TP7 > .pin1"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
 
       <testpoint
         {...throughHoleTestPoint}
@@ -467,8 +492,18 @@ export const InterfacesSection = ({
             direction="right"
             connectsTo=".J6 > .PRESSURE"
           />
-          <netlabel net="PRESSURE" connectsTo=".J6 > .PRESSURE" inline />
-          <netlabel net="PRESSURE" connectsTo=".TP2 > .pin1" inline />
+          <trace
+            name="PRESSURE_J6_PRESSURE"
+            from=".J6 > .PRESSURE"
+            to="net.PRESSURE"
+            schDisplayLabel="PRESSURE"
+          />
+          <trace
+            name="PRESSURE_TP2_pin1"
+            from=".TP2 > .pin1"
+            to="net.PRESSURE"
+            schDisplayLabel="PRESSURE"
+          />
           <port
             {...({
               schSheetName: connectorSheetName ?? props.schSheetName,

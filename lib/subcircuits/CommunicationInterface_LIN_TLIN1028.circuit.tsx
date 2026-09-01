@@ -143,12 +143,11 @@ export const CommunicationInterface_LIN_TLIN1028 = (props: SubcircuitProps) => (
     <trace from="C23.pin1" to="net.V3_3" />
     <trace from="R19.pin1" to="net.V3_3" />
     <trace from="C23.pin2" to="C24.pin2" />
-    <netlabel
-      net="GND"
-      connectsTo="C24.pin2"
-      schX={-3.81}
-      schY={2.032}
-      anchorSide="top"
+    <trace
+      name="GND_C24_pin2"
+      from="C24.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     {/* Logic-side signal boundaries. */}
@@ -157,12 +156,11 @@ export const CommunicationInterface_LIN_TLIN1028 = (props: SubcircuitProps) => (
     <trace from="R20.pin1" to="net.TXD" />
     <trace from="R20.pin2" to="U4.TXD" />
     <trace from="C31.pin1" to="R20.pin2" />
-    <netlabel
-      net="GND"
-      connectsTo="C31.pin2"
-      schX={-5.08}
-      schY={-1.397}
-      anchorSide="top"
+    <trace
+      name="GND_C31_pin2"
+      from="C31.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
     <trace from="U4.EN" to="net.EN_1028" />
     <trace from="U4.nRST" to="net.nRST" />
@@ -179,30 +177,27 @@ export const CommunicationInterface_LIN_TLIN1028 = (props: SubcircuitProps) => (
     />
     <trace from="C25.pin1" to="C26.pin1" />
     <trace from="C26.pin1" to="net.Vsup" />
-    <netlabel
-      net="GND"
-      connectsTo="C25.pin2"
-      schX={3.302}
-      schY={2.032}
-      anchorSide="top"
+    <trace
+      name="GND_C25_pin2"
+      from="C25.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connectsTo="C26.pin2"
-      schX={4.826}
-      schY={2.032}
-      anchorSide="top"
+    <trace
+      name="GND_C26_pin2"
+      from="C26.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     {/* LIN bus shunt capacitor and external LIN boundary. */}
     <trace from="U4.LIN" to="C29.pin1" />
     <trace from="C29.pin1" to="net.LIN" />
-    <netlabel
-      net="GND"
-      connectsTo="C29.pin2"
-      schX={4.064}
-      schY={-1.016}
-      anchorSide="top"
+    <trace
+      name="GND_C29_pin2"
+      from="C29.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     {/* The DDA exposed pad and pin 3 are both grounded in the TI source. */}

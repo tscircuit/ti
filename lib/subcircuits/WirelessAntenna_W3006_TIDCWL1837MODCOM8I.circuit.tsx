@@ -118,19 +118,17 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       to=".J5 > .pin1"
       schematicRouteHints={[{ x: -3.75, y: -2.3 }]}
     />
-    <netlabel
-      net="GND"
-      connection="L2.pin1"
-      schX={-0.6}
-      schY={-2}
-      anchorSide="top"
+    <trace
+      name="GND_L2_pin1"
+      from="L2.pin1"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connection="L1.pin1"
-      schX={1}
-      schY={-2}
-      anchorSide="top"
+    <trace
+      name="GND_L1_pin1"
+      from="L1.pin1"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
     <trace
       from=".J5 > .pin2"
@@ -140,12 +138,11 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
         { x: -3.45, y: -2.55 },
       ]}
     />
-    <netlabel
-      net="GND"
-      connection="J5.pin3"
-      schX={-3.45}
-      schY={-3.5}
-      anchorSide="top"
+    <trace
+      name="GND_J5_pin3"
+      from="J5.pin3"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     <schematictext

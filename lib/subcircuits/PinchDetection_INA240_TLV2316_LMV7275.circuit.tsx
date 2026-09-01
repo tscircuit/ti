@@ -12,8 +12,6 @@ import {
 
 const wrapperOrigin = { x: 820, y: 620 };
 
-const p = (x: number, y: number) => tida01421Position(x, y, wrapperOrigin);
-
 /**
  * Focused TIDA-01421 pinch-detection subsystem.
  *
@@ -38,7 +36,7 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
     <net name="TIMER" />
     <PinchDetectionSignalChain_INA240_TLV2316_LMV7275
       name="signalChain"
-      renderLocalRailLabels={false}
+      renderLocalRailConnections={false}
       {...tida01421Position(
         TIDA01421_SIGNAL_CHAIN_ORIGIN.x,
         TIDA01421_SIGNAL_CHAIN_ORIGIN.y,
@@ -54,57 +52,55 @@ export const PinchDetection_INA240_TLV2316_LMV7275 = (
       )}
     />
 
-    {/* Rendering the U2 and powered-triangle rail symbols in the wrapper lets
-        automatically exposed child V5/GND connections reuse native endpoints
-        instead of adding generated Ux_GND/U2_VS labels over them. Standalone
-        signal-chain rendering still emits the same labels inside the child. */}
-    <netlabel
-      net="V5"
-      connection=".signalChain > .U2 > .VS"
-      anchorSide="bottom"
-      {...p(452.142857, 910.714286)}
+    {/* The wrapper owns the native V5/GND traces for projected child symbols;
+        standalone signal-chain rendering emits equivalent traces itself. */}
+    <trace
+      name="V5_signalChain_U2_VS"
+      from=".signalChain > .U2 > .VS"
+      to="net.V5"
+      schDisplayLabel="V5"
     />
-    <netlabel
-      net="V5"
-      connection=".signalChain > .U2 > .REF1"
-      anchorSide="left"
-      {...p(587.857143, 903.571429)}
+    <trace
+      name="V5_signalChain_U2_REF1"
+      from=".signalChain > .U2 > .REF1"
+      to="net.V5"
+      schDisplayLabel="V5"
     />
-    <netlabel
-      net="V5"
-      connection=".signalChain > .U3A > .pin5"
-      anchorSide="bottom"
-      {...p(788.928571, 929.285714)}
+    <trace
+      name="V5_signalChain_U3A_pin5"
+      from=".signalChain > .U3A > .pin5"
+      to="net.V5"
+      schDisplayLabel="V5"
     />
-    <netlabel
-      net="GND"
-      connection=".signalChain > .U3A > .pin3"
-      anchorSide="top"
-      {...p(789.285714, 901.428571)}
+    <trace
+      name="GND_signalChain_U3A_pin3"
+      from=".signalChain > .U3A > .pin3"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="V5"
-      connection=".signalChain > .U3B > .pin5"
-      anchorSide="bottom"
-      {...p(1078.928571, 924.285714)}
+    <trace
+      name="V5_signalChain_U3B_pin5"
+      from=".signalChain > .U3B > .pin5"
+      to="net.V5"
+      schDisplayLabel="V5"
     />
-    <netlabel
-      net="GND"
-      connection=".signalChain > .U3B > .pin3"
-      anchorSide="top"
-      {...p(1079.285714, 896.428571)}
+    <trace
+      name="GND_signalChain_U3B_pin3"
+      from=".signalChain > .U3B > .pin3"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="V5"
-      connection=".signalChain > .U1Symbol > .pin5"
-      anchorSide="bottom"
-      {...p(1278.928571, 919.285714)}
+    <trace
+      name="V5_signalChain_U1Symbol_pin5"
+      from=".signalChain > .U1Symbol > .pin5"
+      to="net.V5"
+      schDisplayLabel="V5"
     />
-    <netlabel
-      net="GND"
-      connection=".signalChain > .U1Symbol > .pin3"
-      anchorSide="top"
-      {...p(1279.285714, 891.428571)}
+    <trace
+      name="GND_signalChain_U1Symbol_pin3"
+      from=".signalChain > .U1Symbol > .pin3"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
   </subcircuit>
 );

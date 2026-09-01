@@ -174,6 +174,27 @@ const getProjectedSchematicPort = (
   return schematicPort;
 };
 
+const hasNativeNetTrace = (
+  circuitJson: AnyCircuitElement[],
+  sourcePortId: string,
+  netName: string,
+) => {
+  const sourceNetIds = new Set(
+    circuitJson
+      .filter(
+        (element): element is SourceNet =>
+          element.type === "source_net" && element.name === netName,
+      )
+      .map((net) => net.source_net_id),
+  );
+  return circuitJson.some(
+    (element) =>
+      element.type === "source_trace" &&
+      element.connected_source_port_ids.includes(sourcePortId) &&
+      element.connected_source_net_ids.some((netId) => sourceNetIds.has(netId)),
+  );
+};
+
 const getPortSide = (
   circuitJson: AnyCircuitElement[],
   componentName: string,
@@ -591,24 +612,9 @@ test("maps each native amplifier symbol port to the authoritative physical pin",
         representationName,
         Number(symbolPinNumber),
       );
-      const sourceNet = signalJson.find(
-        (element): element is SourceNet =>
-          element.type === "source_net" && element.name === netName,
-      );
-      const railLabel = signalJson.find(
-        (element): element is SchematicNetLabel =>
-          element.type === "schematic_net_label" &&
-          element.text === netName &&
-          element.anchor_position !== undefined &&
-          Math.abs(element.anchor_position.x - projectedPort.center.x) < 1e-6 &&
-          Math.abs(element.anchor_position.y - projectedPort.center.y) < 1e-6,
-      );
-
-      expect(sourceNet).toBeDefined();
-      expect(railLabel?.source_net_id).toBe(sourceNet?.source_net_id);
-      expect(railLabel?.symbol_name).toBe(
-        netName === "GND" ? "rail_down" : "rail_up",
-      );
+      expect(
+        hasNativeNetTrace(signalJson, projectedPort.source_port_id, netName),
+      ).toBe(true);
     }
   }
 });
@@ -859,13 +865,15 @@ test("preserves the local power nets and renders without circuit errors", () => 
   );
   expect(circuitErrors).toEqual([]);
 
-  const powerGroundLabels = powerJson.filter(
-    (element) =>
-      element.type === "schematic_net_label" &&
-      element.text === "GND" &&
-      element.symbol_name === "rail_down",
-  );
-  expect(powerGroundLabels).toHaveLength(4);
+  expect(
+    powerJson
+      .filter(
+        (element): element is SourceTrace => element.type === "source_trace",
+      )
+      .map((trace) => trace.name)
+      .filter((name) => name?.startsWith("GND_"))
+      .sort(),
+  ).toEqual(["GND_C11_pin2", "GND_C12_pin2", "GND_C13_pin2", "GND_C14_pin2"]);
 });
 
 test("uses named traces for source signals without explicit net-label components", () => {
@@ -891,14 +899,16 @@ test("uses named traces for source signals without explicit net-label components
     .map((trace) => trace.name)
     .filter(Boolean)
     .sort();
-  expect(namedSignalTraces).toEqual([
-    "ADCMOTOR",
-    "BIAS-A",
-    "BIAS-B",
-    "TIMER",
-    "V-MINUS-INPUT",
-    "V-PLUS-INPUT",
-  ]);
+  expect(namedSignalTraces).toEqual(
+    expect.arrayContaining([
+      "ADCMOTOR",
+      "BIAS-A",
+      "BIAS-B",
+      "TIMER",
+      "V-MINUS-INPUT",
+      "V-PLUS-INPUT",
+    ]),
+  );
 
   const motorInputNets = Object.fromEntries(
     signalJson
@@ -938,21 +948,15 @@ test("uses named traces for source signals without explicit net-label components
     ),
   ).toEqual([]);
 
-  const u2V5Labels = signalJson.filter(
-    (element): element is SchematicNetLabel =>
-      element.type === "schematic_net_label" &&
-      element.text === "V5" &&
-      [
-        getSchematicPort(signalJson, "U2", 6).center.x,
-        getSchematicPort(signalJson, "U2", 7).center.x,
-      ].includes(element.anchor_position?.x ?? Number.NaN),
-  );
-  expect(
-    u2V5Labels.map((label) => [label.anchor_side, label.symbol_name]),
-  ).toEqual([
-    ["bottom", "rail_up"],
-    ["left", undefined],
-  ]);
+  for (const pinNumber of [6, 7]) {
+    expect(
+      hasNativeNetTrace(
+        signalJson,
+        getSourcePort(signalJson, "U2", pinNumber).source_port_id,
+        "V5",
+      ),
+    ).toBe(true);
+  }
 
   const traceOwnedSignalLabels = signalJson.filter(
     (element): element is SchematicText =>
@@ -1060,21 +1064,9 @@ test("joins the child power rails in the composite without circuit errors", () =
         representationName,
         Number(symbolPinNumber),
       );
-      const labelsAtStem = compositeJson.filter(
-        (element): element is SchematicNetLabel =>
-          element.type === "schematic_net_label" &&
-          element.anchor_position !== undefined &&
-          Math.abs(element.anchor_position.x - projectedPort.center.x) < 1e-6 &&
-          Math.abs(element.anchor_position.y - projectedPort.center.y) < 1e-6,
-      );
-
-      expect(labelsAtStem.length).toBeGreaterThanOrEqual(1);
-      expect(new Set(labelsAtStem.map((label) => label.text))).toEqual(
-        new Set([netName]),
-      );
-      expect(new Set(labelsAtStem.map((label) => label.symbol_name))).toEqual(
-        new Set([netName === "GND" ? "rail_down" : "rail_up"]),
-      );
+      expect(
+        hasNativeNetTrace(compositeJson, projectedPort.source_port_id, netName),
+      ).toBe(true);
     }
   }
 });

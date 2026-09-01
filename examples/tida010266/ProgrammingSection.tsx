@@ -123,61 +123,53 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
       <trace from=".J2 > .GND_3" to=".J2 > .GND_5" />
       <trace from=".J2 > .GND_5" to=".J2 > .GND_7" />
       <trace from=".J2 > .GND_7" to=".J2 > .GND_9" />
-      <netlabel
-        net="V3_3"
-        connectsTo=".J2 > .V3_3"
-        schX={2.1}
-        schY={1.6}
-        anchorSide="right"
+      <trace
+        name="V3_3_J2_V3_3"
+        from=".J2 > .V3_3"
+        to="net.V3_3"
+        schDisplayLabel="V3_3"
       />
-      <netlabel
-        net="V3_3"
-        connectsTo=".R2 > .pin1"
-        schX={-8}
-        schY={2.7}
-        anchorSide="bottom"
+      <trace
+        name="V3_3_R2_pin1"
+        from=".R2 > .pin1"
+        to="net.V3_3"
+        schDisplayLabel="V3_3"
       />
-      <netlabel
-        net="RST"
-        connectsTo=".J2 > .RST"
-        schX={4.8}
-        schY={0}
-        anchorSide="left"
+      <trace
+        name="RST_J2_RST"
+        from=".J2 > .RST"
+        to="net.RST"
+        schDisplayLabel="RST"
       />
-      <netlabel
-        net="RST"
-        connectsTo=".S1 > .pin1"
-        schX={-9.5}
-        schY={0.65}
-        anchorSide="right"
+      <trace
+        name="RST_S1_pin1"
+        from=".S1 > .pin1"
+        to="net.RST"
+        schDisplayLabel="RST"
       />
-      <netlabel
-        net="GND"
-        connectsTo=".J2 > .GND_7"
-        schX={2.1}
-        schY={0.4}
-        anchorSide="right"
+      <trace
+        name="GND_J2_GND_7"
+        from=".J2 > .GND_7"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
-      <netlabel
-        net="GND"
-        connectsTo=".S1 > .pin3"
-        schX={-4}
-        schY={-1.2}
-        anchorSide="top"
+      <trace
+        name="GND_S1_pin3"
+        from=".S1 > .pin3"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
-      <netlabel
-        net="SWDIO"
-        connectsTo=".R1 > .pin2"
-        schX={7.5}
-        schY={1.4}
-        anchorSide="left"
+      <trace
+        name="SWDIO_R1_pin2"
+        from=".R1 > .pin2"
+        to="net.SWDIO"
+        schDisplayLabel="SWDIO"
       />
-      <netlabel
-        net="SWCLK"
-        connectsTo=".R5 > .pin2"
-        schX={7.5}
-        schY={0.6}
-        anchorSide="left"
+      <trace
+        name="SWCLK_R5_pin2"
+        from=".R5 > .pin2"
+        to="net.SWCLK"
+        schDisplayLabel="SWCLK"
       />
       <TIDA010266InlineNetPorts
         originX={originX}

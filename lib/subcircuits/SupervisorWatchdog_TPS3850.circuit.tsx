@@ -181,11 +181,36 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
       schRotation={90}
     />
 
-    <netlabel net="V3_3" connectsTo=".C11 > .pin1" />
-    <netlabel net="V3_3" connectsTo=".C13 > .pin1" />
-    <netlabel net="V3_3" connectsTo=".R21 > .pin2" />
-    <netlabel net="V3_3" connectsTo=".R5 > .pin2" />
-    <netlabel net="V3_3" connectsTo=".R6 > .pin2" />
+    <trace
+      name="V3_3_C11_pin1"
+      from=".C11 > .pin1"
+      to="net.V3_3"
+      schDisplayLabel="V3_3"
+    />
+    <trace
+      name="V3_3_C13_pin1"
+      from=".C13 > .pin1"
+      to="net.V3_3"
+      schDisplayLabel="V3_3"
+    />
+    <trace
+      name="V3_3_R21_pin2"
+      from=".R21 > .pin2"
+      to="net.V3_3"
+      schDisplayLabel="V3_3"
+    />
+    <trace
+      name="V3_3_R5_pin2"
+      from=".R5 > .pin2"
+      to="net.V3_3"
+      schDisplayLabel="V3_3"
+    />
+    <trace
+      name="V3_3_R6_pin2"
+      from=".R6 > .pin2"
+      to="net.V3_3"
+      schDisplayLabel="V3_3"
+    />
 
     <trace
       path={[".U3 > .pin1", ".U3 > .pin3", ".C11 > .pin1", ".J1 > .pin1"]}
@@ -230,11 +255,36 @@ export const SupervisorWatchdog_TPS3850 = (props: SubcircuitProps) => (
     <trace path={[".U3 > .pin9", ".R6 > .pin1", ".D8 > .pin1"]} />
     <trace path={[".R15 > .pin2", ".D8 > .pin2"]} />
     <trace path={[".U3 > .pin5", ".U3 > .pin11"]} />
-    <netlabel net="GND" connectsTo=".U3 > .pin5" />
-    <netlabel net="GND" connectsTo=".C11 > .pin2" />
-    <netlabel net="GND" connectsTo=".C13 > .pin2" />
-    <netlabel net="GND" connectsTo=".J1 > .pin3" />
-    <netlabel net="GND" connectsTo=".C12 > .pin2" />
+    <trace
+      name="GND_U3_pin5"
+      from=".U3 > .pin5"
+      to="net.GND"
+      schDisplayLabel="GND"
+    />
+    <trace
+      name="GND_C11_pin2"
+      from=".C11 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
+    />
+    <trace
+      name="GND_C13_pin2"
+      from=".C13 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
+    />
+    <trace
+      name="GND_J1_pin3"
+      from=".J1 > .pin3"
+      to="net.GND"
+      schDisplayLabel="GND"
+    />
+    <trace
+      name="GND_C12_pin2"
+      from=".C12 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
+    />
 
     <port name="V3_3" direction="left" connectsTo="C11.pin1" />
     <port name="GND" direction="left" connectsTo="U3.GND" />
