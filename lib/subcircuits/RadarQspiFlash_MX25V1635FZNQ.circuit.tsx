@@ -216,33 +216,29 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
       to=".C101 > .pin1"
     />
 
-    <netlabel
-      net="PMIC_3V3"
-      schX={6.096}
-      schY={9.144}
-      anchorSide="bottom"
-      connectsTo=".U9 > .VCC"
+    <trace
+      name="PMIC_3V3_U9_VCC"
+      from=".U9 > .VCC"
+      to="net.PMIC_3V3"
+      schDisplayLabel="PMIC_3V3"
     />
-    <netlabel
-      net="PMIC_3V3"
-      schX={-7.9248}
-      schY={5.4864}
-      anchorSide="bottom"
-      connectsTo=".R43 > .pin2"
+    <trace
+      name="PMIC_3V3_R43_pin2"
+      from=".R43 > .pin2"
+      to="net.PMIC_3V3"
+      schDisplayLabel="PMIC_3V3"
     />
-    <netlabel
-      net="GND"
-      schX={18.8976}
-      schY={-4.2672}
-      anchorSide="top"
-      connectsTo=".U9 > .GND"
+    <trace
+      name="GND_U9_GND"
+      from=".U9 > .GND"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      schX={7.9248}
-      schY={4.2672}
-      anchorSide="top"
-      connectsTo=".C100 > .pin1"
+    <trace
+      name="GND_C100_pin1"
+      from=".C100 > .pin1"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
   </subcircuit>
 );

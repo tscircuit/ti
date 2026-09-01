@@ -54,7 +54,12 @@ export const VoltageReference_ATL431LI_TIDA010266 = (
           connections={{ pin1: "net.VREF_2_5", pin2: "net.GND" }}
         />
       ))}
-      <netlabel net="GND" connectsTo=".U3 > .ANODE" anchorSide="top" />
+      <trace
+        name="GND_U3_ANODE"
+        from=".U3 > .ANODE"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
       <port
         name="GND"
         schX={originX}

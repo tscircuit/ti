@@ -198,7 +198,12 @@ export const Microcontroller_MSPM0L1306_TIDA010266 = (
             direction="left"
             connectsTo={`net.${net}`}
           />
-          <netlabel net={net} connectsTo={`.U4 > .${pin}`} inline />
+          <trace
+            name={[net, `.U4 > .${pin}`].join("-")}
+            from={`.U4 > .${pin}`}
+            to={`net.${net}`}
+            schDisplayLabel={net}
+          />
         </Fragment>
       ))}
       <port
@@ -217,23 +222,48 @@ export const Microcontroller_MSPM0L1306_TIDA010266 = (
         ".C8 > .pin2",
       ].map((connectsTo) => (
         <Fragment key={`GND-${connectsTo}`}>
-          <netlabel net="GND" connectsTo={connectsTo} inline />
+          <trace
+            name={["GND", connectsTo].join("-")}
+            from={connectsTo}
+            to="net.GND"
+            schDisplayLabel="GND"
+          />
         </Fragment>
       ))}
       {[".C6 > .pin1", ".C7 > .pin1", ".R7 > .pin1", ".R8 > .pin1"].map(
         (connectsTo) => (
           <Fragment key={`V3_3-${connectsTo}`}>
-            <netlabel net="V3_3" connectsTo={connectsTo} inline />
+            <trace
+              name={["V3_3", connectsTo].join("-")}
+              from={connectsTo}
+              to="net.V3_3"
+              schDisplayLabel="V3_3"
+            />
           </Fragment>
         ),
       )}
       {[".U4 > .VCORE", ".C8 > .pin1"].map((connectsTo) => (
         <Fragment key={`VCORE-${connectsTo}`}>
-          <netlabel net="VCORE" connectsTo={connectsTo} inline />
+          <trace
+            name={["VCORE", connectsTo].join("-")}
+            from={connectsTo}
+            to="net.VCORE"
+            schDisplayLabel="VCORE"
+          />
         </Fragment>
       ))}
-      <netlabel net="SCL" connectsTo=".R7 > .pin2" inline />
-      <netlabel net="SDA" connectsTo=".R8 > .pin2" inline />
+      <trace
+        name="SCL_R7_pin2"
+        from=".R7 > .pin2"
+        to="net.SCL"
+        schDisplayLabel="SCL"
+      />
+      <trace
+        name="SDA_R8_pin2"
+        from=".R8 > .pin2"
+        to="net.SDA"
+        schDisplayLabel="SDA"
+      />
 
       <capacitor
         name="C6"

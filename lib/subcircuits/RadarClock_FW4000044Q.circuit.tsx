@@ -70,19 +70,17 @@ export const RadarClockSection_FW4000044Q = ({
     <trace name="XTAL_CASE_GND_LEFT" from=".Y1 > .CASE_1" to=".C14 > .pin2" />
     <trace name="XTAL_CASE_GND_RIGHT" from=".Y1 > .CASE_2" to=".C71 > .pin2" />
 
-    <netlabel
-      net="GND"
-      schX={-2.921}
-      schY={-1.27}
-      anchorSide="top"
-      connectsTo=".C14 > .pin2"
+    <trace
+      name="GND_C14_pin2"
+      from=".C14 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      schX={2.667}
-      schY={-1.27}
-      anchorSide="top"
-      connectsTo=".C71 > .pin2"
+    <trace
+      name="GND_C71_pin2"
+      from=".C71 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     <schematictext

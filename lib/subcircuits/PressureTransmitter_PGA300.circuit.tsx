@@ -91,82 +91,61 @@ export const PressureTransmitter_PGA300 = (props: SubcircuitProps) => (
       ]}
     />
 
-    <netlabel
-      net="VBRGP"
-      connectsTo="U1.VBRGP"
-      schX={-12.1}
-      schY={1.4}
-      anchorSide="right"
+    <trace
+      name="VBRGP_U1_VBRGP"
+      from="U1.VBRGP"
+      to="net.VBRGP"
+      schDisplayLabel="VBRGP"
     />
-    <netlabel
-      net="VINPP"
-      connectsTo="R2.pin1"
-      schX={-12.1}
-      schY={0.95}
-      anchorSide="right"
+    <trace
+      name="VINPP_R2_pin1"
+      from="R2.pin1"
+      to="net.VINPP"
+      schDisplayLabel="VINPP"
     />
-    <netlabel
-      net="VINPN"
-      connectsTo="R3.pin1"
-      schX={-12.1}
-      schY={0.15}
-      anchorSide="right"
+    <trace
+      name="VINPN_R3_pin1"
+      from="R3.pin1"
+      to="net.VINPN"
+      schDisplayLabel="VINPN"
     />
-    <netlabel
-      net="Vdd"
-      connectsTo="R4.pin2"
-      schX={13.7}
-      schY={1.7}
-      anchorSide="left"
+    <trace
+      name="Vdd_R4_pin2"
+      from="R4.pin2"
+      to="net.Vdd"
+      schDisplayLabel="Vdd"
     />
-    <netlabel
-      net="Ireturn"
-      connectsTo="D3.pin2"
-      schX={13.7}
-      schY={-0.42}
-      anchorSide="left"
+    <trace
+      name="Ireturn_D3_pin2"
+      from="D3.pin2"
+      to="net.Ireturn"
+      schDisplayLabel="Ireturn"
     />
-    <netlabel
-      net="GND"
-      connectsTo="U1.GND"
-      schX={-0.7}
-      schY={1.895}
-      anchorSide="left"
+    <trace name="GND_U1_GND" from="U1.GND" to="net.GND" schDisplayLabel="GND" />
+    <trace name="GND_U1_PAD" from="U1.PAD" to="net.GND" schDisplayLabel="GND" />
+    <trace
+      name="GND_C1_pin2"
+      from="C1.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connectsTo="U1.PAD"
-      schX={-7.4}
-      schY={-3.2}
-      anchorSide="top"
+    <trace
+      name="GND_C2_pin2"
+      from="C2.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connectsTo="C1.pin2"
-      schX={1.45}
-      schY={-0.85}
-      anchorSide="top"
+    <trace
+      name="GND_C3_pin2"
+      from="C3.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connectsTo="C2.pin2"
-      schX={0.35}
-      schY={-0.85}
-      anchorSide="top"
-    />
-    <netlabel
-      net="GND"
-      connectsTo="C3.pin2"
-      schX={-0.75}
-      schY={-0.85}
-      anchorSide="top"
-    />
-    <netlabel
-      net="GND"
-      connectsTo="R1.pin2"
-      schX={5.49}
-      schY={-2.25}
-      anchorSide="top"
+    <trace
+      name="GND_R1_pin2"
+      from="R1.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     <resistor

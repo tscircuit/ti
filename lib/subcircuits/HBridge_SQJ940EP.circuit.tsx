@@ -270,12 +270,11 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
         { x: 0.365563, y: 3.778674 },
       ]}
     />
-    <netlabel
-      net="GND"
-      connectsTo="C1.pin2"
-      schX={-0.913907}
-      schY={2.924502}
-      anchorSide="top"
+    <trace
+      name="GND_C1_pin2"
+      from="C1.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     {/* Left bridge midpoint, exactly following the source junctions. */}
@@ -379,21 +378,19 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
         { x: 0, y: -2.010595 },
       ]}
     />
-    <netlabel
-      net="SP"
-      connectsTo="NT5.pin2"
-      schX={1.645032}
-      schY={-1.827814}
-      anchorSide="left"
+    <trace
+      name="SP_NT5_pin2"
+      from="NT5.pin2"
+      to="net.SP"
+      schDisplayLabel="SP"
     />
     <trace from="C16.pin1" to="NT5.pin2" />
 
-    <netlabel
-      net="GND"
-      connectsTo="R1.pin2"
-      schX={0}
-      schY={-3.107283}
-      anchorSide="top"
+    <trace
+      name="GND_R1_pin2"
+      from="R1.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
     <trace
       from="R1.pin2"
@@ -403,12 +400,11 @@ export const HBridge_SQJ940EP = (props: SubcircuitProps) => (
         { x: 0.365563, y: -2.924502 },
       ]}
     />
-    <netlabel
-      net="SN"
-      connectsTo="NT6.pin2"
-      schX={1.645032}
-      schY={-2.924502}
-      anchorSide="left"
+    <trace
+      name="SN_NT6_pin2"
+      from="NT6.pin2"
+      to="net.SN"
+      schDisplayLabel="SN"
     />
     <trace
       from="C16.pin2"

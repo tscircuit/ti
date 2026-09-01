@@ -144,20 +144,34 @@ export const MotorThermalProtection_TMP390 = (props: SubcircuitProps) => (
     <trace from="R2.pin2" to="net.GND" />
     <trace from="R3.pin1" to="net.VDDIO" />
     <trace from="R4.pin1" to="net.VDDIO" />
-    <netlabel
-      net="OUTA"
-      connectsTo={["U1.OUTA", "R3.pin2"]}
-      schX={5.2}
-      schY={0.1}
-      anchorSide="left"
-    />
-    <netlabel
-      net="OUTB"
-      connectsTo={["U1.OUTB", "R4.pin2"]}
-      schX={5.2}
-      schY={-0.1}
-      anchorSide="left"
-    />
+    <>
+      <trace
+        name="OUTA_U1_OUTA"
+        from="U1.OUTA"
+        to="net.OUTA"
+        schDisplayLabel="OUTA"
+      />
+      <trace
+        name="OUTA_R3_pin2"
+        from="R3.pin2"
+        to="net.OUTA"
+        schDisplayLabel="OUTA"
+      />
+    </>
+    <>
+      <trace
+        name="OUTB_U1_OUTB"
+        from="U1.OUTB"
+        to="net.OUTB"
+        schDisplayLabel="OUTB"
+      />
+      <trace
+        name="OUTB_R4_pin2"
+        from="R4.pin2"
+        to="net.OUTB"
+        schDisplayLabel="OUTB"
+      />
+    </>
     <schematicpath
       points={[
         { x: 5.2, y: 0.1 },

@@ -124,26 +124,37 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     />
 
     {/* Type-C VBUS input rail, discharge resistor, and ESD clamp. */}
-    <netlabel
-      net="VBUS_IN"
-      connectsTo={["R25.pin1", "D6.pin1", "Q1.drain"]}
-      schX={-4.8}
-      schY={2.3}
-      anchorSide="bottom"
+    <>
+      <trace
+        name="VBUS_IN_R25_pin1"
+        from="R25.pin1"
+        to="net.VBUS_IN"
+        schDisplayLabel="VBUS_IN"
+      />
+      <trace
+        name="VBUS_IN_D6_pin1"
+        from="D6.pin1"
+        to="net.VBUS_IN"
+        schDisplayLabel="VBUS_IN"
+      />
+      <trace
+        name="VBUS_IN_Q1_drain"
+        from="Q1.drain"
+        to="net.VBUS_IN"
+        schDisplayLabel="VBUS_IN"
+      />
+    </>
+    <trace
+      name="GND_R25_pin2"
+      from="R25.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connectsTo="R25.pin2"
-      schX={-6.2}
-      schY={-0.85}
-      anchorSide="top"
-    />
-    <netlabel
-      net="GND"
-      connectsTo="D6.pin2"
-      schX={-4.6}
-      schY={-0.85}
-      anchorSide="top"
+    <trace
+      name="GND_D6_pin2"
+      from="D6.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     {/* Q1 gate and protected VBUS output follow the reference left-to-right. */}
@@ -153,32 +164,65 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <trace from="U7.OUT2" to="U7.OUT3" />
 
     {/* Pull-ups and logic nets use TI's displayed names. */}
-    <netlabel
-      net="V5_COM"
-      connectsTo={["R23.pin2", "R24.pin2"]}
-      schX={0.95}
-      schY={3.0}
-      anchorSide="bottom"
-    />
-    <netlabel
-      net="USB_ID"
-      connectsTo={["R23.pin1", "U7.EN_NOT"]}
-      schX={0}
-      schY={1.95}
-      anchorSide="right"
-    />
+    <>
+      <trace
+        name="V5_COM_R23_pin2"
+        from="R23.pin2"
+        to="net.V5_COM"
+        schDisplayLabel="V5_COM"
+      />
+      <trace
+        name="V5_COM_R24_pin2"
+        from="R24.pin2"
+        to="net.V5_COM"
+        schDisplayLabel="V5_COM"
+      />
+    </>
+    <>
+      <trace
+        name="USB_ID_R23_pin1"
+        from="R23.pin1"
+        to="net.USB_ID"
+        schDisplayLabel="USB_ID"
+      />
+      <trace
+        name="USB_ID_U7_EN_NOT"
+        from="U7.EN_NOT"
+        to="net.USB_ID"
+        schDisplayLabel="USB_ID"
+      />
+    </>
     <trace from="R24.pin1" to="U7.FLT_NOT" />
     <trace from="R24.pin1" to="R34.pin2" />
     <trace from="R34.pin1" to="net.VCONN_FLT" schDisplayLabel="VCONN_FLT" />
 
     {/* U7 input, gate, current-limit, and local ground rails. */}
-    <netlabel
-      net="V5_COM"
-      connectsTo={["U7.IN1", "U7.IN2", "U7.IN3", "C10.pin1"]}
-      schX={4.65}
-      schY={3.0}
-      anchorSide="bottom"
-    />
+    <>
+      <trace
+        name="V5_COM_U7_IN1"
+        from="U7.IN1"
+        to="net.V5_COM"
+        schDisplayLabel="V5_COM"
+      />
+      <trace
+        name="V5_COM_U7_IN2"
+        from="U7.IN2"
+        to="net.V5_COM"
+        schDisplayLabel="V5_COM"
+      />
+      <trace
+        name="V5_COM_U7_IN3"
+        from="U7.IN3"
+        to="net.V5_COM"
+        schDisplayLabel="V5_COM"
+      />
+      <trace
+        name="V5_COM_C10_pin1"
+        from="C10.pin1"
+        to="net.V5_COM"
+        schDisplayLabel="V5_COM"
+      />
+    </>
     <trace from="U7.GATE" to="C11.pin1" />
     <trace from="U7.ILIM" to="R26.pin1" />
 
@@ -187,23 +231,21 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <trace from="U7.GND3" to="R26.pin2" />
     <trace from="R26.pin2" to="C11.pin2" />
     <trace from="C11.pin2" to="C10.pin2" />
-    <netlabel
-      net="GND"
-      connectsTo="R26.pin2"
-      schX={5.45}
-      schY={-1.65}
-      anchorSide="top"
+    <trace
+      name="GND_R26_pin2"
+      from="R26.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     <trace from="U7.GND4" to="U7.GND5" />
     <trace from="U7.GND5" to="U7.GND6" />
     <trace from="U7.PWPD" to="R26.pin2" />
-    <netlabel
-      net="GND"
-      connectsTo="U7.GND5"
-      schX={1.55}
-      schY={-1.9}
-      anchorSide="top"
+    <trace
+      name="GND_U7_GND5"
+      from="U7.GND5"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
   </subcircuit>
 );

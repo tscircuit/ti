@@ -73,19 +73,17 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     {/* Input rail and local input bypass. */}
     <trace from="U3P3.VIN" to="C1_3P3.pin1" />
     <trace from="C1_3P3.pin1" to="R3P3_BYP.pin1" />
-    <netlabel
-      net="VIN_DC_DC"
-      connectsTo="U3P3.VIN"
-      schX={-3.2}
-      schY={0.35}
-      anchorSide="right"
+    <trace
+      name="VIN_DC_DC_U3P3_VIN"
+      from="U3P3.VIN"
+      to="net.VIN_DC_DC"
+      schDisplayLabel="VIN_DC_DC"
     />
-    <netlabel
-      net="EN_3P3"
-      connectsTo="U3P3.EN"
-      schX={-3.2}
-      schY={-0.35}
-      anchorSide="right"
+    <trace
+      name="EN_3P3_U3P3_EN"
+      from="U3P3.EN"
+      to="net.EN_3P3"
+      schDisplayLabel="EN_3P3"
     />
 
     {/* Buck switch node, feedback, output capacitor, and bypass option. */}
@@ -95,7 +93,12 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <trace from="L3P3.pin2" to="R3_3P3.pin1" />
     <trace from="L3P3.pin2" to="C2_3P3.pin1" schDisplayLabel="V3P3_AON" />
     <trace from="R3P3_BYP.pin2" to="L3P3.pin2" />
-    <netlabel net="V3P3_AON" connectsTo="R3P3_BYP.pin2" inline />
+    <trace
+      name="V3P3_AON_R3P3_BYP_pin2"
+      from="R3P3_BYP.pin2"
+      to="net.V3P3_AON"
+      schDisplayLabel="V3P3_AON"
+    />
 
     {/* Power-good pull-up and exported status rail. */}
     <trace
@@ -106,35 +109,31 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
         { x: -2.4, y: -0.8 },
       ]}
     />
-    <netlabel
-      net="V3P3_PG"
-      connectsTo="R3_3P3.pin2"
-      schX={6.2}
-      schY={-0.55}
-      anchorSide="left"
+    <trace
+      name="V3P3_PG_R3_3P3_pin2"
+      from="R3_3P3.pin2"
+      to="net.V3P3_PG"
+      schDisplayLabel="V3P3_PG"
     />
 
     {/* Keep ground returns local, as on the TI reference sheet. */}
-    <netlabel
-      net="GND"
-      connectsTo="C1_3P3.pin2"
-      schX={-2.05}
-      schY={-1.25}
-      anchorSide="top"
+    <trace
+      name="GND_C1_3P3_pin2"
+      from="C1_3P3.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connectsTo="U3P3.GND"
-      schX={1.1}
-      schY={-1.25}
-      anchorSide="top"
+    <trace
+      name="GND_U3P3_GND"
+      from="U3P3.GND"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connectsTo="C2_3P3.pin2"
-      schX={4.85}
-      schY={-1.25}
-      anchorSide="top"
+    <trace
+      name="GND_C2_3P3_pin2"
+      from="C2_3P3.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
   </subcircuit>
 );
