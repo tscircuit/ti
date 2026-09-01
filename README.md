@@ -340,6 +340,8 @@ The package currently exports these subcircuit components:
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSPM0G5117`
+- `Microcontroller_MSPM0G5187`
 - `Microcontroller_MSP430FR6007`
 - `Microcontroller_MSP430FR6007_MultiSheet`
 - `Microcontroller_MSPM0L1306Q1_TIDA020065` ([TIDA-020065](https://www.ti.com/tool/TIDA-020065))
