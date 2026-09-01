@@ -422,8 +422,11 @@ chip is listed individually below, including whether it supports a
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSP430FR6007` | `lqfp_100` | `MSP430FR6007IPZ` |
+| `MSPM0C1104` | `vssop_20_dgs`, `wson_8_dsg` | `MSPM0C1104SDGS20R`, `MSPM0C1104SDSGR` |
 | `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
+| `MSPM33C321A` | `-` | `MSPM33C321ASPZR` |
+| `MSPM33C3219` | `-` | `MSPM33C3219SPZR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `OPT3004` | `uson_6_ep_2x2` | `OPT3004DNPR` |
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |

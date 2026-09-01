@@ -60,12 +60,20 @@ export { LMV324A } from "./LMV324A.circuit.tsx";
 export { MSP430G2230ID } from "./MSP430G2230ID.circuit.tsx";
 export { MSP430F5229 } from "./MSP430F5229.circuit.tsx";
 export { MSP430FR6007 } from "./MSP430FR6007.circuit.tsx";
+export { MSPM0C1104 } from "./MSPM0C1104.circuit.tsx";
 export { MSPM0L1306 } from "./MSPM0L1306.circuit.tsx";
 export {
   MSPM0L1306Q1,
   MSPM0L1306QRHBRQ1,
 } from "./MSPM0L1306QRHBRQ1.circuit.tsx";
 export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";
+export {
+  MSPM33C3219,
+  MSPM33C3219SPZR,
+  MSPM33C321A,
+  MSPM33C321ASPZR,
+  MSPM33C321XSPZR_PIN_LABELS,
+} from "./MSPM33C321xSPZR.circuit.tsx";
 export { MSPM0G3507 } from "./MSPM0G3507.circuit.tsx";
 export { OPT3004 } from "./OPT3004.circuit.tsx";
 export { OPT3001, OPT3001IDNPRQ1 } from "./OPT3001IDNPRQ1.circuit.tsx";
@@ -166,6 +174,14 @@ export { LMV324AIPWR } from "./LMV324AIPWR.circuit.tsx";
 export { LP5892QRRFRQ1 } from "./LP5892QRRFRQ1.circuit.tsx";
 export { MSP430F5229IRGCR } from "./MSP430F5229IRGCR.circuit.tsx";
 export { MSP430FR6007IPZ } from "./MSP430FR6007IPZ.circuit.tsx";
+export {
+  MSPM0C1104SDGS20R,
+  MSPM0C1104SDGS20R_PIN_LABELS,
+} from "../../imports/MSPM0C1104SDGS20R.tsx";
+export {
+  MSPM0C1104SDSGR,
+  MSPM0C1104SDSGR_PIN_LABELS,
+} from "../../imports/MSPM0C1104SDSGR.tsx";
 export { MSPM0L1306SRHBR } from "../../imports/MSPM0L1306SRHBR.tsx";
 export { MSP430G2332IPW20 } from "./MSP430G2332IPW20.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
