@@ -22,7 +22,7 @@
     "@tscircuit/props": "0.0.643",
     "@xyflow/react": "12.11.5",
     "circuit-json": "0.0.479",
-    "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#a9b522ba982805bb7051065453d2bcc706f1b7e1",
+    "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#9a6ddfee3ea0b1abed92842d8fa9b39da04d1d55",
     "circuit-json-to-kicad": "0.0.181",
     "circuit-to-svg": "0.0.410",
     "comlink": "4.4.2",
