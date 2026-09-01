@@ -76,6 +76,7 @@ export {
 } from "./MSPM33C321xSPZR.circuit.tsx";
 export { MSPM0G3507 } from "./MSPM0G3507.circuit.tsx";
 export { MSPM0G5117 } from "./MSPM0G5117.circuit.tsx";
+export { MSPM0G5187 } from "./MSPM0G5187.circuit.tsx";
 export { OPT3004 } from "./OPT3004.circuit.tsx";
 export { OPT3001, OPT3001IDNPRQ1 } from "./OPT3001IDNPRQ1.circuit.tsx";
 export { SN65HVD1473 } from "./SN65HVD1473.circuit.tsx";
@@ -190,6 +191,10 @@ export {
   MSPM0G5117SPMR,
   MSPM0G5117SPMR_PIN_LABELS,
 } from "./MSPM0G5117SPMR.circuit.tsx";
+export {
+  MSPM0G5187SPMR,
+  MSPM0G5187SPMR_PIN_LABELS,
+} from "./MSPM0G5187SPMR.circuit.tsx";
 export { OPT3004DNPR } from "./OPT3004DNPR.circuit.tsx";
 export { SN65HVD1473DGSR } from "./SN65HVD1473DGSR.circuit.tsx";
 export { SMPP2_03 } from "./SMPP2_03.circuit.tsx";

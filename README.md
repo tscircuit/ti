@@ -426,6 +426,7 @@ chip is listed individually below, including whether it supports a
 | `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `MSPM0G5117` | `lqfp_64` | `MSPM0G5117SPMR` |
+| `MSPM0G5187` | `lqfp_64` | `MSPM0G5187SPMR` |
 | `MSPM33C321A` | `-` | `MSPM33C321ASPZR` |
 | `MSPM33C3219` | `-` | `MSPM33C3219SPZR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
