@@ -43,10 +43,15 @@ import {
   MSP430G2332IPW20,
   MSP430F5229,
   MSP430FR6007,
+  MSPM0C1104,
   MSPM0L1306,
   MSPM0L1306Q1,
+  MSPM33C3219,
+  MSPM33C321A,
   MSPM33C3x,
   MSPM0G3507,
+  MSPM0G5117,
+  MSPM0G5187,
   MX25V1635FZNQ,
   OPT3001,
   OPT3004,
@@ -133,6 +138,8 @@ import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudio
 import { Microcontroller_MSPM0L1306 } from "./lib/subcircuits/Microcontroller_MSPM0L1306.circuit.tsx";
 import { Microcontroller_MSPM0L1306Q1_TIDA020065 } from "./lib/subcircuits/Microcontroller_MSPM0L1306Q1_TIDA020065.circuit.tsx";
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
+import { Microcontroller_MSPM0G5117 } from "./lib/subcircuits/Microcontroller_MSPM0G5117.circuit.tsx";
+import { Microcontroller_MSPM0G5187 } from "./lib/subcircuits/Microcontroller_MSPM0G5187.circuit.tsx";
 import { Microcontroller_MSP430FR6007 } from "./lib/subcircuits/Microcontroller_MSP430FR6007.circuit.tsx";
 import { Microcontroller_MSP430FR6007_MultiSheet } from "./lib/subcircuits/Microcontroller_MSP430FR6007_MultiSheet.circuit.tsx";
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
@@ -253,6 +260,8 @@ export {
   Microcontroller_MSPM0L1306,
   Microcontroller_MSPM0L1306Q1_TIDA020065,
   Microcontroller_MSPM0G3507,
+  Microcontroller_MSPM0G5117,
+  Microcontroller_MSPM0G5187,
   Microcontroller_MSP430FR6007,
   Microcontroller_MSP430FR6007_MultiSheet,
   Microcontroller_MSPM33C3x,
@@ -355,10 +364,15 @@ export const TiChipComponents = {
   MSP430G2332IPW20,
   MSP430F5229,
   MSP430FR6007,
+  MSPM0C1104,
   MSPM0L1306,
   MSPM0L1306Q1,
+  MSPM33C3219,
+  MSPM33C321A,
   MSPM33C3x,
   MSPM0G3507,
+  MSPM0G5117,
+  MSPM0G5187,
   MX25V1635FZNQ,
   OPT3001,
   OPT3004,
@@ -453,6 +467,8 @@ export const TiSubcircuitComponents = {
   Microcontroller_MSPM0L1306,
   Microcontroller_MSPM0L1306Q1_TIDA020065,
   Microcontroller_MSPM0G3507,
+  Microcontroller_MSPM0G5117,
+  Microcontroller_MSPM0G5187,
   Microcontroller_MSP430FR6007,
   Microcontroller_MSP430FR6007_MultiSheet,
   Microcontroller_MSPM33C3x,

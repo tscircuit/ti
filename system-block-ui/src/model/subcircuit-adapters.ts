@@ -65,6 +65,87 @@ const adapter = (
   };
 };
 
+const mspm0g51x7Adapter = ({
+  id,
+  partNumber,
+  componentName,
+  sourceFile,
+  edgeAi = false,
+}: {
+  id: string;
+  partNumber: string;
+  componentName: string;
+  sourceFile: string;
+  edgeAi?: boolean;
+}): SubcircuitDefinition =>
+  adapter({
+    id,
+    title: `${partNumber} Microcontroller`,
+    description: `USB-capable 80 MHz MSPM0 MCU with TI-recommended power, reset, VCORE, VUSB33, ROSC, I2C, and SWD support${edgeAi ? " plus a TinyEngine NPU" : ""}.`,
+    category: "Processors",
+    componentName,
+    sourceFile,
+    tags: [
+      "mcu",
+      "mspm0",
+      "usb",
+      "i2c",
+      "swd",
+      ...(edgeAi ? ["edge-ai", "npu"] : []),
+    ],
+    ports: [
+      powerPort({
+        id: "power-in",
+        label: "3.3 V MCU and USB Power",
+        role: "consumer",
+        voltage: { min: 3, max: 3.6, nominal: 3.3 },
+        positive: [".VDD"],
+        ground: [".GND"],
+        protocol: "logic-3v3",
+      }),
+      {
+        id: "i2c",
+        label: "I2C",
+        kind: "data",
+        role: "host",
+        protocol: "i2c",
+        requiredSignals: ["scl", "sda"],
+        allowMultiple: true,
+        signals: [
+          signal("scl", "output", [".I2C0_SCL"]),
+          signal("sda", "bidirectional", [".I2C0_SDA"]),
+        ],
+      },
+      {
+        id: "usb-device",
+        label: "USB Device",
+        kind: "data",
+        role: "device",
+        protocol: "usb",
+        requiredSignals: ["positive", "negative", "ground"],
+        signals: [
+          signal("positive", "bidirectional", [".USB_DP"]),
+          signal("negative", "bidirectional", [".USB_DM"]),
+          signal("ground", "passive", [".GND"]),
+        ],
+      },
+      {
+        id: "swd",
+        label: "Serial Wire Debug",
+        kind: "data",
+        role: "device",
+        protocol: "swd",
+        requiredSignals: ["swdio", "swclk"],
+        signals: [
+          signal("swdio", "bidirectional", [".SWDIO"]),
+          signal("swclk", "input", [".SWCLK"]),
+          signal("reset", "input", [".NRST"], false),
+          signal("ground", "passive", [".GND"], false),
+        ],
+      },
+    ],
+  });
+
 /**
  * Hand-authored electrical metadata for subcircuits whose interfaces are known.
  * All other repository subcircuits are still discovered by catalog.ts, but have
@@ -1084,6 +1165,19 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
         ],
       },
     ],
+  }),
+  mspm0g51x7Adapter({
+    id: "microcontroller-mspm0g5117",
+    partNumber: "MSPM0G5117",
+    componentName: "Microcontroller_MSPM0G5117",
+    sourceFile: "Microcontroller_MSPM0G5117.circuit.tsx",
+  }),
+  mspm0g51x7Adapter({
+    id: "microcontroller-mspm0g5187",
+    partNumber: "MSPM0G5187",
+    componentName: "Microcontroller_MSPM0G5187",
+    sourceFile: "Microcontroller_MSPM0G5187.circuit.tsx",
+    edgeAi: true,
   }),
   adapter({
     id: "electrochromic-mirror-driver-tida01539",
