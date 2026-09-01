@@ -13,7 +13,7 @@
         "@tscircuit/props": "0.0.643",
         "@xyflow/react": "12.11.5",
         "circuit-json": "0.0.479",
-        "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#a9b522ba982805bb7051065453d2bcc706f1b7e1",
+        "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#9a6ddfee3ea0b1abed92842d8fa9b39da04d1d55",
         "circuit-json-to-kicad": "0.0.181",
         "circuit-to-svg": "0.0.410",
         "comlink": "4.4.2",
@@ -239,7 +239,7 @@
 
     "circuit-json": ["circuit-json@0.0.479", "", { "peerDependencies": { "format-si-unit": "*" } }, "sha512-nFmjnYUxeyTDp+7QBPa8j6BiB1knY5KHO+r7gsegjpCHxhgALcVAo+sNavk92n7RQZfIn2NzS4G8VqvOFQNrLw=="],
 
-    "circuit-json-to-altium": ["circuit-json-to-altium@github:tscircuit/circuit-json-to-altium#a9b522b", { "dependencies": { "altiumts": "github:tscircuit/altiumts#f95e9b1a859bc433444c25ec3fd283718c032408", "cfb": "^1.2.2", "circuit-json": "^0.0.480", "color-string": "2.1.4", "jszip": "^3.10.1", "schematic-symbols": "^0.0.239", "transformation-matrix": "^3.1.0" } }, "tscircuit-circuit-json-to-altium-a9b522b", "sha512-690viKYek7zm7qAi5Ahj3hBqhozmymKoGMP3P496vg8RiTA/rgLRlLBTF4hFrAxWZvsBM6PwJHhPqmyVYdIfjQ=="],
+    "circuit-json-to-altium": ["circuit-json-to-altium@github:tscircuit/circuit-json-to-altium#9a6ddfe", { "dependencies": { "altiumts": "github:tscircuit/altiumts#1731aebcd23f7fc072aa42d5839a0aab8ee1e548", "cfb": "^1.2.2", "circuit-json": "^0.0.480", "color-string": "2.1.4", "jszip": "^3.10.1", "schematic-symbols": "^0.0.239", "transformation-matrix": "^3.1.0" } }, "tscircuit-circuit-json-to-altium-9a6ddfe", "sha512-JmAVfLXhdL+70/ml/9pIYSGZeaIhigbRFMltxjHP2Mnu4k62F4XMIm1DgMe4CF4wmaRYko9DXrn9Lx4Az4i1AQ=="],
 
     "circuit-json-to-bpc": ["circuit-json-to-bpc@0.0.14", "", { "peerDependencies": { "bpc-graph": "*", "circuit-json": "*", "typescript": "^5" } }, "sha512-jcgWTgkFepJzSbX8LOk+ZcuZFLVun7EVslfRF1LnZK5pPFWhfSMWE+PJUTDBGIikgs3mYZ4IIZSkjpmMfXvFhA=="],
 
