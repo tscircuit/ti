@@ -53,7 +53,11 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
       manufacturerPartNumber="ESD5Z6.0T1G"
       supplierPartNumbers={{ jlcpcb: ["C82323"] }}
       footprint={ESD5Z6_0T1G_FOOTPRINT}
-      variant="zener"
+      zener
+      pinLabels={{
+        pin1: ["cathode", "neg"],
+        pin2: ["anode", "pos"],
+      }}
       schX={-4.6}
       schY={0.87}
       schRotation={90}
