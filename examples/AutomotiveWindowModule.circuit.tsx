@@ -30,15 +30,11 @@ export default () => (
       name="communication_interface"
       displayName="Communication Interface"
       sheetIndex={2}
-      sheetWidth="180mm"
-      sheetHeight="120mm"
     />
     <schematicsheet
       name="motor_driver"
       displayName="Motor Driver"
       sheetIndex={3}
-      sheetWidth="240mm"
-      sheetHeight="140mm"
     />
     <schematicsheet
       name="pinch_detection"
@@ -51,15 +47,11 @@ export default () => (
       name="motor_thermal_protection"
       displayName="Motor Thermal Protection"
       sheetIndex={5}
-      sheetWidth="140mm"
-      sheetHeight="100mm"
     />
     <schematicsheet
       name="position_feedback"
       displayName="Position Feedback"
       sheetIndex={6}
-      sheetWidth="120mm"
-      sheetHeight="110mm"
     />
 
     <net name="VBATT" isPowerNet />
@@ -93,11 +85,7 @@ export default () => (
     <net name="MOTOR_OUT_2" />
 
     {/* PowerSupply_WindowModule owns its two source-authentic schematic sheets. */}
-    <PowerSupply_WindowModule
-      name="powerSupply"
-      schematicSheetWidth="450mm"
-      schematicSheetHeight="280mm"
-    />
+    <PowerSupply_WindowModule name="powerSupply" />
     <CommunicationInterface_LIN_TLIN1028
       name="communicationInterface"
       schSheetName="communication_interface"
@@ -105,8 +93,6 @@ export default () => (
     {/* The MSP430 target-board implementation owns its reference_full sheet. */}
     <Microcontroller_MSP430FR6007
       name="microcontroller"
-      schematicSheetWidth="560mm"
-      schematicSheetHeight="360mm"
       connections={{
         AVCC: "net.V3_3",
         DVCC: "net.V3_3",

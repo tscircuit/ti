@@ -4,11 +4,6 @@ import { ReverseBatteryProtection_TLV1805_SQJ461EP } from "./ReverseBatteryProte
 import { SupervisorWatchdog_TPS3850 } from "./SupervisorWatchdog_TPS3850.circuit.tsx";
 import { VoltageRegulator_LM73605 } from "./VoltageRegulator_LM73605.circuit.tsx";
 
-export type PowerSupplyWindowModuleProps = SubcircuitProps & {
-  schematicSheetWidth?: string | number;
-  schematicSheetHeight?: string | number;
-};
-
 // Both sheet-2 children use source-relative coordinates. Their documented
 // Altium-origin difference is (0.509, -12.192) mm. Keep the source X offset and
 // add a documented +1.6-mm native-sheet Y packing translation to bring the
@@ -34,33 +29,24 @@ const MAIN_SUPPLY_SHEET_Y_OFFSET = 6.2;
  * parent joins only the verified sheet nets; it does not synthesize
  * thresholds, timing, dividers, or grounding arrangements.
  *
- * Both sheet frames default to native ANSI-B sizing, matching the released
- * Altium title blocks. A parent example may enlarge the frames without moving
- * or scaling any child geometry. A uniform +6.2-mm parent translation centers
- * the Main Supply layout vertically. The regulator child additionally receives
- * the documented +1.6-mm Y packing translation above.
+ * Main Supply keeps the larger native ANSI-B frame needed by its layout.
+ * Watchdog and Vref fits on the default A4 sheet. A uniform +6.2-mm parent
+ * translation centers the Main Supply layout vertically. The regulator child
+ * additionally receives the documented +1.6-mm Y packing translation above;
+ * no child geometry is scaled.
  */
-export const PowerSupply_WindowModule = ({
-  schematicSheetWidth,
-  schematicSheetHeight,
-  ...props
-}: PowerSupplyWindowModuleProps) => (
+export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
     <schematicsheet
       name="main_supply"
       displayName="Main Supply"
       sheetIndex={0}
       sheetSize="ANSI_B"
-      sheetWidth={schematicSheetWidth}
-      sheetHeight={schematicSheetHeight}
     />
     <schematicsheet
       name="watchdog_and_vref"
       displayName="Watchdog and Vref"
       sheetIndex={1}
-      sheetSize="ANSI_B"
-      sheetWidth={schematicSheetWidth}
-      sheetHeight={schematicSheetHeight}
     />
 
     <net name="GND" isPowerNet isGroundNet />

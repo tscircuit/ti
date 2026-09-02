@@ -89,6 +89,18 @@ test("builds the automotive window module from its seven reusable blocks", () =>
   expect(artifacts.tsx).toContain(
     '<schematicsheet\n      name="pinch_detection"\n      displayName="TIDA-01421 Pinch Detection"\n      sheetIndex={4}\n      sheetWidth="430mm"\n      sheetHeight="280mm"',
   );
+  for (const sheetName of [
+    "communication_interface",
+    "motor_driver",
+    "motor_thermal_protection",
+    "position_feedback",
+  ]) {
+    const sheet = artifacts.tsx.match(
+      new RegExp(`<schematicsheet\\s+name="${sheetName}"[\\s\\S]*?/>`),
+    )?.[0];
+    expect(sheet).toBeDefined();
+    expect(sheet).not.toMatch(/sheetSize|sheetWidth|sheetHeight/);
+  }
   expect(artifacts.systemDiagramSvg).toContain(
     'data-connection-id="data_motor_control" data-kind="data"',
   );

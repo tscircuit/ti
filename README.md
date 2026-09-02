@@ -80,7 +80,8 @@ The [`AutomotiveWindowModule.circuit.tsx`](examples/AutomotiveWindowModule.circu
 example composes the power supply, LIN interface, MCU, motor driver,
 anti-pinch detection, motor thermal protection, and position-feedback blocks
 from TI's Automotive Window Module diagram into one connected multi-sheet
-design.
+design. Sheets use default A4 pages; only Main Supply, the MSP430 reference,
+and Pinch Detection use larger frames to contain their circuits.
 
 The [`ConsumerWirelessModule.circuit.tsx`](examples/ConsumerWirelessModule.circuit.tsx)
 example assembles the seven reviewed references behind TI's Consumer wireless

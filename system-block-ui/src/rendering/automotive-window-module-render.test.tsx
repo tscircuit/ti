@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { getSchematicElementBounds } from "@tscircuit/circuit-json-util";
+import type { AnyCircuitElement } from "circuit-json";
 import { unzipSync } from "fflate";
 import {
   createSystemBlockExamples,
@@ -63,6 +65,55 @@ const loadRepositorySources = async (
   return sources;
 };
 
+const expectWindowSheetSizes = (circuitJson: AnyCircuitElement[]) => {
+  const dimensionsBySheet = {
+    communication_interface: [297, 210],
+    motor_driver: [297, 210],
+    motor_thermal_protection: [297, 210],
+    position_feedback: [297, 210],
+    watchdog_and_vref: [297, 210],
+    main_supply: [431.8, 279.4],
+    reference_full: [500, 330],
+    pinch_detection: [430, 280],
+  } as const;
+
+  // Native sheet rendering maps the 1.1-unit resistor span to KiCad's 10.16 mm
+  // and reserves a 5 mm inner margin on each side of the physical page.
+  const schematicUnitToMm = 10.16 / 1.1;
+  for (const [name, [width, height]] of Object.entries(dimensionsBySheet)) {
+    const sheet = circuitJson.find(
+      (element) => element.type === "schematic_sheet" && element.name === name,
+    );
+    expect(sheet).toMatchObject({ sheet_width: width, sheet_height: height });
+    if (sheet?.type !== "schematic_sheet") throw new Error(`Missing ${name}`);
+    if (width === 297 && height === 210) {
+      expect(sheet.sheet_size).toBe("a4");
+    }
+
+    const bounds = circuitJson.flatMap((element) => {
+      if (
+        (element.type !== "schematic_component" &&
+          element.type !== "schematic_trace" &&
+          element.type !== "schematic_net_label") ||
+        element.schematic_sheet_id !== sheet.schematic_sheet_id
+      ) {
+        return [];
+      }
+      const bounds = getSchematicElementBounds(element);
+      return bounds ? [bounds] : [];
+    });
+    expect(bounds.length).toBeGreaterThan(0);
+    const extentX = Math.max(
+      ...bounds.flatMap(({ minX, maxX }) => [Math.abs(minX), Math.abs(maxX)]),
+    );
+    const extentY = Math.max(
+      ...bounds.flatMap(({ minY, maxY }) => [Math.abs(minY), Math.abs(maxY)]),
+    );
+    expect(extentX).toBeLessThanOrEqual((width / 2 - 5) / schematicUnitToMm);
+    expect(extentY).toBeLessThanOrEqual((height / 2 - 5) / schematicUnitToMm);
+  }
+};
+
 test("Automotive Window Module renders every real schematic sheet", async () => {
   const repositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
   const sourceModules = await loadRepositorySources(repositoryRoot);
@@ -110,14 +161,7 @@ test("Automotive Window Module renders every real schematic sheet", async () => 
     "MSP430FR6007 Microcontroller",
   );
 
-  const pinchDetectionSheet = evaluated.circuitJson.find(
-    (element) =>
-      element.type === "schematic_sheet" && element.name === "pinch_detection",
-  );
-  expect(pinchDetectionSheet).toMatchObject({
-    sheet_width: 430,
-    sheet_height: 280,
-  });
+  expectWindowSheetSizes(evaluated.circuitJson);
 
   const errorTypes = getCircuitJsonErrors(evaluated.circuitJson).map(
     ({ error_type }) => error_type,
@@ -141,4 +185,23 @@ test("Automotive Window Module renders every real schematic sheet", async () => 
       fileName.endsWith(".kicad_sch"),
     ),
   ).toHaveLength(9);
+}, 120_000);
+
+test("standalone window example uses A4 unless the circuit needs a larger sheet", async () => {
+  const repositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
+  const sourceModules = await loadRepositorySources(repositoryRoot);
+  const source = await Bun.file(
+    join(repositoryRoot, "examples/AutomotiveWindowModule.circuit.tsx"),
+  ).text();
+  const evaluated = await evaluateGeneratedTsx(source, {
+    fsMap: createLocalTiPackageEvaluationFsMap(
+      automotiveWindowDefinitions,
+      sourceModules,
+    ),
+    mainComponentPath: "AutomotiveWindowModule.circuit.tsx",
+    timeoutMs: 120_000,
+  });
+
+  expect(evaluated.sheets).toHaveLength(8);
+  expectWindowSheetSizes(evaluated.circuitJson);
 }, 120_000);

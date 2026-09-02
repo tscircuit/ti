@@ -93,7 +93,7 @@ export interface SubcircuitDefinition {
    * traces address its internals with descendant selectors.
    */
   hasInternalSchematicSheets?: boolean;
-  /** Reviewed dimensions for the detail sheet generated around this block. */
+  /** Larger sheet dimensions only for blocks that do not fit default A4. */
   schematicSheetSize?: Readonly<{
     width: string;
     height: string;
