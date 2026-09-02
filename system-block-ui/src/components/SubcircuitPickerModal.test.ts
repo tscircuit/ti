@@ -5,14 +5,18 @@ import { getSelectableSubcircuitCandidates } from "./SubcircuitPickerModal";
 
 const definition = (
   id: string,
-  options: { canInstantiate?: boolean; category?: string } = {},
+  options: {
+    canInstantiate?: boolean;
+    category?: string;
+    sourcePath?: string;
+  } = {},
 ): SubcircuitDefinition => ({
   id,
   title: id,
   category: options.category ?? "Wireless",
   componentName: id.replaceAll("-", "_"),
   importPath: "@tsci/tscircuit.ti",
-  sourcePath: `lib/subcircuits/${id}.circuit.tsx`,
+  sourcePath: options.sourcePath ?? `lib/subcircuits/${id}.circuit.tsx`,
   canInstantiate: options.canInstantiate,
   ports: [],
 });
@@ -24,6 +28,9 @@ describe("subcircuit picker candidates", () => {
       definition("zeta-part"),
       definition("unavailable-part", { canInstantiate: false }),
       definition("power-part", { category: "Power" }),
+      definition("imported-chip", {
+        sourcePath: "lib/chips/imported-chip.circuit.tsx",
+      }),
       current,
       definition("alpha-part"),
     ];
