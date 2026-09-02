@@ -31,6 +31,16 @@ export function SubcircuitPickerModal({
   onClose,
   onSelect,
 }: SubcircuitPickerModalProps) {
+  const recommendationDefinitions = useMemo(
+    () =>
+      definitions.filter(
+        (definition) =>
+          definition.canInstantiate !== false &&
+          definition.sourcePath.startsWith("lib/subcircuits/") &&
+          definition.category === currentDefinition.category,
+      ),
+    [currentDefinition.category, definitions],
+  );
   const candidates = useMemo(
     () => getSelectableSubcircuitCandidates(definitions, currentDefinition),
     [currentDefinition, definitions],
@@ -43,7 +53,10 @@ export function SubcircuitPickerModal({
     let active = true;
     setRecommendedIds(new Set());
     if (candidates.length === 0) return;
-    void getTiRecommendations(currentDefinition.category, candidates).then(
+    void getTiRecommendations(
+      currentDefinition.category,
+      recommendationDefinitions,
+    ).then(
       (recommendations) => {
         if (!active) return;
         setRecommendedIds(recommendations.definitionIds);
@@ -53,7 +66,11 @@ export function SubcircuitPickerModal({
     return () => {
       active = false;
     };
-  }, [candidates, currentDefinition.category]);
+  }, [
+    candidates.length,
+    currentDefinition.category,
+    recommendationDefinitions,
+  ]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

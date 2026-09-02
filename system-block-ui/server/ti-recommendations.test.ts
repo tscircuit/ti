@@ -195,12 +195,20 @@ describe("TI MCP recommendation transport", () => {
     clearTiRecommendationCachesForTest();
     const originalFetch = globalThis.fetch;
     const rpcMethods: string[] = [];
+    let recommendationQuery = "";
     globalThis.fetch = (async (input, init) => {
       if (String(input).endsWith("/oauth")) {
         return Response.json({ access_token: "test-token", expires_in: 3600 });
       }
       const rpc = JSON.parse(String(init?.body)) as { method: string };
       rpcMethods.push(rpc.method);
+      if (rpc.method === "tools/call") {
+        recommendationQuery = (
+          rpc as unknown as {
+            params: { arguments: { query_input: { query: string } } };
+          }
+        ).params.arguments.query_input.query;
+      }
       if (rpc.method === "notifications/initialized") {
         return new Response(undefined, { status: 202 });
       }
@@ -241,7 +249,7 @@ describe("TI MCP recommendation transport", () => {
 
     try {
       const request = new Request(
-        "http://localhost/api/ti-recommendations?category=Wireless",
+        "http://localhost/api/ti-recommendations?category=Wireless&candidates=WirelessMCU_CC2340R5%2CBluetoothController_CC2564C",
       );
       const credentials = { clientId: "test-id", clientSecret: "test-secret" };
       const first = await handleTiRecommendationsRequest(request, credentials);
@@ -261,6 +269,9 @@ describe("TI MCP recommendation transport", () => {
       expect(
         rpcMethods.filter((method) => method === "tools/call"),
       ).toHaveLength(1);
+      expect(recommendationQuery).toContain(
+        "WirelessMCU_CC2340R5, BluetoothController_CC2564C",
+      );
     } finally {
       globalThis.fetch = originalFetch;
       clearTiRecommendationCachesForTest();

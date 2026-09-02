@@ -70,4 +70,23 @@ describe("TI recommendation matching", () => {
       clearTiRecommendationCacheForTest();
     }
   });
+
+  test("sends the available subcircuits as recommendation candidates", async () => {
+    clearTiRecommendationCacheForTest();
+    const originalFetch = globalThis.fetch;
+    let requestedUrl = "";
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      requestedUrl = String(input);
+      return Response.json({ recommendations: [] });
+    }) as unknown as typeof globalThis.fetch;
+
+    try {
+      await getTiRecommendations("Wireless", definitions);
+      const query = new URL(requestedUrl, "http://localhost").searchParams;
+      expect(query.get("candidates")).toBe("antenna,cc2340,cc2564");
+    } finally {
+      globalThis.fetch = originalFetch;
+      clearTiRecommendationCacheForTest();
+    }
+  });
 });

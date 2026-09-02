@@ -63,7 +63,15 @@ export function getTiRecommendations(
   let parts = recommendationCache.get(category);
   if (!parts) {
     const request = (async () => {
-      const query = new URLSearchParams({ category, format: "details" });
+      const candidates = definitions
+        .map((definition) => definition.componentName)
+        .sort((a, b) => a.localeCompare(b, "en"))
+        .join(",");
+      const query = new URLSearchParams({
+        candidates,
+        category,
+        format: "details",
+      });
       const response = await fetch(`/api/ti-recommendations?${query}`);
       if (!response.ok) {
         throw new Error(

@@ -438,6 +438,7 @@ async function postRpc(
 async function requestCategoryRecommendations(
   category: string,
   credentials: TiMcpCredentials,
+  candidates: readonly string[],
 ): Promise<readonly TiRecommendedPart[]> {
   const token = await getAccessToken(credentials);
   const initialized = await postRpc(token.value, {
@@ -492,7 +493,11 @@ async function requestCategoryRecommendations(
     };
   }
 
-  const query = `Recommend up to five widely applicable Texas Instruments products for ${category} applications. For every recommendation, return its exact part_number, full product_name, and a concise one-sentence description.`;
+  const candidateConstraint =
+    candidates.length > 0
+      ? ` Choose only from this exact list of available subcircuits: ${candidates.join(", ")}. Do not recommend products outside this list.`
+      : "";
+  const query = `Recommend up to five widely applicable Texas Instruments products for ${category} applications.${candidateConstraint} For every recommendation, return its exact part_number, full product_name, and a concise one-sentence description.`;
 
   const called = await postRpc(
     token.value,
@@ -524,18 +529,22 @@ async function requestCategoryRecommendations(
 function getCategoryRecommendations(
   category: string,
   credentials: TiMcpCredentials,
+  candidates: readonly string[],
 ): Promise<readonly TiRecommendedPart[]> {
   const now = Date.now();
-  const cached = recommendationCache.get(category);
+  const cacheKey = `${category}\0${candidates.join(",")}`;
+  const cached = recommendationCache.get(cacheKey);
   if (cached && cached.expiresAt > now) return cached.promise;
 
-  const promise = requestCategoryRecommendations(category, credentials).catch(
-    (error) => {
-      recommendationCache.delete(category);
-      throw error;
-    },
-  );
-  recommendationCache.set(category, {
+  const promise = requestCategoryRecommendations(
+    category,
+    credentials,
+    candidates,
+  ).catch((error) => {
+    recommendationCache.delete(cacheKey);
+    throw error;
+  });
+  recommendationCache.set(cacheKey, {
     expiresAt: now + RECOMMENDATION_TTL_MS,
     promise,
   });
@@ -552,7 +561,7 @@ export async function handleTiRecommendationsRequest(
   const url = new URL(request.url);
   if (
     [...url.searchParams.keys()].some(
-      (key) => key !== "category" && key !== "format",
+      (key) => key !== "candidates" && key !== "category" && key !== "format",
     ) ||
     (url.searchParams.has("format") &&
       url.searchParams.get("format") !== "details")
@@ -566,6 +575,24 @@ export async function handleTiRecommendationsRequest(
   if (!category || !SUPPORTED_CATEGORIES.has(category)) {
     return jsonResponse({ error: "Unsupported TI category." }, { status: 400 });
   }
+  const rawCandidates = url.searchParams.get("candidates")?.trim();
+  const candidates = rawCandidates
+    ? rawCandidates.split(",").map((candidate) => candidate.trim())
+    : [];
+  if (
+    candidates.length > 50 ||
+    candidates.some(
+      (candidate) =>
+        !candidate ||
+        candidate.length > 100 ||
+        !/^[A-Za-z0-9_]+$/.test(candidate),
+    )
+  ) {
+    return jsonResponse(
+      { error: "Unsupported TI recommendation candidate." },
+      { status: 400 },
+    );
+  }
   const resolvedCredentials = readCredentials(credentials);
   if (!resolvedCredentials) {
     return jsonResponse(
@@ -578,6 +605,7 @@ export async function handleTiRecommendationsRequest(
     const recommendations = await getCategoryRecommendations(
       category,
       resolvedCredentials,
+      candidates,
     );
     return jsonResponse({ recommendations }, { cache: true });
   } catch {
