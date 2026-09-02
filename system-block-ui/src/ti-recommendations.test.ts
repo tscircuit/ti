@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
 
 import type { SubcircuitDefinition } from "./model";
-import { matchTiRecommendedDefinitionIds } from "./ti-recommendations";
+import {
+  clearTiRecommendationCacheForTest,
+  getTiRecommendations,
+  matchTiRecommendedDefinitionIds,
+} from "./ti-recommendations";
 
 const definition = (id: string, title: string): SubcircuitDefinition => ({
   category: "Wireless",
@@ -13,16 +17,41 @@ const definition = (id: string, title: string): SubcircuitDefinition => ({
   title,
 });
 
+const definitions = [
+  definition("cc2340", "Wireless MCU CC2340 R5"),
+  definition("cc2564", "CC2564C Bluetooth Controller"),
+  definition("antenna", "W3006 Wireless Connectivity Antenna"),
+];
+
 describe("TI recommendation matching", () => {
   test("matches exact titles and part-number tokens only", () => {
-    const definitions = [
-      definition("cc2340", "Wireless MCU CC2340 R5"),
-      definition("cc2564", "CC2564C Bluetooth Controller"),
-      definition("antenna", "W3006 Wireless Connectivity Antenna"),
-    ];
-
     expect([
       ...matchTiRecommendedDefinitionIds(["CC2340R5", "W3006"], definitions),
     ]).toEqual(["cc2340", "antenna"]);
+  });
+
+  test("retries a category after a failed request", async () => {
+    clearTiRecommendationCacheForTest();
+    const originalFetch = globalThis.fetch;
+    let requestCount = 0;
+    globalThis.fetch = (async () => {
+      requestCount += 1;
+      return requestCount === 1
+        ? new Response(undefined, { status: 502 })
+        : Response.json({ partNumbers: ["CC2340R5"] });
+    }) as unknown as typeof globalThis.fetch;
+
+    try {
+      await expect(
+        getTiRecommendations("Wireless", definitions),
+      ).rejects.toThrow("HTTP 502");
+      expect(await getTiRecommendations("Wireless", definitions)).toMatchObject(
+        { partNumbers: ["CC2340R5"] },
+      );
+      expect(requestCount).toBe(2);
+    } finally {
+      globalThis.fetch = originalFetch;
+      clearTiRecommendationCacheForTest();
+    }
   });
 });

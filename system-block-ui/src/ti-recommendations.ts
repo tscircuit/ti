@@ -53,10 +53,14 @@ export function getTiRecommendations(
 ): Promise<TiRecommendations> {
   let partNumbers = recommendationCache.get(category);
   if (!partNumbers) {
-    partNumbers = (async () => {
+    const request = (async () => {
       const query = new URLSearchParams({ category });
       const response = await fetch(`/api/ti-recommendations?${query}`);
-      if (!response.ok) return [];
+      if (!response.ok) {
+        throw new Error(
+          `TI recommendations failed with HTTP ${response.status}.`,
+        );
+      }
       const payload = (await response.json()) as TiRecommendationResponse;
       if (Array.isArray(payload.partNumbers)) {
         return payload.partNumbers
@@ -66,8 +70,14 @@ export function getTiRecommendations(
           .slice(0, 5);
       }
       return [];
-    })().catch(() => []);
-    recommendationCache.set(category, partNumbers);
+    })();
+    partNumbers = request;
+    recommendationCache.set(category, request);
+    void request.catch(() => {
+      if (recommendationCache.get(category) === request) {
+        recommendationCache.delete(category);
+      }
+    });
   }
 
   return partNumbers.then((resolvedPartNumbers) => ({

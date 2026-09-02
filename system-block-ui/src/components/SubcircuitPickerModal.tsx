@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import type { SubcircuitDefinition } from "../model";
 import { getTiRecommendations } from "../ti-recommendations";
 
+type RecommendationStatus = "idle" | "loading" | "loaded" | "error";
+
 export function getSelectableSubcircuitCandidates(
   definitions: readonly SubcircuitDefinition[],
   currentDefinition: SubcircuitDefinition,
@@ -40,17 +42,24 @@ export function SubcircuitPickerModal({
   const [recommendedPartNumbers, setRecommendedPartNumbers] = useState<
     readonly string[]
   >([]);
+  const [recommendationStatus, setRecommendationStatus] =
+    useState<RecommendationStatus>("idle");
 
   useEffect(() => {
     let active = true;
     setRecommendedIds(new Set());
     setRecommendedPartNumbers([]);
+    setRecommendationStatus(candidates.length === 0 ? "idle" : "loading");
     if (candidates.length === 0) return;
     void getTiRecommendations(currentDefinition.category, candidates).then(
       (recommendations) => {
         if (!active) return;
         setRecommendedIds(recommendations.definitionIds);
         setRecommendedPartNumbers(recommendations.partNumbers);
+        setRecommendationStatus("loaded");
+      },
+      () => {
+        if (active) setRecommendationStatus("error");
       },
     );
     return () => {
@@ -99,14 +108,22 @@ export function SubcircuitPickerModal({
           </div>
 
           <div className="subcircuit-picker-results">
-            {recommendedPartNumbers.length > 0 && (
+            {(recommendationStatus === "loading" ||
+              recommendationStatus === "error" ||
+              recommendedPartNumbers.length > 0) && (
               <div
                 aria-label="Parts recommended by TI Support Intelligence"
                 aria-live="polite"
                 className="ti-recommendation-strip"
               >
                 <strong>TI suggestions</strong>
-                <span>{recommendedPartNumbers.join(" · ")}</span>
+                <span>
+                  {recommendationStatus === "loading"
+                    ? "Loading…"
+                    : recommendationStatus === "error"
+                      ? "Temporarily unavailable — reopen to retry"
+                      : recommendedPartNumbers.join(" · ")}
+                </span>
               </div>
             )}
 
