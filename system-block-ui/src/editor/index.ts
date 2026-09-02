@@ -9,6 +9,7 @@ export type {
   CreateSystemBlockEditorOptions,
   GraphChangeListener,
   RejectedConnection,
+  ReplaceBlockDefinitionResult,
   SemanticInterfaceSummary,
   SystemBlockConnection,
   SystemBlockConnectionData,

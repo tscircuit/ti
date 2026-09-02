@@ -41,6 +41,7 @@ import {
   type GraphChangeListener,
   normalizeConnectionKind,
   type RejectedConnection,
+  type ReplaceBlockDefinitionResult,
   type SystemBlockConnection,
   type SystemBlockGraphSnapshot,
   type SystemBlockInitialGraph,
@@ -136,6 +137,15 @@ function SystemBlockFlow({
       onEdgesChange={controller.handleEdgesChange}
       onInit={controller.attachFlowInstance}
       onNodesChange={controller.handleNodesChange}
+      onNodeClick={(event, node) => {
+        const target = event.target;
+        if (
+          !(target instanceof Element) ||
+          !target.closest(".system-block-card-action")
+        )
+          return;
+        controller.requestBlockSelection(node.id);
+      }}
       panOnScroll
       proOptions={{ hideAttribution: false }}
       selectionOnDrag
@@ -314,6 +324,11 @@ export class SystemBlockEditorController {
     this.lastConnectionRejection = undefined;
   };
 
+  readonly requestBlockSelection = (blockId: string): void => {
+    if (this.destroyed) return;
+    this.options.onBlockSelectionRequested?.(blockId);
+  };
+
   async addBlock(
     definition: SubcircuitDefinition,
     position: SystemBlockPosition = { x: 0, y: 0 },
@@ -414,6 +429,68 @@ export class SystemBlockEditorController {
     this.edges = this.edges.filter((edge) => edge.id !== id);
     this.publishRender(true);
     return true;
+  }
+
+  /** Replace one placed subcircuit while keeping every compatible connection. */
+  replaceBlockDefinition(
+    blockId: string,
+    definition: SubcircuitDefinition,
+  ): ReplaceBlockDefinitionResult {
+    this.assertAlive();
+    if (definition.canInstantiate === false) {
+      throw new Error(
+        definition.warning ?? "This subcircuit cannot be instantiated.",
+      );
+    }
+
+    const current = this.nodes.find((node) => node.id === blockId);
+    if (!current) throw missingBlockError(blockId);
+
+    this.definitions.set(definition.id, definition);
+    const nextBlock: BlockInstance = {
+      ...current.data.block,
+      definitionId: definition.id,
+      position: { ...current.position },
+    };
+    const replacement = {
+      ...createSystemBlockNode(nextBlock, definition),
+      selected: current.selected,
+    };
+    const nextNodes = this.nodes.map((node) =>
+      node.id === blockId ? replacement : node,
+    );
+    const nextEdges: SystemBlockConnection[] = [];
+    const removedConnections: LogicalConnection[] = [];
+
+    for (const edge of this.edges) {
+      const attempt = this.resolveLogicalConnection(
+        edge.data.logical,
+        nextNodes,
+        nextEdges,
+      );
+      if (!attempt.ok) {
+        removedConnections.push({ ...edge.data.logical });
+        continue;
+      }
+      nextEdges.push(
+        createSystemBlockConnection(
+          attempt.source,
+          attempt.target,
+          attempt.logical,
+          attempt.resolved,
+        ),
+      );
+    }
+
+    this.nodes = nextNodes;
+    this.edges = nextEdges;
+    this.publishRender(true);
+
+    return {
+      block: cloneBlock(nextBlock),
+      removedConnections,
+      retainedConnectionCount: nextEdges.length,
+    };
   }
 
   async clear(): Promise<boolean> {
