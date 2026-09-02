@@ -119,7 +119,3 @@ export function getTiRecommendations(
     parts: resolvedParts,
   }));
 }
-
-export function clearTiRecommendationCacheForTest(): void {
-  recommendationCache.clear();
-}

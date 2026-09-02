@@ -14,6 +14,7 @@ export function getSelectableSubcircuitCandidates(
   return definitions
     .filter(
       (definition) =>
+        definition.id !== currentDefinition.id &&
         definition.canInstantiate !== false &&
         definition.sourcePath.startsWith("lib/subcircuits/") &&
         definition.category === currentDefinition.category,
@@ -44,10 +45,15 @@ export function SubcircuitPickerModal({
       ),
     [currentDefinition.category, definitions],
   );
-  const candidates = useMemo(
-    () => getSelectableSubcircuitCandidates(definitions, currentDefinition),
-    [currentDefinition, definitions],
-  );
+  const candidates = useMemo(() => {
+    const selectable = getSelectableSubcircuitCandidates(
+      definitions,
+      currentDefinition,
+    );
+    return [currentDefinition, ...selectable].sort((a, b) =>
+      a.title.localeCompare(b.title, "en"),
+    );
+  }, [currentDefinition, definitions]);
   const [recommendedIds, setRecommendedIds] = useState<ReadonlySet<string>>(
     () => new Set(),
   );

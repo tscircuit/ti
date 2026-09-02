@@ -615,10 +615,3 @@ export async function handleTiRecommendationsRequest(
     );
   }
 }
-
-export function clearTiRecommendationCachesForTest(): void {
-  cachedToken = undefined;
-  pendingToken = undefined;
-  cachedProductSelectionTool = undefined;
-  recommendationCache.clear();
-}
