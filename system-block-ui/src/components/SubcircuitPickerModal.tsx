@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { SubcircuitDefinition } from "../model";
-import { getTiRecommendations } from "../ti-recommendations";
+import {
+  getTiRecommendations,
+  matchTiRecommendedDefinitionIds,
+  type TiRecommendedPart,
+} from "../ti-recommendations";
 
 export function getSelectableSubcircuitCandidates(
   definitions: readonly SubcircuitDefinition[],
@@ -47,12 +51,27 @@ export function SubcircuitPickerModal({
   const [recommendedIds, setRecommendedIds] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
+  const [recommendedParts, setRecommendedParts] = useState<
+    readonly TiRecommendedPart[]
+  >([]);
   const [isFetchingRecommendations, setIsFetchingRecommendations] =
     useState(false);
+  const widerPortfolioParts = useMemo(
+    () =>
+      recommendedParts.filter(
+        (part) =>
+          matchTiRecommendedDefinitionIds(
+            [part.partNumber],
+            recommendationDefinitions,
+          ).size === 0,
+      ),
+    [recommendationDefinitions, recommendedParts],
+  );
 
   useEffect(() => {
     let active = true;
     setRecommendedIds(new Set());
+    setRecommendedParts([]);
     if (candidates.length === 0) {
       setIsFetchingRecommendations(false);
       return;
@@ -65,6 +84,7 @@ export function SubcircuitPickerModal({
       (recommendations) => {
         if (!active) return;
         setRecommendedIds(recommendations.definitionIds);
+        setRecommendedParts(recommendations.parts);
         setIsFetchingRecommendations(false);
       },
       () => {
@@ -116,7 +136,7 @@ export function SubcircuitPickerModal({
 
         <div className="subcircuit-picker-catalog">
           <div className="subcircuit-picker-results-heading">
-            <span>Available parts</span>
+            <span>Available subcircuits</span>
             <div className="subcircuit-picker-results-summary">
               {isFetchingRecommendations && (
                 <span
@@ -133,6 +153,27 @@ export function SubcircuitPickerModal({
           </div>
 
           <div className="subcircuit-picker-results">
+            {widerPortfolioParts.length > 0 && (
+              <section
+                aria-label="Recommendations from the wider TI portfolio"
+                className="ti-portfolio-recommendations"
+              >
+                <div className="ti-portfolio-recommendations-heading">
+                  <strong>TI portfolio recommendations</strong>
+                  <small>{widerPortfolioParts.length}</small>
+                </div>
+                {widerPortfolioParts.map((part) => (
+                  <article className="ti-portfolio-part" key={part.partNumber}>
+                    <div>
+                      <strong>{part.name}</strong>
+                      <small>Recommended</small>
+                    </div>
+                    {part.description && <span>{part.description}</span>}
+                  </article>
+                ))}
+              </section>
+            )}
+
             {candidates.map((definition) => {
               const isCurrent = definition.id === currentDefinition.id;
               return (

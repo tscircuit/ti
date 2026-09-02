@@ -71,7 +71,7 @@ describe("TI recommendation matching", () => {
     }
   });
 
-  test("sends the available subcircuits as recommendation candidates", async () => {
+  test("requests recommendations from the wider TI portfolio", async () => {
     clearTiRecommendationCacheForTest();
     const originalFetch = globalThis.fetch;
     let requestedUrl = "";
@@ -83,7 +83,8 @@ describe("TI recommendation matching", () => {
     try {
       await getTiRecommendations("Wireless", definitions);
       const query = new URL(requestedUrl, "http://localhost").searchParams;
-      expect(query.get("candidates")).toBe("antenna,cc2340,cc2564");
+      expect(query.get("category")).toBe("Wireless");
+      expect(query.has("candidates")).toBe(false);
     } finally {
       globalThis.fetch = originalFetch;
       clearTiRecommendationCacheForTest();
