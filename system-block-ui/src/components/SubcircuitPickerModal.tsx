@@ -10,7 +10,8 @@ export function getSelectableSubcircuitCandidates(
     .filter(
       (definition) =>
         definition.id !== currentDefinition.id &&
-        definition.canInstantiate !== false,
+        definition.canInstantiate !== false &&
+        definition.category === currentDefinition.category,
     )
     .sort((a, b) => a.title.localeCompare(b.title, "en"));
 }

@@ -5,11 +5,11 @@ import { getSelectableSubcircuitCandidates } from "./SubcircuitPickerModal";
 
 const definition = (
   id: string,
-  options: { canInstantiate?: boolean } = {},
+  options: { canInstantiate?: boolean; category?: string } = {},
 ): SubcircuitDefinition => ({
   id,
   title: id,
-  category: "Wireless",
+  category: options.category ?? "Wireless",
   componentName: id.replaceAll("-", "_"),
   importPath: "@tsci/tscircuit.ti",
   sourcePath: `lib/subcircuits/${id}.circuit.tsx`,
@@ -18,11 +18,12 @@ const definition = (
 });
 
 describe("subcircuit picker candidates", () => {
-  test("shows only selectable replacement parts in alphabetical order", () => {
+  test("shows only selectable same-category parts in alphabetical order", () => {
     const current = definition("current-part");
     const candidates = [
       definition("zeta-part"),
       definition("unavailable-part", { canInstantiate: false }),
+      definition("power-part", { category: "Power" }),
       current,
       definition("alpha-part"),
     ];
