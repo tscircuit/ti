@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   clearTiRecommendationCachesForTest,
-  extractMcpRecommendedPartNumbers,
+  extractMcpRecommendations,
   findProductSelectionTool,
   handleTiRecommendationsRequest,
   parseMcpResponse,
@@ -17,15 +17,22 @@ describe("TI MCP recommendation transport", () => {
     ).toEqual({ jsonrpc: "2.0", id: 2, result: { content: [] } });
   });
 
-  test("extracts distinct recommended part numbers from finder output", () => {
+  test("extracts distinct recommended parts with names and descriptions", () => {
     expect(
-      extractMcpRecommendedPartNumbers({
+      extractMcpRecommendations({
         result: {
           content: [
             {
               text: JSON.stringify({
                 finding_events: [
-                  { data: { part_number: "CC2340R5" }, type: "finding" },
+                  {
+                    data: {
+                      description: "Low-power wireless MCU.",
+                      part_number: "CC2340R5",
+                      product_name: "SimpleLink wireless MCU",
+                    },
+                    type: "finding",
+                  },
                   { data: { part_number: "CC2340R5" }, type: "finding" },
                   { data: { part_number: "CC2564C" }, type: "finding" },
                 ],
@@ -35,12 +42,19 @@ describe("TI MCP recommendation transport", () => {
           ],
         },
       }),
-    ).toEqual(["CC2340R5", "CC2564C"]);
+    ).toEqual([
+      {
+        description: "Low-power wireless MCU.",
+        name: "CC2340R5 SimpleLink wireless MCU",
+        partNumber: "CC2340R5",
+      },
+      { description: "", name: "CC2564C", partNumber: "CC2564C" },
+    ]);
   });
 
   test("extracts part numbers from structured MCP content", () => {
     expect(
-      extractMcpRecommendedPartNumbers({
+      extractMcpRecommendations({
         result: {
           structuredContent: {
             finding_events: [
@@ -49,7 +63,46 @@ describe("TI MCP recommendation transport", () => {
           },
         },
       }),
-    ).toEqual(["CC2540"]);
+    ).toEqual([{ description: "", name: "CC2540", partNumber: "CC2540" }]);
+  });
+
+  test("builds display metadata from TI product family and feature facts", () => {
+    expect(
+      extractMcpRecommendations(
+        {
+          result: {
+            content: [
+              {
+                text: JSON.stringify({
+                  finding_events: [
+                    {
+                      data: {
+                        parameters: [
+                          { name: "Wide supply range" },
+                          { name: "Thermal shutdown" },
+                        ],
+                        part_number: "DRV104",
+                        product_family: "Motor Drivers",
+                      },
+                      type: "finding",
+                    },
+                  ],
+                }),
+                type: "text",
+              },
+            ],
+          },
+        },
+        "Drivers",
+      ),
+    ).toEqual([
+      {
+        description:
+          "From TI's Motor Drivers family, featuring Wide supply range and Thermal shutdown.",
+        name: "DRV104 Motor Drivers",
+        partNumber: "DRV104",
+      },
+    ]);
   });
 
   test("discovers the current product-selection tool from its capability", () => {
@@ -96,6 +149,26 @@ describe("TI MCP recommendation transport", () => {
     expect(response.status).toBe(400);
   });
 
+  test("accepts the versioned detailed response format", async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = (async () =>
+      new Response(undefined, {
+        status: 401,
+      })) as unknown as typeof globalThis.fetch;
+    try {
+      const response = await handleTiRecommendationsRequest(
+        new Request(
+          "http://localhost/api/ti-recommendations?category=Wireless&format=details",
+        ),
+        { clientId: "test-id", clientSecret: "test-secret" },
+      );
+      expect(response.status).toBe(502);
+    } finally {
+      globalThis.fetch = originalFetch;
+      clearTiRecommendationCachesForTest();
+    }
+  });
+
   test("reuses one TI recommendation call for the same category", async () => {
     clearTiRecommendationCachesForTest();
     const originalFetch = globalThis.fetch;
@@ -126,7 +199,14 @@ describe("TI MCP recommendation transport", () => {
             ? {
                 structuredContent: {
                   finding_events: [
-                    { data: { part_number: "CC2340R5" }, type: "finding" },
+                    {
+                      data: {
+                        description: "Low-power wireless MCU.",
+                        part_number: "CC2340R5",
+                        product_name: "SimpleLink wireless MCU",
+                      },
+                      type: "finding",
+                    },
                   ],
                 },
               }
@@ -145,8 +225,17 @@ describe("TI MCP recommendation transport", () => {
       const first = await handleTiRecommendationsRequest(request, credentials);
       const second = await handleTiRecommendationsRequest(request, credentials);
 
-      expect(await first.json()).toEqual({ partNumbers: ["CC2340R5"] });
-      expect(await second.json()).toEqual({ partNumbers: ["CC2340R5"] });
+      const payload = {
+        recommendations: [
+          {
+            description: "Low-power wireless MCU.",
+            name: "CC2340R5 SimpleLink wireless MCU",
+            partNumber: "CC2340R5",
+          },
+        ],
+      };
+      expect(await first.json()).toEqual(payload);
+      expect(await second.json()).toEqual(payload);
       expect(
         rpcMethods.filter((method) => method === "tools/call"),
       ).toHaveLength(1);

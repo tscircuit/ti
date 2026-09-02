@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { SubcircuitDefinition } from "../model";
-import { getTiRecommendations } from "../ti-recommendations";
+import {
+  getTiRecommendations,
+  type TiRecommendedPart,
+} from "../ti-recommendations";
 
 type RecommendationStatus = "idle" | "loading" | "loaded" | "error";
 
@@ -39,8 +42,8 @@ export function SubcircuitPickerModal({
   const [recommendedIds, setRecommendedIds] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
-  const [recommendedPartNumbers, setRecommendedPartNumbers] = useState<
-    readonly string[]
+  const [recommendedParts, setRecommendedParts] = useState<
+    readonly TiRecommendedPart[]
   >([]);
   const [recommendationStatus, setRecommendationStatus] =
     useState<RecommendationStatus>("idle");
@@ -48,14 +51,14 @@ export function SubcircuitPickerModal({
   useEffect(() => {
     let active = true;
     setRecommendedIds(new Set());
-    setRecommendedPartNumbers([]);
+    setRecommendedParts([]);
     setRecommendationStatus(candidates.length === 0 ? "idle" : "loading");
     if (candidates.length === 0) return;
     void getTiRecommendations(currentDefinition.category, candidates).then(
       (recommendations) => {
         if (!active) return;
         setRecommendedIds(recommendations.definitionIds);
-        setRecommendedPartNumbers(recommendations.partNumbers);
+        setRecommendedParts(recommendations.parts);
         setRecommendationStatus("loaded");
       },
       () => {
@@ -110,20 +113,37 @@ export function SubcircuitPickerModal({
           <div className="subcircuit-picker-results">
             {(recommendationStatus === "loading" ||
               recommendationStatus === "error" ||
-              recommendedPartNumbers.length > 0) && (
+              recommendedParts.length > 0) && (
               <div
                 aria-label="Parts recommended by TI Support Intelligence"
                 aria-live="polite"
-                className="ti-recommendation-strip"
+                className="ti-recommendation-group"
               >
-                <strong>TI suggestions</strong>
-                <span>
-                  {recommendationStatus === "loading"
-                    ? "Loading…"
-                    : recommendationStatus === "error"
-                      ? "Temporarily unavailable — reopen to retry"
-                      : recommendedPartNumbers.join(" · ")}
-                </span>
+                <div className="ti-recommendation-heading">
+                  <strong>TI recommended parts</strong>
+                  {recommendationStatus === "loaded" && (
+                    <small>{recommendedParts.length}</small>
+                  )}
+                </div>
+                {recommendationStatus === "loading" && (
+                  <div className="ti-recommendation-status">Loading…</div>
+                )}
+                {recommendationStatus === "error" && (
+                  <div className="ti-recommendation-status">
+                    Temporarily unavailable — reopen to retry
+                  </div>
+                )}
+                {recommendedParts.map((part) => (
+                  <article
+                    className="ti-recommendation-part"
+                    key={part.partNumber}
+                  >
+                    <div>
+                      <strong>{part.name}</strong>
+                    </div>
+                    {part.description && <span>{part.description}</span>}
+                  </article>
+                ))}
               </div>
             )}
 

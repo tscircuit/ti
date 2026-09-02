@@ -1,15 +1,24 @@
 import type { SubcircuitDefinition } from "./model";
 
 interface TiRecommendationResponse {
-  partNumbers?: unknown;
+  recommendations?: unknown;
+}
+
+export interface TiRecommendedPart {
+  description: string;
+  name: string;
+  partNumber: string;
 }
 
 export interface TiRecommendations {
   definitionIds: ReadonlySet<string>;
-  partNumbers: readonly string[];
+  parts: readonly TiRecommendedPart[];
 }
 
-const recommendationCache = new Map<string, Promise<readonly string[]>>();
+const recommendationCache = new Map<
+  string,
+  Promise<readonly TiRecommendedPart[]>
+>();
 
 function normalizePartText(value: string): string {
   return value
@@ -51,10 +60,10 @@ export function getTiRecommendations(
   category: string,
   definitions: readonly SubcircuitDefinition[],
 ): Promise<TiRecommendations> {
-  let partNumbers = recommendationCache.get(category);
-  if (!partNumbers) {
+  let parts = recommendationCache.get(category);
+  if (!parts) {
     const request = (async () => {
-      const query = new URLSearchParams({ category });
+      const query = new URLSearchParams({ category, format: "details" });
       const response = await fetch(`/api/ti-recommendations?${query}`);
       if (!response.ok) {
         throw new Error(
@@ -62,16 +71,35 @@ export function getTiRecommendations(
         );
       }
       const payload = (await response.json()) as TiRecommendationResponse;
-      if (Array.isArray(payload.partNumbers)) {
-        return payload.partNumbers
-          .filter((partNumber): partNumber is string =>
-            Boolean(typeof partNumber === "string" && partNumber.trim()),
+      if (Array.isArray(payload.recommendations)) {
+        return payload.recommendations
+          .filter((recommendation): recommendation is Record<string, unknown> =>
+            Boolean(recommendation && typeof recommendation === "object"),
           )
+          .map((recommendation) => ({
+            description:
+              typeof recommendation.description === "string"
+                ? recommendation.description.trim()
+                : "",
+            name:
+              typeof recommendation.name === "string"
+                ? recommendation.name.trim()
+                : "",
+            partNumber:
+              typeof recommendation.partNumber === "string"
+                ? recommendation.partNumber.trim()
+                : "",
+          }))
+          .filter((recommendation) => recommendation.partNumber)
+          .map((recommendation) => ({
+            ...recommendation,
+            name: recommendation.name || recommendation.partNumber,
+          }))
           .slice(0, 5);
       }
       return [];
     })();
-    partNumbers = request;
+    parts = request;
     recommendationCache.set(category, request);
     void request.catch(() => {
       if (recommendationCache.get(category) === request) {
@@ -80,12 +108,12 @@ export function getTiRecommendations(
     });
   }
 
-  return partNumbers.then((resolvedPartNumbers) => ({
+  return parts.then((resolvedParts) => ({
     definitionIds: matchTiRecommendedDefinitionIds(
-      resolvedPartNumbers,
+      resolvedParts.map((part) => part.partNumber),
       definitions,
     ),
-    partNumbers: resolvedPartNumbers,
+    parts: resolvedParts,
   }));
 }
 

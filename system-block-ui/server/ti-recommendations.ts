@@ -35,7 +35,13 @@ interface CachedToken {
 
 interface CachedRecommendation {
   expiresAt: number;
-  promise: Promise<readonly string[]>;
+  promise: Promise<readonly TiRecommendedPart[]>;
+}
+
+export interface TiRecommendedPart {
+  description: string;
+  name: string;
+  partNumber: string;
 }
 
 interface CachedProductSelectionTool {
@@ -108,42 +114,151 @@ export function parseMcpResponse(raw: string): RpcResponse | undefined {
   }
 }
 
-function collectPartNumbers(value: unknown, partNumbers: string[]): void {
-  if (partNumbers.length === 5) return;
+function firstString(
+  record: Record<string, unknown>,
+  keys: readonly string[],
+): string | undefined {
+  for (const key of keys) {
+    const value = record[key];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return undefined;
+}
+
+interface RecommendationFacts {
+  description?: string;
+  featureNames: string[];
+  name?: string;
+  partNumber: string;
+  productFamily?: string;
+}
+
+function collectRecommendationFacts(
+  value: unknown,
+  factsByPartNumber: Map<string, RecommendationFacts>,
+): void {
   if (typeof value === "string") {
     const trimmed = value.trim();
     if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) return;
     try {
-      collectPartNumbers(JSON.parse(trimmed), partNumbers);
+      collectRecommendationFacts(JSON.parse(trimmed), factsByPartNumber);
     } catch {
       // Some MCP content is prose rather than JSON finder output.
     }
     return;
   }
   if (Array.isArray(value)) {
-    for (const item of value) collectPartNumbers(item, partNumbers);
+    for (const item of value) {
+      collectRecommendationFacts(item, factsByPartNumber);
+    }
     return;
   }
   if (!value || typeof value !== "object") return;
-  const partNumber = (value as { part_number?: unknown }).part_number;
-  if (
-    typeof partNumber === "string" &&
-    partNumber.trim() &&
-    !partNumbers.includes(partNumber.trim())
-  ) {
-    partNumbers.push(partNumber.trim());
+  const record = value as Record<string, unknown>;
+  const rawPartNumber = record.part_number ?? record.partNumber;
+  const partNumber =
+    typeof rawPartNumber === "string" ? rawPartNumber.trim() : "";
+  if (partNumber) {
+    let facts = factsByPartNumber.get(partNumber);
+    if (!facts && factsByPartNumber.size < 5) {
+      facts = { featureNames: [], partNumber };
+      factsByPartNumber.set(partNumber, facts);
+    }
+    if (facts) {
+      facts.description ??= firstString(record, [
+        "description",
+        "short_description",
+        "shortDescription",
+        "product_description",
+        "productDescription",
+        "summary",
+      ]);
+      facts.name ??= firstString(record, [
+        "product_name",
+        "productName",
+        "product_title",
+        "productTitle",
+        "device_name",
+        "deviceName",
+        "generic_product_name",
+        "genericProductName",
+        "title",
+        "name",
+      ]);
+      facts.productFamily ??= firstString(record, [
+        "product_family",
+        "productFamily",
+      ]);
+      const parameters = record.parameters;
+      if (Array.isArray(parameters)) {
+        for (const parameter of parameters) {
+          if (!parameter || typeof parameter !== "object") continue;
+          const featureName = firstString(
+            parameter as Record<string, unknown>,
+            ["name"],
+          );
+          if (featureName && !facts.featureNames.includes(featureName)) {
+            facts.featureNames.push(featureName);
+          }
+        }
+      }
+    }
   }
   for (const [key, item] of Object.entries(value)) {
-    if (key !== "part_number") collectPartNumbers(item, partNumbers);
+    if (key !== "part_number" && key !== "partNumber") {
+      collectRecommendationFacts(item, factsByPartNumber);
+    }
   }
 }
 
-export function extractMcpRecommendedPartNumbers(
+function formatSeries(values: readonly string[]): string {
+  if (values.length < 2) return values[0] ?? "";
+  if (values.length === 2) return `${values[0]} and ${values[1]}`;
+  return `${values.slice(0, -1).join(", ")}, and ${values.at(-1)}`;
+}
+
+function includePartNumber(partNumber: string, name: string): string {
+  const normalizedPartNumber = partNumber.toLowerCase().replace(/\W/g, "");
+  const normalizedName = name.toLowerCase().replace(/\W/g, "");
+  return normalizedName.includes(normalizedPartNumber)
+    ? name
+    : `${partNumber} ${name}`;
+}
+
+function buildDescription(
+  facts: RecommendationFacts,
+  category?: string,
+): string {
+  if (facts.description) return facts.description;
+  const featureNames = facts.featureNames.slice(0, 3);
+  if (featureNames.length > 0) {
+    const prefix = facts.productFamily
+      ? `From TI's ${facts.productFamily} family, featuring`
+      : "Features";
+    return `${prefix} ${formatSeries(featureNames)}.`;
+  }
+  if (facts.productFamily && category) {
+    return `Recommended for ${category} applications from TI's ${facts.productFamily} family.`;
+  }
+  return "";
+}
+
+export function extractMcpRecommendations(
   response: RpcResponse,
-): readonly string[] {
-  const partNumbers: string[] = [];
-  collectPartNumbers(response.result, partNumbers);
-  return partNumbers;
+  category?: string,
+): readonly TiRecommendedPart[] {
+  const factsByPartNumber = new Map<string, RecommendationFacts>();
+  collectRecommendationFacts(response.result, factsByPartNumber);
+  return [...factsByPartNumber.values()].map((facts) => {
+    return {
+      description: buildDescription(facts, category),
+      name: includePartNumber(
+        facts.partNumber,
+        facts.name ?? facts.productFamily ?? facts.partNumber,
+      ),
+      partNumber: facts.partNumber,
+    };
+  });
 }
 
 export function findProductSelectionTool(
@@ -306,7 +421,7 @@ async function postRpc(
 async function requestCategoryRecommendations(
   category: string,
   credentials: TiMcpCredentials,
-): Promise<readonly string[]> {
+): Promise<readonly TiRecommendedPart[]> {
   const token = await getAccessToken(credentials);
   const initialized = await postRpc(token.value, {
     id: 1,
@@ -360,7 +475,7 @@ async function requestCategoryRecommendations(
     };
   }
 
-  const query = `Recommend up to five widely applicable Texas Instruments products for ${category} applications. Return exact TI product part numbers.`;
+  const query = `Recommend up to five widely applicable Texas Instruments products for ${category} applications. For every recommendation, return its exact part_number, full product_name, and a concise one-sentence description.`;
 
   const called = await postRpc(
     token.value,
@@ -386,13 +501,13 @@ async function requestCategoryRecommendations(
     throw new Error("TI MCP product selection failed.");
   }
   if (!called.response) return [];
-  return extractMcpRecommendedPartNumbers(called.response);
+  return extractMcpRecommendations(called.response, category);
 }
 
 function getCategoryRecommendations(
   category: string,
   credentials: TiMcpCredentials,
-): Promise<readonly string[]> {
+): Promise<readonly TiRecommendedPart[]> {
   const now = Date.now();
   const cached = recommendationCache.get(category);
   if (cached && cached.expiresAt > now) return cached.promise;
@@ -418,7 +533,13 @@ export async function handleTiRecommendationsRequest(
     return jsonResponse({ error: "Method not allowed." }, { status: 405 });
   }
   const url = new URL(request.url);
-  if ([...url.searchParams.keys()].some((key) => key !== "category")) {
+  if (
+    [...url.searchParams.keys()].some(
+      (key) => key !== "category" && key !== "format",
+    ) ||
+    (url.searchParams.has("format") &&
+      url.searchParams.get("format") !== "details")
+  ) {
     return jsonResponse(
       { error: "Unsupported query parameter." },
       { status: 400 },
@@ -437,11 +558,11 @@ export async function handleTiRecommendationsRequest(
   }
 
   try {
-    const partNumbers = await getCategoryRecommendations(
+    const recommendations = await getCategoryRecommendations(
       category,
       resolvedCredentials,
     );
-    return jsonResponse({ partNumbers }, { cache: true });
+    return jsonResponse({ recommendations }, { cache: true });
   } catch {
     return jsonResponse(
       { error: "TI recommendations are temporarily unavailable." },

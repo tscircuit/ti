@@ -38,7 +38,15 @@ describe("TI recommendation matching", () => {
       requestCount += 1;
       return requestCount === 1
         ? new Response(undefined, { status: 502 })
-        : Response.json({ partNumbers: ["CC2340R5"] });
+        : Response.json({
+            recommendations: [
+              {
+                description: "Low-power wireless MCU.",
+                name: "SimpleLink wireless MCU",
+                partNumber: "CC2340R5",
+              },
+            ],
+          });
     }) as unknown as typeof globalThis.fetch;
 
     try {
@@ -46,7 +54,15 @@ describe("TI recommendation matching", () => {
         getTiRecommendations("Wireless", definitions),
       ).rejects.toThrow("HTTP 502");
       expect(await getTiRecommendations("Wireless", definitions)).toMatchObject(
-        { partNumbers: ["CC2340R5"] },
+        {
+          parts: [
+            {
+              description: "Low-power wireless MCU.",
+              name: "SimpleLink wireless MCU",
+              partNumber: "CC2340R5",
+            },
+          ],
+        },
       );
       expect(requestCount).toBe(2);
     } finally {
