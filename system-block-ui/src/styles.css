@@ -931,6 +931,18 @@ button {
   font-weight: 720;
 }
 
+.ti-recommendation-part small {
+  flex: none;
+  padding: 3px 7px;
+  color: #22734b;
+  font-size: 9px;
+  font-weight: 720;
+  line-height: 1.2;
+  background: #edf8f2;
+  border: 1px solid #c8ead8;
+  border-radius: 999px;
+}
+
 .ti-recommendation-part span {
   display: -webkit-box;
   overflow: hidden;

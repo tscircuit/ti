@@ -120,7 +120,7 @@ export function SubcircuitPickerModal({
                 className="ti-recommendation-group"
               >
                 <div className="ti-recommendation-heading">
-                  <strong>TI recommended parts</strong>
+                  <strong>TI suggestions</strong>
                   {recommendationStatus === "loaded" && (
                     <small>{recommendedParts.length}</small>
                   )}
@@ -140,6 +140,7 @@ export function SubcircuitPickerModal({
                   >
                     <div>
                       <strong>{part.name}</strong>
+                      <small>Recommended</small>
                     </div>
                     {part.description && <span>{part.description}</span>}
                   </article>
@@ -159,7 +160,7 @@ export function SubcircuitPickerModal({
                   <strong>{definition.title}</strong>
                   {recommendedIds.has(definition.id) && (
                     <small title="Recommended by TI Support Intelligence">
-                      TI recommended
+                      Recommended
                     </small>
                   )}
                 </div>
