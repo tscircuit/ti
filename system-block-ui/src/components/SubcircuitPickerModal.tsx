@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { SubcircuitDefinition } from "../model";
+import { getTiRecommendations } from "../ti-recommendations";
 
 export function getSelectableSubcircuitCandidates(
   definitions: readonly SubcircuitDefinition[],
@@ -33,6 +34,29 @@ export function SubcircuitPickerModal({
     () => getSelectableSubcircuitCandidates(definitions, currentDefinition),
     [currentDefinition, definitions],
   );
+  const [recommendedIds, setRecommendedIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const [recommendedPartNumbers, setRecommendedPartNumbers] = useState<
+    readonly string[]
+  >([]);
+
+  useEffect(() => {
+    let active = true;
+    setRecommendedIds(new Set());
+    setRecommendedPartNumbers([]);
+    if (candidates.length === 0) return;
+    void getTiRecommendations(currentDefinition.category, candidates).then(
+      (recommendations) => {
+        if (!active) return;
+        setRecommendedIds(recommendations.definitionIds);
+        setRecommendedPartNumbers(recommendations.partNumbers);
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [candidates, currentDefinition.category]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -75,6 +99,17 @@ export function SubcircuitPickerModal({
           </div>
 
           <div className="subcircuit-picker-results">
+            {recommendedPartNumbers.length > 0 && (
+              <div
+                aria-label="Parts recommended by TI Support Intelligence"
+                aria-live="polite"
+                className="ti-recommendation-strip"
+              >
+                <strong>TI suggestions</strong>
+                <span>{recommendedPartNumbers.join(" · ")}</span>
+              </div>
+            )}
+
             {candidates.map((definition) => (
               <button
                 aria-label={`Select ${definition.title}`}
@@ -83,7 +118,14 @@ export function SubcircuitPickerModal({
                 onClick={() => onSelect(definition)}
                 type="button"
               >
-                <strong>{definition.title}</strong>
+                <div className="subcircuit-candidate-heading">
+                  <strong>{definition.title}</strong>
+                  {recommendedIds.has(definition.id) && (
+                    <small title="Recommended by TI Support Intelligence">
+                      TI recommended
+                    </small>
+                  )}
+                </div>
                 {definition.description && (
                   <span>{definition.description}</span>
                 )}

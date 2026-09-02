@@ -29,6 +29,12 @@ bun run dev
 Open the local HTTP URL printed by Vite. Schematic evaluation and evaluated
 downloads are supported when the application is served over HTTP.
 
+To show TI Support Intelligence recommendations in the subcircuit picker,
+copy `.env.example` to `.env.local` and set `TI_SIE_CLIENT_ID` and
+`TI_SIE_CLIENT_SECRET` to the OAuth client credentials supplied by Texas
+Instruments. The credentials stay in the local development server and must
+never use the `VITE_` prefix, which would expose them to browser code.
+
 To build the production application and serve that build locally:
 
 ```bash
@@ -50,6 +56,11 @@ npx vercel
 Use `npx vercel --prod` after checking the preview deployment. The configured
 install command performs a frozen install from `system-block-ui/bun.lock`; no
 dashboard build overrides are required.
+
+Configure `TI_SIE_CLIENT_ID` and `TI_SIE_CLIENT_SECRET` as encrypted Vercel
+project environment variables for Preview and Production deployments. The
+server-side recommendation endpoint reuses OAuth tokens and caches one result
+per block category for 24 hours to minimize TI MCP traffic.
 
 The remaining production checks are:
 

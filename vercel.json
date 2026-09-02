@@ -3,5 +3,10 @@
   "framework": "vite",
   "installCommand": "cd system-block-ui && bun install --frozen-lockfile --force",
   "buildCommand": "cd system-block-ui && bun run build",
-  "outputDirectory": "system-block-ui/dist"
+  "outputDirectory": "system-block-ui/dist",
+  "functions": {
+    "api/ti-recommendations.ts": {
+      "maxDuration": 30
+    }
+  }
 }

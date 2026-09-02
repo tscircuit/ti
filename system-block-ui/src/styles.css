@@ -865,6 +865,29 @@ button {
   border-radius: 9px;
 }
 
+.ti-recommendation-strip {
+  display: flex;
+  padding: 8px 15px;
+  align-items: baseline;
+  gap: 8px;
+  color: #536176;
+  font-size: 11px;
+  background: #f2f8f5;
+  border-bottom: 1px solid #dce7e1;
+}
+
+.ti-recommendation-strip strong {
+  flex: none;
+  color: #22734b;
+  font-size: 10px;
+}
+
+.ti-recommendation-strip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .subcircuit-candidate {
   display: flex;
   width: 100%;
@@ -884,6 +907,26 @@ button {
 .subcircuit-candidate strong {
   font-size: 13px;
   font-weight: 720;
+}
+
+.subcircuit-candidate-heading {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.subcircuit-candidate-heading small {
+  flex: none;
+  padding: 3px 7px;
+  color: #22734b;
+  font-size: 9px;
+  font-weight: 720;
+  line-height: 1.2;
+  background: #edf8f2;
+  border: 1px solid #c8ead8;
+  border-radius: 999px;
 }
 
 .subcircuit-candidate span {
