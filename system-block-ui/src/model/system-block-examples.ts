@@ -488,6 +488,144 @@ const createSeatPositionModuleDesign = (
   ],
 });
 
+const createAutomotiveWindowModuleDesign = (
+  catalog: readonly SubcircuitDefinition[],
+): SystemBlockExampleGraph => ({
+  blocks: [
+    {
+      id: "power_supply",
+      name: "power_supply",
+      definitionId: componentId(catalog, "PowerSupply_WindowModule"),
+      position: { x: 20, y: 260 },
+    },
+    {
+      id: "communication_interface",
+      name: "communication_interface",
+      definitionId: componentId(catalog, "CommunicationInterface_LIN_TLIN1028"),
+      position: { x: 390, y: 20 },
+    },
+    {
+      id: "microcontroller",
+      name: "microcontroller",
+      definitionId: componentId(catalog, "Microcontroller_MSP430FR6007"),
+      position: { x: 760, y: 260 },
+    },
+    {
+      id: "motor_driver",
+      name: "motor_driver",
+      definitionId: componentId(catalog, "MotorDriver_DRV8703"),
+      position: { x: 1130, y: 260 },
+    },
+    {
+      id: "pinch_detection",
+      name: "pinch_detection",
+      definitionId: componentId(
+        catalog,
+        "PinchDetection_INA240_TLV2316_LMV7275",
+      ),
+      position: { x: 390, y: 550 },
+    },
+    {
+      id: "motor_thermal_protection",
+      name: "motor_thermal_protection",
+      definitionId: componentId(catalog, "MotorThermalProtection_TMP390"),
+      position: { x: 760, y: 610 },
+    },
+    {
+      id: "position_feedback",
+      name: "position_feedback",
+      definitionId: componentId(catalog, "PositionFeedback_DRV5013_TIDA01389"),
+      position: { x: 1130, y: 610 },
+    },
+  ],
+  connections: [
+    {
+      id: "power_3v3_to_communication",
+      fromBlockId: "power_supply",
+      toBlockId: "communication_interface",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_microcontroller",
+      fromBlockId: "power_supply",
+      toBlockId: "microcontroller",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_motor_driver",
+      fromBlockId: "power_supply",
+      toBlockId: "motor_driver",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_thermal_protection",
+      fromBlockId: "power_supply",
+      toBlockId: "motor_thermal_protection",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_3v3_to_position_feedback",
+      fromBlockId: "power_supply",
+      toBlockId: "position_feedback",
+      kind: "power",
+      protocol: "logic-3v3",
+    },
+    {
+      id: "power_motor_supply_to_driver",
+      fromBlockId: "pinch_detection",
+      toBlockId: "motor_driver",
+      kind: "power",
+      protocol: "window-motor-power",
+    },
+    {
+      id: "data_power_supervision",
+      fromBlockId: "microcontroller",
+      toBlockId: "power_supply",
+      kind: "data",
+      protocol: "window-power-supervision",
+    },
+    {
+      id: "data_lin_controller",
+      fromBlockId: "microcontroller",
+      toBlockId: "communication_interface",
+      kind: "data",
+      protocol: "lin-controller",
+    },
+    {
+      id: "data_motor_control",
+      fromBlockId: "microcontroller",
+      toBlockId: "motor_driver",
+      kind: "data",
+      protocol: "window-motor-control",
+    },
+    {
+      id: "data_pinch_detection",
+      fromBlockId: "pinch_detection",
+      toBlockId: "microcontroller",
+      kind: "data",
+      protocol: "window-pinch-detection",
+    },
+    {
+      id: "data_motor_thermal_status",
+      fromBlockId: "motor_thermal_protection",
+      toBlockId: "microcontroller",
+      kind: "data",
+      protocol: "motor-thermal-status",
+    },
+    {
+      id: "data_position_feedback",
+      fromBlockId: "position_feedback",
+      toBlockId: "microcontroller",
+      kind: "data",
+      protocol: "window-position-feedback",
+    },
+  ],
+});
+
 const createBloodPressureMonitorDesign = (
   catalog: readonly SubcircuitDefinition[],
 ): SystemBlockExampleGraph => ({
@@ -688,6 +826,12 @@ export const createSystemBlockExamples = (
     title: "Seat Position Module",
     sourcePath: "examples/SeatPositionModule.circuit.tsx",
     graph: createSeatPositionModuleDesign(catalog),
+  },
+  {
+    id: "automotive-window-module",
+    title: "Automotive Window Module",
+    sourcePath: "examples/AutomotiveWindowModule.circuit.tsx",
+    graph: createAutomotiveWindowModuleDesign(catalog),
   },
   {
     id: "tida-010266-blood-pressure-monitor",

@@ -13,6 +13,13 @@ type MSP430FR6007LayoutVariant = "single-sheet" | "multi-sheet";
 
 type MSP430FR6007ReferenceLayoutProps = SubcircuitProps & {
   layoutVariant: MSP430FR6007LayoutVariant;
+  schematicSheetWidth?: string | number;
+  schematicSheetHeight?: string | number;
+};
+
+export type MicrocontrollerMSP430FR6007Props = SubcircuitProps & {
+  schematicSheetWidth?: string | number;
+  schematicSheetHeight?: string | number;
 };
 
 /*
@@ -563,6 +570,8 @@ const canonicalNet = (net: string) =>
  */
 export const MSP430FR6007ReferenceLayout = ({
   layoutVariant,
+  schematicSheetWidth,
+  schematicSheetHeight,
   ...props
 }: MSP430FR6007ReferenceLayoutProps) => {
   const isMultiSheet = layoutVariant === "multi-sheet";
@@ -623,8 +632,8 @@ export const MSP430FR6007ReferenceLayout = ({
           name="reference_full"
           displayName="MSP-TS430PZ100E Figure B-78"
           sheetIndex={0}
-          sheetWidth="500mm"
-          sheetHeight="330mm"
+          sheetWidth={schematicSheetWidth ?? "500mm"}
+          sheetHeight={schematicSheetHeight ?? "330mm"}
         />
       )}
 
@@ -1628,8 +1637,8 @@ export const MSP430FR6007ReferenceLayout = ({
   );
 };
 
-export const Microcontroller_MSP430FR6007 = (props: SubcircuitProps) => (
-  <MSP430FR6007ReferenceLayout layoutVariant="single-sheet" {...props} />
-);
+export const Microcontroller_MSP430FR6007 = (
+  props: MicrocontrollerMSP430FR6007Props,
+) => <MSP430FR6007ReferenceLayout layoutVariant="single-sheet" {...props} />;
 
 export default Microcontroller_MSP430FR6007;

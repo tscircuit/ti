@@ -76,6 +76,12 @@ example stays intentionally small: it composes and electrically connects the
 reusable reference subcircuits for the power supply, communication interface,
 light driver, MCU, position feedback, and motor driver blocks.
 
+The [`AutomotiveWindowModule.circuit.tsx`](examples/AutomotiveWindowModule.circuit.tsx)
+example composes the power supply, LIN interface, MCU, motor driver,
+anti-pinch detection, motor thermal protection, and position-feedback blocks
+from TI's Automotive Window Module diagram into one connected multi-sheet
+design.
+
 The [`ConsumerWirelessModule.circuit.tsx`](examples/ConsumerWirelessModule.circuit.tsx)
 example assembles the seven reviewed references behind TI's Consumer wireless
 module diagram. Its protected 5 V input feeds a 3.3 V buck rail, which powers
