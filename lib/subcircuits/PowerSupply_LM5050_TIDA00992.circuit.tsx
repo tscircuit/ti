@@ -12,7 +12,7 @@ const bidirectionalTvsSymbol = (
       schX={0}
       schY={0.72}
       direction="up"
-      schStemLength={0.36}
+      schStemLength={0.48}
     />
     <schematicpath
       points={[
@@ -61,7 +61,7 @@ const bidirectionalTvsSymbol = (
       schX={0}
       schY={-0.72}
       direction="down"
-      schStemLength={0.36}
+      schStemLength={0.48}
     />
     <schematictext
       text="{NAME}"
