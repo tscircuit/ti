@@ -1,5 +1,6 @@
 import { Handle, type NodeProps, Position } from "@xyflow/react";
 
+import { GearIcon } from "../components/Icons";
 import type { PortDefinition, VoltageRequirement } from "../model/types";
 import {
   formatProtocolLabel,
@@ -95,15 +96,15 @@ export function SystemBlockNodeView({
       <header className="system-block-card-header">
         <span className="system-block-card-heading">
           <strong>{definition.title}</strong>
-          <span>{definition.category}</span>
-          <code>{data.block.name ?? data.block.id}</code>
         </span>
-        <span
-          className="system-block-review-badge"
-          data-reviewed={!placementOnly}
+        <button
+          aria-label={`Choose another TI subcircuit for ${definition.title}`}
+          className="nodrag nopan system-block-card-action"
+          title="Change part"
+          type="button"
         >
-          {placementOnly ? "Placement only" : "Reviewed"}
-        </span>
+          <GearIcon height={16} width={16} />
+        </button>
       </header>
 
       {definition.description && (

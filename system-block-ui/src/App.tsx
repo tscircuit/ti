@@ -13,6 +13,7 @@ import {
   ResetIcon,
 } from "./components/Icons";
 import { OutputPanel } from "./components/OutputPanel";
+import { SubcircuitPickerModal } from "./components/SubcircuitPickerModal";
 import {
   createSystemBlockEditor,
   type SystemBlockEditorController,
@@ -116,6 +117,7 @@ export function App() {
     ],
   }));
   const [notice, setNotice] = useState<Notice>();
+  const [pickerBlockId, setPickerBlockId] = useState<string>();
   const [loadedExampleId, setLoadedExampleId] = useState(starterExample.id);
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [isRendering, setIsRendering] = useState(false);
@@ -128,6 +130,12 @@ export function App() {
   const dataLinkCount = snapshot.connections.filter(
     (connection) => connection.kind.toLowerCase() === "data",
   ).length;
+  const pickerBlock = pickerBlockId
+    ? snapshot.blocks.find((block) => block.id === pickerBlockId)
+    : undefined;
+  const pickerDefinition = pickerBlock
+    ? catalog.find((definition) => definition.id === pickerBlock.definitionId)
+    : undefined;
 
   const notify = useCallback(
     (message: string, tone: Notice["tone"] = "default") => {
@@ -177,6 +185,7 @@ export function App() {
     void createSystemBlockEditor(container, {
       catalog,
       initialGraph: starterDesign,
+      onBlockSelectionRequested: setPickerBlockId,
       onGraphChange: (nextSnapshot) => {
         if (disposed) return;
         invalidateSchematic();
@@ -350,11 +359,37 @@ export function App() {
     return buildSchematic();
   }, [buildSchematic]);
 
+  const replaceSelectedBlock = useCallback(
+    (definition: SubcircuitDefinition) => {
+      const controller = controllerRef.current;
+      if (!controller || !pickerBlockId) return;
+
+      try {
+        const result = controller.replaceBlockDefinition(
+          pickerBlockId,
+          definition,
+        );
+        setPickerBlockId(undefined);
+        const removedCount = result.removedConnections.length;
+        notify(
+          removedCount > 0
+            ? `Selected ${definition.title}; removed ${removedCount} incompatible connection${removedCount === 1 ? "" : "s"}.`
+            : `Selected ${definition.title}; compatible connections were preserved.`,
+          removedCount > 0 ? "default" : "success",
+        );
+      } catch (error) {
+        notify(errorMessage(error), "error");
+      }
+    },
+    [notify, pickerBlockId],
+  );
+
   const resetDesign = useCallback(async () => {
     const example =
       examples.find((candidate) => candidate.id === loadedExampleId) ??
       starterExample;
     try {
+      setPickerBlockId(undefined);
       await controllerRef.current?.loadInitialGraph(example.graph);
       await controllerRef.current?.zoomToFit();
       notify(`Restored the ${example.title} example.`, "success");
@@ -370,6 +405,7 @@ export function App() {
       if (!example || !controller) return;
 
       try {
+        setPickerBlockId(undefined);
         await controller.loadInitialGraph(example.graph);
         setLoadedExampleId(example.id);
         await controller.zoomToFit();
@@ -601,7 +637,7 @@ export function App() {
           </div>
           <div className="drop-hint">
             <PdfIcon height={14} width={14} />
-            Drag blocks · connect matching semantic sockets
+            Use the gear to change a part · drag to connect sockets
           </div>
 
           {notice && (
@@ -622,6 +658,15 @@ export function App() {
           tsx={generatedArtifacts.tsx}
         />
       </div>
+
+      {pickerBlock && pickerDefinition && (
+        <SubcircuitPickerModal
+          currentDefinition={pickerDefinition}
+          definitions={catalog}
+          onClose={() => setPickerBlockId(undefined)}
+          onSelect={replaceSelectedBlock}
+        />
+      )}
     </main>
   );
 }

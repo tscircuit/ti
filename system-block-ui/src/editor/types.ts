@@ -232,8 +232,15 @@ export interface RejectedConnection {
 export interface CreateSystemBlockEditorOptions {
   catalog?: readonly SubcircuitDefinition[];
   initialGraph?: SystemBlockInitialGraph;
+  onBlockSelectionRequested?: (blockId: string) => void;
   onGraphChange?: GraphChangeListener;
   onConnectionRejected?: (rejection: RejectedConnection) => void;
+}
+
+export interface ReplaceBlockDefinitionResult {
+  block: BlockInstance;
+  removedConnections: readonly LogicalConnection[];
+  retainedConnectionCount: number;
 }
 
 export interface SystemBlockRenderState {

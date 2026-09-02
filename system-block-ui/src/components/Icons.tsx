@@ -167,3 +167,16 @@ export const PlusIcon = (props: IconProps) => (
     />
   </Icon>
 );
+
+export const GearIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="M10.3 3.3c.4-1.7 3-1.7 3.4 0a1.75 1.75 0 0 0 2.6 1.1c1.5-.9 3.3.9 2.4 2.4a1.75 1.75 0 0 0 1.1 2.6c1.7.4 1.7 3 0 3.4a1.75 1.75 0 0 0-1.1 2.6c.9 1.5-.9 3.3-2.4 2.4a1.75 1.75 0 0 0-2.6 1.1c-.4 1.7-3 1.7-3.4 0a1.75 1.75 0 0 0-2.6-1.1c-1.5.9-3.3-.9-2.4-2.4a1.75 1.75 0 0 0-1.1-2.6c-1.7-.4-1.7-3 0-3.4a1.75 1.75 0 0 0 1.1-2.6c-.9-1.5.9-3.3 2.4-2.4a1.75 1.75 0 0 0 2.6-1.1Z"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.6"
+    />
+    <circle cx="12" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.6" />
+  </Icon>
+);
