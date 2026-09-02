@@ -922,7 +922,14 @@ button {
   gap: 12px;
 }
 
-.subcircuit-candidate-heading small {
+.subcircuit-candidate-badges {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+}
+
+.subcircuit-candidate-badges small {
   flex: none;
   padding: 3px 7px;
   color: #22734b;
@@ -932,6 +939,12 @@ button {
   background: #edf8f2;
   border: 1px solid #c8ead8;
   border-radius: 999px;
+}
+
+.subcircuit-candidate-badges small[data-tone="current"] {
+  color: #697582;
+  background: #f1f3f5;
+  border-color: #dce1e7;
 }
 
 .subcircuit-candidate span {
@@ -954,6 +967,12 @@ button {
   color: #9f2026;
   background: #faf4f4;
   outline: none;
+}
+
+.subcircuit-candidate:disabled {
+  color: #29343f;
+  background: #f8f9fa;
+  cursor: default;
 }
 
 .subcircuit-candidate:focus-visible {

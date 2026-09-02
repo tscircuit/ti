@@ -10,7 +10,6 @@ export function getSelectableSubcircuitCandidates(
   return definitions
     .filter(
       (definition) =>
-        definition.id !== currentDefinition.id &&
         definition.canInstantiate !== false &&
         definition.sourcePath.startsWith("lib/subcircuits/") &&
         definition.category === currentDefinition.category,
@@ -134,27 +133,38 @@ export function SubcircuitPickerModal({
           </div>
 
           <div className="subcircuit-picker-results">
-            {candidates.map((definition) => (
-              <button
-                aria-label={`Select ${definition.title}`}
-                className="subcircuit-candidate"
-                key={definition.id}
-                onClick={() => onSelect(definition)}
-                type="button"
-              >
-                <div className="subcircuit-candidate-heading">
-                  <strong>{definition.title}</strong>
-                  {recommendedIds.has(definition.id) && (
-                    <small title="Recommended by TI Support Intelligence">
-                      Recommended
-                    </small>
+            {candidates.map((definition) => {
+              const isCurrent = definition.id === currentDefinition.id;
+              return (
+                <button
+                  aria-label={
+                    isCurrent
+                      ? `Current subcircuit: ${definition.title}`
+                      : `Select ${definition.title}`
+                  }
+                  className="subcircuit-candidate"
+                  disabled={isCurrent}
+                  key={definition.id}
+                  onClick={() => onSelect(definition)}
+                  type="button"
+                >
+                  <div className="subcircuit-candidate-heading">
+                    <strong>{definition.title}</strong>
+                    <div className="subcircuit-candidate-badges">
+                      {isCurrent && <small data-tone="current">Current</small>}
+                      {recommendedIds.has(definition.id) && (
+                        <small title="Recommended by TI Support Intelligence">
+                          Recommended
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                  {definition.description && (
+                    <span>{definition.description}</span>
                   )}
-                </div>
-                {definition.description && (
-                  <span>{definition.description}</span>
-                )}
-              </button>
-            ))}
+                </button>
+              );
+            })}
 
             {candidates.length === 0 && (
               <div className="subcircuit-picker-empty">

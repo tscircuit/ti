@@ -22,7 +22,7 @@ const definition = (
 });
 
 describe("subcircuit picker candidates", () => {
-  test("shows only selectable same-category parts in alphabetical order", () => {
+  test("shows the full selectable same-category library in alphabetical order", () => {
     const current = definition("current-part");
     const candidates = [
       definition("zeta-part"),
@@ -39,6 +39,6 @@ describe("subcircuit picker candidates", () => {
       getSelectableSubcircuitCandidates(candidates, current).map(
         (item) => item.id,
       ),
-    ).toEqual(["alpha-part", "zeta-part"]);
+    ).toEqual(["alpha-part", "current-part", "zeta-part"]);
   });
 });
