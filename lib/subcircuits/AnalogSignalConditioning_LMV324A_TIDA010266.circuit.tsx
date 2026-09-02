@@ -268,21 +268,29 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         }}
         symbol={filterOpAmpSymbol("U2C")}
       />
-      <netlabel net="V3_3" connectsTo=".U2B > .pin4" inline />
-      <netlabel
-        net="GND"
-        connectsTo=".U2B > .pin11"
-        anchorSide="top"
-        schX={filterX(0)}
-        schY={-1.45}
+      <trace
+        name="V3_3_U2B_pin4"
+        from=".U2B > .pin4"
+        to="net.V3_3"
+        schDisplayLabel="V3_3"
       />
-      <netlabel net="V3_3" connectsTo=".U2C > .pin4" inline />
-      <netlabel
-        net="GND"
-        connectsTo=".U2C > .pin11"
-        anchorSide="top"
-        schX={filterX(10)}
-        schY={-1.45}
+      <trace
+        name="GND_U2B_pin11"
+        from=".U2B > .pin11"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="V3_3_U2C_pin4"
+        from=".U2C > .pin4"
+        to="net.V3_3"
+        schDisplayLabel="V3_3"
+      />
+      <trace
+        name="GND_U2C_pin11"
+        from=".U2C > .pin11"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
       <schematicsymbol
         name="U2D"
@@ -340,12 +348,11 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_DIV", pin2: "net.GND" }}
       />
-      <netlabel
-        net="GND"
-        connectsTo=".R6 > .pin2"
-        anchorSide="top"
-        schX={inputX(1.5)}
-        schY={inputY(13.9)}
+      <trace
+        name="GND_R6_pin2"
+        from=".R6 > .pin2"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
 
       <capacitor
@@ -460,12 +467,11 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         schOrientation="vertical"
         connections={{ pin1: "net.IBIAS_SET", pin2: "net.GND" }}
       />
-      <netlabel
-        net="GND"
-        connectsTo=".R21 > .pin2"
-        anchorSide="top"
-        schX={pressureX(-23)}
-        schY={pressureY(-18.5)}
+      <trace
+        name="GND_R21_pin2"
+        from=".R21 > .pin2"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
       <port
         {...({ schSheetName: sensorSheetName } as Record<string, unknown>)}

@@ -49,9 +49,24 @@ export const PowerManagement_TPS7A2433_TIDA010266 = (
         schOrientation="vertical"
         connections={{ pin1: "net.V3_3" }}
       />
-      <netlabel net="GND" connectsTo=".U1 > .GND" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".C5 > .pin2" anchorSide="top" />
-      <netlabel net="GND" connectsTo=".C1 > .pin2" anchorSide="top" />
+      <trace
+        name="GND_U1_GND"
+        from=".U1 > .GND"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_C5_pin2"
+        from=".C5 > .pin2"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_C1_pin2"
+        from=".C1 > .pin2"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
       <port
         name="GND"
         schX={originX}

@@ -104,12 +104,11 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
     />
     <trace name="MOTOR_SUPPLY" from=".U1 > .VM" to=".C1 > .pin1" />
     <trace name="VM_BYPASS_SUPPLY" from=".C1 > .pin1" to="net.VM" />
-    <netlabel
-      net="GND"
-      schX={3}
-      schY={1.2}
-      anchorSide="top"
-      connectsTo=".C1 > .pin2"
+    <trace
+      name="GND_C1_pin2"
+      from=".C1 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     <capacitor
@@ -123,12 +122,11 @@ export const MotorDriver_DRV8210 = (props: SubcircuitProps) => (
       schRotation={-90}
     />
     <trace name="VCC_BYPASS_SUPPLY" from=".C2 > .pin1" to="net.VCC" />
-    <netlabel
-      net="GND"
-      schX={-2}
-      schY={1.8}
-      anchorSide="top"
-      connectsTo=".C2 > .pin2"
+    <trace
+      name="GND_C2_pin2"
+      from=".C2 > .pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
   </subcircuit>
 );

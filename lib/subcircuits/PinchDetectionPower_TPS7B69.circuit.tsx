@@ -83,29 +83,29 @@ export const PinchDetectionPower_TPS7B69 = (props: SubcircuitProps) => (
 
     {/* The source draws four independent local GND symbols in this block.
         Keep them as native electrical rail labels rather than a shared bus. */}
-    <netlabel
-      net="GND"
-      connection="C11.pin2"
-      anchorSide="top"
-      {...p(690, 410)}
+    <trace
+      name="GND_C11_pin2"
+      from="C11.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connection="C12.pin2"
-      anchorSide="top"
-      {...p(900, 410)}
+    <trace
+      name="GND_C12_pin2"
+      from="C12.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connection="C13.pin2"
-      anchorSide="top"
-      {...p(690, 250)}
+    <trace
+      name="GND_C13_pin2"
+      from="C13.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
-    <netlabel
-      net="GND"
-      connection="C14.pin2"
-      anchorSide="top"
-      {...p(900, 250)}
+    <trace
+      name="GND_C14_pin2"
+      from="C14.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
   </subcircuit>
 );

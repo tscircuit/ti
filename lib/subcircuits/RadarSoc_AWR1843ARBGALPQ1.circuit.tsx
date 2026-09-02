@@ -1357,12 +1357,11 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
           </Fragment>
         ),
       )}
-      <netlabel
-        net="PMIC_3V3"
-        schX={toSchX(70)}
-        schY={toIoPullupSchY(490)}
-        anchorSide="bottom"
-        connectsTo=".R59 > .pin2"
+      <trace
+        name="PMIC_3V3_R59_pin2"
+        from=".R59 > .pin2"
+        to="net.PMIC_3V3"
+        schDisplayLabel="PMIC_3V3"
       />
       <trace name="NRST_R59_C130" from=".R59 > .pin1" to=".C130 > .pin2" />
       <trace name="NRST_C130_TP14" from=".C130 > .pin2" to=".TP14 > .pin1" />
@@ -1381,40 +1380,35 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
         from=".R3 > .pin1"
         to="net.AR_HOSTINTR1"
       />
-      <netlabel
-        net="GND"
-        schX={toSchX(70)}
-        schY={toIoPullupSchY(260)}
-        anchorSide="top"
-        connectsTo=".R3 > .pin2"
+      <trace
+        name="GND_R3_pin2"
+        from=".R3 > .pin2"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
-      <netlabel
-        net="GND"
-        schX={toSchX(270)}
-        schY={toIoPullupSchY(430)}
-        anchorSide="top"
-        connectsTo=".C130 > .pin1"
+      <trace
+        name="GND_C130_pin1"
+        from=".C130 > .pin1"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
-      <netlabel
-        net="GND"
-        schX={toSchX(1480)}
-        schY={toIoSchY(670)}
-        anchorSide="top"
-        connectsTo=".R172 > .pin1"
+      <trace
+        name="GND_R172_pin1"
+        from=".R172 > .pin1"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
-      <netlabel
-        net="GND"
-        schX={toSchX(1480)}
-        schY={toIoSchY(480)}
-        anchorSide="top"
-        connectsTo=".R170 > .pin1"
+      <trace
+        name="GND_R170_pin1"
+        from=".R170 > .pin1"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
-      <netlabel
-        net="GND"
-        schX={toSchX(1480)}
-        schY={toIoSchY(290)}
-        anchorSide="top"
-        connectsTo=".R158 > .pin1"
+      <trace
+        name="GND_R158_pin1"
+        from=".R158 > .pin1"
+        to="net.GND"
+        schDisplayLabel="GND"
       />
 
       {AWR_GPADC_TEST_CONNECTIONS.map(({ ball, testpoint }) => (
@@ -1434,22 +1428,20 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
         schDisplayLabel="AR_PMIC_CLKOUT_SOP2"
       />
       <trace from=".R85 > .pin1" to="net.AR_PMIC_CLKOUT_SOP2" />
-      <netlabel
-        net="PMIC_CLK"
-        schX={toSchX(1200)}
-        schY={toIoSchY(830)}
-        anchorSide="right"
-        connectsTo=".R103 > .pin2"
+      <trace
+        name="PMIC_CLK_R103_pin2"
+        from=".R103 > .pin2"
+        to="net.PMIC_CLK"
+        schDisplayLabel="PMIC_CLK"
       />
       <trace from=".R85 > .pin2" to=".R176 > .pin2" />
       <trace from=".R176 > .pin2" to=".R172 > .pin2" />
       <trace from=".R176 > .pin1" to=".S3 > .pin1" />
-      <netlabel
-        net="PMIC_3V3"
-        schX={toSchX(1640)}
-        schY={toIoSchY(780)}
-        anchorSide="bottom"
-        connectsTo=".S3 > .pin2"
+      <trace
+        name="PMIC_3V3_S3_pin2"
+        from=".S3 > .pin2"
+        to="net.PMIC_3V3"
+        schDisplayLabel="PMIC_3V3"
       />
 
       <trace
@@ -1459,12 +1451,11 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
       />
       <trace from=".R84 > .pin2" to=".R171 > .pin1" />
       <trace from=".R171 > .pin1" to=".R170 > .pin2" />
-      <netlabel
-        net="SOP1"
-        schX={toSchX(1370)}
-        schY={toIoSchY(630)}
-        anchorSide="right"
-        connectsTo=".R171 > .pin2"
+      <trace
+        name="SOP1_R171_pin2"
+        from=".R171 > .pin2"
+        to="net.SOP1"
+        schDisplayLabel="SOP1"
       />
 
       <trace
@@ -1475,20 +1466,18 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
       <trace from=".R83 > .pin2" to=".R174 > .pin2" />
       <trace from=".R174 > .pin2" to=".R159 > .pin1" />
       <trace from=".R159 > .pin1" to=".R158 > .pin2" />
-      <netlabel
-        net="SOP0"
-        schX={toSchX(1370)}
-        schY={toIoSchY(440)}
-        anchorSide="right"
-        connectsTo=".R159 > .pin2"
+      <trace
+        name="SOP0_R159_pin2"
+        from=".R159 > .pin2"
+        to="net.SOP0"
+        schDisplayLabel="SOP0"
       />
       <trace from=".R174 > .pin1" to=".R2 > .pin1" />
-      <netlabel
-        net="PMIC_3V3"
-        schX={toSchX(1640)}
-        schY={toIoSchY(380)}
-        anchorSide="bottom"
-        connectsTo=".R2 > .pin2"
+      <trace
+        name="PMIC_3V3_R2_pin2"
+        from=".R2 > .pin2"
+        to="net.PMIC_3V3"
+        schDisplayLabel="PMIC_3V3"
       />
     </group>
 

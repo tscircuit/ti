@@ -14,7 +14,7 @@ export type InstrumentationAmplifier_INA350Props = SubcircuitProps & {
   /** Override the bypass-capacitor reference designator. */
   bypassCapacitorName?: string;
   /** Expose TIDA-style module ports and render their signal names inline. */
-  inlineNetLabels?: boolean;
+  renderInlineNetPorts?: boolean;
   /** Select the compact reusable symbol or TI reference-drawing block style. */
   schematicStyle?: "triangle" | "box";
   /** Internal supply-net label; the reusable default remains VS. */
@@ -33,7 +33,7 @@ export const InstrumentationAmplifier_INA350 = ({
   shutdown = "external",
   chipName = "U1",
   bypassCapacitorName = "C1",
-  inlineNetLabels = false,
+  renderInlineNetPorts = false,
   schematicStyle = "triangle",
   supplyNetName = "VS",
   ...props
@@ -50,7 +50,7 @@ export const InstrumentationAmplifier_INA350 = ({
       minTraceWidth={0.1}
       nominalTraceWidth={0.1}
       {...props}
-      {...(inlineNetLabels
+      {...(renderInlineNetPorts
         ? {
             schTraceAutoLabelEnabled: false,
             schMaxTraceDistance: schematicStyle === "box" ? "4mm" : "1000mm",
@@ -352,21 +352,14 @@ export const InstrumentationAmplifier_INA350 = ({
         schRotation={schematicStyle === "box" ? undefined : -90}
         schOrientation={schematicStyle === "box" ? "vertical" : undefined}
       />
-      <netlabel
-        net={supplyNetName}
-        schX={-1}
-        schY={3.1}
-        anchorSide="bottom"
-        connectsTo={`.${chipName} > .V_POS`}
-        inline={inlineNetLabels}
-      />
-      <netlabel
-        net={supplyNetName}
-        schX={1.5}
-        schY={3.7}
-        anchorSide="bottom"
-        connectsTo={`.${bypassCapacitorName} > .pin1`}
-        inline={inlineNetLabels}
+      <trace
+        name="SUPPLY"
+        path={[
+          `.${chipName} > .V_POS`,
+          `.${bypassCapacitorName} > .pin1`,
+          `net.${supplyNetName}`,
+        ]}
+        schDisplayLabel={supplyNetName}
       />
       <trace
         name="ENABLE"
@@ -398,26 +391,15 @@ export const InstrumentationAmplifier_INA350 = ({
             : undefined
         }
       />
-      <netlabel
-        net="GND"
-        schX={1.5}
-        schY={2.45}
-        anchorSide="top"
-        connectsTo={`.${bypassCapacitorName} > .pin2`}
-        inline={inlineNetLabels}
-      />
-      {schematicStyle === "box" && (
-        <netlabel
-          net="GND"
-          connectsTo={`.${chipName} > .V_NEG`}
-          anchorSide="top"
-        />
-      )}
-
       <trace
-        name="THERMAL_PAD"
-        from={`.${chipName} > .EP`}
-        to={`.${chipName} > .V_NEG`}
+        name="GROUND"
+        path={[
+          `.${chipName} > .EP`,
+          `.${chipName} > .V_NEG`,
+          `.${bypassCapacitorName} > .pin2`,
+          "net.GND",
+        ]}
+        schDisplayLabel="GND"
       />
       <trace
         name="REFERENCE"
@@ -425,8 +407,7 @@ export const InstrumentationAmplifier_INA350 = ({
         from={`.${chipName} > .REF`}
         to="net.REF"
       />
-      <trace name="GROUND" from={`.${chipName} > .V_NEG`} to="net.GND" />
-      {inlineNetLabels && (
+      {renderInlineNetPorts && (
         <TIDA010266InlineNetPorts
           originX={originX}
           originY={originY}

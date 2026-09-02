@@ -211,7 +211,20 @@ for (const settings of [
         source_port_id: port.source_port_id,
       });
       assert.equal(schematicPorts.length, 1);
-      assert.ok(schematicPorts[0].is_connected);
+      const schematicPort = schematicPorts[0];
+      const hasNativeTraceLabel = circuit.db.schematic_net_label
+        .list()
+        .some(
+          (label) =>
+            Boolean(label.source_trace_id) &&
+            label.anchor_position !== undefined &&
+            Math.abs(label.anchor_position.x - schematicPort.center.x) < 1e-6 &&
+            Math.abs(label.anchor_position.y - schematicPort.center.y) < 1e-6,
+        );
+      assert.ok(
+        schematicPort.is_connected || hasNativeTraceLabel,
+        `${port.port_hints?.join("/")} schematic port is disconnected`,
+      );
       assert.equal(
         circuit.db.pcb_port.list({ source_port_id: port.source_port_id })
           .length,

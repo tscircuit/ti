@@ -245,6 +245,37 @@ test("the Consumer Wireless Module carries chip and passive footprints into PCB 
     ),
   );
 
+  const esd5z6 = circuit.db.source_component
+    .list()
+    .find((component) =>
+      component.supplier_part_numbers?.jlcpcb?.includes("C82323"),
+    );
+  assert.ok(esd5z6, "ESD5Z6.0T1G is missing from the starter design");
+  const esd5z6Ports = circuit.db.source_port.list({
+    source_component_id: esd5z6.source_component_id,
+  });
+  assert.ok(
+    esd5z6Ports.find(
+      (port) => port.pin_number === 1 && port.port_hints?.includes("cathode"),
+    ),
+  );
+  assert.ok(
+    esd5z6Ports.find(
+      (port) => port.pin_number === 2 && port.port_hints?.includes("anode"),
+    ),
+  );
+  const esd5z6Schematic = circuit.db.schematic_component.getWhere({
+    source_component_id: esd5z6.source_component_id,
+  });
+  assert.ok(esd5z6Schematic);
+  assert.equal(esd5z6Schematic.symbol_name, "zener_diode_vert");
+  assert.equal(
+    circuit.db.schematic_port.list({
+      schematic_component_id: esd5z6Schematic.schematic_component_id,
+    }).length,
+    2,
+  );
+
   const missingFootprints = circuit
     .getCircuitJson()
     .filter((element) => element.type === "pcb_missing_footprint_error");

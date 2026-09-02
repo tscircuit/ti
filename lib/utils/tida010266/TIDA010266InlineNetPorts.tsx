@@ -60,7 +60,12 @@ export const TIDA010266InlineNetPorts = ({
             />
             {labelTargets.map((target, index) => (
               <Fragment key={`${name}-${index}`}>
-                <netlabel net={net} connectsTo={target} inline />
+                <trace
+                  name={[net, target].join("-")}
+                  from={target}
+                  to={`net.${net}`}
+                  schDisplayLabel={net}
+                />
               </Fragment>
             ))}
           </Fragment>

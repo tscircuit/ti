@@ -205,26 +205,12 @@ const SUBCIRCUIT_PIN_STYLE = {
   pin76: { marginTop: 0.4 },
 };
 
-const spread = (index: number, count: number, start: number, end: number) =>
-  count === 1 ? start : start + (index * (end - start)) / (count - 1);
-
-const MatrixNetLabel = ({
-  netName,
-  schX,
-  schY,
-  anchorSide,
-}: {
-  netName: MatrixNet;
-  schX: number;
-  schY: number;
-  anchorSide: "left" | "right" | "top" | "bottom";
-}) => (
-  <netlabel
-    net={netName}
-    connectsTo={`.U1 > .pin${PIN_BY_NET[netName]}`}
-    schX={schX}
-    schY={schY}
-    anchorSide={anchorSide}
+const MatrixNetConnection = ({ netName }: { netName: MatrixNet }) => (
+  <trace
+    name={[netName, `.U1 > .pin${PIN_BY_NET[netName]}`].join("-")}
+    from={`.U1 > .pin${PIN_BY_NET[netName]}`}
+    to={`net.${netName}`}
+    schDisplayLabel={netName}
   />
 );
 
@@ -278,20 +264,34 @@ const SupplyBypass = ({
         pcbY={pcbBulkY}
         pcbRotation={90}
       />
-      <netlabel
-        net={netName}
-        connectsTo={[`.${localCapacitor} > .pin1`, `.${bulkCapacitor} > .pin1`]}
-        schX={schX}
-        schY={7.95}
-        anchorSide="bottom"
-      />
-      <netlabel
-        net="GND"
-        connectsTo={[`.${localCapacitor} > .pin2`, `.${bulkCapacitor} > .pin2`]}
-        schX={schX}
-        schY={6.45}
-        anchorSide="top"
-      />
+      <>
+        <trace
+          name={[netName, `.${localCapacitor} > .pin1`].join("-")}
+          from={`.${localCapacitor} > .pin1`}
+          to={`net.${netName}`}
+          schDisplayLabel={netName}
+        />
+        <trace
+          name={[netName, `.${bulkCapacitor} > .pin1`].join("-")}
+          from={`.${bulkCapacitor} > .pin1`}
+          to={`net.${netName}`}
+          schDisplayLabel={netName}
+        />
+      </>
+      <>
+        <trace
+          name={["GND", `.${localCapacitor} > .pin2`].join("-")}
+          from={`.${localCapacitor} > .pin2`}
+          to="net.GND"
+          schDisplayLabel="GND"
+        />
+        <trace
+          name={["GND", `.${bulkCapacitor} > .pin2`].join("-")}
+          from={`.${bulkCapacitor} > .pin2`}
+          to="net.GND"
+          schDisplayLabel="GND"
+        />
+      </>
     </>
   );
 };
@@ -376,93 +376,95 @@ export const OutputUserInterface_LEDMatrix_LP5892_Q1 = (
       )),
     )}
 
-    {DIGITAL_INTERFACE_NETS.map((netName, index) => (
+    {DIGITAL_INTERFACE_NETS.map((netName) => (
       <Fragment key={netName}>
-        <netlabel
-          net={netName}
-          connectsTo={`.U1 > .pin${PIN_BY_NET[netName]}`}
-          schX={-5.7}
-          schY={3.575 - index * 0.35}
-          anchorSide="right"
+        <trace
+          name={[netName, `.U1 > .pin${PIN_BY_NET[netName]}`].join("-")}
+          from={`.U1 > .pin${PIN_BY_NET[netName]}`}
+          to={`net.${netName}`}
+          schDisplayLabel={netName}
         />
       </Fragment>
     ))}
 
-    {LINE_OUTPUTS.map((netName, index) => (
-      <MatrixNetLabel
-        key={netName}
-        netName={netName}
-        schX={-5.7}
-        schY={1.675 - index * 0.35}
-        anchorSide="right"
-      />
+    {LINE_OUTPUTS.map((netName) => (
+      <MatrixNetConnection key={netName} netName={netName} />
     ))}
 
-    {RED_OUTPUTS.map((netName, index) => (
-      <MatrixNetLabel
-        key={netName}
-        netName={netName}
-        schX={5.7}
-        schY={3 - index * 0.4}
-        anchorSide="left"
-      />
+    {RED_OUTPUTS.map((netName) => (
+      <MatrixNetConnection key={netName} netName={netName} />
     ))}
 
-    {BLUE_OUTPUTS.map((netName, index) => (
-      <MatrixNetLabel
-        key={netName}
-        netName={netName}
-        schX={spread(index, BLUE_OUTPUTS.length, -4.5, 1.5)}
-        schY={5}
-        anchorSide="bottom"
-      />
+    {BLUE_OUTPUTS.map((netName) => (
+      <MatrixNetConnection key={netName} netName={netName} />
     ))}
 
-    {GREEN_OUTPUTS.map((netName, index) => (
-      <MatrixNetLabel
-        key={netName}
-        netName={netName}
-        schX={spread(index, GREEN_OUTPUTS.length, -3.5, 2.5)}
-        schY={-5}
-        anchorSide="top"
-      />
+    {GREEN_OUTPUTS.map((netName) => (
+      <MatrixNetConnection key={netName} netName={netName} />
     ))}
 
-    <netlabel
-      net="VB"
-      connectsTo={[".U1 > .pin48", ".U1 > .pin49"]}
-      schX={2.1}
-      schY={5}
-      anchorSide="bottom"
+    <>
+      <trace
+        name="VB_U1_pin48"
+        from=".U1 > .pin48"
+        to="net.VB"
+        schDisplayLabel="VB"
+      />
+      <trace
+        name="VB_U1_pin49"
+        from=".U1 > .pin49"
+        to="net.VB"
+        schDisplayLabel="VB"
+      />
+    </>
+    <>
+      <trace
+        name="VG_U1_pin50"
+        from=".U1 > .pin50"
+        to="net.VG"
+        schDisplayLabel="VG"
+      />
+      <trace
+        name="VG_U1_pin51"
+        from=".U1 > .pin51"
+        to="net.VG"
+        schDisplayLabel="VG"
+      />
+    </>
+    <>
+      <trace
+        name="VR_U1_pin9"
+        from=".U1 > .pin9"
+        to="net.VR"
+        schDisplayLabel="VR"
+      />
+      <trace
+        name="VR_U1_pin10"
+        from=".U1 > .pin10"
+        to="net.VR"
+        schDisplayLabel="VR"
+      />
+    </>
+    <trace
+      name="VCC_U1_pin8"
+      from=".U1 > .pin8"
+      to="net.VCC"
+      schDisplayLabel="VCC"
     />
-    <netlabel
-      net="VG"
-      connectsTo={[".U1 > .pin50", ".U1 > .pin51"]}
-      schX={2.9}
-      schY={5}
-      anchorSide="bottom"
-    />
-    <netlabel
-      net="VR"
-      connectsTo={[".U1 > .pin9", ".U1 > .pin10"]}
-      schX={3.7}
-      schY={5}
-      anchorSide="bottom"
-    />
-    <netlabel
-      net="VCC"
-      connectsTo=".U1 > .pin8"
-      schX={4.3}
-      schY={5}
-      anchorSide="bottom"
-    />
-    <netlabel
-      net="GND"
-      connectsTo={[".U1 > .pin7", ".U1 > .pin77"]}
-      schX={3.1}
-      schY={-5}
-      anchorSide="top"
-    />
+    <>
+      <trace
+        name="GND_U1_pin7"
+        from=".U1 > .pin7"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+      <trace
+        name="GND_U1_pin77"
+        from=".U1 > .pin77"
+        to="net.GND"
+        schDisplayLabel="GND"
+      />
+    </>
 
     <resistor
       name="R_IREF"
@@ -476,12 +478,11 @@ export const OutputUserInterface_LEDMatrix_LP5892_Q1 = (
       pcbRotation={90}
       connections={{ pin2: ".U1 > .pin20" }}
     />
-    <netlabel
-      net="GND"
-      connectsTo=".R_IREF > .pin1"
-      schX={-7.2}
-      schY={2.275}
-      anchorSide="right"
+    <trace
+      name="GND_R_IREF_pin1"
+      from=".R_IREF > .pin1"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     <SupplyBypass

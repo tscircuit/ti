@@ -318,7 +318,12 @@ export const ReverseBatteryProtection_TLV1805_SQJ461EP = (
     />
     <trace from=".D2 > .pin2" to=".R14 > .pin2" />
     <trace path={[".C24 > .pin1", ".C25 > .pin1"]} />
-    <netlabel net="VIN2" connectsTo=".D6 > .pin1" />
+    <trace
+      name="VIN2_D6_pin1"
+      from=".D6 > .pin1"
+      to="net.VIN2"
+      schDisplayLabel="VIN2"
+    />
     <trace
       path={[
         ".Q1 > .pin1",

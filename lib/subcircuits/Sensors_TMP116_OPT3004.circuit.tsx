@@ -1,4 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
+import { Fragment } from "react";
 import { OPT3004DNPR } from "../chips/OPT3004DNPR.circuit.tsx";
 import { TMP116NAIDRVR } from "../chips/TMP116NAIDRVR.circuit.tsx";
 
@@ -13,28 +14,26 @@ const EXPOSED_NETS = [
 
 type SensorNetName = (typeof EXPOSED_NETS)[number];
 
-interface LocalNetLabelProps {
+interface LocalNetConnectionProps {
   net: SensorNetName;
   connectsTo: string | string[];
-  schX: number;
-  schY: number;
-  anchorSide: "top" | "bottom" | "left" | "right";
 }
 
-const LocalNetLabel = ({
-  net,
-  connectsTo,
-  schX,
-  schY,
-  anchorSide,
-}: LocalNetLabelProps) => (
-  <netlabel
-    net={net}
-    connectsTo={connectsTo}
-    schX={schX}
-    schY={schY}
-    anchorSide={anchorSide}
-  />
+const LocalNetConnection = ({ net, connectsTo }: LocalNetConnectionProps) => (
+  <>
+    {(Array.isArray(connectsTo) ? connectsTo : [connectsTo]).map(
+      (connection, index) => (
+        <Fragment key={`${net}-${index}`}>
+          <trace
+            name={[net, connection].join("-")}
+            from={connection}
+            to={`net.${net}`}
+            schDisplayLabel={net}
+          />
+        </Fragment>
+      ),
+    )}
+  </>
 );
 
 /**
@@ -161,127 +160,31 @@ export const Sensors_TMP116_OPT3004 = (props: SubcircuitProps) => (
       pcbY={4}
     />
 
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".U1 > .VDD"
-      schX={-4.9}
-      schY={0.7}
-      anchorSide="right"
-    />
-    <LocalNetLabel
+    <LocalNetConnection net="VDD" connectsTo=".U1 > .VDD" />
+    <LocalNetConnection
       net="GND"
       connectsTo={[".U1 > .ADD0", ".U1 > .GND", ".U1 > .EP"]}
-      schX={-4.9}
-      schY={-1.1}
-      anchorSide="right"
     />
-    <LocalNetLabel
-      net="SCL"
-      connectsTo=".U1 > .SCL"
-      schX={-1.7}
-      schY={0.5}
-      anchorSide="left"
-    />
-    <LocalNetLabel
-      net="SDA"
-      connectsTo=".U1 > .SDA"
-      schX={-1.7}
-      schY={-0.2}
-      anchorSide="left"
-    />
-    <LocalNetLabel
-      net="TEMP_ALERT"
-      connectsTo=".U1 > .ALERT"
-      schX={-1.7}
-      schY={-0.9}
-      anchorSide="left"
-    />
+    <LocalNetConnection net="SCL" connectsTo=".U1 > .SCL" />
+    <LocalNetConnection net="SDA" connectsTo=".U1 > .SDA" />
+    <LocalNetConnection net="TEMP_ALERT" connectsTo=".U1 > .ALERT" />
 
-    <LocalNetLabel
-      net="SCL"
-      connectsTo=".U2 > .SCL"
-      schX={1.7}
-      schY={0.5}
-      anchorSide="right"
-    />
-    <LocalNetLabel
-      net="SDA"
-      connectsTo=".U2 > .SDA"
-      schX={1.7}
-      schY={-0.2}
-      anchorSide="right"
-    />
-    <LocalNetLabel
-      net="LIGHT_INT"
-      connectsTo=".U2 > .INT"
-      schX={1.7}
-      schY={-0.9}
-      anchorSide="right"
-    />
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".U2 > .VDD"
-      schX={4.9}
-      schY={0.7}
-      anchorSide="left"
-    />
-    <LocalNetLabel
+    <LocalNetConnection net="SCL" connectsTo=".U2 > .SCL" />
+    <LocalNetConnection net="SDA" connectsTo=".U2 > .SDA" />
+    <LocalNetConnection net="LIGHT_INT" connectsTo=".U2 > .INT" />
+    <LocalNetConnection net="VDD" connectsTo=".U2 > .VDD" />
+    <LocalNetConnection
       net="GND"
       connectsTo={[".U2 > .ADDR", ".U2 > .GND", ".U2 > .EP"]}
-      schX={4.9}
-      schY={-1.1}
-      anchorSide="left"
     />
 
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".R1 > .pin1"
-      schX={-3}
-      schY={3}
-      anchorSide="right"
-    />
-    <LocalNetLabel
-      net="SCL"
-      connectsTo=".R1 > .pin2"
-      schX={-1.4}
-      schY={3}
-      anchorSide="left"
-    />
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".R2 > .pin1"
-      schX={-3}
-      schY={2.2}
-      anchorSide="right"
-    />
-    <LocalNetLabel
-      net="SDA"
-      connectsTo=".R2 > .pin2"
-      schX={-1.4}
-      schY={2.2}
-      anchorSide="left"
-    />
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".R3 > .pin1"
-      schX={1.4}
-      schY={3}
-      anchorSide="right"
-    />
-    <LocalNetLabel
-      net="TEMP_ALERT"
-      connectsTo=".R3 > .pin2"
-      schX={3}
-      schY={3}
-      anchorSide="left"
-    />
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".R4 > .pin2"
-      schX={3}
-      schY={2.2}
-      anchorSide="left"
-    />
+    <LocalNetConnection net="VDD" connectsTo=".R1 > .pin1" />
+    <LocalNetConnection net="SCL" connectsTo=".R1 > .pin2" />
+    <LocalNetConnection net="VDD" connectsTo=".R2 > .pin1" />
+    <LocalNetConnection net="SDA" connectsTo=".R2 > .pin2" />
+    <LocalNetConnection net="VDD" connectsTo=".R3 > .pin1" />
+    <LocalNetConnection net="TEMP_ALERT" connectsTo=".R3 > .pin2" />
+    <LocalNetConnection net="VDD" connectsTo=".R4 > .pin2" />
     <trace
       name="LIGHT_INT_PULLUP"
       from=".U2 > .INT"
@@ -290,34 +193,10 @@ export const Sensors_TMP116_OPT3004 = (props: SubcircuitProps) => (
       pcbRouteHints={[{ x: 5.8, y: 0 }]}
     />
 
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".C1 > .pin1"
-      schX={-4.7}
-      schY={-1.9}
-      anchorSide="bottom"
-    />
-    <LocalNetLabel
-      net="GND"
-      connectsTo=".C1 > .pin2"
-      schX={-4.7}
-      schY={-3.5}
-      anchorSide="top"
-    />
-    <LocalNetLabel
-      net="VDD"
-      connectsTo=".C2 > .pin1"
-      schX={4.7}
-      schY={-1.9}
-      anchorSide="bottom"
-    />
-    <LocalNetLabel
-      net="GND"
-      connectsTo=".C2 > .pin2"
-      schX={4.7}
-      schY={-3.5}
-      anchorSide="top"
-    />
+    <LocalNetConnection net="VDD" connectsTo=".C1 > .pin1" />
+    <LocalNetConnection net="GND" connectsTo=".C1 > .pin2" />
+    <LocalNetConnection net="VDD" connectsTo=".C2 > .pin1" />
+    <LocalNetConnection net="GND" connectsTo=".C2 > .pin2" />
   </subcircuit>
 );
 

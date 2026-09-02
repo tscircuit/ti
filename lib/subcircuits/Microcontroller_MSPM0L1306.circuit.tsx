@@ -95,12 +95,11 @@ export const Microcontroller_MSPM0L1306 = (props: SubcircuitProps) => (
       schRotation={0}
       connections={{ pin1: "U1.ROSC" }}
     />
-    <netlabel
-      net="GND"
-      connectsTo="R2.pin2"
-      schX={4.8}
-      schY={1.55}
-      anchorSide="top"
+    <trace
+      name="GND_R2_pin2"
+      from="R2.pin2"
+      to="net.GND"
+      schDisplayLabel="GND"
     />
 
     <resistor
