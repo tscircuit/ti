@@ -133,18 +133,35 @@ interface RecommendationFacts {
   productFamily?: string;
 }
 
+function collectPartNumbersFromText(
+  text: string,
+  factsByPartNumber: Map<string, RecommendationFacts>,
+): void {
+  const possiblePartNumbers =
+    text.match(/\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*\d[A-Z0-9-]*\b/gi) ?? [];
+  for (const possiblePartNumber of possiblePartNumbers) {
+    const partNumber = possiblePartNumber.replace(/[.,;:)]+$/, "");
+    if (partNumber.length < 4 || factsByPartNumber.has(partNumber)) continue;
+    if (factsByPartNumber.size >= 5) return;
+    factsByPartNumber.set(partNumber, { featureNames: [], partNumber });
+  }
+}
+
 function collectRecommendationFacts(
   value: unknown,
   factsByPartNumber: Map<string, RecommendationFacts>,
 ): void {
   if (typeof value === "string") {
     const trimmed = value.trim();
-    if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) return;
-    try {
-      collectRecommendationFacts(JSON.parse(trimmed), factsByPartNumber);
-    } catch {
-      // Some MCP content is prose rather than JSON finder output.
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      try {
+        collectRecommendationFacts(JSON.parse(trimmed), factsByPartNumber);
+        return;
+      } catch {
+        // Fall through to the text parser for malformed or fenced JSON.
+      }
     }
+    collectPartNumbersFromText(trimmed, factsByPartNumber);
     return;
   }
   if (Array.isArray(value)) {

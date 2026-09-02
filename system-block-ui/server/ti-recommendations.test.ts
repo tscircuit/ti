@@ -66,6 +66,28 @@ describe("TI MCP recommendation transport", () => {
     ).toEqual([{ description: "", name: "CC2540", partNumber: "CC2540" }]);
   });
 
+  test("extracts part numbers from prose MCP content", () => {
+    expect(
+      extractMcpRecommendations({
+        result: {
+          content: [
+            {
+              text: [
+                "Recommended products:",
+                "- **CC2340R5** — Low-power wireless MCU.",
+                "- **CC2564C** — Dual-mode Bluetooth controller.",
+              ].join("\n"),
+              type: "text",
+            },
+          ],
+        },
+      }),
+    ).toEqual([
+      { description: "", name: "CC2340R5", partNumber: "CC2340R5" },
+      { description: "", name: "CC2564C", partNumber: "CC2564C" },
+    ]);
+  });
+
   test("builds display metadata from TI product family and feature facts", () => {
     expect(
       extractMcpRecommendations(
