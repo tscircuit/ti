@@ -48,11 +48,17 @@ export function SubcircuitPickerModal({
   const [recommendedIds, setRecommendedIds] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
+  const [isFetchingRecommendations, setIsFetchingRecommendations] =
+    useState(false);
 
   useEffect(() => {
     let active = true;
     setRecommendedIds(new Set());
-    if (candidates.length === 0) return;
+    if (candidates.length === 0) {
+      setIsFetchingRecommendations(false);
+      return;
+    }
+    setIsFetchingRecommendations(true);
     void getTiRecommendations(
       currentDefinition.category,
       recommendationDefinitions,
@@ -60,8 +66,11 @@ export function SubcircuitPickerModal({
       (recommendations) => {
         if (!active) return;
         setRecommendedIds(recommendations.definitionIds);
+        setIsFetchingRecommendations(false);
       },
-      () => {},
+      () => {
+        if (active) setIsFetchingRecommendations(false);
+      },
     );
     return () => {
       active = false;
@@ -109,7 +118,19 @@ export function SubcircuitPickerModal({
         <div className="subcircuit-picker-catalog">
           <div className="subcircuit-picker-results-heading">
             <span>Available parts</span>
-            <small>{candidates.length}</small>
+            <div className="subcircuit-picker-results-summary">
+              {isFetchingRecommendations && (
+                <span
+                  aria-live="polite"
+                  className="ti-recommendation-fetching"
+                  role="status"
+                >
+                  <i aria-hidden="true" />
+                  Fetching TI recommendations…
+                </span>
+              )}
+              <small>{candidates.length}</small>
+            </div>
           </div>
 
           <div className="subcircuit-picker-results">
