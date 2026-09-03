@@ -152,7 +152,7 @@ SOD-523 protection diode also use exact JLCPCB-imported copper. Its MOSFET and
 U.FL connector still require explicit package selections.
 
 `circuit-json-to-altium` is temporarily pinned to the official repository's
-exact commit `9a6ddfee3ea0b1abed92842d8fa9b39da04d1d55` because that converter has
+exact commit `f05162751359bb3a8fca849f537406564915fdab` because that converter has
 not published its first npm release yet. The pin should become an exact npm
 version once one is available; it does not use a preview registry or floating
 Git branch. Its nested `altiumts` dependency is overridden to the equivalent
