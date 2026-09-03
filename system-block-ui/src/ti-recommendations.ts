@@ -1,78 +1,22 @@
-import type { SubcircuitDefinition } from "./model";
-
 interface TiRecommendationResponse {
-  recommendations?: unknown;
+  text?: unknown;
 }
 
 const TI_RECOMMENDATIONS_URL =
   import.meta.env.VITE_TI_RECOMMENDATIONS_URL?.trim() ||
   "https://ti-mcp-cache-proxy.seve.workers.dev/api/ti-recommendations";
 
-export interface TiRecommendedPart {
-  description: string;
-  name: string;
-  partNumber: string;
-}
+const recommendationCache = new Map<string, Promise<string>>();
 
-export interface TiRecommendations {
-  definitionIds: ReadonlySet<string>;
-  parts: readonly TiRecommendedPart[];
-}
-
-const recommendationCache = new Map<
-  string,
-  Promise<readonly TiRecommendedPart[]>
->();
-
-function normalizePartText(value: string): string {
-  return value
-    .normalize("NFKC")
-    .toLowerCase()
-    .replaceAll(/[^a-z0-9]/g, "");
-}
-
-function partNumberTokens(title: string): readonly string[] {
-  return (title.match(/[a-z0-9]+(?:[-/][a-z0-9]+)*/gi) ?? [])
-    .filter((token) => /\d/.test(token))
-    .map(normalizePartText)
-    .filter((token) => token.length >= 4);
-}
-
-export function matchTiRecommendedDefinitionIds(
-  partNumbers: readonly string[],
-  definitions: readonly SubcircuitDefinition[],
-): ReadonlySet<string> {
-  const normalizedRecommendation = normalizePartText(partNumbers.join(" "));
-  const matches = definitions
-    .filter((definition) => {
-      const normalizedTitle = normalizePartText(definition.title);
-      if (
-        normalizedTitle.length >= 8 &&
-        normalizedRecommendation.includes(normalizedTitle)
-      ) {
-        return true;
-      }
-      return partNumberTokens(definition.title).some((token) =>
-        normalizedRecommendation.includes(token),
-      );
-    })
-    .map((definition) => definition.id);
-  return new Set(matches);
-}
-
-export function getTiRecommendations(
-  category: string,
-  definitions: readonly SubcircuitDefinition[],
-): Promise<TiRecommendations> {
-  let parts = recommendationCache.get(category);
-  if (!parts) {
+export function getTiRecommendationText(category: string): Promise<string> {
+  let text = recommendationCache.get(category);
+  if (!text) {
     const request = (async () => {
-      const query = new URLSearchParams({
-        category,
-        format: "details",
-      });
       const endpoint = new URL(TI_RECOMMENDATIONS_URL);
-      endpoint.search = query.toString();
+      endpoint.search = new URLSearchParams({
+        category,
+        format: "text",
+      }).toString();
       const response = await fetch(endpoint);
       if (!response.ok) {
         throw new Error(
@@ -80,35 +24,9 @@ export function getTiRecommendations(
         );
       }
       const payload = (await response.json()) as TiRecommendationResponse;
-      if (Array.isArray(payload.recommendations)) {
-        return payload.recommendations
-          .filter((recommendation): recommendation is Record<string, unknown> =>
-            Boolean(recommendation && typeof recommendation === "object"),
-          )
-          .map((recommendation) => ({
-            description:
-              typeof recommendation.description === "string"
-                ? recommendation.description.trim()
-                : "",
-            name:
-              typeof recommendation.name === "string"
-                ? recommendation.name.trim()
-                : "",
-            partNumber:
-              typeof recommendation.partNumber === "string"
-                ? recommendation.partNumber.trim()
-                : "",
-          }))
-          .filter((recommendation) => recommendation.partNumber)
-          .map((recommendation) => ({
-            ...recommendation,
-            name: recommendation.name || recommendation.partNumber,
-          }))
-          .slice(0, 5);
-      }
-      return [];
+      return typeof payload.text === "string" ? payload.text : "";
     })();
-    parts = request;
+    text = request;
     recommendationCache.set(category, request);
     void request.catch(() => {
       if (recommendationCache.get(category) === request) {
@@ -116,12 +34,5 @@ export function getTiRecommendations(
       }
     });
   }
-
-  return parts.then((resolvedParts) => ({
-    definitionIds: matchTiRecommendedDefinitionIds(
-      resolvedParts.map((part) => part.partNumber),
-      definitions,
-    ),
-    parts: resolvedParts,
-  }));
+  return text;
 }
