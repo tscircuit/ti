@@ -905,9 +905,9 @@ test("composite joins only the shared TI sheet nets", async () => {
       name: "watchdog_and_vref",
       display_name: "Watchdog and Vref",
       sheet_index: 1,
-      sheet_size: "ansi_b",
-      sheet_width: 431.8,
-      sheet_height: 279.4,
+      sheet_size: "a4",
+      sheet_width: 297,
+      sheet_height: 210,
     },
   ]);
 

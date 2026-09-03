@@ -29,10 +29,11 @@ const MAIN_SUPPLY_SHEET_Y_OFFSET = 6.2;
  * parent joins only the verified sheet nets; it does not synthesize
  * thresholds, timing, dividers, or grounding arrangements.
  *
- * Both sheet frames use native ANSI-B sizing, matching the released Altium
- * title blocks. A uniform +6.2-mm parent translation centers the Main Supply
- * layout vertically. The regulator child additionally receives the documented
- * +1.6-mm Y packing translation above; no child geometry is scaled.
+ * Main Supply keeps the larger native ANSI-B frame needed by its layout.
+ * Watchdog and Vref fits on the default A4 sheet. A uniform +6.2-mm parent
+ * translation centers the Main Supply layout vertically. The regulator child
+ * additionally receives the documented +1.6-mm Y packing translation above;
+ * no child geometry is scaled.
  */
 export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
@@ -46,7 +47,6 @@ export const PowerSupply_WindowModule = (props: SubcircuitProps) => (
       name="watchdog_and_vref"
       displayName="Watchdog and Vref"
       sheetIndex={1}
-      sheetSize="ANSI_B"
     />
 
     <net name="GND" isPowerNet isGroundNet />

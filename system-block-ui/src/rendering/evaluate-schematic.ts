@@ -28,7 +28,13 @@ export const PREVIEW_EVALUATION_PLATFORM = {
   analogSimulationDisabled: true,
 } as const;
 
-const NON_FATAL_PREVIEW_ERROR_TYPES = ["pcb_missing_footprint_error"] as const;
+const NON_FATAL_PREVIEW_ERROR_TYPES = [
+  "pcb_missing_footprint_error",
+  // The schematic remains valid when a remote KiCad library footprint is not
+  // present in the cache. ECAD export keeps that source component as a
+  // footprint placeholder, matching the existing missing-footprint behavior.
+  "external_footprint_load_error",
+] as const;
 
 export interface EvaluateGeneratedTsxOptions {
   /** Maximum time allowed for worker creation, evaluation, and rendering. */

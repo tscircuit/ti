@@ -88,6 +88,16 @@ export interface SubcircuitDefinition {
   tags?: readonly string[];
   /** False when the source cannot safely receive generated instance props. */
   canInstantiate?: boolean;
+  /**
+   * The subcircuit declares and assigns its own schematic sheets. Generated
+   * traces address its internals with descendant selectors.
+   */
+  hasInternalSchematicSheets?: boolean;
+  /** Larger sheet dimensions only for blocks that do not fit default A4. */
+  schematicSheetSize?: Readonly<{
+    width: string;
+    height: string;
+  }>;
   /** Catalog warning shown before a user adds a constrained subcircuit. */
   warning?: string;
   ports: readonly PortDefinition[];

@@ -35,12 +35,17 @@ const sanitizeJsxCommentText = (value: string): string => {
   return sanitized || "automatic";
 };
 
-const prefixSelector = (blockName: string, selector: string): string => {
+const prefixSelector = (
+  blockName: string,
+  selector: string,
+  useDescendantSelector = false,
+): string => {
   const relative = selector.trim().replace(/^>\s*/, "");
   // Nested subcircuits use a descendant selector between component levels,
   // for example `.U4Sensor .U4 > .SCL`. Adding a child combinator before
   // that path makes tscircuit search for a non-existent combined component.
-  const separator = /^\.[^>\s]+\s+\./.test(relative) ? " " : " > ";
+  const separator =
+    useDescendantSelector || /^\.[^>\s]+\s+\./.test(relative) ? " " : " > ";
   return `.${blockName}${separator}${relative}`;
 };
 
@@ -61,6 +66,7 @@ const renderImport = (
 const renderTrace = (
   trace: ResolvedTrace,
   instanceNameByBlockId: ReadonlyMap<string, string>,
+  descendantSelectorBlockIds: ReadonlySet<string>,
 ): readonly string[] => {
   const fromName = instanceNameByBlockId.get(trace.fromBlockId);
   const toName = instanceNameByBlockId.get(trace.toBlockId);
@@ -74,8 +80,20 @@ const renderTrace = (
 
   return [
     "    <trace",
-    `      from=${quote(prefixSelector(fromName, trace.fromSelector))}`,
-    `      to=${quote(prefixSelector(toName, trace.toSelector))}`,
+    `      from=${quote(
+      prefixSelector(
+        fromName,
+        trace.fromSelector,
+        descendantSelectorBlockIds.has(trace.fromBlockId),
+      ),
+    )}`,
+    `      to=${quote(
+      prefixSelector(
+        toName,
+        trace.toSelector,
+        descendantSelectorBlockIds.has(trace.toBlockId),
+      ),
+    )}`,
     "    />",
   ];
 };
@@ -216,6 +234,11 @@ const renderGeneratedSource = ({
   const instanceNameByBlockId = new Map(
     prepared.map((item) => [item.block.id, item.instanceName]),
   );
+  const descendantSelectorBlockIds = new Set(
+    prepared
+      .filter((item) => item.definition.hasInternalSchematicSheets)
+      .map((item) => item.block.id),
+  );
   const packageByComponent = new Map<string, Set<string>>();
   for (const item of prepared) {
     const packageName = request.packageName ?? item.definition.importPath;
@@ -254,22 +277,32 @@ const renderGeneratedSource = ({
     "    </schematicsheet>",
   );
 
-  prepared.forEach((item, sheetIndex) => {
-    lines.push(
-      "    <schematicsheet",
-      `      name=${quote(item.sheetName)}`,
-      `      displayName=${quote(item.definition.title)}`,
-      `      sheetIndex={${sheetIndex + 1}}`,
-      "    />",
-    );
-  });
+  prepared
+    .filter((item) => !item.definition.hasInternalSchematicSheets)
+    .forEach((item, sheetIndex) => {
+      lines.push(
+        "    <schematicsheet",
+        `      name=${quote(item.sheetName)}`,
+        `      displayName=${quote(item.definition.title)}`,
+        `      sheetIndex={${sheetIndex + 1}}`,
+        ...(item.definition.schematicSheetSize
+          ? [
+              `      sheetWidth=${quote(item.definition.schematicSheetSize.width)}`,
+              `      sheetHeight=${quote(item.definition.schematicSheetSize.height)}`,
+            ]
+          : []),
+        "    />",
+      );
+    });
 
   lines.push("");
   for (const item of prepared) {
     lines.push(
       `    <${item.definition.componentName}`,
       `      name=${quote(item.instanceName)}`,
-      `      schSheetName=${quote(item.sheetName)}`,
+      ...(item.definition.hasInternalSchematicSheets
+        ? []
+        : [`      schSheetName=${quote(item.sheetName)}`]),
       ...(item.block.schX === undefined
         ? []
         : [`      schX={${item.block.schX}}`]),
@@ -289,7 +322,13 @@ const renderGeneratedSource = ({
       `    {/* ${connection.kind === "power" ? "Power" : "Data"}: ${protocolComment} */}`,
     );
     for (const trace of connection.traces) {
-      lines.push(...renderTrace(trace, instanceNameByBlockId));
+      lines.push(
+        ...renderTrace(
+          trace,
+          instanceNameByBlockId,
+          descendantSelectorBlockIds,
+        ),
+      );
     }
   }
 

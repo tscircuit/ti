@@ -52,6 +52,7 @@ interface SchematicBuildResult {
 }
 
 const BUILD_TOAST_ID = "schematic-build";
+const SCHEMATIC_BUILD_TIMEOUT_MS = 120_000;
 
 const instanceBaseName = (componentName: string): string =>
   componentName
@@ -308,7 +309,7 @@ export function App() {
             ...getGeneratedSystemEvaluationFsMap(generatedArtifacts),
             ...createLocalTiPackageEvaluationFsMap(selectedDefinitions),
           },
-          timeoutMs: 45_000,
+          timeoutMs: SCHEMATIC_BUILD_TIMEOUT_MS,
           schematicOptions: {
             width: SCHEMATIC_SVG_WIDTH,
             height: SCHEMATIC_SVG_HEIGHT,

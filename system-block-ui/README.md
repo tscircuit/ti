@@ -18,6 +18,12 @@ graph with an editable diagram backed by a complete circuit in [`../examples`](.
 The menu includes the repository's reviewed complete-circuit examples; reset
 restores whichever example was loaded most recently.
 
+The Automotive Window Module preset composes its seven reviewed power, LIN,
+MSP430, motor-driver, anti-pinch, thermal-protection, and position-feedback
+subcircuits. Its semantic graph follows TI's Automotive Window Module block
+diagram, while schematic evaluation uses the local implementations and their
+source-backed detail sheets.
+
 ## Run with schematic evaluation
 
 ```bash
