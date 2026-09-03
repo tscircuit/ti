@@ -898,9 +898,64 @@ button {
   border-bottom: 1px solid #dce7e1;
 }
 
+.ti-mcp-response {
+  border-bottom: 1px solid #dfe4e9;
+}
+
+.ti-mcp-response summary {
+  padding: 12px 15px;
+  color: #425366;
+  font-size: 12px;
+  font-weight: 650;
+  background: #f8f9fb;
+  cursor: pointer;
+}
+
+.ti-mcp-response summary span {
+  margin-left: 6px;
+  color: #697582;
+  font-size: 10px;
+  font-weight: 450;
+}
+
+.ti-mcp-response summary:hover,
+.ti-mcp-response summary:focus-visible {
+  background: #eef1f4;
+}
+
+.ti-mcp-response pre {
+  max-height: 280px;
+  margin: 0;
+  padding: 15px;
+  overflow: auto;
+  color: #29343f;
+  font-size: 11px;
+  line-height: 1.5;
+  tab-size: 2;
+  background: #fafbfc;
+  border-top: 1px solid #dfe4e9;
+}
+
+.ti-mcp-response summary:focus-visible,
+.ti-mcp-response pre:focus-visible {
+  outline: 2px solid #697582;
+  outline-offset: -2px;
+}
+
+.ti-recommendation-error {
+  margin: 0;
+  padding: 12px 15px;
+  color: #922329;
+  font-size: 12px;
+  line-height: 1.4;
+  background: #fff6f6;
+  border-bottom: 1px solid #dfe4e9;
+}
+
 .ti-portfolio-recommendations-heading,
 .ti-portfolio-part div {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: 12px;

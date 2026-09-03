@@ -63,6 +63,10 @@ export function SubcircuitPickerModal({
   const [expandedPartNumber, setExpandedPartNumber] = useState<string | null>(
     null,
   );
+  const [mcpResponseJson, setMcpResponseJson] = useState<string | null>(null);
+  const [recommendationError, setRecommendationError] = useState<string | null>(
+    null,
+  );
   const [isFetchingRecommendations, setIsFetchingRecommendations] =
     useState(false);
   const widerPortfolioParts = useMemo(
@@ -82,6 +86,8 @@ export function SubcircuitPickerModal({
     setRecommendedIds(new Set());
     setRecommendedParts([]);
     setExpandedPartNumber(null);
+    setMcpResponseJson(null);
+    setRecommendationError(null);
     if (candidates.length === 0) {
       setIsFetchingRecommendations(false);
       return;
@@ -95,10 +101,17 @@ export function SubcircuitPickerModal({
         if (!active) return;
         setRecommendedIds(recommendations.definitionIds);
         setRecommendedParts(recommendations.parts);
+        setMcpResponseJson(
+          JSON.stringify(recommendations.mcpResponse, null, 2),
+        );
         setIsFetchingRecommendations(false);
       },
       () => {
-        if (active) setIsFetchingRecommendations(false);
+        if (!active) return;
+        setRecommendationError(
+          "TI recommendations could not be loaded. Available subcircuits are still selectable.",
+        );
+        setIsFetchingRecommendations(false);
       },
     );
     return () => {
@@ -163,6 +176,24 @@ export function SubcircuitPickerModal({
           </div>
 
           <div className="subcircuit-picker-results">
+            {recommendationError && (
+              <p className="ti-recommendation-error" role="status">
+                {recommendationError}
+              </p>
+            )}
+            {mcpResponseJson !== null && (
+              <details
+                className="ti-mcp-response"
+                key={currentDefinition.category}
+              >
+                <summary>
+                  MCP response <span>JSON</span>
+                </summary>
+                <pre aria-label="TI MCP JSON response" tabIndex={0}>
+                  <code>{mcpResponseJson}</code>
+                </pre>
+              </details>
+            )}
             {widerPortfolioParts.length > 0 && (
               <section
                 aria-label="Recommendations from the wider TI portfolio"
