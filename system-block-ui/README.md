@@ -34,9 +34,10 @@ Worker at <https://ti-mcp-cache-proxy.seve.workers.dev>. No TI credentials are
 stored in this application. To use a locally running proxy instead, copy
 `.env.example` to `.env.local` before starting Vite.
 
-In the subcircuit picker, click a recommended TI portfolio part to reveal its
-description. Recommendation descriptions stay collapsed until their part is
-clicked.
+The subcircuit picker keeps the repository's selectable TI subcircuits separate
+from the upstream exchange. Expand **TI MCP conversation** to see the exact
+request prompt and literal tool-response text. The MCP output is not converted
+into selectable parts or recommendation badges.
 
 To build the production application and serve that build locally:
 
