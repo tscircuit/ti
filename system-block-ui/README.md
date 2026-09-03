@@ -29,6 +29,15 @@ bun run dev
 Open the local HTTP URL printed by Vite. Schematic evaluation and evaluated
 downloads are supported when the application is served over HTTP.
 
+TI Support Intelligence recommendations are fetched from the cached Cloudflare
+Worker at <https://ti-mcp-cache-proxy.seve.workers.dev>. No TI credentials are
+stored in this application. To use a locally running proxy instead, copy
+`.env.example` to `.env.local` before starting Vite.
+
+In the subcircuit picker, click a recommended TI portfolio part to reveal its
+description. Recommendation descriptions stay collapsed until their part is
+clicked.
+
 To build the production application and serve that build locally:
 
 ```bash
@@ -50,6 +59,10 @@ npx vercel
 Use `npx vercel --prod` after checking the preview deployment. The configured
 install command performs a frozen install from `system-block-ui/bun.lock`; no
 dashboard build overrides are required.
+
+The deployed cache proxy is used by default. Set
+`VITE_TI_RECOMMENDATIONS_URL` only when a deployment should use another proxy
+endpoint.
 
 The remaining production checks are:
 
