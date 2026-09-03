@@ -2,9 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import type { SubcircuitDefinition } from "../model";
 import {
-  getTiRecommendations,
-  matchTiRecommendedDefinitionIds,
-  type TiRecommendedPart,
+  getTiMcpConversation,
+  type TiMcpConversation,
 } from "../ti-recommendations";
 
 export function getSelectableSubcircuitCandidates(
@@ -35,16 +34,6 @@ export function SubcircuitPickerModal({
   onClose,
   onSelect,
 }: SubcircuitPickerModalProps) {
-  const recommendationDefinitions = useMemo(
-    () =>
-      definitions.filter(
-        (definition) =>
-          definition.canInstantiate !== false &&
-          definition.sourcePath.startsWith("lib/subcircuits/") &&
-          definition.category === currentDefinition.category,
-      ),
-    [currentDefinition.category, definitions],
-  );
   const candidates = useMemo(() => {
     const selectable = getSelectableSubcircuitCandidates(
       definitions,
@@ -54,61 +43,42 @@ export function SubcircuitPickerModal({
       a.title.localeCompare(b.title, "en"),
     );
   }, [currentDefinition, definitions]);
-  const [recommendedIds, setRecommendedIds] = useState<ReadonlySet<string>>(
-    () => new Set(),
-  );
-  const [recommendedParts, setRecommendedParts] = useState<
-    readonly TiRecommendedPart[]
-  >([]);
-  const [expandedPartNumber, setExpandedPartNumber] = useState<string | null>(
+  const [isConversationOpen, setIsConversationOpen] = useState(false);
+  const [conversation, setConversation] = useState<TiMcpConversation | null>(
     null,
   );
-  const [isFetchingRecommendations, setIsFetchingRecommendations] =
-    useState(false);
-  const widerPortfolioParts = useMemo(
-    () =>
-      recommendedParts.filter(
-        (part) =>
-          matchTiRecommendedDefinitionIds(
-            [part.partNumber],
-            recommendationDefinitions,
-          ).size === 0,
-      ),
-    [recommendationDefinitions, recommendedParts],
-  );
+  const [isFetchingConversation, setIsFetchingConversation] = useState(false);
+  const [conversationUnavailable, setConversationUnavailable] = useState(false);
 
   useEffect(() => {
+    setIsConversationOpen(false);
+    setConversation(null);
+    setIsFetchingConversation(false);
+    setConversationUnavailable(false);
+  }, [currentDefinition.category]);
+
+  useEffect(() => {
+    if (!isConversationOpen || conversation) return;
+
     let active = true;
-    setRecommendedIds(new Set());
-    setRecommendedParts([]);
-    setExpandedPartNumber(null);
-    if (candidates.length === 0) {
-      setIsFetchingRecommendations(false);
-      return;
-    }
-    setIsFetchingRecommendations(true);
-    void getTiRecommendations(
-      currentDefinition.category,
-      recommendationDefinitions,
-    ).then(
-      (recommendations) => {
+    setConversationUnavailable(false);
+    setIsFetchingConversation(true);
+    void getTiMcpConversation(currentDefinition.category).then(
+      (result) => {
         if (!active) return;
-        setRecommendedIds(recommendations.definitionIds);
-        setRecommendedParts(recommendations.parts);
-        setIsFetchingRecommendations(false);
+        setConversation(result);
+        setIsFetchingConversation(false);
       },
       () => {
-        if (active) setIsFetchingRecommendations(false);
+        if (!active) return;
+        setConversationUnavailable(true);
+        setIsFetchingConversation(false);
       },
     );
     return () => {
       active = false;
     };
-  }, [
-    candidates.length,
-    currentDefinition.category,
-    recommendationDefinitions,
-  ]);
+  }, [conversation, currentDefinition.category, isConversationOpen]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -147,57 +117,64 @@ export function SubcircuitPickerModal({
         <div className="subcircuit-picker-catalog">
           <div className="subcircuit-picker-results-heading">
             <span>Available subcircuits</span>
-            <div className="subcircuit-picker-results-summary">
-              {isFetchingRecommendations && (
-                <span
-                  aria-live="polite"
-                  className="ti-recommendation-fetching"
-                  role="status"
-                >
-                  <i aria-hidden="true" />
-                  Fetching TI recommendations…
-                </span>
-              )}
-              <small>{candidates.length}</small>
-            </div>
+            <small>{candidates.length}</small>
           </div>
 
           <div className="subcircuit-picker-results">
-            {widerPortfolioParts.length > 0 && (
-              <section
-                aria-label="Recommendations from the wider TI portfolio"
-                className="ti-portfolio-recommendations"
+            <section className="ti-mcp-conversation">
+              <button
+                aria-expanded={isConversationOpen}
+                className="ti-mcp-conversation-toggle"
+                onClick={() => setIsConversationOpen((open) => !open)}
+                type="button"
               >
-                <div className="ti-portfolio-recommendations-heading">
-                  <strong>TI portfolio recommendations</strong>
-                  <small>{widerPortfolioParts.length}</small>
-                </div>
-                {widerPortfolioParts.map((part) => {
-                  const isExpanded = expandedPartNumber === part.partNumber;
-                  return (
-                    <button
-                      aria-expanded={isExpanded}
-                      className="ti-portfolio-part"
-                      key={part.partNumber}
-                      onClick={() =>
-                        setExpandedPartNumber(
-                          isExpanded ? null : part.partNumber,
-                        )
-                      }
-                      type="button"
+                <strong>TI MCP conversation</strong>
+                <span aria-hidden="true">›</span>
+              </button>
+
+              {isConversationOpen && (
+                <div className="ti-mcp-conversation-content">
+                  {isFetchingConversation && (
+                    <div
+                      aria-live="polite"
+                      className="ti-mcp-conversation-fetching"
+                      role="status"
                     >
-                      <div>
-                        <strong>{part.name}</strong>
-                        <small>Recommended</small>
-                      </div>
-                      {isExpanded && part.description && (
-                        <span>{part.description}</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </section>
-            )}
+                      <i aria-hidden="true" />
+                      Contacting TI MCP…
+                    </div>
+                  )}
+
+                  {conversationUnavailable && (
+                    <p className="ti-mcp-conversation-error">
+                      TI MCP conversation is temporarily unavailable. Collapse
+                      and reopen to retry.
+                    </p>
+                  )}
+
+                  {conversation && (
+                    <>
+                      <section className="ti-mcp-message">
+                        <header>
+                          <strong>Request</strong>
+                          <small>{conversation.tool}</small>
+                        </header>
+                        <pre>{conversation.request}</pre>
+                      </section>
+                      <section className="ti-mcp-message" data-kind="response">
+                        <header>
+                          <strong>Response</strong>
+                        </header>
+                        <pre>
+                          {conversation.response ||
+                            "TI MCP returned an empty response."}
+                        </pre>
+                      </section>
+                    </>
+                  )}
+                </div>
+              )}
+            </section>
 
             {candidates.map((definition) => {
               const isCurrent = definition.id === currentDefinition.id;
@@ -218,11 +195,6 @@ export function SubcircuitPickerModal({
                     <strong>{definition.title}</strong>
                     <div className="subcircuit-candidate-badges">
                       {isCurrent && <small data-tone="current">Current</small>}
-                      {recommendedIds.has(definition.id) && (
-                        <small title="Recommended by TI Support Intelligence">
-                          Recommended
-                        </small>
-                      )}
                     </div>
                   </div>
                   {definition.description && (
