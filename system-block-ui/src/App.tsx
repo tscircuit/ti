@@ -124,12 +124,6 @@ export function App() {
   const [schematicSheets, setSchematicSheets] = useState<
     readonly EvaluatedSchematicSheet[]
   >([]);
-  const hasAutomaticPower = snapshot.connections.some(
-    (connection) => connection.kind.toLowerCase() === "power",
-  );
-  const dataLinkCount = snapshot.connections.filter(
-    (connection) => connection.kind.toLowerCase() === "data",
-  ).length;
   const pickerBlock = pickerBlockId
     ? snapshot.blocks.find((block) => block.id === pickerBlockId)
     : undefined;
@@ -609,13 +603,6 @@ export function App() {
         >
           <div className="flow-canvas" ref={canvasRef} />
           <div className="canvas-toolbar">
-            <span className="toolbar-label">
-              {snapshot.blocks.length}{" "}
-              {snapshot.blocks.length === 1 ? "block" : "blocks"}
-              {hasAutomaticPower ? " · automatic power" : ""} · {dataLinkCount}{" "}
-              {dataLinkCount === 1 ? "data link" : "data links"}
-            </span>
-            <span className="toolbar-separator" />
             <button
               aria-label="Fit graph to canvas"
               className="icon-button"
