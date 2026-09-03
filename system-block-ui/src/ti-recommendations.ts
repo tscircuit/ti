@@ -1,9 +1,5 @@
 import type { SubcircuitDefinition } from "./model";
 
-interface TiRecommendationResponse {
-  recommendations?: unknown;
-}
-
 const TI_RECOMMENDATIONS_URL =
   import.meta.env.VITE_TI_RECOMMENDATIONS_URL?.trim() ||
   "https://ti-mcp-cache-proxy.seve.workers.dev/api/ti-recommendations";
@@ -14,15 +10,79 @@ export interface TiRecommendedPart {
   partNumber: string;
 }
 
-export interface TiRecommendations {
-  definitionIds: ReadonlySet<string>;
+interface TiRecommendationData {
+  mcpResponse: unknown;
   parts: readonly TiRecommendedPart[];
 }
 
-const recommendationCache = new Map<
-  string,
-  Promise<readonly TiRecommendedPart[]>
->();
+export interface TiRecommendations extends TiRecommendationData {
+  definitionIds: ReadonlySet<string>;
+}
+
+const recommendationCache = new Map<string, Promise<TiRecommendationData>>();
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+export function parseTiRecommendationResponse(
+  payload: unknown,
+): TiRecommendationData {
+  const conversation = isRecord(payload) ? payload.conversation : undefined;
+  let mcpResponse =
+    isRecord(conversation) && "response" in conversation
+      ? conversation.response
+      : payload;
+  if (typeof mcpResponse === "string") {
+    try {
+      mcpResponse = JSON.parse(mcpResponse);
+    } catch {
+      // Keep non-JSON MCP responses available in the viewer, too.
+    }
+  }
+
+  let recommendations: unknown[] = [];
+  if (isRecord(payload) && Array.isArray(payload.recommendations)) {
+    recommendations = payload.recommendations;
+  } else if (isRecord(mcpResponse)) {
+    if (Array.isArray(mcpResponse.recommendations)) {
+      recommendations = mcpResponse.recommendations;
+    } else if (Array.isArray(mcpResponse.finding_events)) {
+      // Each product can have many findings (one per parameter). Only findings
+      // are recommendations; filter_events also contain unrelated family parts.
+      recommendations = mcpResponse.finding_events
+        .filter((event) => isRecord(event) && event.type === "finding")
+        .map((event) => event.data);
+    }
+  }
+
+  const parts = new Map<string, TiRecommendedPart>();
+  for (const recommendation of recommendations) {
+    if (!isRecord(recommendation)) continue;
+    const partNumber =
+      readString(recommendation.partNumber) ||
+      readString(recommendation.part_number);
+    if (!partNumber) continue;
+    const key = normalizePartText(partNumber);
+    if (!key || parts.has(key)) continue;
+    parts.set(key, {
+      partNumber,
+      name:
+        readString(recommendation.name) ||
+        readString(recommendation.product_name) ||
+        partNumber,
+      description:
+        readString(recommendation.description) ||
+        readString(recommendation.product_family),
+    });
+  }
+
+  return { mcpResponse, parts: [...parts.values()] };
+}
 
 function normalizePartText(value: string): string {
   return value
@@ -42,18 +102,17 @@ export function matchTiRecommendedDefinitionIds(
   partNumbers: readonly string[],
   definitions: readonly SubcircuitDefinition[],
 ): ReadonlySet<string> {
-  const normalizedRecommendation = normalizePartText(partNumbers.join(" "));
+  const normalizedRecommendations = partNumbers.map(normalizePartText);
   const matches = definitions
     .filter((definition) => {
       const normalizedTitle = normalizePartText(definition.title);
-      if (
-        normalizedTitle.length >= 8 &&
-        normalizedRecommendation.includes(normalizedTitle)
-      ) {
-        return true;
-      }
-      return partNumberTokens(definition.title).some((token) =>
-        normalizedRecommendation.includes(token),
+      return normalizedRecommendations.some(
+        (recommendation) =>
+          (normalizedTitle.length >= 8 &&
+            recommendation.includes(normalizedTitle)) ||
+          partNumberTokens(definition.title).some((token) =>
+            recommendation.includes(token),
+          ),
       );
     })
     .map((definition) => definition.id);
@@ -64,13 +123,10 @@ export function getTiRecommendations(
   category: string,
   definitions: readonly SubcircuitDefinition[],
 ): Promise<TiRecommendations> {
-  let parts = recommendationCache.get(category);
-  if (!parts) {
+  let data = recommendationCache.get(category);
+  if (!data) {
     const request = (async () => {
-      const query = new URLSearchParams({
-        category,
-        format: "details",
-      });
+      const query = new URLSearchParams({ category });
       const endpoint = new URL(TI_RECOMMENDATIONS_URL);
       endpoint.search = query.toString();
       const response = await fetch(endpoint);
@@ -79,36 +135,9 @@ export function getTiRecommendations(
           `TI recommendations failed with HTTP ${response.status}.`,
         );
       }
-      const payload = (await response.json()) as TiRecommendationResponse;
-      if (Array.isArray(payload.recommendations)) {
-        return payload.recommendations
-          .filter((recommendation): recommendation is Record<string, unknown> =>
-            Boolean(recommendation && typeof recommendation === "object"),
-          )
-          .map((recommendation) => ({
-            description:
-              typeof recommendation.description === "string"
-                ? recommendation.description.trim()
-                : "",
-            name:
-              typeof recommendation.name === "string"
-                ? recommendation.name.trim()
-                : "",
-            partNumber:
-              typeof recommendation.partNumber === "string"
-                ? recommendation.partNumber.trim()
-                : "",
-          }))
-          .filter((recommendation) => recommendation.partNumber)
-          .map((recommendation) => ({
-            ...recommendation,
-            name: recommendation.name || recommendation.partNumber,
-          }))
-          .slice(0, 5);
-      }
-      return [];
+      return parseTiRecommendationResponse(await response.json());
     })();
-    parts = request;
+    data = request;
     recommendationCache.set(category, request);
     void request.catch(() => {
       if (recommendationCache.get(category) === request) {
@@ -117,11 +146,11 @@ export function getTiRecommendations(
     });
   }
 
-  return parts.then((resolvedParts) => ({
+  return data.then((recommendations) => ({
+    ...recommendations,
     definitionIds: matchTiRecommendedDefinitionIds(
-      resolvedParts.map((part) => part.partNumber),
+      recommendations.parts.map((part) => part.partNumber),
       definitions,
     ),
-    parts: resolvedParts,
   }));
 }
