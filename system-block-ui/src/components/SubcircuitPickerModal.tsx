@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { SubcircuitDefinition } from "../model";
-import { getTiRecommendationText } from "../ti-recommendations";
+import {
+  getTiRecommendations,
+  matchTiRecommendedDefinitionIds,
+  type TiRecommendedPart,
+} from "../ti-recommendations";
 
 export function getSelectableSubcircuitCandidates(
   definitions: readonly SubcircuitDefinition[],
@@ -31,6 +35,16 @@ export function SubcircuitPickerModal({
   onClose,
   onSelect,
 }: SubcircuitPickerModalProps) {
+  const recommendationDefinitions = useMemo(
+    () =>
+      definitions.filter(
+        (definition) =>
+          definition.canInstantiate !== false &&
+          definition.sourcePath.startsWith("lib/subcircuits/") &&
+          definition.category === currentDefinition.category,
+      ),
+    [currentDefinition.category, definitions],
+  );
   const candidates = useMemo(() => {
     const selectable = getSelectableSubcircuitCandidates(
       definitions,
@@ -40,42 +54,61 @@ export function SubcircuitPickerModal({
       a.title.localeCompare(b.title, "en"),
     );
   }, [currentDefinition, definitions]);
-  const [isRecommendationOpen, setIsRecommendationOpen] = useState(false);
-  const [recommendationText, setRecommendationText] = useState<string | null>(
+  const [recommendedIds, setRecommendedIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const [recommendedParts, setRecommendedParts] = useState<
+    readonly TiRecommendedPart[]
+  >([]);
+  const [expandedPartNumber, setExpandedPartNumber] = useState<string | null>(
     null,
   );
   const [isFetchingRecommendations, setIsFetchingRecommendations] =
     useState(false);
-  const [recommendationUnavailable, setRecommendationUnavailable] =
-    useState(false);
+  const widerPortfolioParts = useMemo(
+    () =>
+      recommendedParts.filter(
+        (part) =>
+          matchTiRecommendedDefinitionIds(
+            [part.partNumber],
+            recommendationDefinitions,
+          ).size === 0,
+      ),
+    [recommendationDefinitions, recommendedParts],
+  );
 
   useEffect(() => {
-    setIsRecommendationOpen(false);
-    setRecommendationText(null);
-    setRecommendationUnavailable(false);
-  }, [currentDefinition.category]);
-
-  useEffect(() => {
-    if (!isRecommendationOpen || recommendationText !== null) return;
     let active = true;
+    setRecommendedIds(new Set());
+    setRecommendedParts([]);
+    setExpandedPartNumber(null);
+    if (candidates.length === 0) {
+      setIsFetchingRecommendations(false);
+      return;
+    }
     setIsFetchingRecommendations(true);
-    setRecommendationUnavailable(false);
-    void getTiRecommendationText(currentDefinition.category).then(
-      (text) => {
+    void getTiRecommendations(
+      currentDefinition.category,
+      recommendationDefinitions,
+    ).then(
+      (recommendations) => {
         if (!active) return;
-        setRecommendationText(text);
+        setRecommendedIds(recommendations.definitionIds);
+        setRecommendedParts(recommendations.parts);
         setIsFetchingRecommendations(false);
       },
       () => {
-        if (!active) return;
-        setRecommendationUnavailable(true);
-        setIsFetchingRecommendations(false);
+        if (active) setIsFetchingRecommendations(false);
       },
     );
     return () => {
       active = false;
     };
-  }, [currentDefinition.category, isRecommendationOpen, recommendationText]);
+  }, [
+    candidates.length,
+    currentDefinition.category,
+    recommendationDefinitions,
+  ]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -114,59 +147,57 @@ export function SubcircuitPickerModal({
         <div className="subcircuit-picker-catalog">
           <div className="subcircuit-picker-results-heading">
             <span>Available subcircuits</span>
-            <small>{candidates.length}</small>
+            <div className="subcircuit-picker-results-summary">
+              {isFetchingRecommendations && (
+                <span
+                  aria-live="polite"
+                  className="ti-recommendation-fetching"
+                  role="status"
+                >
+                  <i aria-hidden="true" />
+                  Fetching TI recommendations…
+                </span>
+              )}
+              <small>{candidates.length}</small>
+            </div>
           </div>
 
           <div className="subcircuit-picker-results">
-            <section className="ti-recommendation-disclosure">
-              <button
-                aria-controls="ti-recommendation-text"
-                aria-expanded={isRecommendationOpen}
-                className="ti-recommendation-toggle"
-                onClick={() => setIsRecommendationOpen((open) => !open)}
-                type="button"
+            {widerPortfolioParts.length > 0 && (
+              <section
+                aria-label="Recommendations from the wider TI portfolio"
+                className="ti-portfolio-recommendations"
               >
-                <div>
+                <div className="ti-portfolio-recommendations-heading">
                   <strong>TI portfolio recommendations</strong>
-                  <span>View TI's recommendation text</span>
+                  <small>{widerPortfolioParts.length}</small>
                 </div>
-                <div className="ti-recommendation-toggle-meta">
-                  <small>Recommended</small>
-                  <span aria-hidden="true" data-open={isRecommendationOpen}>
-                    ›
-                  </span>
-                </div>
-              </button>
-              {isRecommendationOpen && (
-                <div
-                  className="ti-recommendation-content"
-                  id="ti-recommendation-text"
-                >
-                  {isFetchingRecommendations && (
-                    <span
-                      aria-live="polite"
-                      className="ti-recommendation-fetching"
-                      role="status"
+                {widerPortfolioParts.map((part) => {
+                  const isExpanded = expandedPartNumber === part.partNumber;
+                  return (
+                    <button
+                      aria-expanded={isExpanded}
+                      className="ti-portfolio-part"
+                      key={part.partNumber}
+                      onClick={() =>
+                        setExpandedPartNumber(
+                          isExpanded ? null : part.partNumber,
+                        )
+                      }
+                      type="button"
                     >
-                      <i aria-hidden="true" />
-                      Fetching TI recommendations…
-                    </span>
-                  )}
-                  {recommendationUnavailable && (
-                    <span role="status">
-                      TI recommendations are temporarily unavailable. Close and
-                      reopen to retry.
-                    </span>
-                  )}
-                  {!isFetchingRecommendations && !recommendationUnavailable && (
-                    <pre>
-                      {recommendationText ||
-                        "TI returned no recommendation text."}
-                    </pre>
-                  )}
-                </div>
-              )}
-            </section>
+                      <div>
+                        <strong>{part.name}</strong>
+                        <small>Recommended</small>
+                      </div>
+                      {isExpanded && part.description && (
+                        <span>{part.description}</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </section>
+            )}
 
             {candidates.map((definition) => {
               const isCurrent = definition.id === currentDefinition.id;
@@ -187,6 +218,11 @@ export function SubcircuitPickerModal({
                     <strong>{definition.title}</strong>
                     <div className="subcircuit-candidate-badges">
                       {isCurrent && <small data-tone="current">Current</small>}
+                      {recommendedIds.has(definition.id) && (
+                        <small title="Recommended by TI Support Intelligence">
+                          Recommended
+                        </small>
+                      )}
                     </div>
                   </div>
                   {definition.description && (

@@ -857,9 +857,14 @@ button {
   border-radius: 999px;
 }
 
+.subcircuit-picker-results-summary,
 .ti-recommendation-fetching {
   display: flex;
   align-items: center;
+}
+
+.subcircuit-picker-results-summary {
+  gap: 10px;
 }
 
 .ti-recommendation-fetching {
@@ -888,57 +893,34 @@ button {
   border-radius: 9px;
 }
 
-.ti-recommendation-disclosure {
+.ti-portfolio-recommendations {
   background: #f6fbf8;
   border-bottom: 1px solid #dce7e1;
 }
 
-.ti-recommendation-toggle {
+.ti-portfolio-recommendations-heading,
+.ti-portfolio-part div {
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 15px;
+}
+
+.ti-portfolio-recommendations-heading {
+  padding: 9px 15px;
   color: #22734b;
-  text-align: left;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
+  border-bottom: 1px solid #dce7e1;
 }
 
-.ti-recommendation-toggle:hover,
-.ti-recommendation-toggle:focus-visible {
-  background: #edf8f2;
-  outline: none;
-}
-
-.ti-recommendation-toggle > div:first-child {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.ti-recommendation-toggle strong {
+.ti-portfolio-recommendations-heading strong {
   font-size: 10px;
   font-weight: 750;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.ti-recommendation-toggle > div:first-child span {
-  color: #697582;
-  font-size: 11px;
-}
-
-.ti-recommendation-toggle-meta {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 9px;
-}
-
-.ti-recommendation-toggle-meta small {
+.ti-portfolio-recommendations-heading small,
+.ti-portfolio-part small {
   flex: none;
   padding: 3px 7px;
   color: #22734b;
@@ -950,36 +932,40 @@ button {
   border-radius: 999px;
 }
 
-.ti-recommendation-toggle-meta > span {
-  color: #697582;
-  font-size: 22px;
-  line-height: 1;
-  transition: transform 120ms ease;
-}
-
-.ti-recommendation-toggle-meta > span[data-open="true"] {
-  transform: rotate(90deg);
-}
-
-.ti-recommendation-content {
-  padding: 13px 15px 15px;
-  color: #4e5d6c;
+.ti-portfolio-part {
+  display: flex;
+  width: 100%;
+  min-height: 50px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 15px;
+  color: #29343f;
+  text-align: left;
   background: #fbfdfc;
-  border-top: 1px solid #dce7e1;
+  border: 0;
+  cursor: pointer;
 }
 
-.ti-recommendation-content > span {
-  font-size: 12px;
-  line-height: 1.5;
+.ti-portfolio-part + .ti-portfolio-part {
+  border-top: 1px solid #dfe9e3;
 }
 
-.ti-recommendation-content pre {
-  margin: 0;
-  overflow-wrap: anywhere;
-  font: inherit;
+.ti-portfolio-part:hover,
+.ti-portfolio-part:focus-visible {
+  background: #edf8f2;
+  outline: none;
+}
+
+.ti-portfolio-part strong {
+  font-size: 13px;
+  font-weight: 720;
+}
+
+.ti-portfolio-part span {
+  color: #697582;
   font-size: 12px;
-  line-height: 1.55;
-  white-space: pre-wrap;
+  line-height: 1.4;
 }
 
 .subcircuit-candidate {
