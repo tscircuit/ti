@@ -4,6 +4,10 @@ interface TiRecommendationResponse {
   recommendations?: unknown;
 }
 
+const TI_RECOMMENDATIONS_URL =
+  import.meta.env.VITE_TI_RECOMMENDATIONS_URL?.trim() ||
+  "https://ti-mcp-cache-proxy.seve.workers.dev/api/ti-recommendations";
+
 export interface TiRecommendedPart {
   description: string;
   name: string;
@@ -67,7 +71,9 @@ export function getTiRecommendations(
         category,
         format: "details",
       });
-      const response = await fetch(`/api/ti-recommendations?${query}`);
+      const endpoint = new URL(TI_RECOMMENDATIONS_URL);
+      endpoint.search = query.toString();
+      const response = await fetch(endpoint);
       if (!response.ok) {
         throw new Error(
           `TI recommendations failed with HTTP ${response.status}.`,
