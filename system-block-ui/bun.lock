@@ -44,7 +44,7 @@
     },
   },
   "overrides": {
-    "altiumts": "0.0.32",
+    "altiumts": "0.0.59",
   },
   "packages": {
     "@babel/runtime": ["@babel/runtime@7.29.7", "", {}, "sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw=="],
@@ -217,7 +217,7 @@
 
     "adler-32": ["adler-32@1.3.1", "", {}, "sha512-ynZ4w/nUUv5rrsR8UUGoe1VC9hZj6V5hU9Qw1HlMDJGEJw5S7TfTErWTjMys6M7vr0YWcPqs3qAr4ss0nDfP+A=="],
 
-    "altiumts": ["altiumts@0.0.32", "", { "dependencies": { "cfb": "^1.2.2", "fflate": "^0.8.3" }, "peerDependencies": { "typescript": "^5" }, "bin": { "altiumts": "dist/cli.js" } }, "sha512-yjKmEhU05m7qIRQAF79oD3COIMdGrAg77yY5Z15qTC4p8FN/CAroziayZ31wgEl2A+kZyZx4t7VMF+DzyNHIbg=="],
+    "altiumts": ["altiumts@0.0.59", "", { "dependencies": { "cfb": "^1.2.2", "fflate": "^0.8.3" }, "peerDependencies": { "typescript": "^5" }, "bin": { "altiumts": "dist/cli.js" } }, "sha512-EunWtSs0FXEnxN9G10PvZyplDwcaE8/ioML3nnzqlAlGeKcnkKGHLpKBL0aUjg0i4yCovzn6ZihroBFhsi/6XA=="],
 
     "base64-arraybuffer": ["base64-arraybuffer@1.0.2", "", {}, "sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ=="],
 
