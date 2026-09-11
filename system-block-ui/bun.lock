@@ -13,7 +13,7 @@
         "@tscircuit/props": "0.0.643",
         "@xyflow/react": "12.11.5",
         "circuit-json": "0.0.479",
-        "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#f47ab326aa8abb5466d21f326c7402b0e0d7ba26",
+        "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#77b6d7dcb19c146a21e07cf063a824fc76061220",
         "circuit-json-to-kicad": "0.0.181",
         "circuit-to-svg": "0.0.410",
         "comlink": "4.4.2",
@@ -44,7 +44,7 @@
     },
   },
   "overrides": {
-    "altiumts": "0.0.59",
+    "altiumts": "0.0.63"
   },
   "packages": {
     "@babel/runtime": ["@babel/runtime@7.29.7", "", {}, "sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw=="],
@@ -239,7 +239,7 @@
 
     "circuit-json": ["circuit-json@0.0.479", "", { "peerDependencies": { "format-si-unit": "*" } }, "sha512-nFmjnYUxeyTDp+7QBPa8j6BiB1knY5KHO+r7gsegjpCHxhgALcVAo+sNavk92n7RQZfIn2NzS4G8VqvOFQNrLw=="],
 
-    "circuit-json-to-altium": ["circuit-json-to-altium@github:tscircuit/circuit-json-to-altium#f47ab32", { "dependencies": { "altiumts": "github:tscircuit/altiumts#6c8af3de0e50c7d918f7f2bf43cca5af604cf9cc", "cfb": "^1.2.2", "circuit-json": "^0.0.480", "color-string": "2.1.4", "jszip": "^3.10.1", "schematic-symbols": "^0.0.239", "transformation-matrix": "^3.1.0" } }, "tscircuit-circuit-json-to-altium-f47ab32", "sha512-J6KcJl7HUb2qo+tzIk74n2BzxVVNq3L76HReVs+5Da/yFCaeYgXg64ww66XSXA6uSFm8X8g/3RFBGW6iV9AWJw=="],
+    "circuit-json-to-altium": ["circuit-json-to-altium@github:tscircuit/circuit-json-to-altium#77b6d7d", { "dependencies": { "altiumts": "0.0.63", "cfb": "^1.2.2", "circuit-json": "^0.0.480", "color-string": "2.1.4", "jszip": "^3.10.1", "schematic-symbols": "^0.0.239", "transformation-matrix": "^3.1.0" } }, "tscircuit-circuit-json-to-altium-77b6d7d", "sha512-hMcSBZ5ciB4w/c5YsiOuMszfX6OGF79xmAobdn7fHEAOlj80Ezo5G3PCK5TBVIG1Zn8XGRCLBsIuqFoZtHDl9A=="],
 
     "circuit-json-to-bpc": ["circuit-json-to-bpc@0.0.14", "", { "peerDependencies": { "bpc-graph": "*", "circuit-json": "*", "typescript": "^5" } }, "sha512-jcgWTgkFepJzSbX8LOk+ZcuZFLVun7EVslfRF1LnZK5pPFWhfSMWE+PJUTDBGIikgs3mYZ4IIZSkjpmMfXvFhA=="],
 
