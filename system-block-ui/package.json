@@ -51,6 +51,6 @@
     "vite": "8.2.2"
   },
   "overrides": {
-    "altiumts": "0.0.59"
+    "altiumts": "github:tscircuit/altiumts#2cee1e06af91a4954ce1be6469301c76340e79ef"
   }
 }
