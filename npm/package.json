@@ -1,0 +1,47 @@
+{
+  "name": "@tscircuit/ti",
+  "version": "1.0.0",
+  "description": "Texas Instruments chips and reference subcircuits for tscircuit",
+  "type": "module",
+  "main": "./index.cjs",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "index.cjs",
+    "index.d.ts"
+  ],
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tscircuit/ti.git"
+  },
+  "keywords": [
+    "tscircuit",
+    "ti",
+    "electronics",
+    "pcb"
+  ],
+  "dependencies": {
+    "@tscircuit/props": "^0.0.640",
+    "@types/react": "^19.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "tscircuit": ">=0.0.2460 <0.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}
