@@ -12,6 +12,10 @@ const manifest = JSON.parse(
 const sourceManifest = JSON.parse(
   await readFile(new URL("../package.json", import.meta.url), "utf8"),
 );
+const hostVersion =
+  process.env.TSCIRCUIT_TEST_VERSION === "latest"
+    ? "latest"
+    : sourceManifest.devDependencies.tscircuit;
 const temporary = await mkdtemp(join(tmpdir(), "tscircuit-ti-npm-"));
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 
@@ -58,8 +62,8 @@ try {
     '{"private":true,"type":"module"}',
   );
   console.log("Installing the tarball in a clean project");
-  // Pin the host to the version used to develop this library. npm must supply
-  // all other runtime/type dependencies from the packed package's manifest.
+  // Exercise both the development runtime and the runtime npm selects today.
+  // npm must resolve the remaining peers from the packed package's manifest.
   run(
     npm,
     [
@@ -68,7 +72,7 @@ try {
       "--no-fund",
       "--registry=https://registry.npmjs.org",
       tarball,
-      `tscircuit@${sourceManifest.devDependencies.tscircuit}`,
+      `tscircuit@${hostVersion}`,
       "typescript@5.9.3",
     ],
     consumer,
@@ -89,12 +93,16 @@ for (const ti of [esm, cjs]) {
   const chip = ti.TPS22919({ name: "U1" });
   assert.equal(chip.props.spiceModel.type, "spicemodel");
   assert.ok(chip.props.spiceModel.props.source.includes(".SUBCKT"));
-  const circuit = new Circuit();
-  circuit.add(createElement("board", { width: "20mm", height: "20mm", pcbDisabled: true },
-    createElement(ti.BQ24074, { name: "U1" })));
-  await circuit.renderUntilSettled();
-  assert.ok(circuit.getCircuitJson().some((item) =>
-    item.type === "source_component" && item.name === "U1"));
+  for (const Component of [ti.BQ24074, ti.PowerMonitor_INA237]) {
+    const circuit = new Circuit();
+    circuit.pcbDisabled = true;
+    circuit.add(createElement("board", { width: "120mm", height: "120mm" },
+      createElement(Component, { name: "Device" })));
+    await circuit.renderUntilSettled();
+    const json = circuit.getCircuitJson();
+    assert.ok(json.some((item) => item.type === "source_component"));
+    assert.deepEqual(json.filter((item) => item.type.endsWith("_error")), []);
+  }
 }
 console.log("ESM/CJS exports, embedded model, and circuit rendering passed");
 `,
@@ -126,6 +134,44 @@ BQ24074({ name: "U1", footprintVariant: 123 });
     ],
     consumer,
   );
+  await writeFile(
+    join(consumer, "smoke.circuit.tsx"),
+    `import { BQ24074, PowerMonitor_INA237 } from "@tscircuit/ti";
+export default () => (
+  <board width="120mm" height="120mm">
+    <BQ24074 name="Standalone" schX={30} />
+    <PowerMonitor_INA237 name="Monitor" />
+  </board>
+);
+`,
+  );
+  run(
+    "bun",
+    [
+      "node_modules/tscircuit/cli.mjs",
+      "build",
+      "smoke.circuit.tsx",
+      "--disable-pcb",
+      "--disable-parts-engine",
+      "--schematic-svgs",
+    ],
+    consumer,
+  );
+  const circuitJson = JSON.parse(
+    await readFile(join(consumer, "dist/smoke/circuit.json"), "utf8"),
+  );
+  assert.ok(
+    circuitJson.filter((item) => item.type === "source_component").length > 10,
+  );
+  assert.deepEqual(
+    circuitJson.filter((item) => item.type.endsWith("_error")),
+    [],
+  );
+  assert.match(
+    await readFile(join(consumer, "dist/smoke/schematic.svg"), "utf8"),
+    /<svg/,
+  );
+  console.log(`TypeScript and tsci build passed with tscircuit@${hostVersion}`);
   console.log("Checking global installation in an isolated prefix");
   const prefix = join(temporary, "global");
   run(
@@ -152,7 +198,26 @@ BQ24074({ name: "U1", footprintVariant: 123 });
   );
   assert.equal(installed.name, manifest.name);
   assert.equal(installed.version, manifest.version);
-  console.log("TypeScript consumer and isolated global installation passed");
+  // Installation alone does not detect an incompatible peer chosen for core.
+  run(
+    process.execPath,
+    [
+      "--input-type=module",
+      "--eval",
+      `
+      import assert from "node:assert/strict";
+      import { createRequire } from "node:module";
+      import { pathToFileURL } from "node:url";
+      const entry = pathToFileURL(${JSON.stringify(join(globalRoot, "@tscircuit/ti/index.js"))});
+      const esm = await import(entry.href);
+      const cjs = createRequire(entry)("./index.cjs");
+      assert.equal(typeof esm.BQ24074, "function");
+      assert.equal(typeof cjs.BQ24074, "function");
+    `,
+    ],
+    temporary,
+  );
+  console.log("Isolated global installation and ESM/CJS imports passed");
 } finally {
   await rm(temporary, { recursive: true, force: true });
 }

@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         node: ["22.14.0", "24"]
+        tscircuit: ["minimum", "latest"]
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -28,3 +29,5 @@ jobs:
       - run: bun install
       - run: bun run build:npm
       - run: bun run test:npm
+        env:
+          TSCIRCUIT_TEST_VERSION: ${{ matrix.tscircuit }}

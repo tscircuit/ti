@@ -33,12 +33,12 @@
     "pcb"
   ],
   "dependencies": {
-    "@tscircuit/props": "^0.0.640",
     "@types/react": "^19.0.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "tscircuit": ">=0.0.2460 <0.1.0"
+    "tscircuit": ">=0.0.2460 <0.1.0",
+    "@tscircuit/props": ">=0.0.640 <0.1.0"
   },
   "publishConfig": {
     "access": "public",

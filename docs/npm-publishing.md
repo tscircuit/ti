@@ -25,8 +25,11 @@ System Block Builder files, or development dependencies are published.
 
 The smoke test packs this directory, installs the tarball into a temporary
 project, and checks ESM/CommonJS exports, an embedded model, a rendered circuit,
-and a TypeScript consumer using bundler module resolution and ES2023 library types. It also installs the tarball globally using a
-separate temporary npm prefix. The test requires network access for dependencies
+and a TypeScript consumer using bundler module resolution and ES2023 library
+types. It builds a TSX consumer with `tsci build` and checks its schematic SVG.
+It also installs the tarball globally using a
+separate temporary npm prefix and loads both global JavaScript entrypoints.
+The test requires network access for dependencies
 and removes its temporary installations afterward.
 
 To inspect the package manually:
@@ -83,6 +86,12 @@ the packages referenced by the generated declarations.
 `npm install -g @tscircuit/ti` installs it globally, but does not provide a CLI or
 make the library available to project imports. Use a local installation when
 writing circuits.
+
+`@tscircuit/props` is a peer alongside React and tscircuit. Keeping it as a
+narrowly pinned dependency can make newer core code resolve an older props
+package that lacks required runtime exports. CI tests the development runtime
+and `tscircuit@latest`; run `TSCIRCUIT_TEST_VERSION=latest bun run test:npm` to
+exercise the latest runtime locally.
 
 The TypeScript smoke test uses `moduleResolution: "bundler"`. Strict NodeNext
 resolution currently reports extensionless imports in tscircuit's transitive
