@@ -18,6 +18,25 @@ surrounding circuit.
 bun add @tsci/tscircuit.ti
 ```
 
+### Public npm distribution
+
+The same components are packaged as `@tscircuit/ti` for the public npm registry.
+Once the first npm release has been published:
+
+```bash
+npm install @tscircuit/ti
+```
+
+Use `import { PowerMonitor_INA237 } from "@tscircuit/ti"` with this distribution.
+The examples below use the existing tscircuit registry name; both distributions
+expose the same components.
+
+Global installation is also supported with `npm install -g @tscircuit/ti`.
+This is a component library with no CLI. Install it locally for project imports.
+
+See [npm publishing](docs/npm-publishing.md) for build, verification, and release
+instructions. Node.js 22.14 or newer is required for the npm distribution.
+
 ## Basic Usage
 
 Import the TI part you need from the package and place it inside a board.

@@ -1,0 +1,29 @@
+name: Check npm package
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22.14.0"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - run: bun install
+      - run: bun run build:npm
+      - run: bun run test:npm
+        env:
+          TSCIRCUIT_TEST_VERSION: minimum
