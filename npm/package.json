@@ -6,6 +6,9 @@
   "main": "./index.cjs",
   "module": "./index.js",
   "types": "./index.d.ts",
+  "bin": {
+    "ti": "./cli/ti.mjs"
+  },
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -17,7 +20,8 @@
   "files": [
     "index.js",
     "index.cjs",
-    "index.d.ts"
+    "index.d.ts",
+    "cli"
   ],
   "engines": {
     "node": ">=22.14.0"
