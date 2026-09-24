@@ -77,7 +77,7 @@ try {
     ),
   );
   assert.equal(packed.name, manifest.name);
-  assert.equal(packed.version, manifest.version);
+  assert.equal(packed.version, sourceManifest.version);
   assert.deepEqual(packed.files.map((file) => file.path).sort(), [
     "README.md",
     "cli/import.mjs",
@@ -242,7 +242,7 @@ export default () => (
     await readFile(join(globalRoot, "@tscircuit/ti/package.json"), "utf8"),
   );
   assert.equal(installed.name, manifest.name);
-  assert.equal(installed.version, manifest.version);
+  assert.equal(installed.version, sourceManifest.version);
   assert.deepEqual(installed.bin, manifest.bin);
   await testCli(
     process.platform === "win32"

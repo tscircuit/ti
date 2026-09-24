@@ -2,11 +2,13 @@ name: Publish TI to npm
 
 on:
   push:
-    tags: ["npm-v*"]
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
+  pull-requests: write
 
 concurrency:
   group: npm-publish
@@ -14,9 +16,16 @@ concurrency:
 
 jobs:
   publish:
+    # Version PRs must not start another release when auto-merged.
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      !(github.event_name == 'push' && startsWith(github.event.head_commit.message, 'chore: bump version'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TSCIRCUIT_BOT_GITHUB_TOKEN }}
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -25,19 +34,47 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
-      - name: Verify release tag matches the npm package version
+      - run: npm install --global npm@11 pver@0.0.43
+      # There is no root lockfile; do not leave one for pver's rebase.
+      - run: bun install --no-save
+      - name: Prepare release with pver
+        id: release
+        # The root is the tscircuit registry package. Only bump/tag it here;
+        # npm publishing must target the generated @tscircuit/ti distribution.
         run: |
-          node --input-type=module <<'NODE'
-          import assert from "node:assert/strict";
-          import { readFileSync } from "node:fs";
-          const { version } = JSON.parse(readFileSync("npm/package.json", "utf8"));
-          assert.equal(process.env.GITHUB_REF_NAME, `npm-v${version}`);
-          NODE
-      - run: npm install --global npm@11
-      - run: bun install
+          previous_version=$(node -p "require('./package.json').version")
+          pver release --git --package-json --no-push-main
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ "$version" != "$previous_version" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
       - run: bun run test:cli
+        if: steps.release.outputs.changed == 'true'
       - run: bun run build:npm
+        if: steps.release.outputs.changed == 'true'
       - run: bun run test:npm
+        if: steps.release.outputs.changed == 'true'
       # Configure this workflow as @tscircuit/ti's npm trusted publisher.
       # See docs/npm-publishing.md for the one-time first publication.
       - run: npm publish ./dist/npm --access public --provenance
+        if: steps.release.outputs.changed == 'true'
+      - name: Create version bump pull request
+        id: create-pr
+        if: steps.release.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: bump version to v${{ steps.release.outputs.version }}"
+          title: "chore: bump version to v${{ steps.release.outputs.version }}"
+          body: "Automated version update after publishing @tscircuit/ti to npm."
+          branch: version-bumps/v${{ steps.release.outputs.version }}
+          base: main
+          token: ${{ secrets.TSCIRCUIT_BOT_GITHUB_TOKEN }}
+          committer: tscircuitbot <githubbot@tscircuit.com>
+          author: tscircuitbot <githubbot@tscircuit.com>
+      - name: Enable auto-merge
+        if: steps.create-pr.outputs.pull-request-number != ''
+        run: gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+        env:
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
+          GH_TOKEN: ${{ secrets.TSCIRCUIT_BOT_GITHUB_TOKEN }}
