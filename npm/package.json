@@ -1,6 +1,5 @@
 {
   "name": "@tscircuit/ti",
-  "version": "1.0.0",
   "description": "Texas Instruments chips and reference subcircuits for tscircuit",
   "type": "module",
   "main": "./index.cjs",
