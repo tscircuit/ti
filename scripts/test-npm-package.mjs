@@ -19,12 +19,12 @@ const hostVersion =
 const temporary = await mkdtemp(join(tmpdir(), "tscircuit-ti-npm-"));
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 
-function run(command, args, cwd) {
+function run(command, args, cwd, env = {}) {
   const result = spawnSync(command, args, {
     cwd,
     encoding: "utf8",
-    env: { ...process.env, NODE_PATH: "" },
-    shell: process.platform === "win32" && command === npm,
+    env: { ...process.env, NODE_PATH: "", ...env },
+    shell: process.platform === "win32" && command.endsWith(".cmd"),
     maxBuffer: 10 * 1024 * 1024,
   });
   if (result.error) throw result.error;
@@ -34,6 +34,27 @@ function run(command, args, cwd) {
     );
   }
   return result.stdout;
+}
+
+function testCli(command, cwd) {
+  assert.match(run(command, ["--help"], cwd), /Usage: ti search/);
+  const result = JSON.parse(
+    run(command, ["search", "--json", "buck converter"], cwd, {
+      NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-fetch.mjs", import.meta.url).href}`,
+    }),
+  );
+  assert.deepEqual(result, {
+    query: "buck converter",
+    results: [
+      {
+        mfr: "TPS62160DSGR",
+        description: "Buck converter",
+        stock: 1200,
+        price: null,
+        source: "ti",
+      },
+    ],
+  });
 }
 
 try {
@@ -49,6 +70,8 @@ try {
   assert.equal(packed.version, manifest.version);
   assert.deepEqual(packed.files.map((file) => file.path).sort(), [
     "README.md",
+    "cli/main.mjs",
+    "cli/ti.mjs",
     "index.cjs",
     "index.d.ts",
     "index.js",
@@ -77,6 +100,15 @@ try {
     ],
     consumer,
   );
+  testCli(
+    join(
+      consumer,
+      "node_modules/.bin",
+      process.platform === "win32" ? "ti.cmd" : "ti",
+    ),
+    consumer,
+  );
+  console.log("Locally installed ti command passed");
   await writeFile(
     join(consumer, "smoke.mjs"),
     `import assert from "node:assert/strict";
@@ -198,6 +230,14 @@ export default () => (
   );
   assert.equal(installed.name, manifest.name);
   assert.equal(installed.version, manifest.version);
+  assert.deepEqual(installed.bin, manifest.bin);
+  testCli(
+    process.platform === "win32"
+      ? join(prefix, "ti.cmd")
+      : join(prefix, "bin/ti"),
+    temporary,
+  );
+  console.log("Globally installed ti command passed");
   // Installation alone does not detect an incompatible peer chosen for core.
   run(
     process.execPath,

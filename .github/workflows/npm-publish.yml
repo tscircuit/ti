@@ -35,6 +35,7 @@ jobs:
           NODE
       - run: npm install --global npm@11
       - run: bun install
+      - run: bun run test:cli
       - run: bun run build:npm
       - run: bun run test:npm
       # Configure this workflow as @tscircuit/ti's npm trusted publisher.

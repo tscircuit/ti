@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { copyFile, mkdir, rm } from "node:fs/promises";
+import { chmod, copyFile, cp, mkdir, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -30,4 +30,8 @@ await copyFile(
   new URL("../npm/README.md", import.meta.url),
   new URL("README.md", output),
 );
+await cp(new URL("../cli/", import.meta.url), new URL("cli/", output), {
+  recursive: true,
+});
+await chmod(new URL("cli/ti.mjs", output), 0o755);
 console.log("Built @tscircuit/ti in dist/npm");

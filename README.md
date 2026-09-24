@@ -32,7 +32,16 @@ The examples below use the existing tscircuit registry name; both distributions
 expose the same components.
 
 Global installation is also supported with `npm install -g @tscircuit/ti`.
-This is a component library with no CLI. Install it locally for project imports.
+This provides the `ti` command for searching Texas Instruments components:
+
+```bash
+ti search "buck converter"
+ti search --json "buck converter"
+```
+
+Search uses the same TI catalog and 10-result limit as `tsci search --ti`.
+JSON output contains `{ query, results }`, with `source: "ti"` on each result.
+Install the package locally for project imports.
 
 See [npm publishing](docs/npm-publishing.md) for build, verification, and release
 instructions. Node.js 22.14 or newer is required for the npm distribution.

@@ -28,11 +28,17 @@ uses the same runtime as your circuit project.
 
 ```sh
 npm install -g @tscircuit/ti
+ti search "buck converter"
+ti search --json "buck converter"
 ```
 
-This installs the component library in npm's global package directory. It does
-not provide a terminal command or make imports resolve in local projects;
-install it in each project where you use its components.
+The `ti search` command searches the same Texas Instruments catalog as
+`tsci search --ti`, returning up to 10 components. Queries can be quoted or
+passed as separate words. Use `--json` for `{ query, results }` output, including
+TI metadata and `source: "ti"` on every result, or `ti --help` for usage.
+
+Global installation does not make imports resolve in local projects; install
+the package in each project where you use its components.
 
 See the [library documentation](https://github.com/tscircuit/ti#readme) for the
 available chips, reference subcircuits, and connection examples. Examples using
