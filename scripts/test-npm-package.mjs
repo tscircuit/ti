@@ -36,7 +36,7 @@ function run(command, args, cwd, env = {}) {
   return result.stdout;
 }
 
-function testCli(command, cwd) {
+async function testCli(command, cwd) {
   assert.match(run(command, ["--help"], cwd), /Usage: ti search/);
   const result = JSON.parse(
     run(command, ["search", "--json", "buck converter"], cwd, {
@@ -55,6 +55,16 @@ function testCli(command, cwd) {
       },
     ],
   });
+  assert.match(
+    run(command, ["import", "C324077"], cwd, {
+      NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-import-fetch.mjs", import.meta.url).href}`,
+    }),
+    /Imported imports\/TPS62160DSGR.tsx from EasyEDA/,
+  );
+  assert.match(
+    await readFile(join(cwd, "imports/TPS62160DSGR.tsx"), "utf8"),
+    /export const TPS62160DSGR/,
+  );
 }
 
 try {
@@ -70,6 +80,7 @@ try {
   assert.equal(packed.version, manifest.version);
   assert.deepEqual(packed.files.map((file) => file.path).sort(), [
     "README.md",
+    "cli/import.mjs",
     "cli/main.mjs",
     "cli/ti.mjs",
     "index.cjs",
@@ -100,7 +111,7 @@ try {
     ],
     consumer,
   );
-  testCli(
+  await testCli(
     join(
       consumer,
       "node_modules/.bin",
@@ -169,10 +180,12 @@ BQ24074({ name: "U1", footprintVariant: 123 });
   await writeFile(
     join(consumer, "smoke.circuit.tsx"),
     `import { BQ24074, PowerMonitor_INA237 } from "@tscircuit/ti";
+import { TPS62160DSGR } from "./imports/TPS62160DSGR";
 export default () => (
   <board width="120mm" height="120mm">
     <BQ24074 name="Standalone" schX={30} />
     <PowerMonitor_INA237 name="Monitor" />
+    <TPS62160DSGR name="Imported" schX={-30} />
   </board>
 );
 `,
@@ -231,7 +244,7 @@ export default () => (
   assert.equal(installed.name, manifest.name);
   assert.equal(installed.version, manifest.version);
   assert.deepEqual(installed.bin, manifest.bin);
-  testCli(
+  await testCli(
     process.platform === "win32"
       ? join(prefix, "ti.cmd")
       : join(prefix, "bin/ti"),

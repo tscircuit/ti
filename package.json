@@ -21,7 +21,7 @@
     "snapshot:update": "tsci snapshot --update",
     "start": "tsci dev",
     "test": "bun test",
-    "test:cli": "node --test tests/cli/*.test.mjs",
+    "test:cli": "node --test tests/cli/*.test.mjs && bun test tests/cli/import-snapshot.test.tsx",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write",
     "format:check": "biome format .",
@@ -41,5 +41,8 @@
   "peerDependencies": {
     "typescript": "^5"
   },
-  "author": "imrishabh18"
+  "author": "imrishabh18",
+  "dependencies": {
+    "easyeda": "0.0.360"
+  }
 }

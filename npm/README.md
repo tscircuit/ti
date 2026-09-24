@@ -30,12 +30,21 @@ uses the same runtime as your circuit project.
 npm install -g @tscircuit/ti
 ti search "buck converter"
 ti search --json "buck converter"
+ti import TPS62160DSGR
 ```
 
 The `ti search` command searches the same Texas Instruments catalog as
 `tsci search --ti`, returning up to 10 components. Queries can be quoted or
 passed as separate words. Use `--json` for `{ query, results }` output, including
 TI metadata and `source: "ti"` on every result, or `ti --help` for usage.
+
+`ti import TPS62160DSGR` finds the exact manufacturer part in LCSC/JLCPCB,
+converts its EasyEDA symbol and footprint, and writes `imports/TPS62160DSGR.tsx`.
+You can also use an LCSC ID directly: `ti import C324077`.
+Use the result with `import { TPS62160DSGR } from "./imports/TPS62160DSGR"`.
+Existing files are never overwritten. Imports require an internet connection
+and an available EasyEDA part. They contain individual chips, not complete
+reference subcircuits; available 3D models remain remote links.
 
 Global installation does not make imports resolve in local projects; install
 the package in each project where you use its components.
