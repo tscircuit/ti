@@ -37,7 +37,8 @@
     "pcb"
   ],
   "dependencies": {
-    "@types/react": "^19.0.0"
+    "@types/react": "^19.0.0",
+    "easyeda": "0.0.360"
   },
   "peerDependencies": {
     "react": "^19.0.0",

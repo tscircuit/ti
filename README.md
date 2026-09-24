@@ -32,16 +32,26 @@ The examples below use the existing tscircuit registry name; both distributions
 expose the same components.
 
 Global installation is also supported with `npm install -g @tscircuit/ti`.
-This provides the `ti` command for searching Texas Instruments components:
+This provides the `ti` command for searching and importing components:
 
 ```bash
 ti search "buck converter"
 ti search --json "buck converter"
+ti import TPS62160DSGR
 ```
 
 Search uses the same TI catalog and 10-result limit as `tsci search --ti`.
 JSON output contains `{ query, results }`, with `source: "ti"` on each result.
 Install the package locally for project imports.
+
+`ti import` resolves an exact manufacturer part number through LCSC/JLCPCB,
+fetches the EasyEDA symbol and footprint, and writes an editable component to
+`imports/TPS62160DSGR.tsx`. An LCSC ID such as `ti import C324077` works directly.
+Import the generated component with
+`import { TPS62160DSGR } from "./imports/TPS62160DSGR"`.
+Existing files are preserved. This imports a single chip, not a reference
+subcircuit. Available 3D models remain remote links; importing requires an
+internet connection and an available EasyEDA part.
 
 See [npm publishing](docs/npm-publishing.md) for build, verification, and release
 instructions. Node.js 22.14 or newer is required for the npm distribution.

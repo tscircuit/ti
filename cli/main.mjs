@@ -1,8 +1,9 @@
 import { parseArgs } from "node:util";
 
 const help = `Usage: ti search [options] <query...>
+       ti import <part-number>
 
-Search Texas Instruments components.
+Search Texas Instruments components or import a chip from EasyEDA.
 
 Options:
   --json      Output search results as JSON
@@ -10,7 +11,9 @@ Options:
 
 Examples:
   ti search "buck converter"
-  ti search --json TPS62160`;
+  ti search --json TPS62160
+  ti import TPS62160DSGR
+  ti import C324077`;
 
 export async function runCli(
   argv,
@@ -18,12 +21,17 @@ export async function runCli(
     fetch = globalThis.fetch,
     stdout = console.log,
     stderr = console.error,
+    cwd = process.cwd(),
   } = {},
 ) {
   const [command, ...args] = argv;
   if (!command || command === "--help" || command === "-h") {
     stdout(help);
     return 0;
+  }
+  if (command === "import") {
+    const { runImport } = await import("./import.mjs");
+    return runImport(args, { fetch, stdout, stderr, cwd });
   }
   if (command !== "search") {
     stderr(`Unknown command "${command}". Run ti --help for usage.`);

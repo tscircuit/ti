@@ -41,5 +41,8 @@
   "peerDependencies": {
     "typescript": "^5"
   },
-  "author": "imrishabh18"
+  "author": "imrishabh18",
+  "dependencies": {
+    "easyeda": "0.0.360"
+  }
 }
