@@ -164,12 +164,10 @@ as their capacitance and rail voltage require. The 4 mm power inductor and
 SOD-523 protection diode also use exact JLCPCB-imported copper. Its MOSFET and
 U.FL connector still require explicit package selections.
 
-`circuit-json-to-altium` is temporarily pinned to the official repository's
-exact commit `ad48b5115063a19a3a1f91a2810b6d06cd1c15f3` because that converter has
-not published its first npm release yet. The pin should become an exact npm
-version once one is available; it does not use a preview registry or floating
-Git branch. Its nested `altiumts` dependency is overridden to the
-published `altiumts@0.0.71` release so installs do not need to resolve another
+`circuit-json-to-altium` is pinned to the official repository's exact commit
+`c219c1ba3191ed080d1c6f5c505e04ce16ba2b16`; it does not use a preview registry
+or floating Git branch. Its nested `altiumts` dependency is overridden to the
+published `altiumts@0.0.79` release so installs do not need to resolve another
 Git dependency.
 
 Evaluation uses the same canonical TSX shown in the panel and included in the
