@@ -165,9 +165,9 @@ SOD-523 protection diode also use exact JLCPCB-imported copper. Its MOSFET and
 U.FL connector still require explicit package selections.
 
 `circuit-json-to-altium` is pinned to the official repository's exact commit
-`148cd3596331d53e5791644781a8dde5c107ccd8`; it does not use a preview registry
+`c219c1ba3191ed080d1c6f5c505e04ce16ba2b16`; it does not use a preview registry
 or floating Git branch. Its nested `altiumts` dependency is overridden to the
-published `altiumts@0.0.78` release so installs do not need to resolve another
+published `altiumts@0.0.79` release so installs do not need to resolve another
 Git dependency.
 
 Evaluation uses the same canonical TSX shown in the panel and included in the
