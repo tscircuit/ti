@@ -37,12 +37,17 @@ function selectComponent(circuitJson, selector) {
 }
 
 function getPortLabels(port) {
-  return [port.name, ...(Array.isArray(port.port_hints) ? port.port_hints : [])];
+  return [
+    port.name,
+    ...(Array.isArray(port.port_hints) ? port.port_hints : []),
+  ];
 }
 
 function resolvePort(circuitJson, component, selector) {
   if (typeof selector !== "string" || !selector.trim()) {
-    throw new Error("Every SysConfig source selector must be a non-empty string");
+    throw new Error(
+      "Every SysConfig source selector must be a non-empty string",
+    );
   }
 
   const componentPorts = circuitJson.filter(
@@ -201,16 +206,10 @@ function resolveCc2340Options(circuitJson, component, request) {
   const i2c = rawI2c
     ? {
         i2c_name: rawI2c.i2c_name,
-        sda_source_port_id: resolvePort(
-          circuitJson,
-          component,
-          rawI2c.sda,
-        ).source_port_id,
-        scl_source_port_id: resolvePort(
-          circuitJson,
-          component,
-          rawI2c.scl,
-        ).source_port_id,
+        sda_source_port_id: resolvePort(circuitJson, component, rawI2c.sda)
+          .source_port_id,
+        scl_source_port_id: resolvePort(circuitJson, component, rawI2c.scl)
+          .source_port_id,
         max_bit_rate: rawI2c.max_bit_rate,
         peripheral_assignment: rawI2c.peripheral_assignment,
       }
@@ -274,7 +273,9 @@ function resolveAm2434Options(circuitJson, component, request) {
     throw new Error("AM2434 CLI conversion does not support I2C yet");
   }
   if ((request.reserved_ports ?? []).length) {
-    throw new Error("AM2434 CLI conversion does not support reserved_ports yet");
+    throw new Error(
+      "AM2434 CLI conversion does not support reserved_ports yet",
+    );
   }
   if (request.firmware !== undefined) {
     throw new Error("AM2434 CLI conversion does not accept firmware settings");
