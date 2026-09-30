@@ -53,14 +53,7 @@ export function getTiInvocation(target, syscfgPath, outputDir, env) {
       "nortos",
     );
   } else if (target === "am2434") {
-    args.push(
-      "--context",
-      "r5fss0-0",
-      "--part",
-      "ALV",
-      "--package",
-      "ALV",
-    );
+    args.push("--context", "r5fss0-0", "--part", "ALV", "--package", "ALV");
   } else {
     throw new Error(`Unsupported TI validation target ${target}`);
   }
