@@ -95,17 +95,14 @@ function commandFailure(label, result) {
     .filter(Boolean)
     .join("\n")
     .trim();
-  return new Error(details ? `${label} failed:\n${details}` : `${label} failed`);
+  return new Error(
+    details ? `${label} failed:\n${details}` : `${label} failed`,
+  );
 }
 
 export async function getCircuitJsonInput(
   inputPath,
-  {
-    cwd,
-    spawnSync = nodeSpawnSync,
-    env = process.env,
-    bun = "bun",
-  },
+  { cwd, spawnSync = nodeSpawnSync, env = process.env, bun = "bun" },
 ) {
   const absoluteInput = resolve(cwd, inputPath);
   if (!existsSync(absoluteInput)) {
@@ -175,7 +172,10 @@ export async function loadRequestConfig(
   const candidates = explicitPath
     ? [resolve(cwd, explicitPath)]
     : [
-        join(dirname(absoluteInput), `${getInputStem(absoluteInput)}.sysconfig.json`),
+        join(
+          dirname(absoluteInput),
+          `${getInputStem(absoluteInput)}.sysconfig.json`,
+        ),
         join(projectDir, "ti.sysconfig.json"),
       ];
   const configPath = candidates.find((candidate) => existsSync(candidate));
