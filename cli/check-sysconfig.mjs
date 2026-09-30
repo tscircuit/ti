@@ -7,6 +7,7 @@ import { generateSysconfig } from "./sysconfig/generate.mjs";
 import {
   countGeneratedFiles,
   getTiInvocation,
+  validateTiEnvironment,
 } from "./sysconfig/ti-cli.mjs";
 
 const help = `Usage: ti check-sysconfig [options] <file>
@@ -63,6 +64,7 @@ export async function runCheckSysconfig(
       );
     }
 
+    validateTiEnvironment(env);
     temporary = await mkdtemp(join(tmpdir(), "ti-check-sysconfig-"));
     const syscfgPath = join(temporary, "generated.syscfg");
     const tiOutput = join(temporary, "ti-output");
