@@ -1,5 +1,5 @@
 import { spawnSync as nodeSpawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import {
   mkdir,
   mkdtemp,
