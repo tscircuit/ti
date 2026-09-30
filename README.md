@@ -53,6 +53,75 @@ Existing files are preserved. This imports a single chip, not a reference
 subcircuit. Available 3D models remain remote links; importing requires an
 internet connection and an available EasyEDA part.
 
+### TI SysConfig commands
+
+The same `ti` executable can generate TI SysConfig from a tscircuit entrypoint:
+
+```bash
+ti generate-sysconfig ./board.circuit.tsx
+ti check-sysconfig ./board.circuit.tsx
+```
+
+`generate-sysconfig` runs the normal tscircuit build for TS/TSX inputs, resolves
+stable component/signal names from Circuit JSON, and delegates the device mapping
+to `circuit-json-to-sysconfig`. It also accepts `.circuit.json` directly. The
+generated file defaults to `<input>.syscfg`; use `-o` to choose another path.
+
+Firmware behavior is intentionally explicit. Put a sibling
+`board.sysconfig.json` next to the input, or use project-level
+`ti.sysconfig.json` (or `--config <file>`). For the current CC2340 scope:
+
+```json
+{
+  "component": "U1_MCU",
+  "gpios": [
+    {
+      "source": "DISP_PWR_N",
+      "gpio_name": "CONFIG_DISPLAY_ISOLATE",
+      "direction": "output",
+      "initial_state": "high"
+    },
+    {
+      "source": "ACCEL_INT1",
+      "gpio_name": "CONFIG_ACCEL_INT",
+      "direction": "input",
+      "pull": "none",
+      "interrupt": "none"
+    }
+  ],
+  "i2c": {
+    "i2c_name": "CONFIG_I2C_0",
+    "sda": "I2C_SDA",
+    "scl": "I2C_SCL",
+    "max_bit_rate": 100000,
+    "peripheral_assignment": "suggested"
+  },
+  "reserved_ports": [],
+  "firmware": { "rtos": "nortos" }
+}
+```
+
+A `source` may be a source-net name, MCU port name/alias, source-port ID, or
+numeric package pin, but it must resolve to exactly one MCU port. Prefer signal
+names such as `ACCEL_INT1` so changing the physical MCU pin in the circuit changes
+the generated SysConfig without editing the request file.
+
+`check-sysconfig` first performs the same conversion in a temporary directory,
+then invokes a matching locally installed TI SysConfig CLI. It requires:
+
+```bash
+export TI_SYSCONFIG_NODE=/path/to/sysconfig/nodejs/node
+export TI_SYSCONFIG_CLI=/path/to/sysconfig/dist/cli.js
+export TI_SDK_ROOT=/path/to/matching-ti-sdk
+ti check-sysconfig ./board.circuit.tsx
+```
+
+The command fails if conversion fails, TI rejects the file, or TI generates no
+output. It never installs TI software or accepts TI license terms. Use the TI
+tool/SDK versions required by the selected target. Current converter scope is
+CC2340R52E0RGER GPIO/I2C and the existing single-GPIO AM2434BSDFHIALVR path;
+unsupported targets fail explicitly.
+
 See [npm publishing](docs/npm-publishing.md) for build, verification, and release
 instructions. Node.js 22.14 or newer is required for the npm distribution.
 

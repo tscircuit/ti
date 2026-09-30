@@ -38,6 +38,14 @@ function run(command, args, cwd, env = {}) {
 
 async function testCli(command, cwd) {
   assert.match(run(command, ["--help"], cwd), /Usage: ti search/);
+  assert.match(
+    run(command, ["generate-sysconfig", "--help"], cwd),
+    /Usage: ti generate-sysconfig/,
+  );
+  assert.match(
+    run(command, ["check-sysconfig", "--help"], cwd),
+    /Usage: ti check-sysconfig/,
+  );
   const result = JSON.parse(
     run(command, ["search", "--json", "buck converter"], cwd, {
       NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-fetch.mjs", import.meta.url).href}`,
@@ -80,8 +88,15 @@ try {
   assert.equal(packed.version, sourceManifest.version);
   assert.deepEqual(packed.files.map((file) => file.path).sort(), [
     "README.md",
+    "cli/check-sysconfig.mjs",
+    "cli/generate-sysconfig.mjs",
     "cli/import.mjs",
     "cli/main.mjs",
+    "cli/sysconfig/convert.ts",
+    "cli/sysconfig/generate.mjs",
+    "cli/sysconfig/input.mjs",
+    "cli/sysconfig/request.mjs",
+    "cli/sysconfig/ti-cli.mjs",
     "cli/ti.mjs",
     "index.cjs",
     "index.d.ts",
