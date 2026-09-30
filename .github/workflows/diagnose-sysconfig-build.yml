@@ -8,7 +8,7 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-22.04
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,7 +26,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/evidence"
           node --input-type=module <<'JS'
           import { writeFile } from 'node:fs/promises';
-          const base = 'https://tscircuit.com/api';
+          const base = 'https://registry-api.tscircuit.com';
           const release = '9fbe3bdb-3a54-439a-a8e7-3364ae480c5c';
           const listResponse = await fetch(`${base}/package_builds/list?package_release_id=${release}`, {signal: AbortSignal.timeout(30000)});
           const listText = await listResponse.text();
@@ -35,43 +35,93 @@ jobs:
           if (!listResponse.ok) { console.log(listText.slice(0,3000)); process.exit(1); }
           const list = JSON.parse(listText);
           console.log('BUILD_LIST', JSON.stringify(list));
-          for (const build of (list.package_builds ?? []).slice(0, 3)) {
+          for (const build of (list.package_builds ?? []).slice(0, 2)) {
             const response = await fetch(`${base}/package_builds/get?package_build_id=${encodeURIComponent(build.package_build_id)}&include_logs=true`, {signal: AbortSignal.timeout(30000)});
             const text = await response.text();
             await writeFile(`${process.env.RUNNER_TEMP}/evidence/build-${build.package_build_id}.json`, text);
             console.log('BUILD_DETAIL', response.status, text);
           }
           JS
-      - name: Install project dependencies
+      - name: Prepare narrowly scoped fixes in this disposable workspace
         if: always()
-        run: bun install
-      - name: Reproduce root typecheck and a real TSX export
+        run: |
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tsconfig.json')
+          config=json.loads(p.read_text())
+          config['compilerOptions']['lib']=['ES2023','DOM','DOM.Iterable']
+          p.write_text(json.dumps(config,indent=2)+'\n')
+          p=Path('.github/workflows/npm-package.yml')
+          p.write_text(p.read_text().replace('      - run: bun run test:cli','      - run: bun run typecheck\n      - run: bun run test:cli'))
+          p=Path('tests/cli/sysconfig.test.mjs')
+          text=p.read_text()
+          start=text.index('test("generate-sysconfig supports TSX after the normal tscircuit build step"')
+          end=text.index('test("check-sysconfig invokes', start)
+          replacement='''test("generate-sysconfig compiles real TSX and follows a pin change", async (t) => {
+            const f = fixture(t);
+            const sourcePath = join(f.cwd, "board.circuit.tsx");
+            const source = `export default () => (
+              <board width="10mm" height="10mm" routingDisabled>
+                <chip name="U1_MCU" manufacturerPartNumber="CC2340R52E0RGER"
+                  pinLabels={{
+                    pin9: ["DISP_PWR_N", "DIO20_A11"],
+                    pin5: ["ACCEL_INT1", "DIO12"],
+                    pin3: ["I2C_SDA", "DIO8"],
+                    pin19: ["I2C_SCL", "DIO6_A1"],
+                  }} />
+              </board>
+            );`;
+            writeFileSync(sourcePath, source);
+            assert.equal(
+              await f.run(["generate-sysconfig", "board.circuit.tsx"]),
+              0,
+              f.stderr.join("\\n"),
+            );
+            assert.match(readFileSync(join(f.cwd, "board.syscfg"), "utf8"), /GPIO2\\.gpioPin\\.\\$assign = "DIO12"/);
+            writeFileSync(sourcePath, source.replace('pin5: ["ACCEL_INT1", "DIO12"]', 'pin6: ["ACCEL_INT1", "DIO13"]'));
+            assert.equal(
+              await f.run(["generate-sysconfig", "board.circuit.tsx"]),
+              0,
+              f.stderr.join("\\n"),
+            );
+            const exported = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
+            assert.match(exported, /GPIO2\\.gpioPin\\.\\$assign = "DIO13"/);
+            assert.match(exported, /I2C1\\.maxBitRate = 100;/);
+          });
+
+          '''
+          p.write_text(text[:start]+replacement+text[end:])
+          PY
+      - run: bun install
+        if: always()
+      - name: Format only the intended changed files
+        if: always()
+        run: bunx --no-install biome format --write tsconfig.json tests/cli/sysconfig.test.mjs
+      - name: Verify typecheck, CLI tests, formatting, package build and install
         if: always()
         run: |
           set +e
-          bun run typecheck > "$RUNNER_TEMP/evidence/typecheck.log" 2>&1
-          status=$?
-          echo "TYPECHECK_EXIT=$status"
-          cat "$RUNNER_TEMP/evidence/typecheck.log"
-          mkdir -p .sysconfig-smoke
-          cat > .sysconfig-smoke/board.circuit.tsx <<'TSX'
-          export default () => (
-            <board width="10mm" height="10mm" routingDisabled>
-              <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
-                pinLabels={{ pin5: ["ACCEL_INT1", "DIO12"] }} />
-            </board>
-          )
-          TSX
-          cat > .sysconfig-smoke/board.sysconfig.json <<'JSON'
-          {"component":"U1","gpios":[{"source":"ACCEL_INT1","gpio_name":"CONFIG_ACCEL_INT","direction":"input","pull":"none","interrupt":"none"}],"reserved_ports":[],"firmware":{"rtos":"nortos"}}
-          JSON
-          timeout 180 node cli/ti.mjs generate-sysconfig .sysconfig-smoke/board.circuit.tsx > "$RUNNER_TEMP/evidence/tsx-export.log" 2>&1
-          echo "TSX_EXPORT_EXIT=$?"
-          cat "$RUNNER_TEMP/evidence/tsx-export.log"
-          test ! -f .sysconfig-smoke/board.syscfg || cat .sysconfig-smoke/board.syscfg
+          failed=0
+          for task in typecheck test:cli format:check build:npm test:npm; do
+            bun run "$task" > "$RUNNER_TEMP/evidence/${task//:/-}.log" 2>&1
+            status=$?
+            echo "CHECK $task EXIT=$status"
+            cat "$RUNNER_TEMP/evidence/${task//:/-}.log"
+            if [ "$status" -ne 0 ]; then failed=1; fi
+          done
+          mkdir -p "$RUNNER_TEMP/evidence/fixes/tests/cli" "$RUNNER_TEMP/evidence/fixes/.github/workflows"
+          cp tsconfig.json "$RUNNER_TEMP/evidence/fixes/tsconfig.json"
+          cp tests/cli/sysconfig.test.mjs "$RUNNER_TEMP/evidence/fixes/tests/cli/"
+          cp .github/workflows/npm-package.yml "$RUNNER_TEMP/evidence/fixes/.github/workflows/"
+          git diff -- tsconfig.json tests/cli/sysconfig.test.mjs .github/workflows/npm-package.yml > "$RUNNER_TEMP/evidence/fix.patch"
+          echo 'REVIEWED_PATCH'
+          cat "$RUNNER_TEMP/evidence/fix.patch"
+          exit "$failed"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: sysconfig-build-diagnosis
+          name: sysconfig-build-fix-verification
           path: ${{ runner.temp }}/evidence/
+          include-hidden-files: true
           retention-days: 7
