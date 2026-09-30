@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { runCli } from "../../cli/main.mjs";
+import { validateGeneratedFiles } from "../../cli/sysconfig/ti-cli.mjs";
 
 function cc2340Circuit(accelPin = 5, accelIdentifier = "DIO12") {
   const component = {
@@ -105,7 +106,7 @@ const request = {
     peripheral_assignment: "suggested",
   },
   reserved_ports: [],
-  firmware: { rtos: "nortos" },
+  firmware: { rtos: "nortos", lf_clock_source: "lf_rcosc" },
 };
 
 function fixture(t) {
@@ -151,6 +152,8 @@ test("generate-sysconfig resolves stable signal names and writes CC2340 SysConfi
   assert.match(source, /I2C1\.i2c\.sdaPin\.\$assign = "DIO8"/);
   assert.match(source, /I2C1\.i2c\.sclPin\.\$assign = "DIO6_A1_AR\+"/);
   assert.match(source, /I2C1\.maxBitRate = 100;/);
+  assert.match(source, /CCFG\.srcClkLF = "LF RCOSC";/);
+  assert.match(source, /Board\.generateInitializationFunctions = false;/);
   assert.doesNotMatch(source, /maxBitRate = 100000/);
 });
 
@@ -168,18 +171,23 @@ test("generate-sysconfig follows a circuit pin change without changing the reque
   assert.doesNotMatch(source, /GPIO2\.gpioPin\.\$assign = "DIO12"/);
 });
 
-test("generate-sysconfig compiles real TSX and follows a pin change", async (t) => {
+test("generate-sysconfig compiles connected TSX traces and follows a pin change", async (t) => {
   const f = fixture(t);
   const sourcePath = join(f.cwd, "board.circuit.tsx");
   const source = `export default () => (
     <board width="10mm" height="10mm" routingDisabled>
       <chip name="U1_MCU" manufacturerPartNumber="CC2340R52E0RGER"
         pinLabels={{
-          pin9: ["DISP_PWR_N", "DIO20_A11"],
+          pin9: ["DIO20_A11"],
           pin5: ["ACCEL_INT1", "DIO12"],
           pin3: ["I2C_SDA", "DIO8"],
           pin19: ["I2C_SCL", "DIO6_A1"],
         }} />
+      <resistor name="R1" resistance="10k" footprint="0402" />
+      <net name="DISP_PWR_N" />
+      <trace from=".U1_MCU > .DIO20_A11" to=".R1 > .pin1" />
+      <trace from=".R1 > .pin1" to="net.DISP_PWR_N" />
+      <trace from=".R1 > .pin2" to=".U1_MCU > .ACCEL_INT1" />
     </board>
   );`;
   writeFileSync(sourcePath, source);
@@ -205,8 +213,40 @@ test("generate-sysconfig compiles real TSX and follows a pin change", async (t) 
     f.stderr.join("\n"),
   );
   const exported = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
+  assert.match(exported, /GPIO1\.gpioPin\.\$assign = "DIO20_A11"/);
   assert.match(exported, /GPIO2\.gpioPin\.\$assign = "DIO13"/);
   assert.match(exported, /I2C1\.maxBitRate = 100;/);
+});
+
+test("generate-sysconfig rejects a net reaching multiple MCU pins through connected traces", async (t) => {
+  const f = fixture(t);
+  const circuitJson = cc2340Circuit();
+  circuitJson.push(
+    {
+      type: "source_trace",
+      source_trace_id: "display_to_junction",
+      connected_source_port_ids: ["display", "junction"],
+      connected_source_net_ids: [],
+    },
+    {
+      type: "source_trace",
+      source_trace_id: "junction_to_accel",
+      connected_source_port_ids: ["junction", "accel"],
+      connected_source_net_ids: [],
+    },
+    {
+      type: "source_trace",
+      source_trace_id: "cycle",
+      connected_source_port_ids: ["junction", "display"],
+      connected_source_net_ids: [],
+    },
+  );
+  writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(circuitJson));
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(
+    f.stderr.join("\n"),
+    /"DISP_PWR_N" to resolve to one port on U1_MCU; found 2/,
+  );
 });
 
 test("check-sysconfig invokes the configured TI CLI only after conversion", async (t) => {
@@ -229,6 +269,14 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
       const outputDir = args[outputIndex + 1];
       mkdirSync(outputDir, { recursive: true });
       writeFileSync(join(outputDir, "ti_drivers_config.h"), "#define OK 1\n");
+      writeFileSync(
+        join(outputDir, "ti_drivers_config.c"),
+        "/* test output */\n",
+      );
+      writeFileSync(
+        join(outputDir, "ti_devices_config.c"),
+        "/* test output */\n",
+      );
       return { status: 0, stdout: "", stderr: "" };
     }
     throw new Error(`Unexpected command: ${command}`);
@@ -253,6 +301,28 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
   assert.ok(observedTiArgs.includes("RGE"));
   assert.ok(observedTiArgs.includes("nortos"));
   assert.match(f.stdout.join("\n"), /SysConfig check passed/);
+});
+
+test("TI success requires the target's generated C and header files", async (t) => {
+  const f = fixture(t);
+  writeFileSync(join(f.cwd, "unrelated.log"), "success\n");
+  await assert.rejects(
+    validateGeneratedFiles(f.cwd, "cc2340"),
+    /ti_drivers_config.c/,
+  );
+  writeFileSync(join(f.cwd, "ti_drivers_config.c"), "/* test output */\n");
+  writeFileSync(join(f.cwd, "ti_drivers_config.h"), "/* test output */\n");
+  writeFileSync(join(f.cwd, "ti_devices_config.c"), "");
+  await assert.rejects(
+    validateGeneratedFiles(f.cwd, "cc2340"),
+    /ti_devices_config.c/,
+  );
+  writeFileSync(join(f.cwd, "ti_devices_config.c"), "/* test output */\n");
+  assert.ok(await validateGeneratedFiles(f.cwd, "cc2340"));
+  await assert.rejects(
+    validateGeneratedFiles(f.cwd, "am2434"),
+    /ti_pinmux_config.c/,
+  );
 });
 
 test("check-sysconfig reports missing TI prerequisites without installing anything", async (t) => {

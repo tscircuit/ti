@@ -72,18 +72,32 @@ function resolvePort(circuitJson, component, selector) {
       .filter((item) => item?.type === "source_net" && item.name === selector)
       .map((item) => item.source_net_id),
   );
-  for (const trace of circuitJson) {
-    if (
-      trace?.type !== "source_trace" ||
-      !Array.isArray(trace.connected_source_net_ids) ||
-      !trace.connected_source_net_ids.some((id) => netIds.has(id))
-    ) {
-      continue;
-    }
-    for (const portId of trace.connected_source_port_ids ?? []) {
-      if (componentPorts.some((port) => port.source_port_id === portId)) {
-        candidateIds.add(portId);
+  const connectedPortIds = new Set();
+  const remainingTraces = new Set(
+    circuitJson.filter((item) => item?.type === "source_trace"),
+  );
+  let expanded;
+  do {
+    expanded = false;
+    for (const trace of remainingTraces) {
+      const traceNetIds = trace.connected_source_net_ids ?? [];
+      const tracePortIds = trace.connected_source_port_ids ?? [];
+      if (
+        !traceNetIds.some((id) => netIds.has(id)) &&
+        !tracePortIds.some((id) => connectedPortIds.has(id))
+      ) {
+        continue;
       }
+      for (const netId of traceNetIds) netIds.add(netId);
+      for (const portId of tracePortIds) connectedPortIds.add(portId);
+      remainingTraces.delete(trace);
+      expanded = true;
+    }
+  } while (expanded);
+
+  for (const port of componentPorts) {
+    if (connectedPortIds.has(port.source_port_id)) {
+      candidateIds.add(port.source_port_id);
     }
   }
 
@@ -244,7 +258,11 @@ function resolveCc2340Options(circuitJson, component, request) {
   });
 
   assertObject(request.firmware, "firmware");
-  assertOnlyKeys(request.firmware, new Set(["rtos"]), "firmware");
+  assertOnlyKeys(
+    request.firmware,
+    new Set(["rtos", "lf_clock_source"]),
+    "firmware",
+  );
   if (request.firmware.rtos !== "nortos") {
     throw new Error(
       "The current CC2340 converter scope requires firmware.rtos to be nortos",
@@ -258,7 +276,7 @@ function resolveCc2340Options(circuitJson, component, request) {
       gpios,
       ...(i2c ? { i2c } : {}),
       reserved_ports,
-      firmware: { rtos: "nortos" },
+      firmware: { ...request.firmware },
     },
   };
 }

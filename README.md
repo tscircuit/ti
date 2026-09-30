@@ -97,7 +97,7 @@ Firmware behavior is intentionally explicit. Put a sibling
     "peripheral_assignment": "suggested"
   },
   "reserved_ports": [],
-  "firmware": { "rtos": "nortos" }
+  "firmware": { "rtos": "nortos", "lf_clock_source": "lf_rcosc" }
 }
 ```
 
@@ -105,6 +105,12 @@ A `source` may be a source-net name, MCU port name/alias, source-port ID, or
 numeric package pin, but it must resolve to exactly one MCU port. Prefer signal
 names such as `ACCEL_INT1` so changing the physical MCU pin in the circuit changes
 the generated SysConfig without editing the request file.
+
+Named nets are resolved through connected source traces, including junctions at
+component pins; the resolver does not traverse through a component's body.
+The CC2340 LF clock choice is explicit: `lf_rcosc` selects the internal oscillator,
+and `lf_xosc` selects an external crystal. Using or reserving DIO3/DIO4 requires
+`lf_rcosc`. Device-only conversion also disables LaunchPad-specific flash startup.
 
 `check-sysconfig` first performs the same conversion in a temporary directory,
 then invokes a matching locally installed TI SysConfig CLI. It requires:
@@ -117,10 +123,16 @@ ti check-sysconfig ./board.circuit.tsx
 ```
 
 The command fails if conversion fails, TI rejects the file, or TI generates no
-output. It never installs TI software or accepts TI license terms. Use the TI
+required non-empty C/header files. It never installs TI software or accepts TI license terms. Use the TI
 tool/SDK versions required by the selected target. Current converter scope is
 CC2340R52E0RGER GPIO/I2C and the existing single-GPIO AM2434BSDFHIALVR path;
 unsupported targets fail explicitly.
+
+The pedometer GPIO/I2C demo was validated in CCS 21.0.1 using SysConfig 1.28.1+4785
+and SimpleLink F3 SDK 9.21.00.36. The converter's `validate:cc2340` runner separately
+checks electrical settings and byte-for-byte C/header parity with a CCS-saved
+reference. `check-sysconfig` itself checks TI acceptance and required output files;
+it does not compile firmware or prove hardware behavior.
 
 See [npm publishing](docs/npm-publishing.md) for build, verification, and release
 instructions. Node.js 22.14 or newer is required for the npm distribution.

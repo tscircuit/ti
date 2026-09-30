@@ -5,8 +5,8 @@ import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { generateSysconfig } from "./sysconfig/generate.mjs";
 import {
-  countGeneratedFiles,
   getTiInvocation,
+  validateGeneratedFiles,
   validateTiEnvironment,
 } from "./sysconfig/ti-cli.mjs";
 
@@ -102,12 +102,10 @@ export async function runCheckSysconfig(
       );
     }
 
-    const generatedFiles = await countGeneratedFiles(tiOutput);
-    if (generatedFiles === 0) {
-      throw new Error(
-        "TI SysConfig exited successfully but produced no non-empty generated files",
-      );
-    }
+    const generatedFiles = await validateGeneratedFiles(
+      tiOutput,
+      generated.target,
+    );
 
     stdout(
       `SysConfig check passed for ${positionals[0]} (${generatedFiles} generated file${generatedFiles === 1 ? "" : "s"}).`,

@@ -74,3 +74,22 @@ export async function countGeneratedFiles(directory) {
   }
   return count;
 }
+
+export async function validateGeneratedFiles(directory, target) {
+  const requiredFiles = [
+    "ti_drivers_config.c",
+    "ti_drivers_config.h",
+    target === "cc2340" ? "ti_devices_config.c" : "ti_pinmux_config.c",
+  ];
+  for (const file of requiredFiles) {
+    const filePath = join(directory, file);
+    const details = await stat(filePath).catch((error) => {
+      if (error.code === "ENOENT") return null;
+      throw error;
+    });
+    if (!details?.isFile() || details.size === 0) {
+      throw new Error(`TI SysConfig did not generate a non-empty ${file}`);
+    }
+  }
+  return countGeneratedFiles(directory);
+}

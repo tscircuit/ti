@@ -44,6 +44,6 @@
   "author": "imrishabh18",
   "dependencies": {
     "easyeda": "0.0.360",
-    "circuit-json-to-sysconfig": "github:tscircuit/circuit-json-to-sysconfig#007eb0475681b0088efa19e845b3807ab1b1ec27"
+    "circuit-json-to-sysconfig": "github:tscircuit/circuit-json-to-sysconfig#220280e8909d1766c639db808076418f06412c74"
   }
 }
