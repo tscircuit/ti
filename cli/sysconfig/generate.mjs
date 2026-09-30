@@ -10,7 +10,7 @@ import {
 } from "./input.mjs";
 import { resolveConverterOptions } from "./request.mjs";
 
-export const CONVERTER_REVISION = "220280e8909d1766c639db808076418f06412c74";
+export const CONVERTER_REVISION = "9049b4cce0510088d9b48397759528cb532a0dbd";
 
 const converterHelperPath = fileURLToPath(
   new URL("./convert.ts", import.meta.url),

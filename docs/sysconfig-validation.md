@@ -4,7 +4,7 @@ Validated on 2026-09-30 with the original `seveibar/pedometer` v0.4.4 source,
 tscircuit 0.0.2463, Bun 1.3.9, CCS 21.0.1, SysConfig 1.28.1+4785, and SimpleLink
 F3 SDK 9.21.00.36 (official source commit
 `c55fa9bae0ec71b103508afac4861d446204669b`). The CLI pins converter
-`220280e8909d1766c639db808076418f06412c74`, proposed in
+`9049b4cce0510088d9b48397759528cb532a0dbd`, merged in
 [converter PR #5](https://github.com/tscircuit/circuit-json-to-sysconfig/pull/5).
 
 Both exact commands pass from the installed npm tarball, with the source
@@ -46,6 +46,7 @@ format check, npm build, and isolated local/global installed-package tests.
 The TI subprocess is mocked only in unit tests; the validation above used the
 installed TI tools. No temporary local dependency links remain in the package.
 
-PR #250 remains draft pending the converter dependency and review of remote
-checks. The previous separate registry build timeout is not claimed fixed.
+Converter PR #5 is merged; its tree is byte-identical to the locally validated
+revision. PR #250 remains draft while the separate registry build is pending.
+The previous registry build timeout is not claimed fixed.
 SysConfig 1.26.3, a complete firmware link, and hardware operation were not tested.
