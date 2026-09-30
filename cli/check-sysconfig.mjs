@@ -3,11 +3,11 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
+import { generateSysconfig } from "./sysconfig/generate.mjs";
 import {
   countGeneratedFiles,
-  generateSysconfig,
   getTiInvocation,
-} from "./sysconfig-utils.mjs";
+} from "./sysconfig/ti-cli.mjs";
 
 const help = `Usage: ti check-sysconfig [options] <file>
 
