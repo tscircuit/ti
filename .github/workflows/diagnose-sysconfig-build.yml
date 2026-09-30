@@ -1,0 +1,77 @@
+name: Diagnose SysConfig build
+on:
+  push:
+    branches: [diagnose-sysconfig-build]
+    paths: [.github/workflows/diagnose-sysconfig-build.yml]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: f80b097e940cd773744cca4bd5379992b7cf5859
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.2'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.14.0'
+          package-manager-cache: false
+      - name: Retrieve the actual public registry build failure
+        run: |
+          mkdir -p "$RUNNER_TEMP/evidence"
+          node --input-type=module <<'JS'
+          import { writeFile } from 'node:fs/promises';
+          const base = 'https://tscircuit.com/api';
+          const release = '9fbe3bdb-3a54-439a-a8e7-3364ae480c5c';
+          const listResponse = await fetch(`${base}/package_builds/list?package_release_id=${release}`, {signal: AbortSignal.timeout(30000)});
+          const listText = await listResponse.text();
+          await writeFile(`${process.env.RUNNER_TEMP}/evidence/build-list.json`, listText);
+          console.log('LIST_STATUS', listResponse.status);
+          if (!listResponse.ok) { console.log(listText.slice(0,3000)); process.exit(1); }
+          const list = JSON.parse(listText);
+          console.log('BUILD_LIST', JSON.stringify(list));
+          for (const build of (list.package_builds ?? []).slice(0, 3)) {
+            const response = await fetch(`${base}/package_builds/get?package_build_id=${encodeURIComponent(build.package_build_id)}&include_logs=true`, {signal: AbortSignal.timeout(30000)});
+            const text = await response.text();
+            await writeFile(`${process.env.RUNNER_TEMP}/evidence/build-${build.package_build_id}.json`, text);
+            console.log('BUILD_DETAIL', response.status, text);
+          }
+          JS
+      - name: Install project dependencies
+        if: always()
+        run: bun install
+      - name: Reproduce root typecheck and a real TSX export
+        if: always()
+        run: |
+          set +e
+          bun run typecheck > "$RUNNER_TEMP/evidence/typecheck.log" 2>&1
+          status=$?
+          echo "TYPECHECK_EXIT=$status"
+          cat "$RUNNER_TEMP/evidence/typecheck.log"
+          mkdir -p .sysconfig-smoke
+          cat > .sysconfig-smoke/board.circuit.tsx <<'TSX'
+          export default () => (
+            <board width="10mm" height="10mm" routingDisabled>
+              <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
+                pinLabels={{ pin5: ["ACCEL_INT1", "DIO12"] }} />
+            </board>
+          )
+          TSX
+          cat > .sysconfig-smoke/board.sysconfig.json <<'JSON'
+          {"component":"U1","gpios":[{"source":"ACCEL_INT1","gpio_name":"CONFIG_ACCEL_INT","direction":"input","pull":"none","interrupt":"none"}],"reserved_ports":[],"firmware":{"rtos":"nortos"}}
+          JSON
+          timeout 180 node cli/ti.mjs generate-sysconfig .sysconfig-smoke/board.circuit.tsx > "$RUNNER_TEMP/evidence/tsx-export.log" 2>&1
+          echo "TSX_EXPORT_EXIT=$?"
+          cat "$RUNNER_TEMP/evidence/tsx-export.log"
+          test ! -f .sysconfig-smoke/board.syscfg || cat .sysconfig-smoke/board.syscfg
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sysconfig-build-diagnosis
+          path: ${{ runner.temp }}/evidence/
+          retention-days: 7
