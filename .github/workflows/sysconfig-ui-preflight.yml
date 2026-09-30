@@ -1,0 +1,66 @@
+name: SysConfig UI preflight
+
+on:
+  push:
+    branches: [sysconfig-ui-parity]
+    paths: [.github/workflows/sysconfig-ui-preflight.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  ui-access:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser in temporary workspace
+        run: |
+          mkdir -p "$RUNNER_TEMP/sysconfig-ui-preflight"
+          cd "$RUNNER_TEMP/sysconfig-ui-preflight"
+          npm init -y >/dev/null
+          npm install --save-exact playwright@1.58.2
+          npx --no-install playwright install --with-deps chromium
+      - name: Inspect the official cloud UI without accepting terms or signing in
+        working-directory: ${{ runner.temp }}/sysconfig-ui-preflight
+        run: |
+          cat > probe.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import { mkdir, writeFile } from 'node:fs/promises';
+          await mkdir('evidence', { recursive: true });
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+          const errors = [];
+          page.on('pageerror', error => errors.push(error.message));
+          const report = { purpose: 'Access diagnostic only; UI parity NOT RUN', requestedUrl: 'https://dev.ti.com/sysconfig/', actions: ['Navigate to official public UI', 'Read visible text and controls', 'Capture screenshot'], licenseAcceptance: false, authenticated: false };
+          try {
+            const response = await page.goto(report.requestedUrl, { waitUntil: 'domcontentloaded', timeout: 90000 });
+            report.httpStatus = response?.status();
+            await page.waitForTimeout(15000);
+            report.url = page.url();
+            report.title = await page.title();
+            report.frames = [];
+            for (const frame of page.frames()) {
+              report.frames.push({ url: frame.url(), text: await frame.locator('body').innerText({ timeout: 10000 }).catch(() => ''), controls: await frame.locator('input, select, button, a').evaluateAll(elements => elements.map(e => ({ tag: e.tagName, type: e.getAttribute('type'), name: e.getAttribute('name'), id: e.id, text: e.innerText?.slice(0, 150), href: e.getAttribute('href'), options: e.tagName === 'SELECT' ? [...e.options].map(o => ({ text: o.text, value: o.value })) : undefined }))).catch(() => []) });
+            }
+          } catch (error) {
+            report.error = error.message;
+            process.exitCode = 1;
+          } finally {
+            report.errors = errors;
+            await page.screenshot({ path: 'evidence/ui-access.png', fullPage: true }).catch(() => {});
+            await writeFile('evidence/access.json', JSON.stringify(report, null, 2));
+            console.log(JSON.stringify(report, null, 2));
+            console.log('UI PARITY NOT RUN. This is an access diagnostic, not a converter validation.');
+            await browser.close();
+          }
+          JS
+          node probe.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sysconfig-ui-preflight
+          path: ${{ runner.temp }}/sysconfig-ui-preflight/evidence/
+          retention-days: 7
