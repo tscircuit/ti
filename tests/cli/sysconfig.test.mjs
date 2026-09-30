@@ -170,7 +170,10 @@ test("generate-sysconfig follows a circuit pin change without changing the reque
 
 test("generate-sysconfig supports TSX after the normal tscircuit build step", async (t) => {
   const f = fixture(t);
-  writeFileSync(join(f.cwd, "board.circuit.tsx"), "export default () => null\n");
+  writeFileSync(
+    join(f.cwd, "board.circuit.tsx"),
+    "export default () => null\n",
+  );
   const compiledPath = join(f.cwd, "dist", "board", "circuit.json");
 
   const spawnSync = (command, args, options) => {
