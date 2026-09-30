@@ -1,5 +1,6 @@
 import { parseArgs } from "node:util";
-import { formatPath } from "./sysconfig/input.mjs";\nimport { generateSysconfig } from "./sysconfig/generate.mjs";
+import { formatPath } from "./sysconfig/input.mjs";
+import { generateSysconfig } from "./sysconfig/generate.mjs";
 
 const help = `Usage: ti generate-sysconfig [options] <file>
 
