@@ -3,11 +3,14 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getCircuitJsonInput, getInputStem, loadRequestConfig } from "./input.mjs";
+import {
+  getCircuitJsonInput,
+  getInputStem,
+  loadRequestConfig,
+} from "./input.mjs";
 import { resolveConverterOptions } from "./request.mjs";
 
-export const CONVERTER_REVISION =
-  "007eb0475681b0088efa19e845b3807ab1b1ec27";
+export const CONVERTER_REVISION = "007eb0475681b0088efa19e845b3807ab1b1ec27";
 
 const converterHelperPath = fileURLToPath(
   new URL("./convert.ts", import.meta.url),
@@ -18,7 +21,9 @@ function commandFailure(label, result) {
     .filter(Boolean)
     .join("\n")
     .trim();
-  return new Error(details ? `${label} failed:\n${details}` : `${label} failed`);
+  return new Error(
+    details ? `${label} failed:\n${details}` : `${label} failed`,
+  );
 }
 
 function defaultOutputPath(inputPath, cwd) {
@@ -49,7 +54,8 @@ async function invokeConverter(
       },
     );
     if (result.error) throw result.error;
-    if (result.status !== 0) throw commandFailure("SysConfig conversion", result);
+    if (result.status !== 0)
+      throw commandFailure("SysConfig conversion", result);
   } finally {
     await rm(temporary, { recursive: true, force: true });
   }
