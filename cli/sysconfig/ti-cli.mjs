@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
 
-export function getTiInvocation(target, syscfgPath, outputDir, env) {
+export function validateTiEnvironment(env) {
   const tiNode = env.TI_SYSCONFIG_NODE;
   const tiCli = env.TI_SYSCONFIG_CLI;
   const sdkRoot = env.TI_SDK_ROOT;
@@ -35,6 +35,11 @@ export function getTiInvocation(target, syscfgPath, outputDir, env) {
     throw new Error(`TI SDK product metadata does not exist: ${product}`);
   }
 
+  return { tiNode, tiCli, sdkRoot, product };
+}
+
+export function getTiInvocation(target, syscfgPath, outputDir, env) {
+  const { tiNode, tiCli, product } = validateTiEnvironment(env);
   const args = [tiCli, "--product", product];
   if (target === "cc2340") {
     args.push(
