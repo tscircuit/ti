@@ -556,6 +556,59 @@ test("AM2434 TI validation checks the historical SDK and tool identity", (t) => 
   );
 });
 
+test("AM2434 rejects malformed and unsupported reserved ports", () => {
+  const circuitJson = [
+    {
+      type: "source_component",
+      ftype: "simple_chip",
+      source_component_id: "mcu",
+      name: "U1_MCU",
+      manufacturer_part_number: "AM2434BSDFHIALVR",
+    },
+    {
+      type: "source_port",
+      source_port_id: "a7",
+      source_component_id: "mcu",
+      name: "A7",
+      pin_number: "A7",
+    },
+  ];
+  const request = {
+    component: "U1_MCU",
+    gpios: [{ source: "A7", gpio_name: "CONFIG_LED", direction: "output" }],
+  };
+
+  for (const reservedPorts of [
+    { source: "A7", reason: "must remain unconfigured" },
+    null,
+    "A7",
+  ]) {
+    assert.throws(
+      () =>
+        resolveConverterOptions(circuitJson, {
+          ...request,
+          reserved_ports: reservedPorts,
+        }),
+      /reserved_ports must be an array/,
+    );
+  }
+  assert.throws(
+    () =>
+      resolveConverterOptions(circuitJson, {
+        ...request,
+        reserved_ports: [{ source: "A7", reason: "must remain unconfigured" }],
+      }),
+    /AM2434 CLI conversion does not support reserved_ports yet/,
+  );
+  assert.equal(
+    resolveConverterOptions(circuitJson, {
+      ...request,
+      reserved_ports: [],
+    }).options.source_port_id,
+    "a7",
+  );
+});
+
 test("CC2340 TI output must match requested pins, states, rate, and clock", async (t) => {
   const f = fixture(t);
   assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);

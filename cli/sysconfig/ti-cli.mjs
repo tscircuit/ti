@@ -14,7 +14,7 @@ export function validateTiEnvironment(env) {
     ["TI_SYSCONFIG_CLI", tiCli],
     ["TI_SDK_ROOT", sdkRoot],
   ]
-    .filter(([, value]) => !value)
+    .filter(([, configuredPath]) => !configuredPath)
     .map(([name]) => name);
 
   if (missing.length) {

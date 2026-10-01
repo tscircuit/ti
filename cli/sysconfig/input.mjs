@@ -157,8 +157,8 @@ export async function getCircuitJsonInput(
   };
 }
 
-function assertRequestObject(value) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
+function assertRequestObject(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) {
     throw new Error("SysConfig request must be a JSON object");
   }
 }

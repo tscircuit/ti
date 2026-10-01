@@ -1,8 +1,8 @@
 const CC2340_MPN = "CC2340R52E0RGER";
 const AM2434_MPN = "AM2434BSDFHIALVR";
 
-function assertObject(value, label) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
+function assertObject(record, label) {
+  if (!record || typeof record !== "object" || Array.isArray(record)) {
     throw new Error(`${label} must be a JSON object`);
   }
 }
@@ -317,7 +317,13 @@ function resolveAm2434Options({ circuitJson, component, request }) {
   if (request.i2c !== undefined) {
     throw new Error("AM2434 CLI conversion does not support I2C yet");
   }
-  if ((request.reserved_ports ?? []).length) {
+  if (
+    request.reserved_ports !== undefined &&
+    !Array.isArray(request.reserved_ports)
+  ) {
+    throw new Error("reserved_ports must be an array");
+  }
+  if (request.reserved_ports?.length) {
     throw new Error(
       "AM2434 CLI conversion does not support reserved_ports yet",
     );
