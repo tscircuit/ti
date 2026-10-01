@@ -19,7 +19,7 @@ const hostVersion =
 const temporary = await mkdtemp(join(tmpdir(), "tscircuit-ti-npm-"));
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 
-function run(command, args, cwd, env = {}) {
+function run({ command, args, cwd, env = {} }) {
   const result = spawnSync(command, args, {
     cwd,
     encoding: "utf8",
@@ -36,11 +36,24 @@ function run(command, args, cwd, env = {}) {
   return result.stdout;
 }
 
-async function testCli(command, cwd) {
-  assert.match(run(command, ["--help"], cwd), /Usage: ti search/);
+async function testCli({ command, cwd }) {
+  assert.match(run({ command, args: ["--help"], cwd }), /Usage: ti search/);
+  assert.match(
+    run({ command, args: ["generate-sysconfig", "--help"], cwd }),
+    /Usage: ti generate-sysconfig/,
+  );
+  assert.match(
+    run({ command, args: ["check-sysconfig", "--help"], cwd }),
+    /Usage: ti check-sysconfig/,
+  );
   const result = JSON.parse(
-    run(command, ["search", "--json", "buck converter"], cwd, {
-      NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-fetch.mjs", import.meta.url).href}`,
+    run({
+      command,
+      args: ["search", "--json", "buck converter"],
+      cwd,
+      env: {
+        NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-fetch.mjs", import.meta.url).href}`,
+      },
     }),
   );
   assert.deepEqual(result, {
@@ -56,8 +69,13 @@ async function testCli(command, cwd) {
     ],
   });
   assert.match(
-    run(command, ["import", "C324077"], cwd, {
-      NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-import-fetch.mjs", import.meta.url).href}`,
+    run({
+      command,
+      args: ["import", "C324077"],
+      cwd,
+      env: {
+        NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-import-fetch.mjs", import.meta.url).href}`,
+      },
     }),
     /Imported imports\/TPS62160DSGR.tsx from EasyEDA/,
   );
@@ -65,23 +83,79 @@ async function testCli(command, cwd) {
     await readFile(join(cwd, "imports/TPS62160DSGR.tsx"), "utf8"),
     /export const TPS62160DSGR/,
   );
+  await writeFile(
+    join(cwd, "board.circuit.json"),
+    JSON.stringify([
+      {
+        type: "source_component",
+        ftype: "simple_chip",
+        source_component_id: "mcu",
+        name: "U1_MCU",
+        manufacturer_part_number: "CC2340R52E0RGER",
+      },
+      {
+        type: "source_port",
+        source_port_id: "display",
+        source_component_id: "mcu",
+        name: "DIO20_A11",
+        pin_number: 9,
+        port_hints: ["DIO20_A11"],
+      },
+    ]),
+  );
+  await writeFile(
+    join(cwd, "board.sysconfig.json"),
+    JSON.stringify({
+      component: "U1_MCU",
+      gpios: [
+        {
+          source: "DIO20_A11",
+          gpio_name: "CONFIG_DISPLAY_ISOLATE",
+          direction: "output",
+          initial_state: "high",
+        },
+      ],
+      firmware: { rtos: "nortos", lf_clock_source: "lf_rcosc" },
+    }),
+  );
+  assert.match(
+    run({ command, args: ["generate-sysconfig", "board.circuit.json"], cwd }),
+    /Generated board\.syscfg/,
+  );
+  assert.match(
+    await readFile(join(cwd, "board.syscfg"), "utf8"),
+    /GPIO1\.gpioPin\.\$assign = "DIO20_A11"/,
+  );
 }
 
 try {
   console.log("Packing the npm distribution");
   const [packed] = JSON.parse(
-    run(
-      npm,
-      ["pack", "./dist/npm", "--json", "--pack-destination", temporary],
-      root,
-    ),
+    run({
+      command: npm,
+      args: ["pack", "./dist/npm", "--json", "--pack-destination", temporary],
+      cwd: root,
+    }),
   );
   assert.equal(packed.name, manifest.name);
   assert.equal(packed.version, sourceManifest.version);
+  assert.equal(manifest.dependencies["circuit-json-to-sysconfig"], undefined);
   assert.deepEqual(packed.files.map((file) => file.path).sort(), [
     "README.md",
+    "cli/check-sysconfig.mjs",
+    "cli/generate-sysconfig.mjs",
     "cli/import.mjs",
     "cli/main.mjs",
+    "cli/sysconfig/am2434-profile.mjs",
+    "cli/sysconfig/cc2340-profile.mjs",
+    "cli/sysconfig/convert.mjs",
+    "cli/sysconfig/generate.mjs",
+    "cli/sysconfig/input.mjs",
+    "cli/sysconfig/request.mjs",
+    "cli/sysconfig/runtime.mjs",
+    "cli/sysconfig/ti-cli.mjs",
+    "cli/sysconfig/validate-am2434-output.mjs",
+    "cli/sysconfig/validate-cc2340-output.mjs",
     "cli/ti.mjs",
     "index.cjs",
     "index.d.ts",
@@ -98,9 +172,9 @@ try {
   console.log("Installing the tarball in a clean project");
   // Exercise both the development runtime and the runtime npm selects today.
   // npm must resolve the remaining peers from the packed package's manifest.
-  run(
-    npm,
-    [
+  run({
+    command: npm,
+    args: [
       "install",
       "--no-audit",
       "--no-fund",
@@ -109,16 +183,16 @@ try {
       `tscircuit@${hostVersion}`,
       "typescript@5.9.3",
     ],
-    consumer,
-  );
-  await testCli(
-    join(
+    cwd: consumer,
+  });
+  await testCli({
+    command: join(
       consumer,
       "node_modules/.bin",
       process.platform === "win32" ? "ti.cmd" : "ti",
     ),
-    consumer,
-  );
+    cwd: consumer,
+  });
   console.log("Locally installed ti command passed");
   await writeFile(
     join(consumer, "smoke.mjs"),
@@ -150,7 +224,13 @@ for (const ti of [esm, cjs]) {
 console.log("ESM/CJS exports, embedded model, and circuit rendering passed");
 `,
   );
-  console.log(run(process.execPath, ["smoke.mjs"], consumer).trim());
+  console.log(
+    run({
+      command: process.execPath,
+      args: ["smoke.mjs"],
+      cwd: consumer,
+    }).trim(),
+  );
   await writeFile(
     join(consumer, "types.mts"),
     `import { BQ24074, PowerMonitor_INA237 } from "@tscircuit/ti";
@@ -160,9 +240,9 @@ PowerMonitor_INA237({ name: "Monitor" });
 BQ24074({ name: "U1", footprintVariant: 123 });
 `,
   );
-  run(
-    process.execPath,
-    [
+  run({
+    command: process.execPath,
+    args: [
       "node_modules/typescript/bin/tsc",
       "--noEmit",
       "--strict",
@@ -175,8 +255,8 @@ BQ24074({ name: "U1", footprintVariant: 123 });
       "es2023",
       "types.mts",
     ],
-    consumer,
-  );
+    cwd: consumer,
+  });
   await writeFile(
     join(consumer, "smoke.circuit.tsx"),
     `import { BQ24074, PowerMonitor_INA237 } from "@tscircuit/ti";
@@ -190,9 +270,9 @@ export default () => (
 );
 `,
   );
-  run(
-    "bun",
-    [
+  run({
+    command: "bun",
+    args: [
       "node_modules/tscircuit/cli.mjs",
       "build",
       "smoke.circuit.tsx",
@@ -200,8 +280,8 @@ export default () => (
       "--disable-parts-engine",
       "--schematic-svgs",
     ],
-    consumer,
-  );
+    cwd: consumer,
+  });
   const circuitJson = JSON.parse(
     await readFile(join(consumer, "dist/smoke/circuit.json"), "utf8"),
   );
@@ -219,9 +299,9 @@ export default () => (
   console.log(`TypeScript and tsci build passed with tscircuit@${hostVersion}`);
   console.log("Checking global installation in an isolated prefix");
   const prefix = join(temporary, "global");
-  run(
-    npm,
-    [
+  run({
+    command: npm,
+    args: [
       "install",
       "-g",
       "--prefix",
@@ -231,30 +311,31 @@ export default () => (
       "--registry=https://registry.npmjs.org",
       tarball,
     ],
-    temporary,
-  );
-  const globalRoot = run(
-    npm,
-    ["root", "-g", "--prefix", prefix],
-    temporary,
-  ).trim();
+    cwd: temporary,
+  });
+  const globalRoot = run({
+    command: npm,
+    args: ["root", "-g", "--prefix", prefix],
+    cwd: temporary,
+  }).trim();
   const installed = JSON.parse(
     await readFile(join(globalRoot, "@tscircuit/ti/package.json"), "utf8"),
   );
   assert.equal(installed.name, manifest.name);
   assert.equal(installed.version, sourceManifest.version);
   assert.deepEqual(installed.bin, manifest.bin);
-  await testCli(
-    process.platform === "win32"
-      ? join(prefix, "ti.cmd")
-      : join(prefix, "bin/ti"),
-    temporary,
-  );
+  await testCli({
+    command:
+      process.platform === "win32"
+        ? join(prefix, "ti.cmd")
+        : join(prefix, "bin/ti"),
+    cwd: temporary,
+  });
   console.log("Globally installed ti command passed");
   // Installation alone does not detect an incompatible peer chosen for core.
-  run(
-    process.execPath,
-    [
+  run({
+    command: process.execPath,
+    args: [
       "--input-type=module",
       "--eval",
       `
@@ -268,8 +349,8 @@ export default () => (
       assert.equal(typeof cjs.BQ24074, "function");
     `,
     ],
-    temporary,
-  );
+    cwd: temporary,
+  });
   console.log("Isolated global installation and ESM/CJS imports passed");
 } finally {
   await rm(temporary, { recursive: true, force: true });

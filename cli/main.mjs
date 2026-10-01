@@ -2,10 +2,12 @@ import { parseArgs } from "node:util";
 
 const help = `Usage: ti search [options] <query...>
        ti import <part-number>
+       ti generate-sysconfig [options] <file>
+       ti check-sysconfig [options] <file>
 
-Search Texas Instruments components or import a chip from EasyEDA.
+Search/import TI parts, or generate and validate TI SysConfig from tscircuit.
 
-Options:
+Search options:
   --json      Output search results as JSON
   -h, --help  Show help
 
@@ -13,7 +15,9 @@ Examples:
   ti search "buck converter"
   ti search --json TPS62160
   ti import TPS62160DSGR
-  ti import C324077`;
+  ti import C324077
+  ti generate-sysconfig ./board.circuit.tsx
+  ti check-sysconfig ./board.circuit.tsx`;
 
 export async function runCli(
   argv,
@@ -22,6 +26,9 @@ export async function runCli(
     stdout = console.log,
     stderr = console.error,
     cwd = process.cwd(),
+    spawnSync,
+    env = process.env,
+    bun = "bun",
   } = {},
 ) {
   const [command, ...args] = argv;
@@ -32,6 +39,28 @@ export async function runCli(
   if (command === "import") {
     const { runImport } = await import("./import.mjs");
     return runImport(args, { fetch, stdout, stderr, cwd });
+  }
+  if (command === "generate-sysconfig") {
+    const { runGenerateSysconfig } = await import("./generate-sysconfig.mjs");
+    return runGenerateSysconfig(args, {
+      stdout,
+      stderr,
+      cwd,
+      spawnSync,
+      env,
+      bun,
+    });
+  }
+  if (command === "check-sysconfig") {
+    const { runCheckSysconfig } = await import("./check-sysconfig.mjs");
+    return runCheckSysconfig(args, {
+      stdout,
+      stderr,
+      cwd,
+      spawnSync,
+      env,
+      bun,
+    });
   }
   if (command !== "search") {
     stderr(`Unknown command "${command}". Run ti --help for usage.`);

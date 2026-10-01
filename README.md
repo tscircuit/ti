@@ -53,6 +53,99 @@ Existing files are preserved. This imports a single chip, not a reference
 subcircuit. Available 3D models remain remote links; importing requires an
 internet connection and an available EasyEDA part.
 
+### TI SysConfig commands
+
+The same `ti` executable can generate TI SysConfig from a tscircuit entrypoint:
+
+Install [Bun](https://bun.sh/) first; both SysConfig commands require `bun` on
+`PATH`, including when `ti` was installed with npm.
+
+```bash
+ti generate-sysconfig ./board.circuit.tsx
+ti check-sysconfig ./board.circuit.tsx
+```
+
+`generate-sysconfig` runs the normal tscircuit build for TS/TSX inputs, resolves
+stable component/signal names from Circuit JSON, and delegates the device mapping
+to `circuit-json-to-sysconfig`. It also accepts `.circuit.json` directly. The
+generated file defaults to `<input>.syscfg`; use `-o` to choose another path.
+
+Firmware behavior is intentionally explicit. Put a sibling
+`board.sysconfig.json` next to the input, or use project-level
+`ti.sysconfig.json` (or `--config <file>`). For the current CC2340 scope:
+
+```json
+{
+  "component": "U1_MCU",
+  "gpios": [
+    {
+      "source": "DISP_PWR_N",
+      "gpio_name": "CONFIG_DISPLAY_ISOLATE",
+      "direction": "output",
+      "initial_state": "high"
+    },
+    {
+      "source": "ACCEL_INT1",
+      "gpio_name": "CONFIG_ACCEL_INT",
+      "direction": "input",
+      "pull": "none",
+      "interrupt": "none"
+    }
+  ],
+  "i2c": {
+    "i2c_name": "CONFIG_I2C_0",
+    "sda": "I2C_SDA",
+    "scl": "I2C_SCL",
+    "max_bit_rate": 100000,
+    "peripheral_assignment": "suggested"
+  },
+  "reserved_ports": [],
+  "firmware": { "rtos": "nortos", "lf_clock_source": "lf_rcosc" }
+}
+```
+
+A `source` may be a source-net name, MCU port name/alias, source-port ID, or
+numeric package pin, but it must resolve to exactly one MCU port. Prefer signal
+names such as `ACCEL_INT1` so changing the physical MCU pin in the circuit changes
+the generated SysConfig without editing the request file.
+
+Named nets are resolved through connected source traces, including junctions at
+component pins; the resolver does not traverse through a component's body.
+The CC2340 LF clock choice is required: `lf_rcosc` selects the internal oscillator,
+and `lf_xosc` selects an external crystal. Using or reserving DIO3/DIO4 requires
+`lf_rcosc`. Device-only conversion also disables LaunchPad-specific flash startup.
+
+`check-sysconfig` first performs the same conversion in a temporary directory,
+then invokes a matching locally installed TI SysConfig CLI. It requires:
+
+```bash
+export TI_SYSCONFIG_NODE=/path/to/sysconfig/nodejs/node
+export TI_SYSCONFIG_CLI=/path/to/sysconfig/dist/cli.js
+export TI_SDK_ROOT=/path/to/matching-ti-sdk
+ti check-sysconfig ./board.circuit.tsx
+```
+
+The command fails if conversion fails, TI rejects the file, or TI generates no
+required non-empty C/header files. For CC2340 it also checks the generated
+C/header against requested GPIO pins and states, I²C pins and 100 kbit/s rate,
+the LF clock, reserved pins, and absence of LaunchPad flash startup. The
+CC2340 check requires SysConfig 1.28.1+4785 and SimpleLink F3 SDK 9.21.00.36,
+the versions used for the real TI validation. It never installs TI software or
+accepts TI license terms. Current converter scope is
+CC2340R52E0RGER GPIO/I2C and the existing single-GPIO AM2434BSDFHIALVR path;
+unsupported targets fail explicitly.
+AM2434 validation requires MCU+ SDK metadata `MCU_PLUS_SDK@07.03.01` and
+SysConfig 1.14.0+2667. It compares the single requested output GPIO with TI's
+generated name, A7/B7 pin, direction, and MCU pinmux assignment.
+
+The pedometer GPIO/I2C demo was validated in CCS 21.0.1 using SysConfig 1.28.1+4785
+and SimpleLink F3 SDK 9.21.00.36. The converter's `validate:cc2340` runner separately
+checks byte-for-byte C/header parity with a CCS-saved reference.
+`check-sysconfig` validates requested CC2340 settings in TI-generated output;
+it does not compare arbitrary boards to that pedometer reference, compile
+firmware, or prove hardware behavior. AM2434 checking covers only the supported
+single-output GPIO scope.
+
 See [npm publishing](docs/npm-publishing.md) for build, verification, and release
 instructions. Node.js 22.14 or newer is required for the npm distribution.
 

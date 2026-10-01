@@ -46,6 +46,31 @@ Existing files are never overwritten. Imports require an internet connection
 and an available EasyEDA part. They contain individual chips, not complete
 reference subcircuits; available 3D models remain remote links.
 
+SysConfig generation is available from the same executable:
+
+Install [Bun](https://bun.sh/) first; both SysConfig commands require `bun` on
+`PATH` in addition to Node.js.
+
+```sh
+ti generate-sysconfig ./board.circuit.tsx
+ti check-sysconfig ./board.circuit.tsx
+```
+
+Place explicit firmware/peripheral choices in `board.sysconfig.json` next to
+the entrypoint or in project-level `ti.sysconfig.json`. The generate command
+builds TS/TSX to Circuit JSON and writes a `.syscfg`; the check command then
+runs a matching locally installed TI SysConfig CLI. The check requires
+`TI_SYSCONFIG_NODE`, `TI_SYSCONFIG_CLI`, and `TI_SDK_ROOT`. For CC2340, use
+SysConfig 1.28.1+4785 and SimpleLink F3 SDK 9.21.00.36; the checker verifies
+these versions and compares TI-generated GPIO, I²C, and clock settings with
+the request. It never downloads TI software or accepts license terms
+automatically. See the repository
+README for the request-file schema and currently supported converter targets.
+
+For AM2434, the checker requires SysConfig 1.14.0+2667 and MCU+ SDK
+`MCU_PLUS_SDK@07.03.01`; it compares the supported single output GPIO's
+name, A7/B7 pin, direction, and pinmux assignment with the request.
+
 Global installation does not make imports resolve in local projects; install
 the package in each project where you use its components.
 
