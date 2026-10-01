@@ -1,0 +1,45 @@
+{
+  "component": "U1",
+  "gpios": [
+    {
+      "source": "DISPLAY_ISOLATE",
+      "gpio_name": "CONFIG_DISPLAY_ISOLATE",
+      "direction": "output",
+      "initial_state": "high"
+    },
+    {
+      "source": "PMIC_LP",
+      "gpio_name": "CONFIG_PMIC_LP",
+      "direction": "output",
+      "initial_state": "low"
+    },
+    {
+      "source": "ACCEL_INT",
+      "gpio_name": "CONFIG_ACCEL_INT",
+      "direction": "input",
+      "pull": "none",
+      "interrupt": "none"
+    }
+  ],
+  "i2c": {
+    "i2c_name": "CONFIG_I2C_0",
+    "sda": "I2C_SDA",
+    "scl": "I2C_SCL",
+    "max_bit_rate": 100000,
+    "peripheral_assignment": "suggested"
+  },
+  "reserved_ports": [
+    {
+      "source": "SWDIO",
+      "reason": "Debug ownership"
+    },
+    {
+      "source": "SWCLK",
+      "reason": "Debug ownership"
+    }
+  ],
+  "firmware": {
+    "rtos": "nortos",
+    "lf_clock_source": "lf_rcosc"
+  }
+}
