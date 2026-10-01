@@ -4,16 +4,20 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { generateSysconfig } from "./sysconfig/generate.mjs";
+import { requireBun } from "./sysconfig/runtime.mjs";
+import { validateCc2340Output } from "./sysconfig/validate-cc2340-output.mjs";
 import {
   getTiInvocation,
   validateGeneratedFiles,
   validateTiEnvironment,
+  validateTiTarget,
 } from "./sysconfig/ti-cli.mjs";
 
 const help = `Usage: ti check-sysconfig [options] <file>
 
 Generate SysConfig from a tscircuit TSX/Circuit JSON input, then run the
 locally installed TI SysConfig CLI in a temporary directory.
+Requires Bun on PATH.
 
 Required environment:
   TI_SYSCONFIG_NODE   TI SysConfig bundled Node executable
@@ -64,6 +68,7 @@ export async function runCheckSysconfig(
       );
     }
 
+    requireBun({ bun, spawnSync, env });
     validateTiEnvironment(env);
     temporary = await mkdtemp(join(tmpdir(), "ti-check-sysconfig-"));
     const syscfgPath = join(temporary, "generated.syscfg");
@@ -76,6 +81,7 @@ export async function runCheckSysconfig(
       env,
       bun,
     });
+    validateTiTarget({ target: generated.target, env, spawnSync });
 
     const invocation = getTiInvocation({
       target: generated.target,
@@ -106,6 +112,14 @@ export async function runCheckSysconfig(
       tiOutput,
       generated.target,
     );
+    if (generated.target === "cc2340") {
+      await validateCc2340Output({
+        directory: tiOutput,
+        circuitJson: generated.circuitJson,
+        options: generated.converterOptions,
+        syscfgPath,
+      });
+    }
 
     stdout(
       `SysConfig check passed for ${positionals[0]} (${generatedFiles} generated file${generatedFiles === 1 ? "" : "s"}).`,

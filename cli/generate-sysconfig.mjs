@@ -1,12 +1,14 @@
 import { parseArgs } from "node:util";
 import { formatPath } from "./sysconfig/input.mjs";
 import { generateSysconfig } from "./sysconfig/generate.mjs";
+import { requireBun } from "./sysconfig/runtime.mjs";
 
 const help = `Usage: ti generate-sysconfig [options] <file>
 
 Generate a TI .syscfg file from a tscircuit TSX file or Circuit JSON.
 Firmware behavior stays explicit in a sibling *.sysconfig.json file or
 project-level ti.sysconfig.json.
+Requires Bun on PATH.
 
 Options:
   --config <file>   Explicit SysConfig request JSON
@@ -50,6 +52,8 @@ export async function runGenerateSysconfig(
         "One TSX or Circuit JSON file is required. Usage: ti generate-sysconfig [options] <file>",
       );
     }
+
+    requireBun({ bun, spawnSync, env });
 
     const result = await generateSysconfig(positionals[0], {
       cwd,

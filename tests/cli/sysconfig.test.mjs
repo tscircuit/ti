@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync as realSpawnSync } from "node:child_process";
 import {
   existsSync,
+  copyFileSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -12,7 +13,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { runCli } from "../../cli/main.mjs";
-import { validateGeneratedFiles } from "../../cli/sysconfig/ti-cli.mjs";
+import {
+  validateGeneratedFiles,
+  validateTiTarget,
+} from "../../cli/sysconfig/ti-cli.mjs";
+import { validateCc2340Output } from "../../cli/sysconfig/validate-cc2340-output.mjs";
+import { resolveConverterOptions } from "../../cli/sysconfig/request.mjs";
+
+const tiOutputFixture = new URL(
+  "./fixtures/cc2340-ti-output/",
+  import.meta.url,
+);
 
 function cc2340Circuit(accelPin = 5, accelIdentifier = "DIO12") {
   const component = {
@@ -30,6 +41,14 @@ function cc2340Circuit(accelPin = 5, accelIdentifier = "DIO12") {
       name: "DIO20_A11",
       pin_number: 9,
       port_hints: ["DIO20_A11"],
+    },
+    {
+      type: "source_port",
+      source_port_id: "pmic",
+      source_component_id: "mcu",
+      name: "DIO3_X32P",
+      pin_number: 14,
+      port_hints: ["DIO3_X32P"],
     },
     {
       type: "source_port",
@@ -58,6 +77,7 @@ function cc2340Circuit(accelPin = 5, accelIdentifier = "DIO12") {
   ];
   const signals = [
     ["display", "DISP_PWR_N"],
+    ["pmic", "PMIC_LP"],
     ["accel", "ACCEL_INT1"],
     ["sda", "I2C_SDA"],
     ["scl", "I2C_SCL"],
@@ -92,6 +112,12 @@ const request = {
       initial_state: "high",
     },
     {
+      source: "PMIC_LP",
+      gpio_name: "CONFIG_PMIC_LP",
+      direction: "output",
+      initial_state: "low",
+    },
+    {
       source: "ACCEL_INT1",
       gpio_name: "CONFIG_ACCEL_INT",
       direction: "input",
@@ -115,6 +141,7 @@ const jsxCircuitSource = `export default () => (
     <chip name="U1_MCU" manufacturerPartNumber="CC2340R52E0RGER"
       pinLabels={{
         pin9: ["DISP_PWR_N", "DIO20_A11"],
+        pin14: ["PMIC_LP", "DIO3_X32P"],
         pin5: ["ACCEL_INT1", "DIO12"],
         pin3: ["I2C_SDA", "DIO8"],
         pin19: ["I2C_SCL", "DIO6_A1"],
@@ -130,6 +157,7 @@ export default () => React.createElement("board", {
   manufacturerPartNumber: "CC2340R52E0RGER",
   pinLabels: {
     pin9: ["DISP_PWR_N", "DIO20_A11"],
+    pin14: ["PMIC_LP", "DIO3_X32P"],
     pin5: ["ACCEL_INT1", "DIO12"],
     pin3: ["I2C_SDA", "DIO8"],
     pin19: ["I2C_SCL", "DIO6_A1"],
@@ -174,8 +202,8 @@ test("generate-sysconfig resolves stable signal names and writes CC2340 SysConfi
   assert.match(source, /--device "CC2340R5RGE"/);
   assert.match(source, /GPIO1\.\$name = "CONFIG_DISPLAY_ISOLATE"/);
   assert.match(source, /GPIO1\.gpioPin\.\$assign = "DIO20_A11"/);
-  assert.match(source, /GPIO2\.\$name = "CONFIG_ACCEL_INT"/);
-  assert.match(source, /GPIO2\.gpioPin\.\$assign = "DIO12"/);
+  assert.match(source, /GPIO3\.\$name = "CONFIG_ACCEL_INT"/);
+  assert.match(source, /GPIO3\.gpioPin\.\$assign = "DIO12"/);
   assert.match(source, /I2C1\.i2c\.sdaPin\.\$assign = "DIO8"/);
   assert.match(source, /I2C1\.i2c\.sclPin\.\$assign = "DIO6_A1_AR\+"/);
   assert.match(source, /I2C1\.maxBitRate = 100;/);
@@ -194,8 +222,8 @@ test("generate-sysconfig follows a circuit pin change without changing the reque
   assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
   const source = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
   assert.match(source, /CONFIG_ACCEL_INT/);
-  assert.match(source, /GPIO2\.gpioPin\.\$assign = "DIO13"/);
-  assert.doesNotMatch(source, /GPIO2\.gpioPin\.\$assign = "DIO12"/);
+  assert.match(source, /GPIO3\.gpioPin\.\$assign = "DIO13"/);
+  assert.doesNotMatch(source, /GPIO3\.gpioPin\.\$assign = "DIO12"/);
 });
 
 test("generate-sysconfig accepts every advertised source and Circuit JSON input format", {
@@ -254,6 +282,44 @@ test("generate-sysconfig rejects non-array GPIO requests instead of dropping the
   }
 });
 
+test("CC2340 requires an explicit LF clock source", async (t) => {
+  const f = fixture(t);
+  const missingClock = structuredClone(request);
+  delete missingClock.firmware.lf_clock_source;
+  writeFileSync(
+    join(f.cwd, "board.sysconfig.json"),
+    JSON.stringify(missingClock),
+  );
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(
+    f.stderr.at(-1),
+    /firmware\.lf_clock_source must be explicitly set/,
+  );
+  assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+});
+
+test("SysConfig commands report missing Bun before reading circuit files", async (t) => {
+  const f = fixture(t);
+  const missingBun = () => ({
+    error: Object.assign(new Error("not found"), { code: "ENOENT" }),
+  });
+  assert.equal(
+    await f.run(["generate-sysconfig", "missing.circuit.json"], {
+      spawnSync: missingBun,
+    }),
+    1,
+  );
+  assert.match(f.stderr.at(-1), /require Bun on PATH/);
+  assert.doesNotMatch(f.stderr.at(-1), /Input file does not exist/);
+  assert.equal(
+    await f.run(["check-sysconfig", "missing.circuit.json"], {
+      spawnSync: missingBun,
+    }),
+    1,
+  );
+  assert.match(f.stderr.at(-1), /require Bun on PATH/);
+});
+
 test("generate-sysconfig compiles connected TSX traces and follows a pin change", async (t) => {
   const f = fixture(t);
   const sourcePath = join(f.cwd, "board.circuit.tsx");
@@ -261,8 +327,9 @@ test("generate-sysconfig compiles connected TSX traces and follows a pin change"
     <board width="10mm" height="10mm" routingDisabled>
       <chip name="U1_MCU" manufacturerPartNumber="CC2340R52E0RGER"
         pinLabels={{
-          pin9: ["DIO20_A11"],
-          pin5: ["ACCEL_INT1", "DIO12"],
+        pin9: ["DIO20_A11"],
+        pin14: ["PMIC_LP", "DIO3_X32P"],
+        pin5: ["ACCEL_INT1", "DIO12"],
           pin3: ["I2C_SDA", "DIO8"],
           pin19: ["I2C_SCL", "DIO6_A1"],
         }} />
@@ -281,7 +348,7 @@ test("generate-sysconfig compiles connected TSX traces and follows a pin change"
   );
   assert.match(
     readFileSync(join(f.cwd, "board.syscfg"), "utf8"),
-    /GPIO2\.gpioPin\.\$assign = "DIO12"/,
+    /GPIO3\.gpioPin\.\$assign = "DIO12"/,
   );
   writeFileSync(
     sourcePath,
@@ -297,7 +364,7 @@ test("generate-sysconfig compiles connected TSX traces and follows a pin change"
   );
   const exported = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
   assert.match(exported, /GPIO1\.gpioPin\.\$assign = "DIO20_A11"/);
-  assert.match(exported, /GPIO2\.gpioPin\.\$assign = "DIO13"/);
+  assert.match(exported, /GPIO3\.gpioPin\.\$assign = "DIO13"/);
   assert.match(exported, /I2C1\.maxBitRate = 100;/);
 });
 
@@ -339,28 +406,49 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
   const tiNode = join(f.cwd, "sysconfig-node");
   const tiCli = join(f.cwd, "cli.js");
   mkdirSync(join(tiRoot, ".metadata"), { recursive: true });
-  writeFileSync(join(tiRoot, ".metadata", "product.json"), "{}");
+  writeFileSync(
+    join(tiRoot, ".metadata", "product.json"),
+    JSON.stringify({
+      name: "simplelink_lowpower_f3_sdk",
+      version: "9.21.00.36",
+    }),
+  );
   writeFileSync(tiNode, "");
   writeFileSync(tiCli, "");
 
   let observedTiArgs;
+  let corruptRate = false;
   const spawnSync = (command, args, options) => {
     if (command === "bun") return realSpawnSync(command, args, options);
     if (command === tiNode) {
+      if (args.includes("--version")) {
+        return { status: 0, stdout: "1.28.1+4785\n", stderr: "" };
+      }
       observedTiArgs = args;
       const outputIndex = args.indexOf("--output");
       assert.notEqual(outputIndex, -1);
       const outputDir = args[outputIndex + 1];
       mkdirSync(outputDir, { recursive: true });
-      writeFileSync(join(outputDir, "ti_drivers_config.h"), "#define OK 1\n");
-      writeFileSync(
-        join(outputDir, "ti_drivers_config.c"),
-        "/* test output */\n",
-      );
-      writeFileSync(
-        join(outputDir, "ti_devices_config.c"),
-        "/* test output */\n",
-      );
+      for (const filename of [
+        "ti_drivers_config.h",
+        "ti_drivers_config.c",
+        "ti_devices_config.c",
+      ]) {
+        copyFileSync(
+          new URL(filename, tiOutputFixture),
+          join(outputDir, filename),
+        );
+      }
+      if (corruptRate) {
+        const headerPath = join(outputDir, "ti_drivers_config.h");
+        writeFileSync(
+          headerPath,
+          readFileSync(headerPath, "utf8").replace(
+            "#define CONFIG_I2C_0_MAXSPEED   (100U)",
+            "#define CONFIG_I2C_0_MAXSPEED   (400U)",
+          ),
+        );
+      }
       return { status: 0, stdout: "", stderr: "" };
     }
     throw new Error(`Unexpected command: ${command}`);
@@ -385,6 +473,188 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
   assert.ok(observedTiArgs.includes("RGE"));
   assert.ok(observedTiArgs.includes("nortos"));
   assert.match(f.stdout.join("\n"), /SysConfig check passed/);
+  corruptRate = true;
+  assert.equal(
+    await f.run(["check-sysconfig", "board.jsx"], { spawnSync, env }),
+    1,
+  );
+  assert.match(f.stderr.at(-1), /100 kbit\/s/);
+});
+
+test("CC2340 TI validation rejects a mismatched SDK or SysConfig tool", (t) => {
+  const f = fixture(t);
+  const tiRoot = join(f.cwd, "ti-sdk");
+  const tiNode = join(f.cwd, "node");
+  const tiCli = join(f.cwd, "cli.js");
+  mkdirSync(join(tiRoot, ".metadata"), { recursive: true });
+  writeFileSync(tiNode, "");
+  writeFileSync(tiCli, "");
+  const product = join(tiRoot, ".metadata", "product.json");
+  const env = {
+    TI_SYSCONFIG_NODE: tiNode,
+    TI_SYSCONFIG_CLI: tiCli,
+    TI_SDK_ROOT: tiRoot,
+  };
+  writeFileSync(
+    product,
+    JSON.stringify({ name: "other_sdk", version: "9.21.00.36" }),
+  );
+  assert.throws(
+    () => validateTiTarget({ target: "cc2340", env }),
+    /CC2340 requires simplelink_lowpower_f3_sdk/,
+  );
+  writeFileSync(
+    product,
+    JSON.stringify({
+      name: "simplelink_lowpower_f3_sdk",
+      version: "9.21.00.36",
+    }),
+  );
+  assert.throws(
+    () =>
+      validateTiTarget({
+        target: "cc2340",
+        env,
+        spawnSync: () => ({ status: 0, stdout: "1.26.3\n" }),
+      }),
+    /requires TI SysConfig 1\.28\.1\+4785/,
+  );
+});
+
+test("AM2434 TI validation checks the historical SDK and tool identity", (t) => {
+  const f = fixture(t);
+  const tiRoot = join(f.cwd, "ti-sdk");
+  const tiNode = join(f.cwd, "node");
+  const tiCli = join(f.cwd, "cli.js");
+  mkdirSync(join(tiRoot, ".metadata"), { recursive: true });
+  writeFileSync(tiNode, "");
+  writeFileSync(tiCli, "");
+  const product = join(tiRoot, ".metadata", "product.json");
+  const env = {
+    TI_SYSCONFIG_NODE: tiNode,
+    TI_SYSCONFIG_CLI: tiCli,
+    TI_SDK_ROOT: tiRoot,
+  };
+  writeFileSync(
+    product,
+    JSON.stringify({ name: "MCU_PLUS_SDK", version: "07.03.01" }),
+  );
+  assert.doesNotThrow(() =>
+    validateTiTarget({
+      target: "am2434",
+      env,
+      spawnSync: () => ({ status: 0, stdout: "1.14.0+2667\n" }),
+    }),
+  );
+  writeFileSync(
+    product,
+    JSON.stringify({ name: "other_sdk", version: "07.03.01" }),
+  );
+  assert.throws(
+    () => validateTiTarget({ target: "am2434", env }),
+    /AM2434 requires MCU_PLUS_SDK/,
+  );
+});
+
+test("CC2340 TI output must match requested pins, states, rate, and clock", async (t) => {
+  const f = fixture(t);
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
+  const circuitJson = cc2340Circuit();
+  const options = resolveConverterOptions(circuitJson, request).options;
+  const directory = join(f.cwd, "ti-output");
+  mkdirSync(directory);
+  for (const filename of ["ti_drivers_config.h", "ti_drivers_config.c"]) {
+    copyFileSync(new URL(filename, tiOutputFixture), join(directory, filename));
+  }
+  const check = () =>
+    validateCc2340Output({
+      directory,
+      circuitJson,
+      options,
+      syscfgPath: join(f.cwd, "board.syscfg"),
+    });
+  await check();
+  const headerPath = join(directory, "ti_drivers_config.h");
+  const driverPath = join(directory, "ti_drivers_config.c");
+  const header = readFileSync(headerPath, "utf8");
+  const drivers = readFileSync(driverPath, "utf8");
+  for (const [text, replacement, reason] of [
+    [
+      "#define CONFIG_DISPLAY_ISOLATE 20",
+      "#define CONFIG_DISPLAY_ISOLATE 21",
+      /CONFIG_DISPLAY_ISOLATE/,
+    ],
+    [
+      "#define CONFIG_I2C_0_MAXSPEED   (100U)",
+      "#define CONFIG_I2C_0_MAXSPEED   (400U)",
+      /100 kbit\/s/,
+    ],
+  ]) {
+    writeFileSync(headerPath, header.replace(text, replacement));
+    await assert.rejects(check(), reason);
+  }
+  writeFileSync(headerPath, header);
+  for (const [text, replacement, reason] of [
+    [
+      "GPIO_CFG_OUT_HIGH, /* CONFIG_DISPLAY_ISOLATE */",
+      "GPIO_CFG_OUT_LOW, /* CONFIG_DISPLAY_ISOLATE */",
+      /CONFIG_DISPLAY_ISOLATE/,
+    ],
+    ["PowerLPF3_selectLFOSC();", "PowerLPF3_selectLFXT();", /lf_rcosc/],
+    [
+      ".sdaPinMux   = GPIO_MUX_PORTCFG_PFUNC4",
+      ".sdaPinMux   = GPIO_MUX_PORTCFG_PFUNC2",
+      /SDA mux/,
+    ],
+    [
+      "Board_initHook();",
+      "Board_initFlash();\n    Board_initHook();",
+      /LaunchPad external-flash/,
+    ],
+  ]) {
+    writeFileSync(driverPath, drivers.replace(text, replacement));
+    await assert.rejects(check(), reason);
+  }
+  writeFileSync(driverPath, drivers);
+  const circuitWithReserved = [
+    ...circuitJson,
+    {
+      type: "source_port",
+      source_port_id: "reserved",
+      source_component_id: "mcu",
+      name: "DIO11",
+      pin_number: 4,
+      port_hints: ["DIO11"],
+    },
+  ];
+  const reservedOptions = {
+    ...options,
+    reserved_ports: [
+      { source_port_id: "reserved", reason: "Other peripheral" },
+    ],
+  };
+  await validateCc2340Output({
+    directory,
+    circuitJson: circuitWithReserved,
+    options: reservedOptions,
+    syscfgPath: join(f.cwd, "board.syscfg"),
+  });
+  writeFileSync(
+    driverPath,
+    drivers.replace(
+      "GPIO_CFG_NO_DIR, /* DIO_11 */",
+      "GPIO_CFG_OUTPUT_INTERNAL, /* DIO_11 */",
+    ),
+  );
+  await assert.rejects(
+    validateCc2340Output({
+      directory,
+      circuitJson: circuitWithReserved,
+      options: reservedOptions,
+      syscfgPath: join(f.cwd, "board.syscfg"),
+    }),
+    /configures reserved DIO11/,
+  );
 });
 
 test("TI success requires the target's generated C and header files", async (t) => {
@@ -413,7 +683,7 @@ test("check-sysconfig reports missing TI prerequisites without installing anythi
   const f = fixture(t);
   assert.equal(
     await f.run(["check-sysconfig", "board.circuit.json"], {
-      env: {},
+      env: { PATH: process.env.PATH },
     }),
     1,
   );

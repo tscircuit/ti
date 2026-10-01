@@ -284,6 +284,11 @@ function resolveCc2340Options({ circuitJson, component, request }) {
       "The current CC2340 converter scope requires firmware.rtos to be nortos",
     );
   }
+  if (!["lf_rcosc", "lf_xosc"].includes(request.firmware.lf_clock_source)) {
+    throw new Error(
+      "CC2340 firmware.lf_clock_source must be explicitly set to lf_rcosc or lf_xosc",
+    );
+  }
 
   return {
     target: "cc2340",

@@ -57,6 +57,9 @@ internet connection and an available EasyEDA part.
 
 The same `ti` executable can generate TI SysConfig from a tscircuit entrypoint:
 
+Install [Bun](https://bun.sh/) first; both SysConfig commands require `bun` on
+`PATH`, including when `ti` was installed with npm.
+
 ```bash
 ti generate-sysconfig ./board.circuit.tsx
 ti check-sysconfig ./board.circuit.tsx
@@ -108,7 +111,7 @@ the generated SysConfig without editing the request file.
 
 Named nets are resolved through connected source traces, including junctions at
 component pins; the resolver does not traverse through a component's body.
-The CC2340 LF clock choice is explicit: `lf_rcosc` selects the internal oscillator,
+The CC2340 LF clock choice is required: `lf_rcosc` selects the internal oscillator,
 and `lf_xosc` selects an external crystal. Using or reserving DIO3/DIO4 requires
 `lf_rcosc`. Device-only conversion also disables LaunchPad-specific flash startup.
 
@@ -123,16 +126,25 @@ ti check-sysconfig ./board.circuit.tsx
 ```
 
 The command fails if conversion fails, TI rejects the file, or TI generates no
-required non-empty C/header files. It never installs TI software or accepts TI license terms. Use the TI
-tool/SDK versions required by the selected target. Current converter scope is
+required non-empty C/header files. For CC2340 it also checks the generated
+C/header against requested GPIO pins and states, I²C pins and 100 kbit/s rate,
+the LF clock, reserved pins, and absence of LaunchPad flash startup. The
+CC2340 check requires SysConfig 1.28.1+4785 and SimpleLink F3 SDK 9.21.00.36,
+the versions used for the real TI validation. It never installs TI software or
+accepts TI license terms. Current converter scope is
 CC2340R52E0RGER GPIO/I2C and the existing single-GPIO AM2434BSDFHIALVR path;
 unsupported targets fail explicitly.
+AM2434 validation requires MCU+ SDK metadata `MCU_PLUS_SDK@07.03.01` and
+SysConfig 1.14.0+2667; its generated-output check remains TI acceptance and
+required files.
 
 The pedometer GPIO/I2C demo was validated in CCS 21.0.1 using SysConfig 1.28.1+4785
 and SimpleLink F3 SDK 9.21.00.36. The converter's `validate:cc2340` runner separately
-checks electrical settings and byte-for-byte C/header parity with a CCS-saved
-reference. `check-sysconfig` itself checks TI acceptance and required output files;
-it does not compile firmware or prove hardware behavior.
+checks byte-for-byte C/header parity with a CCS-saved reference.
+`check-sysconfig` validates requested CC2340 settings in TI-generated output;
+it does not compare arbitrary boards to that pedometer reference, compile
+firmware, or prove hardware behavior. AM2434 checks remain TI acceptance and
+required-output checks.
 
 See [npm publishing](docs/npm-publishing.md) for build, verification, and release
 instructions. Node.js 22.14 or newer is required for the npm distribution.

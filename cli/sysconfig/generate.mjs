@@ -109,5 +109,7 @@ export async function generateSysconfig(
     configPath: resolvedConfigPath,
     target: resolved.target,
     component: resolved.component,
+    circuitJson: built.circuitJson,
+    converterOptions: resolved.options,
   };
 }

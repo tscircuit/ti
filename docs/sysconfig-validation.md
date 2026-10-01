@@ -35,18 +35,23 @@ driver/device C and header files match a separately saved CCS reference
 byte-for-byte. Both generated C files also compile individually for Cortex-M0+
 with TI ARM Clang 5.1.1.LTS. The converter's `bun run validate:cc2340` reproduces
 the electrical/pin/rate/startup/parity checks and real TI DIO12-to-DIO13 fixture
-regression. This is separate from the CLI's acceptance/output-presence check.
+regression. That runner also checks byte-for-byte CCS parity. The CLI check
+compares TI-generated GPIO pins, direction, startup states,
+pulls, interrupts, I²C pins/rate/mux, LF clock, reserved pins, and absence of
+LaunchPad flash initialization against the resolved request. It verifies the
+installed SDK metadata and SysConfig version before reporting success.
 
 The real board exposed connected-trace net resolution missing from the CLI.
 It also exposed SDK LaunchPad flash initialization and external-crystal defaults;
 the companion converter correction handles those at their source.
 
-Local checks pass: 16 CLI tests, the existing import snapshot, root typecheck,
-format check, npm build, and isolated local/global installed-package tests.
-The TI subprocess is mocked only in unit tests; the validation above used the
-installed TI tools. No temporary local dependency links remain in the package.
+The CLI tests use captured TI-generated C/header files and mutate requested
+settings to prove incorrect outputs fail. A current-head run with the installed
+TI tools passes on the pedometer. The npm bundle produces the same `.syscfg`
+byte-for-byte as the CCS-validated file. No temporary local dependency links
+remain in the package.
 
 Converter PR #5 is merged; its tree is byte-identical to the locally validated
-revision. PR #250 remains draft while the separate registry build is pending.
-The previous registry build timeout is not claimed fixed.
+revision. PR #250 remains draft and unmerged. A separate registry build timeout
+is not claimed fixed.
 SysConfig 1.26.3, a complete firmware link, and hardware operation were not tested.
