@@ -70,6 +70,16 @@ stable component/signal names from Circuit JSON, and delegates the device mappin
 to `circuit-json-to-sysconfig`. It also accepts `.circuit.json` directly. The
 generated file defaults to `<input>.syscfg`; use `-o` to choose another path.
 
+The generated `dist/index/circuit.json` describes hardware connections. A separate
+firmware request selects GPIO directions, output startup states, and I2C speed.
+For `index.circuit.tsx`, name this file `index.sysconfig.json` and place it beside
+the TSX input. A successful circuit build does not create this request file.
+
+For `imrishabh18/pedometer` v1.1.3, copy the
+[tested request](docs/pedometer/index.sysconfig.json) beside `index.circuit.tsx`.
+It selects the demo GPIO/I2C behavior using that board's `U1` component and net
+names. Review these firmware choices before using them in an application.
+
 Firmware behavior is intentionally explicit. Put a sibling
 `board.sysconfig.json` next to the input, or use project-level
 `ti.sysconfig.json` (or `--config <file>`). For the current CC2340 scope:

@@ -179,8 +179,18 @@ export async function loadRequestConfig(
       ];
   const configPath = candidates.find((candidate) => existsSync(candidate));
   if (!configPath) {
+    if (explicitPath) {
+      throw new Error(
+        `SysConfig request file does not exist: ${formatPath(candidates[0], cwd)} (from --config). This must be a firmware request JSON file, not the generated circuit.json.`,
+      );
+    }
     throw new Error(
-      `No SysConfig request file found. Create ${getInputStem(absoluteInput)}.sysconfig.json next to the input, create ti.sysconfig.json at the project root, or pass --config <file>.`,
+      [
+        `Circuit JSON is available, but the firmware request file is missing.`,
+        `The generated circuit.json describes the hardware; it does not specify GPIO directions, output startup states, or I2C speed.`,
+        `Create ${formatPath(candidates[0], cwd)} with those choices, create ${formatPath(candidates[1], cwd)}, or pass --config <request.json>.`,
+        `See the "TI SysConfig commands" section of the README for the request format.`,
+      ].join("\n"),
     );
   }
 

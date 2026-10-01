@@ -257,6 +257,58 @@ test("generate-sysconfig follows a circuit pin change without changing the reque
   assert.doesNotMatch(source, /GPIO3\.gpioPin\.\$assign = "DIO12"/);
 });
 
+test("generate-sysconfig accepts the pedometer's open-drain I2C declarations", async (t) => {
+  const f = fixture(t);
+  const circuitJson = cc2340Circuit();
+  for (const port of circuitJson) {
+    if (
+      port.type === "source_port" &&
+      ["sda", "scl"].includes(port.source_port_id)
+    ) {
+      port.is_using_open_drain = true;
+    }
+  }
+  writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(circuitJson));
+  assert.equal(
+    await f.run(["generate-sysconfig", "board.circuit.json"]),
+    0,
+    f.stderr.join("\n"),
+  );
+  const generated = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
+  assert.match(generated, /I2C1\.i2c\.sdaPin\.\$assign = "DIO8"/);
+  assert.match(generated, /I2C1\.i2c\.sclPin\.\$assign = "DIO6_A1_AR\+"/);
+});
+
+test("missing firmware request distinguishes successful circuit generation from firmware choices", async (t) => {
+  const f = fixture(t);
+  rmSync(join(f.cwd, "board.sysconfig.json"));
+  writeFileSync(join(f.cwd, "index.circuit.tsx"), jsxCircuitSource);
+  assert.equal(await f.run(["generate-sysconfig", "index.circuit.tsx"]), 1);
+  assert.ok(existsSync(join(f.cwd, "dist/index/circuit.json")));
+  const message = f.stderr.join("\n");
+  assert.match(message, /Circuit JSON is available/);
+  assert.match(message, /GPIO directions, output startup states, or I2C speed/);
+  assert.match(message, /Create index\.sysconfig\.json/);
+  assert.match(message, /ti\.sysconfig\.json/);
+  assert.equal(existsSync(join(f.cwd, "index.syscfg")), false);
+});
+
+test("a missing explicit request reports its path without suggesting an implicit request", async (t) => {
+  const f = fixture(t);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "missing.json",
+    ]),
+    1,
+  );
+  assert.match(f.stderr.join("\n"), /missing\.json \(from --config\)/);
+  assert.doesNotMatch(f.stderr.join("\n"), /Create board\.sysconfig\.json/);
+  assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+});
+
 test("generate-sysconfig accepts every advertised source and Circuit JSON input format", {
   timeout: 20_000,
 }, async (t) => {
