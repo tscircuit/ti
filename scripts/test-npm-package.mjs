@@ -73,6 +73,49 @@ async function testCli(command, cwd) {
     await readFile(join(cwd, "imports/TPS62160DSGR.tsx"), "utf8"),
     /export const TPS62160DSGR/,
   );
+  await writeFile(
+    join(cwd, "board.circuit.json"),
+    JSON.stringify([
+      {
+        type: "source_component",
+        ftype: "simple_chip",
+        source_component_id: "mcu",
+        name: "U1_MCU",
+        manufacturer_part_number: "CC2340R52E0RGER",
+      },
+      {
+        type: "source_port",
+        source_port_id: "display",
+        source_component_id: "mcu",
+        name: "DIO20_A11",
+        pin_number: 9,
+        port_hints: ["DIO20_A11"],
+      },
+    ]),
+  );
+  await writeFile(
+    join(cwd, "board.sysconfig.json"),
+    JSON.stringify({
+      component: "U1_MCU",
+      gpios: [
+        {
+          source: "DIO20_A11",
+          gpio_name: "CONFIG_DISPLAY_ISOLATE",
+          direction: "output",
+          initial_state: "high",
+        },
+      ],
+      firmware: { rtos: "nortos", lf_clock_source: "lf_rcosc" },
+    }),
+  );
+  assert.match(
+    run(command, ["generate-sysconfig", "board.circuit.json"], cwd),
+    /Generated board\.syscfg/,
+  );
+  assert.match(
+    await readFile(join(cwd, "board.syscfg"), "utf8"),
+    /GPIO1\.gpioPin\.\$assign = "DIO20_A11"/,
+  );
 }
 
 try {
@@ -86,13 +129,14 @@ try {
   );
   assert.equal(packed.name, manifest.name);
   assert.equal(packed.version, sourceManifest.version);
+  assert.equal(manifest.dependencies["circuit-json-to-sysconfig"], undefined);
   assert.deepEqual(packed.files.map((file) => file.path).sort(), [
     "README.md",
     "cli/check-sysconfig.mjs",
     "cli/generate-sysconfig.mjs",
     "cli/import.mjs",
     "cli/main.mjs",
-    "cli/sysconfig/convert.ts",
+    "cli/sysconfig/convert.mjs",
     "cli/sysconfig/generate.mjs",
     "cli/sysconfig/input.mjs",
     "cli/sysconfig/request.mjs",

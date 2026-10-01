@@ -37,8 +37,7 @@
   ],
   "dependencies": {
     "@types/react": "^19.0.0",
-    "easyeda": "0.0.360",
-    "circuit-json-to-sysconfig": "github:tscircuit/circuit-json-to-sysconfig#9049b4cce0510088d9b48397759528cb532a0dbd"
+    "easyeda": "0.0.360"
   },
   "peerDependencies": {
     "react": "^19.0.0",

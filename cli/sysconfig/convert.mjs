@@ -5,7 +5,7 @@ const [circuitJsonPath, optionsPath, outputPath] = process.argv.slice(2);
 
 if (!circuitJsonPath || !optionsPath || !outputPath) {
   throw new Error(
-    "Usage: bun convert.ts <circuit.json> <options.json> <output.syscfg>",
+    "Usage: bun convert.mjs <circuit.json> <options.json> <output.syscfg>",
   );
 }
 

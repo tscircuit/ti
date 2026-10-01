@@ -13,7 +13,7 @@ import { resolveConverterOptions } from "./request.mjs";
 export const CONVERTER_REVISION = "9049b4cce0510088d9b48397759528cb532a0dbd";
 
 const converterHelperPath = fileURLToPath(
-  new URL("./convert.ts", import.meta.url),
+  new URL("./convert.mjs", import.meta.url),
 );
 
 function commandFailure(label, result) {
