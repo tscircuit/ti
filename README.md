@@ -135,16 +135,16 @@ accepts TI license terms. Current converter scope is
 CC2340R52E0RGER GPIO/I2C and the existing single-GPIO AM2434BSDFHIALVR path;
 unsupported targets fail explicitly.
 AM2434 validation requires MCU+ SDK metadata `MCU_PLUS_SDK@07.03.01` and
-SysConfig 1.14.0+2667; its generated-output check remains TI acceptance and
-required files.
+SysConfig 1.14.0+2667. It compares the single requested output GPIO with TI's
+generated name, A7/B7 pin, direction, and MCU pinmux assignment.
 
 The pedometer GPIO/I2C demo was validated in CCS 21.0.1 using SysConfig 1.28.1+4785
 and SimpleLink F3 SDK 9.21.00.36. The converter's `validate:cc2340` runner separately
 checks byte-for-byte C/header parity with a CCS-saved reference.
 `check-sysconfig` validates requested CC2340 settings in TI-generated output;
 it does not compare arbitrary boards to that pedometer reference, compile
-firmware, or prove hardware behavior. AM2434 checks remain TI acceptance and
-required-output checks.
+firmware, or prove hardware behavior. AM2434 checking covers only the supported
+single-output GPIO scope.
 
 See [npm publishing](docs/npm-publishing.md) for build, verification, and release
 instructions. Node.js 22.14 or newer is required for the npm distribution.

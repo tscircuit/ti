@@ -5,6 +5,32 @@ import { join } from "node:path";
 import { am2434Profile } from "./am2434-profile.mjs";
 import { cc2340Profile } from "./cc2340-profile.mjs";
 
+function parseTiProductMetadata(source) {
+  // TI's MCU+ SDK product.json contains trailing commas. Remove only commas
+  // before a closing array/object token, never comma-like text inside strings.
+  let inString = false;
+  let escaped = false;
+  let normalized = "";
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    if (inString) {
+      normalized += character;
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') inString = false;
+      continue;
+    }
+    if (character === '"') inString = true;
+    if (character === ",") {
+      let next = index + 1;
+      while (next < source.length && /\s/.test(source[next])) next += 1;
+      if (source[next] === "}" || source[next] === "]") continue;
+    }
+    normalized += character;
+  }
+  return JSON.parse(normalized);
+}
+
 export function validateTiEnvironment(env) {
   const tiNode = env.TI_SYSCONFIG_NODE;
   const tiCli = env.TI_SYSCONFIG_CLI;
@@ -52,7 +78,7 @@ export function validateTiTarget({ target, env, spawnSync = nodeSpawnSync }) {
   if (!profile) throw new Error(`Unsupported TI validation target ${target}`);
   let sdk;
   try {
-    sdk = JSON.parse(readFileSync(product, "utf8"));
+    sdk = parseTiProductMetadata(readFileSync(product, "utf8"));
   } catch (error) {
     throw new Error(`Unable to read TI SDK product metadata: ${error.message}`);
   }

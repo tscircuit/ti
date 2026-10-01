@@ -18,12 +18,43 @@ import {
   validateTiTarget,
 } from "../../cli/sysconfig/ti-cli.mjs";
 import { validateCc2340Output } from "../../cli/sysconfig/validate-cc2340-output.mjs";
+import { validateAm2434Output } from "../../cli/sysconfig/validate-am2434-output.mjs";
 import { resolveConverterOptions } from "../../cli/sysconfig/request.mjs";
 
 const tiOutputFixture = new URL(
   "./fixtures/cc2340-ti-output/",
   import.meta.url,
 );
+const am2434OutputFixture = new URL(
+  "./fixtures/am2434-ti-output/",
+  import.meta.url,
+);
+
+function am2434Circuit(ball = "A7") {
+  return [
+    {
+      type: "source_component",
+      ftype: "simple_chip",
+      source_component_id: "mcu",
+      name: "U1_MCU",
+      manufacturer_part_number: "AM2434BSDFHIALVR",
+    },
+    {
+      type: "source_port",
+      source_port_id: "gpio_output",
+      source_component_id: "mcu",
+      name: "GPIO_OUTPUT",
+      port_hints: [ball],
+    },
+  ];
+}
+
+const am2434Request = {
+  component: "U1_MCU",
+  gpios: [
+    { source: "GPIO_OUTPUT", gpio_name: "GPIO_CONVERTED", direction: "output" },
+  ],
+};
 
 function cc2340Circuit(accelPin = 5, accelIdentifier = "DIO12") {
   const component = {
@@ -278,6 +309,19 @@ test("generate-sysconfig rejects non-array GPIO requests instead of dropping the
     );
     assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
     assert.match(f.stderr.at(-1), /gpios must be an array/);
+    assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+  }
+});
+
+test("CC2340 rejects malformed reserved ports instead of dropping them", async (t) => {
+  const f = fixture(t);
+  for (const reserved_ports of [null, { source: "DIO20_A11" }, "DIO20_A11"]) {
+    writeFileSync(
+      join(f.cwd, "board.sysconfig.json"),
+      JSON.stringify({ ...request, reserved_ports }),
+    );
+    assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+    assert.match(f.stderr.at(-1), /reserved_ports must be an array/);
     assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
   }
 });
@@ -537,7 +581,7 @@ test("AM2434 TI validation checks the historical SDK and tool identity", (t) => 
   };
   writeFileSync(
     product,
-    JSON.stringify({ name: "MCU_PLUS_SDK", version: "07.03.01" }),
+    '{"name":"MCU_PLUS_SDK","version":"07.03.01","includePaths":["../source",],}',
   );
   assert.doesNotThrow(() =>
     validateTiTarget({
@@ -554,29 +598,16 @@ test("AM2434 TI validation checks the historical SDK and tool identity", (t) => 
     () => validateTiTarget({ target: "am2434", env }),
     /AM2434 requires MCU_PLUS_SDK/,
   );
+  writeFileSync(product, '{"name":"MCU_PLUS_SDK", broken]');
+  assert.throws(
+    () => validateTiTarget({ target: "am2434", env }),
+    /Unable to read TI SDK product metadata/,
+  );
 });
 
 test("AM2434 rejects malformed and unsupported reserved ports", () => {
-  const circuitJson = [
-    {
-      type: "source_component",
-      ftype: "simple_chip",
-      source_component_id: "mcu",
-      name: "U1_MCU",
-      manufacturer_part_number: "AM2434BSDFHIALVR",
-    },
-    {
-      type: "source_port",
-      source_port_id: "a7",
-      source_component_id: "mcu",
-      name: "A7",
-      pin_number: "A7",
-    },
-  ];
-  const request = {
-    component: "U1_MCU",
-    gpios: [{ source: "A7", gpio_name: "CONFIG_LED", direction: "output" }],
-  };
+  const circuitJson = am2434Circuit();
+  const request = am2434Request;
 
   for (const reservedPorts of [
     { source: "A7", reason: "must remain unconfigured" },
@@ -605,8 +636,124 @@ test("AM2434 rejects malformed and unsupported reserved ports", () => {
       ...request,
       reserved_ports: [],
     }).options.source_port_id,
-    "a7",
+    "gpio_output",
   );
+});
+
+test("AM2434 TI output must match the requested A7 or B7 GPIO", async (t) => {
+  const f = fixture(t);
+  for (const ball of ["A7", "B7"]) {
+    const circuitJson = am2434Circuit(ball);
+    const options = resolveConverterOptions(circuitJson, am2434Request).options;
+    const inputPath = join(f.cwd, "am2434.circuit.json");
+    const syscfgPath = join(f.cwd, "am2434.syscfg");
+    const directory = join(f.cwd, `am2434-${ball}`);
+    writeFileSync(inputPath, JSON.stringify(circuitJson));
+    writeFileSync(
+      join(f.cwd, "am2434.sysconfig.json"),
+      JSON.stringify(am2434Request),
+    );
+    assert.equal(
+      await f.run(["generate-sysconfig", inputPath]),
+      0,
+      f.stderr.join("\n"),
+    );
+    mkdirSync(directory);
+    for (const filename of ["ti_drivers_config.h", "ti_pinmux_config.c"]) {
+      copyFileSync(
+        new URL(`${ball}/${filename}`, am2434OutputFixture),
+        join(directory, filename),
+      );
+    }
+    const check = () =>
+      validateAm2434Output({ directory, circuitJson, options, syscfgPath });
+    await check();
+    const headerPath = join(directory, "ti_drivers_config.h");
+    const pinmuxPath = join(directory, "ti_pinmux_config.c");
+    const header = readFileSync(headerPath, "utf8");
+    const pinmux = readFileSync(pinmuxPath, "utf8");
+    for (const [original, changed, error] of [
+      [
+        `GPIO_CONVERTED_PIN (${ball === "A7" ? 5 : 6})`,
+        "GPIO_CONVERTED_PIN (9)",
+        /GPIO_CONVERTED_PIN/,
+      ],
+      [
+        "GPIO_CONVERTED_DIR (GPIO_DIRECTION_OUTPUT)",
+        "GPIO_CONVERTED_DIR (GPIO_DIRECTION_INPUT)",
+        /GPIO_CONVERTED_DIR/,
+      ],
+    ]) {
+      writeFileSync(headerPath, header.replace(original, changed));
+      await assert.rejects(check(), error);
+    }
+    writeFileSync(headerPath, header);
+    writeFileSync(pinmuxPath, pinmux.replace("PIN_MODE(7)", "PIN_MODE(6)"));
+    await assert.rejects(check(), /pinmux/);
+    writeFileSync(
+      pinmuxPath,
+      pinmux.replace(
+        "{PINMUX_END, PINMUX_END}",
+        "{ PIN_MCU_SPI1_CS1, ( PIN_MODE(7) ) },\n    {PINMUX_END, PINMUX_END}",
+      ),
+    );
+    await assert.rejects(check(), /pinmux/);
+    writeFileSync(pinmuxPath, pinmux);
+  }
+});
+
+test("check-sysconfig rejects AM2434 TI output for the previous circuit pin", async (t) => {
+  const f = fixture(t);
+  const inputPath = join(f.cwd, "am2434.circuit.json");
+  writeFileSync(inputPath, JSON.stringify(am2434Circuit("A7")));
+  writeFileSync(
+    join(f.cwd, "am2434.sysconfig.json"),
+    JSON.stringify(am2434Request),
+  );
+  const tiRoot = join(f.cwd, "ti-sdk");
+  const tiNode = join(f.cwd, "sysconfig-node");
+  const tiCli = join(f.cwd, "cli.js");
+  mkdirSync(join(tiRoot, ".metadata"), { recursive: true });
+  writeFileSync(
+    join(tiRoot, ".metadata", "product.json"),
+    JSON.stringify({ name: "MCU_PLUS_SDK", version: "07.03.01" }),
+  );
+  writeFileSync(tiNode, "");
+  writeFileSync(tiCli, "");
+  const spawnSync = (command, args, options) => {
+    if (command === "bun") return realSpawnSync(command, args, options);
+    assert.equal(command, tiNode);
+    if (args.includes("--version")) {
+      return { status: 0, stdout: "1.14.0+2667\n", stderr: "" };
+    }
+    const outputDir = args[args.indexOf("--output") + 1];
+    mkdirSync(outputDir, { recursive: true });
+    for (const filename of ["ti_drivers_config.h", "ti_pinmux_config.c"]) {
+      copyFileSync(
+        new URL(`A7/${filename}`, am2434OutputFixture),
+        join(outputDir, filename),
+      );
+    }
+    writeFileSync(join(outputDir, "ti_drivers_config.c"), "/* TI output */\n");
+    return { status: 0, stdout: "", stderr: "" };
+  };
+  const env = {
+    ...process.env,
+    TI_SYSCONFIG_NODE: tiNode,
+    TI_SYSCONFIG_CLI: tiCli,
+    TI_SDK_ROOT: tiRoot,
+  };
+  assert.equal(
+    await f.run(["check-sysconfig", inputPath], { spawnSync, env }),
+    0,
+    f.stderr.join("\n"),
+  );
+  writeFileSync(inputPath, JSON.stringify(am2434Circuit("B7")));
+  assert.equal(
+    await f.run(["check-sysconfig", inputPath], { spawnSync, env }),
+    1,
+  );
+  assert.match(f.stderr.at(-1), /GPIO_CONVERTED_PIN \(6\)/);
 });
 
 test("CC2340 TI output must match requested pins, states, rate, and clock", async (t) => {

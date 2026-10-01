@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { generateSysconfig } from "./sysconfig/generate.mjs";
 import { requireBun } from "./sysconfig/runtime.mjs";
+import { validateAm2434Output } from "./sysconfig/validate-am2434-output.mjs";
 import { validateCc2340Output } from "./sysconfig/validate-cc2340-output.mjs";
 import {
   getTiInvocation,
@@ -114,6 +115,13 @@ export async function runCheckSysconfig(
     );
     if (generated.target === "cc2340") {
       await validateCc2340Output({
+        directory: tiOutput,
+        circuitJson: generated.circuitJson,
+        options: generated.converterOptions,
+        syscfgPath,
+      });
+    } else if (generated.target === "am2434") {
+      await validateAm2434Output({
         directory: tiOutput,
         circuitJson: generated.circuitJson,
         options: generated.converterOptions,

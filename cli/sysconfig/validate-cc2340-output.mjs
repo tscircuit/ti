@@ -6,14 +6,14 @@ function escapeRegExp(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function requireMatch(source, pattern, setting) {
-  if (!pattern.test(source)) {
+function requireMatch({ generatedText, pattern, setting }) {
+  if (!pattern.test(generatedText)) {
     throw new Error(`TI generated output does not match ${setting}`);
   }
 }
 
-function requireLiteral(source, literal, setting) {
-  if (!source.includes(literal)) {
+function requireLiteral({ generatedText, literal, setting }) {
+  if (!generatedText.includes(literal)) {
     throw new Error(`TI generated output does not match ${setting}`);
   }
 }
@@ -37,12 +37,15 @@ function getDio({ circuitJson, sourcePortId }) {
   return dio;
 }
 
-function requireMacro(header, name, expected) {
-  requireMatch(
-    header,
-    new RegExp(`^#define\\s+${escapeRegExp(name)}\\s+${expected}\\s*$`, "m"),
-    `${name} = ${expected}`,
-  );
+function requireMacro({ header, name, expected }) {
+  requireMatch({
+    generatedText: header,
+    pattern: new RegExp(
+      `^#define\\s+${escapeRegExp(name)}\\s+${expected}\\s*$`,
+      "m",
+    ),
+    setting: `${name} = ${expected}`,
+  });
 }
 
 function getGpioConfiguration(drivers, name) {
@@ -74,20 +77,20 @@ function validateGpio({ circuitJson, options, header, drivers, syscfg }) {
   for (const [index, gpio] of options.gpios.entries()) {
     const dio = getDio({ circuitJson, sourcePortId: gpio.source_port_id });
     const instance = `GPIO${index + 1}`;
-    requireLiteral(
-      syscfg,
-      `${instance}.$name = "${gpio.gpio_name}";`,
-      gpio.gpio_name,
-    );
-    requireMatch(
-      syscfg,
-      new RegExp(
+    requireLiteral({
+      generatedText: syscfg,
+      literal: `${instance}.$name = "${gpio.gpio_name}";`,
+      setting: gpio.gpio_name,
+    });
+    requireMatch({
+      generatedText: syscfg,
+      pattern: new RegExp(
         `^${instance}\\.gpioPin\\.\\$assign = "DIO${dio}(?:_[^"]+)?";$`,
         "m",
       ),
-      `${gpio.gpio_name} DIO${dio} assignment`,
-    );
-    requireMacro(header, gpio.gpio_name, dio);
+      setting: `${gpio.gpio_name} DIO${dio} assignment`,
+    });
+    requireMacro({ header, name: gpio.gpio_name, expected: dio });
     const configuration = getGpioConfiguration(drivers, gpio.gpio_name);
     const expectedFlags =
       gpio.direction === "output"
@@ -104,7 +107,11 @@ function validateGpio({ circuitJson, options, header, drivers, syscfg }) {
             pullFlags[gpio.pull],
           ];
     for (const flag of expectedFlags) {
-      requireLiteral(configuration, flag, `${gpio.gpio_name} ${flag}`);
+      requireLiteral({
+        generatedText: configuration,
+        literal: flag,
+        setting: `${gpio.gpio_name} ${flag}`,
+      });
     }
   }
 }
@@ -142,50 +149,57 @@ function validateI2c({ circuitJson, options, header, drivers, syscfg }) {
   const sda = getDio({ circuitJson, sourcePortId: i2c.sda_source_port_id });
   const scl = getDio({ circuitJson, sourcePortId: i2c.scl_source_port_id });
   const prefix = `CONFIG_GPIO_${i2c.i2c_name.replace(/^CONFIG_/, "")}`;
-  requireMacro(header, `${prefix}_SDA`, sda);
-  requireMacro(header, `${prefix}_SCL`, scl);
-  requireMatch(
-    header,
-    new RegExp(
+  requireMacro({ header, name: `${prefix}_SDA`, expected: sda });
+  requireMacro({ header, name: `${prefix}_SCL`, expected: scl });
+  requireMatch({
+    generatedText: header,
+    pattern: new RegExp(
       `^#define\\s+${escapeRegExp(i2c.i2c_name)}_MAXSPEED\\s+\\(${i2c.max_bit_rate / 1000}U\\)`,
       "m",
     ),
-    `${i2c.i2c_name} ${i2c.max_bit_rate / 1000} kbit/s`,
-  );
-  requireMatch(
-    header,
-    new RegExp(
+    setting: `${i2c.i2c_name} ${i2c.max_bit_rate / 1000} kbit/s`,
+  });
+  requireMatch({
+    generatedText: header,
+    pattern: new RegExp(
       `^#define\\s+${escapeRegExp(i2c.i2c_name)}_MAXBITRATE\\s+\\(\\(I2C_BitRate\\)I2C_100kHz\\)`,
       "m",
     ),
-    `${i2c.i2c_name} I2C_100kHz`,
-  );
-  requireLiteral(drivers, ".baseAddr    = I2C0_BASE", `${i2c.i2c_name} I2C0`);
-  requireLiteral(
-    drivers,
-    `.sdaPin      = ${prefix}_SDA`,
-    `${i2c.i2c_name} SDA`,
-  );
-  requireLiteral(
-    drivers,
-    `.sclPin      = ${prefix}_SCL`,
-    `${i2c.i2c_name} SCL`,
-  );
-  requireLiteral(
-    drivers,
-    ".sdaPinMux   = GPIO_MUX_PORTCFG_PFUNC4",
-    `${i2c.i2c_name} SDA mux`,
-  );
-  requireLiteral(
-    drivers,
-    ".sclPinMux   = GPIO_MUX_PORTCFG_PFUNC2",
-    `${i2c.i2c_name} SCL mux`,
-  );
-  requireMatch(
-    syscfg,
-    new RegExp(`^I2C1\\.maxBitRate = ${i2c.max_bit_rate / 1000};$`, "m"),
-    `${i2c.i2c_name} source rate`,
-  );
+    setting: `${i2c.i2c_name} I2C_100kHz`,
+  });
+  requireLiteral({
+    generatedText: drivers,
+    literal: ".baseAddr    = I2C0_BASE",
+    setting: `${i2c.i2c_name} I2C0`,
+  });
+  requireLiteral({
+    generatedText: drivers,
+    literal: `.sdaPin      = ${prefix}_SDA`,
+    setting: `${i2c.i2c_name} SDA`,
+  });
+  requireLiteral({
+    generatedText: drivers,
+    literal: `.sclPin      = ${prefix}_SCL`,
+    setting: `${i2c.i2c_name} SCL`,
+  });
+  requireLiteral({
+    generatedText: drivers,
+    literal: ".sdaPinMux   = GPIO_MUX_PORTCFG_PFUNC4",
+    setting: `${i2c.i2c_name} SDA mux`,
+  });
+  requireLiteral({
+    generatedText: drivers,
+    literal: ".sclPinMux   = GPIO_MUX_PORTCFG_PFUNC2",
+    setting: `${i2c.i2c_name} SCL mux`,
+  });
+  requireMatch({
+    generatedText: syscfg,
+    pattern: new RegExp(
+      `^I2C1\\.maxBitRate = ${i2c.max_bit_rate / 1000};$`,
+      "m",
+    ),
+    setting: `${i2c.i2c_name} source rate`,
+  });
 }
 
 function validateReservedPorts({ circuitJson, options, drivers }) {
@@ -205,17 +219,21 @@ function validateClockAndStartup({ options, drivers, syscfg }) {
   const clock = options.firmware.lf_clock_source;
   const selected = clock === "lf_rcosc" ? "LFOSC" : "LFXT";
   const other = clock === "lf_rcosc" ? "LFXT" : "LFOSC";
-  requireLiteral(drivers, `PowerLPF3_select${selected}();`, `${clock} startup`);
+  requireLiteral({
+    generatedText: drivers,
+    literal: `PowerLPF3_select${selected}();`,
+    setting: `${clock} startup`,
+  });
   if (drivers.includes(`PowerLPF3_select${other}();`)) {
     throw new Error(
       `TI generated output selects ${other} instead of ${selected}`,
     );
   }
-  requireLiteral(
-    syscfg,
-    "Board.generateInitializationFunctions = false;",
-    "custom board startup",
-  );
+  requireLiteral({
+    generatedText: syscfg,
+    literal: "Board.generateInitializationFunctions = false;",
+    setting: "custom board startup",
+  });
   if (/Board_\w*Flash|BOARD_EXT_FLASH/.test(drivers)) {
     throw new Error(
       "TI generated output includes LaunchPad external-flash startup",
@@ -234,7 +252,11 @@ export async function validateCc2340Output({
     readFile(join(directory, "ti_drivers_config.c"), "utf8"),
     readFile(syscfgPath, "utf8"),
   ]);
-  requireLiteral(header, "#define CONFIG_CC2340R5RGE", "CC2340R5RGE device");
+  requireLiteral({
+    generatedText: header,
+    literal: "#define CONFIG_CC2340R5RGE",
+    setting: "CC2340R5RGE device",
+  });
   validateGpioNames({ options, header });
   validateGpio({ circuitJson, options, header, drivers, syscfg });
   validateI2c({ circuitJson, options, header, drivers, syscfg });

@@ -19,7 +19,7 @@ const hostVersion =
 const temporary = await mkdtemp(join(tmpdir(), "tscircuit-ti-npm-"));
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 
-function run(command, args, cwd, env = {}) {
+function run({ command, args, cwd, env = {} }) {
   const result = spawnSync(command, args, {
     cwd,
     encoding: "utf8",
@@ -36,19 +36,24 @@ function run(command, args, cwd, env = {}) {
   return result.stdout;
 }
 
-async function testCli(command, cwd) {
-  assert.match(run(command, ["--help"], cwd), /Usage: ti search/);
+async function testCli({ command, cwd }) {
+  assert.match(run({ command, args: ["--help"], cwd }), /Usage: ti search/);
   assert.match(
-    run(command, ["generate-sysconfig", "--help"], cwd),
+    run({ command, args: ["generate-sysconfig", "--help"], cwd }),
     /Usage: ti generate-sysconfig/,
   );
   assert.match(
-    run(command, ["check-sysconfig", "--help"], cwd),
+    run({ command, args: ["check-sysconfig", "--help"], cwd }),
     /Usage: ti check-sysconfig/,
   );
   const result = JSON.parse(
-    run(command, ["search", "--json", "buck converter"], cwd, {
-      NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-fetch.mjs", import.meta.url).href}`,
+    run({
+      command,
+      args: ["search", "--json", "buck converter"],
+      cwd,
+      env: {
+        NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-fetch.mjs", import.meta.url).href}`,
+      },
     }),
   );
   assert.deepEqual(result, {
@@ -64,8 +69,13 @@ async function testCli(command, cwd) {
     ],
   });
   assert.match(
-    run(command, ["import", "C324077"], cwd, {
-      NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-import-fetch.mjs", import.meta.url).href}`,
+    run({
+      command,
+      args: ["import", "C324077"],
+      cwd,
+      env: {
+        NODE_OPTIONS: `--import=${new URL("../tests/cli/fixtures/mock-import-fetch.mjs", import.meta.url).href}`,
+      },
     }),
     /Imported imports\/TPS62160DSGR.tsx from EasyEDA/,
   );
@@ -109,7 +119,7 @@ async function testCli(command, cwd) {
     }),
   );
   assert.match(
-    run(command, ["generate-sysconfig", "board.circuit.json"], cwd),
+    run({ command, args: ["generate-sysconfig", "board.circuit.json"], cwd }),
     /Generated board\.syscfg/,
   );
   assert.match(
@@ -121,11 +131,11 @@ async function testCli(command, cwd) {
 try {
   console.log("Packing the npm distribution");
   const [packed] = JSON.parse(
-    run(
-      npm,
-      ["pack", "./dist/npm", "--json", "--pack-destination", temporary],
-      root,
-    ),
+    run({
+      command: npm,
+      args: ["pack", "./dist/npm", "--json", "--pack-destination", temporary],
+      cwd: root,
+    }),
   );
   assert.equal(packed.name, manifest.name);
   assert.equal(packed.version, sourceManifest.version);
@@ -144,6 +154,7 @@ try {
     "cli/sysconfig/request.mjs",
     "cli/sysconfig/runtime.mjs",
     "cli/sysconfig/ti-cli.mjs",
+    "cli/sysconfig/validate-am2434-output.mjs",
     "cli/sysconfig/validate-cc2340-output.mjs",
     "cli/ti.mjs",
     "index.cjs",
@@ -161,9 +172,9 @@ try {
   console.log("Installing the tarball in a clean project");
   // Exercise both the development runtime and the runtime npm selects today.
   // npm must resolve the remaining peers from the packed package's manifest.
-  run(
-    npm,
-    [
+  run({
+    command: npm,
+    args: [
       "install",
       "--no-audit",
       "--no-fund",
@@ -172,16 +183,16 @@ try {
       `tscircuit@${hostVersion}`,
       "typescript@5.9.3",
     ],
-    consumer,
-  );
-  await testCli(
-    join(
+    cwd: consumer,
+  });
+  await testCli({
+    command: join(
       consumer,
       "node_modules/.bin",
       process.platform === "win32" ? "ti.cmd" : "ti",
     ),
-    consumer,
-  );
+    cwd: consumer,
+  });
   console.log("Locally installed ti command passed");
   await writeFile(
     join(consumer, "smoke.mjs"),
@@ -213,7 +224,13 @@ for (const ti of [esm, cjs]) {
 console.log("ESM/CJS exports, embedded model, and circuit rendering passed");
 `,
   );
-  console.log(run(process.execPath, ["smoke.mjs"], consumer).trim());
+  console.log(
+    run({
+      command: process.execPath,
+      args: ["smoke.mjs"],
+      cwd: consumer,
+    }).trim(),
+  );
   await writeFile(
     join(consumer, "types.mts"),
     `import { BQ24074, PowerMonitor_INA237 } from "@tscircuit/ti";
@@ -223,9 +240,9 @@ PowerMonitor_INA237({ name: "Monitor" });
 BQ24074({ name: "U1", footprintVariant: 123 });
 `,
   );
-  run(
-    process.execPath,
-    [
+  run({
+    command: process.execPath,
+    args: [
       "node_modules/typescript/bin/tsc",
       "--noEmit",
       "--strict",
@@ -238,8 +255,8 @@ BQ24074({ name: "U1", footprintVariant: 123 });
       "es2023",
       "types.mts",
     ],
-    consumer,
-  );
+    cwd: consumer,
+  });
   await writeFile(
     join(consumer, "smoke.circuit.tsx"),
     `import { BQ24074, PowerMonitor_INA237 } from "@tscircuit/ti";
@@ -253,9 +270,9 @@ export default () => (
 );
 `,
   );
-  run(
-    "bun",
-    [
+  run({
+    command: "bun",
+    args: [
       "node_modules/tscircuit/cli.mjs",
       "build",
       "smoke.circuit.tsx",
@@ -263,8 +280,8 @@ export default () => (
       "--disable-parts-engine",
       "--schematic-svgs",
     ],
-    consumer,
-  );
+    cwd: consumer,
+  });
   const circuitJson = JSON.parse(
     await readFile(join(consumer, "dist/smoke/circuit.json"), "utf8"),
   );
@@ -282,9 +299,9 @@ export default () => (
   console.log(`TypeScript and tsci build passed with tscircuit@${hostVersion}`);
   console.log("Checking global installation in an isolated prefix");
   const prefix = join(temporary, "global");
-  run(
-    npm,
-    [
+  run({
+    command: npm,
+    args: [
       "install",
       "-g",
       "--prefix",
@@ -294,30 +311,31 @@ export default () => (
       "--registry=https://registry.npmjs.org",
       tarball,
     ],
-    temporary,
-  );
-  const globalRoot = run(
-    npm,
-    ["root", "-g", "--prefix", prefix],
-    temporary,
-  ).trim();
+    cwd: temporary,
+  });
+  const globalRoot = run({
+    command: npm,
+    args: ["root", "-g", "--prefix", prefix],
+    cwd: temporary,
+  }).trim();
   const installed = JSON.parse(
     await readFile(join(globalRoot, "@tscircuit/ti/package.json"), "utf8"),
   );
   assert.equal(installed.name, manifest.name);
   assert.equal(installed.version, sourceManifest.version);
   assert.deepEqual(installed.bin, manifest.bin);
-  await testCli(
-    process.platform === "win32"
-      ? join(prefix, "ti.cmd")
-      : join(prefix, "bin/ti"),
-    temporary,
-  );
+  await testCli({
+    command:
+      process.platform === "win32"
+        ? join(prefix, "ti.cmd")
+        : join(prefix, "bin/ti"),
+    cwd: temporary,
+  });
   console.log("Globally installed ti command passed");
   // Installation alone does not detect an incompatible peer chosen for core.
-  run(
-    process.execPath,
-    [
+  run({
+    command: process.execPath,
+    args: [
       "--input-type=module",
       "--eval",
       `
@@ -331,8 +349,8 @@ export default () => (
       assert.equal(typeof cjs.BQ24074, "function");
     `,
     ],
-    temporary,
-  );
+    cwd: temporary,
+  });
   console.log("Isolated global installation and ESM/CJS imports passed");
 } finally {
   await rm(temporary, { recursive: true, force: true });

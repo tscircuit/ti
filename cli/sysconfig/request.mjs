@@ -242,10 +242,13 @@ function resolveCc2340Options({ circuitJson, component, request }) {
       }
     : undefined;
 
-  const rawReserved = request.reserved_ports ?? [];
-  if (!Array.isArray(rawReserved)) {
+  if (
+    request.reserved_ports !== undefined &&
+    !Array.isArray(request.reserved_ports)
+  ) {
     throw new Error("reserved_ports must be an array");
   }
+  const rawReserved = request.reserved_ports ?? [];
   const reserved_ports = rawReserved.map((entry, index) => {
     assertObject(entry, `reserved_ports[${index}]`);
     assertOnlyKeys({
