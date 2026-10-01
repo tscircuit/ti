@@ -68,10 +68,9 @@ function resolveTscircuitCli(projectDir) {
 
 function getBuildOutputPath(inputPath, projectDir) {
   const relativeInput = relative(projectDir, inputPath);
-  const outputDirName = relativeInput.replace(
-    /(\.board|\.circuit)?\.(tsx|ts|jsx|js)$/i,
-    "",
-  );
+  // Match tscircuit build's getCircuitJsonOutputDirName: .ts, .jsx, and .js
+  // remain in the output directory name, while .tsx is stripped.
+  const outputDirName = relativeInput.replace(/(\.board|\.circuit)?\.tsx$/, "");
   return join(projectDir, "dist", outputDirName, "circuit.json");
 }
 

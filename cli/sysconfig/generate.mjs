@@ -32,15 +32,13 @@ function defaultOutputPath(inputPath, cwd) {
 }
 
 async function invokeConverter(
-  circuitJsonPath,
-  options,
-  outputPath,
+  { circuitJsonPath, converterOptions, outputPath },
   { cwd, spawnSync, env, bun },
 ) {
   const temporary = await mkdtemp(join(tmpdir(), "ti-sysconfig-convert-"));
   try {
     const optionsPath = join(temporary, "options.json");
-    await writeFile(optionsPath, JSON.stringify(options, null, 2));
+    await writeFile(optionsPath, JSON.stringify(converterOptions, null, 2));
     await mkdir(dirname(outputPath), { recursive: true });
 
     const result = spawnSync(
@@ -92,9 +90,11 @@ export async function generateSysconfig(
     : defaultOutputPath(inputPath, cwd);
 
   await invokeConverter(
-    built.circuitJsonPath,
-    resolved.options,
-    resolvedOutputPath,
+    {
+      circuitJsonPath: built.circuitJsonPath,
+      converterOptions: resolved.options,
+      outputPath: resolvedOutputPath,
+    },
     {
       cwd: built.projectDir,
       spawnSync,

@@ -38,7 +38,7 @@ export function validateTiEnvironment(env) {
   return { tiNode, tiCli, sdkRoot, product };
 }
 
-export function getTiInvocation(target, syscfgPath, outputDir, env) {
+export function getTiInvocation({ target, syscfgPath, outputDir, env }) {
   const { tiNode, tiCli, product } = validateTiEnvironment(env);
   const args = [tiCli, "--product", product];
   if (target === "cc2340") {

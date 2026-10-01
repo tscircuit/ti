@@ -7,8 +7,8 @@ function assertObject(value, label) {
   }
 }
 
-function assertOnlyKeys(value, allowed, label) {
-  const unknown = Object.keys(value).filter((key) => !allowed.has(key));
+function assertOnlyKeys({ record, allowedKeys, label }) {
+  const unknown = Object.keys(record).filter((key) => !allowedKeys.has(key));
   if (unknown.length) {
     throw new Error(
       `${label} contains unsupported field(s): ${unknown.join(", ")}`,
@@ -43,7 +43,7 @@ function getPortLabels(port) {
   ];
 }
 
-function resolvePort(circuitJson, component, selector) {
+function resolvePort({ circuitJson, component, selector }) {
   if (typeof selector !== "string" || !selector.trim()) {
     throw new Error(
       "Every SysConfig source selector must be a non-empty string",
@@ -114,9 +114,9 @@ function resolvePort(circuitJson, component, selector) {
 
 function parseRawGpio(gpio, index) {
   assertObject(gpio, `gpios[${index}]`);
-  assertOnlyKeys(
-    gpio,
-    new Set([
+  assertOnlyKeys({
+    record: gpio,
+    allowedKeys: new Set([
       "source",
       "gpio_name",
       "direction",
@@ -124,8 +124,8 @@ function parseRawGpio(gpio, index) {
       "pull",
       "interrupt",
     ]),
-    `gpios[${index}]`,
-  );
+    label: `gpios[${index}]`,
+  });
   if (typeof gpio.source !== "string" || !gpio.source.trim()) {
     throw new Error(`gpios[${index}].source must be a non-empty string`);
   }
@@ -141,17 +141,17 @@ function parseRawGpio(gpio, index) {
 function parseI2c(i2c) {
   if (i2c === undefined) return undefined;
   assertObject(i2c, "i2c");
-  assertOnlyKeys(
-    i2c,
-    new Set([
+  assertOnlyKeys({
+    record: i2c,
+    allowedKeys: new Set([
       "i2c_name",
       "sda",
       "scl",
       "max_bit_rate",
       "peripheral_assignment",
     ]),
-    "i2c",
-  );
+    label: "i2c",
+  });
   for (const field of ["i2c_name", "sda", "scl", "peripheral_assignment"]) {
     if (typeof i2c[field] !== "string" || !i2c[field].trim()) {
       throw new Error(`i2c.${field} must be a non-empty string`);
@@ -163,18 +163,25 @@ function parseI2c(i2c) {
   return i2c;
 }
 
-function resolveCc2340Options(circuitJson, component, request) {
-  assertOnlyKeys(
-    request,
-    new Set(["component", "gpios", "i2c", "reserved_ports", "firmware"]),
-    "SysConfig request",
-  );
+function resolveCc2340Options({ circuitJson, component, request }) {
+  assertOnlyKeys({
+    record: request,
+    allowedKeys: new Set([
+      "component",
+      "gpios",
+      "i2c",
+      "reserved_ports",
+      "firmware",
+    ]),
+    label: "SysConfig request",
+  });
 
-  const rawGpios = Array.isArray(request.gpios)
-    ? request.gpios.map(parseRawGpio)
-    : [];
+  if (request.gpios !== undefined && !Array.isArray(request.gpios)) {
+    throw new Error("gpios must be an array");
+  }
+  const rawGpios = (request.gpios ?? []).map(parseRawGpio);
   const gpios = rawGpios.map((gpio) => {
-    const port = resolvePort(circuitJson, component, gpio.source);
+    const port = resolvePort({ circuitJson, component, selector: gpio.source });
     if (gpio.direction === "output") {
       if (gpio.initial_state !== "low" && gpio.initial_state !== "high") {
         throw new Error(
@@ -220,10 +227,16 @@ function resolveCc2340Options(circuitJson, component, request) {
   const i2c = rawI2c
     ? {
         i2c_name: rawI2c.i2c_name,
-        sda_source_port_id: resolvePort(circuitJson, component, rawI2c.sda)
-          .source_port_id,
-        scl_source_port_id: resolvePort(circuitJson, component, rawI2c.scl)
-          .source_port_id,
+        sda_source_port_id: resolvePort({
+          circuitJson,
+          component,
+          selector: rawI2c.sda,
+        }).source_port_id,
+        scl_source_port_id: resolvePort({
+          circuitJson,
+          component,
+          selector: rawI2c.scl,
+        }).source_port_id,
         max_bit_rate: rawI2c.max_bit_rate,
         peripheral_assignment: rawI2c.peripheral_assignment,
       }
@@ -235,11 +248,11 @@ function resolveCc2340Options(circuitJson, component, request) {
   }
   const reserved_ports = rawReserved.map((entry, index) => {
     assertObject(entry, `reserved_ports[${index}]`);
-    assertOnlyKeys(
-      entry,
-      new Set(["source", "reason"]),
-      `reserved_ports[${index}]`,
-    );
+    assertOnlyKeys({
+      record: entry,
+      allowedKeys: new Set(["source", "reason"]),
+      label: `reserved_ports[${index}]`,
+    });
     if (typeof entry.source !== "string" || !entry.source.trim()) {
       throw new Error(
         `reserved_ports[${index}].source must be a non-empty string`,
@@ -251,18 +264,21 @@ function resolveCc2340Options(circuitJson, component, request) {
       );
     }
     return {
-      source_port_id: resolvePort(circuitJson, component, entry.source)
-        .source_port_id,
+      source_port_id: resolvePort({
+        circuitJson,
+        component,
+        selector: entry.source,
+      }).source_port_id,
       reason: entry.reason,
     };
   });
 
   assertObject(request.firmware, "firmware");
-  assertOnlyKeys(
-    request.firmware,
-    new Set(["rtos", "lf_clock_source"]),
-    "firmware",
-  );
+  assertOnlyKeys({
+    record: request.firmware,
+    allowedKeys: new Set(["rtos", "lf_clock_source"]),
+    label: "firmware",
+  });
   if (request.firmware.rtos !== "nortos") {
     throw new Error(
       "The current CC2340 converter scope requires firmware.rtos to be nortos",
@@ -281,12 +297,18 @@ function resolveCc2340Options(circuitJson, component, request) {
   };
 }
 
-function resolveAm2434Options(circuitJson, component, request) {
-  assertOnlyKeys(
-    request,
-    new Set(["component", "gpios", "i2c", "reserved_ports", "firmware"]),
-    "SysConfig request",
-  );
+function resolveAm2434Options({ circuitJson, component, request }) {
+  assertOnlyKeys({
+    record: request,
+    allowedKeys: new Set([
+      "component",
+      "gpios",
+      "i2c",
+      "reserved_ports",
+      "firmware",
+    ]),
+    label: "SysConfig request",
+  });
   if (request.i2c !== undefined) {
     throw new Error("AM2434 CLI conversion does not support I2C yet");
   }
@@ -320,8 +342,11 @@ function resolveAm2434Options(circuitJson, component, request) {
     target: "am2434",
     options: {
       source_component_id: component.source_component_id,
-      source_port_id: resolvePort(circuitJson, component, gpio.source)
-        .source_port_id,
+      source_port_id: resolvePort({
+        circuitJson,
+        component,
+        selector: gpio.source,
+      }).source_port_id,
       gpio_name: gpio.gpio_name,
       direction: "output",
     },
@@ -335,13 +360,13 @@ export function resolveConverterOptions(circuitJson, request) {
   if (component.manufacturer_part_number === CC2340_MPN) {
     return {
       component,
-      ...resolveCc2340Options(circuitJson, component, request),
+      ...resolveCc2340Options({ circuitJson, component, request }),
     };
   }
   if (component.manufacturer_part_number === AM2434_MPN) {
     return {
       component,
-      ...resolveAm2434Options(circuitJson, component, request),
+      ...resolveAm2434Options({ circuitJson, component, request }),
     };
   }
 

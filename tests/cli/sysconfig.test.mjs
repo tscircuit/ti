@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync as realSpawnSync } from "node:child_process";
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -109,6 +110,32 @@ const request = {
   firmware: { rtos: "nortos", lf_clock_source: "lf_rcosc" },
 };
 
+const jsxCircuitSource = `export default () => (
+  <board width="10mm" height="10mm" routingDisabled>
+    <chip name="U1_MCU" manufacturerPartNumber="CC2340R52E0RGER"
+      pinLabels={{
+        pin9: ["DISP_PWR_N", "DIO20_A11"],
+        pin5: ["ACCEL_INT1", "DIO12"],
+        pin3: ["I2C_SDA", "DIO8"],
+        pin19: ["I2C_SCL", "DIO6_A1"],
+      }} />
+  </board>
+);`;
+
+const plainCircuitSource = `import React from "react";
+export default () => React.createElement("board", {
+  width: "10mm", height: "10mm", routingDisabled: true,
+}, React.createElement("chip", {
+  name: "U1_MCU",
+  manufacturerPartNumber: "CC2340R52E0RGER",
+  pinLabels: {
+    pin9: ["DISP_PWR_N", "DIO20_A11"],
+    pin5: ["ACCEL_INT1", "DIO12"],
+    pin3: ["I2C_SDA", "DIO8"],
+    pin19: ["I2C_SCL", "DIO6_A1"],
+  },
+}));`;
+
 function fixture(t) {
   const cwd = mkdtempSync(join(tmpdir(), "ti-sysconfig-cli-"));
   t.after(() => rmSync(cwd, { recursive: true, force: true }));
@@ -169,6 +196,62 @@ test("generate-sysconfig follows a circuit pin change without changing the reque
   assert.match(source, /CONFIG_ACCEL_INT/);
   assert.match(source, /GPIO2\.gpioPin\.\$assign = "DIO13"/);
   assert.doesNotMatch(source, /GPIO2\.gpioPin\.\$assign = "DIO12"/);
+});
+
+test("generate-sysconfig accepts every advertised source and Circuit JSON input format", {
+  timeout: 20_000,
+}, async (t) => {
+  const f = fixture(t);
+  for (const extension of ["tsx", "ts", "jsx", "js"]) {
+    const inputName = `board.${extension}`;
+    writeFileSync(
+      join(f.cwd, inputName),
+      extension === "tsx" || extension === "jsx"
+        ? jsxCircuitSource
+        : plainCircuitSource,
+    );
+    assert.equal(
+      await f.run(["generate-sysconfig", inputName]),
+      0,
+      `${inputName}: ${f.stderr.join("\n")}`,
+    );
+    const buildDirectory = extension === "tsx" ? "board" : inputName;
+    assert.ok(existsSync(join(f.cwd, "dist", buildDirectory, "circuit.json")));
+    const syscfg = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
+    assert.match(syscfg, /GPIO1\.gpioPin\.\$assign = "DIO20_A11"/);
+    assert.match(syscfg, /I2C1\.maxBitRate = 100;/);
+  }
+
+  writeFileSync(join(f.cwd, "circuit.json"), JSON.stringify(cc2340Circuit()));
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "circuit.json",
+      "--config",
+      "board.sysconfig.json",
+      "-o",
+      "direct.syscfg",
+    ]),
+    0,
+    f.stderr.join("\n"),
+  );
+  assert.match(
+    readFileSync(join(f.cwd, "direct.syscfg"), "utf8"),
+    /CONFIG_DISPLAY_ISOLATE/,
+  );
+});
+
+test("generate-sysconfig rejects non-array GPIO requests instead of dropping them", async (t) => {
+  const f = fixture(t);
+  for (const gpios of [request.gpios[0], null]) {
+    writeFileSync(
+      join(f.cwd, "board.sysconfig.json"),
+      JSON.stringify({ ...request, gpios }),
+    );
+    assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+    assert.match(f.stderr.at(-1), /gpios must be an array/);
+    assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+  }
 });
 
 test("generate-sysconfig compiles connected TSX traces and follows a pin change", async (t) => {
@@ -251,6 +334,7 @@ test("generate-sysconfig rejects a net reaching multiple MCU pins through connec
 
 test("check-sysconfig invokes the configured TI CLI only after conversion", async (t) => {
   const f = fixture(t);
+  writeFileSync(join(f.cwd, "board.jsx"), jsxCircuitSource);
   const tiRoot = join(f.cwd, "ti-sdk");
   const tiNode = join(f.cwd, "sysconfig-node");
   const tiCli = join(f.cwd, "cli.js");
@@ -289,7 +373,7 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
     TI_SDK_ROOT: tiRoot,
   };
   assert.equal(
-    await f.run(["check-sysconfig", "board.circuit.json"], {
+    await f.run(["check-sysconfig", "board.jsx"], {
       spawnSync,
       env,
     }),

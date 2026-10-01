@@ -77,12 +77,12 @@ export async function runCheckSysconfig(
       bun,
     });
 
-    const invocation = getTiInvocation(
-      generated.target,
+    const invocation = getTiInvocation({
+      target: generated.target,
       syscfgPath,
-      tiOutput,
+      outputDir: tiOutput,
       env,
-    );
+    });
     const result = spawnSync(invocation.command, invocation.args, {
       cwd,
       env,
