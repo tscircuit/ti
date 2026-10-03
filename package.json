@@ -37,10 +37,12 @@
     "circuit-json-to-sysconfig": "github:tscircuit/circuit-json-to-sysconfig#b4458ed78fdcfeee3404af45bf30b36e06349c7d",
     "circuit-to-svg": "0.0.410",
     "tscircuit": "0.0.2460",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@tscircuit/props": "^0.0.682"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5",
+    "@tscircuit/props": "*"
   },
   "author": "imrishabh18",
   "dependencies": {
