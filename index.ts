@@ -1,89 +1,277 @@
 import {
+  AM62L32,
+  AWR1843ARBGALPQ1,
+  ATL431LI,
+  BQ24072,
+  BQ24073,
   BQ24074,
   BQ25895,
+  BQ25731RSN,
+  BQ294700DSG,
+  BQ40Z60RHB,
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2540F256RHAR,
+  CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
+  CSD19532Q5B,
+  DAC101C081Q,
+  DRV5013Q1,
+  DRV8210,
+  DRV8703,
   DRV8833,
   DRV8876,
+  DRV83053Q1,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
+  ISOW7841,
+  LM5050Q1,
+  LM50HVQ1,
+  LM73605,
+  LM74202Q1,
+  LMK1C1104,
+  LMV324A,
+  LP5892Q1,
+  MSP430G2230ID,
+  MSP430G2332IPW20,
+  MSP430F5229,
+  MSP430FR6007,
+  MSPM0C1104,
+  MSPM0L1306,
+  MSPM0L1306Q1,
+  MSPM33C3219,
+  MSPM33C321A,
   MSPM33C3x,
   MSPM0G3507,
+  MSPM0G5117,
+  MSPM0G5187,
+  MX25V1635FZNQ,
+  OPT3001,
+  OPT3004,
+  PGA300ARHHR,
+  SN65HVD1473,
+  SMPP2_03,
+  SN65LVDS31D,
+  SN74LVC1G34DBVR,
+  TAS2505,
+  TCAN1042HGV,
   TLC59116,
+  TLIN1028,
+  TLV316,
+  TLV755P,
+  TLV1805,
+  TLV9152IDR,
+  TMP103AYFF,
+  TMP116,
   TMP1827,
   TMP1075,
+  TMP390Q1,
+  TPD2E009DRTR,
   TPS22919,
+  TPS25910RSA,
+  TPS3850,
   TPS6293,
+  TPS62086RLTR,
   TPS61222,
+  TPS61236RWLR,
+  TPS61288RQQR,
   TPS61299X,
   TPS6521835,
   TPS63802,
   TPS7A02,
+  TPS7A20,
+  TPS7A24,
+  TPS7E81Q1,
+  TPS78230DRVR,
+  TPS92638,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
   TXS0102,
   W25Q128JVSIQ,
-} from "./lib/chips/index";
-import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit";
-import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
-import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit";
-import { RealTimeClock_BQ32002 } from "./lib/subcircuits/RealTimeClock_BQ32002.circuit";
-import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit";
-import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit";
-import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit";
-import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit";
-import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit";
-import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSensor_HDC2080.circuit";
-import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit";
-import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit";
-import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit";
-import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit";
-import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit";
-import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit";
-import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit";
-import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit";
-import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit";
-import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit";
+  W3006,
+} from "./lib/chips/index.tsx";
+import { BatteryManagement_BQ24072 } from "./lib/subcircuits/BatteryManagement_BQ24072.circuit.tsx";
+import { BatteryManagement_BQ24073 } from "./lib/subcircuits/BatteryManagement_BQ24073.circuit.tsx";
+import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit.tsx";
+import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit.tsx";
+import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit.tsx";
+import { BatteryManagement_2to4Cell_BQ40Z60 } from "./lib/subcircuits/BatteryManagement_2to4Cell_BQ40Z60.circuit.tsx";
+import { RealTimeClock_BQ32002 } from "./lib/subcircuits/RealTimeClock_BQ32002.circuit.tsx";
+import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit.tsx";
+import { BluetoothController_CC2564C } from "./lib/subcircuits/BluetoothController_CC2564C.circuit.tsx";
+import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit.tsx";
+import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit.tsx";
+import { GateDriver_DRV8703 } from "./lib/subcircuits/GateDriver_DRV8703.circuit.tsx";
+import { HBridge_SQJ940EP } from "./lib/subcircuits/HBridge_SQJ940EP.circuit.tsx";
+import { MotorDriver_DRV8210 } from "./lib/subcircuits/MotorDriver_DRV8210.circuit.tsx";
+import { MotorDriver_DRV8703 } from "./lib/subcircuits/MotorDriver_DRV8703.circuit.tsx";
+import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit.tsx";
+import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit.tsx";
+import { PositionFeedback_DRV5013 } from "./lib/subcircuits/PositionFeedback_DRV5013.circuit.tsx";
+import { MotorDriver_DRV8305_TIDA01330 } from "./lib/subcircuits/MotorDriver_DRV8305_TIDA01330.circuit.tsx";
+import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSensor_HDC2080.circuit.tsx";
+import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
+import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
+import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
+import { PinchDetectionPower_TPS7B69 } from "./lib/subcircuits/PinchDetectionPower_TPS7B69.circuit.tsx";
+import { PinchDetectionSignalChain_INA240_TLV2316_LMV7275 } from "./lib/subcircuits/PinchDetectionSignalChain_INA240_TLV2316_LMV7275.circuit.tsx";
+import { PinchDetection_INA240_TLV2316_LMV7275 } from "./lib/subcircuits/PinchDetection_INA240_TLV2316_LMV7275.circuit.tsx";
+import { InstrumentationAmplifier_INA350 } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
+import { PressureTransmitter_PGA300 } from "./lib/subcircuits/PressureTransmitter_PGA300.circuit.tsx";
+import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
+import { PowerSupply_WindowModule } from "./lib/subcircuits/PowerSupply_WindowModule.circuit.tsx";
+import { ReverseBatteryProtection_TLV1805_SQJ461EP } from "./lib/subcircuits/ReverseBatteryProtection_TLV1805_SQJ461EP.circuit.tsx";
+import { SupervisorWatchdog_TPS3850 } from "./lib/subcircuits/SupervisorWatchdog_TPS3850.circuit.tsx";
+import { VoltageRegulator_LM73605 } from "./lib/subcircuits/VoltageRegulator_LM73605.circuit.tsx";
+import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.circuit.tsx";
+import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
+import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
+import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit.tsx";
+import { Microcontroller_MSPM0L1306 } from "./lib/subcircuits/Microcontroller_MSPM0L1306.circuit.tsx";
+import { Microcontroller_MSPM0L1306Q1_TIDA020065 } from "./lib/subcircuits/Microcontroller_MSPM0L1306Q1_TIDA020065.circuit.tsx";
+import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
+import { Microcontroller_MSPM0G5117 } from "./lib/subcircuits/Microcontroller_MSPM0G5117.circuit.tsx";
+import { Microcontroller_MSPM0G5187 } from "./lib/subcircuits/Microcontroller_MSPM0G5187.circuit.tsx";
+import { Microcontroller_MSP430FR6007 } from "./lib/subcircuits/Microcontroller_MSP430FR6007.circuit.tsx";
+import { Microcontroller_MSP430FR6007_MultiSheet } from "./lib/subcircuits/Microcontroller_MSP430FR6007_MultiSheet.circuit.tsx";
+import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
+import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
+import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "./lib/subcircuits/OutputUserInterface_LEDMatrix_LP5892_Q1.circuit.tsx";
+import { Sensors_TMP116_OPT3004 } from "./lib/subcircuits/Sensors_TMP116_OPT3004.circuit.tsx";
+import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
+import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
+import {
+  MotorThermalProtection_TMP390,
+  TMP390_FIGURE_8_3_DEFAULTS,
+} from "./lib/subcircuits/MotorThermalProtection_TMP390.circuit.tsx";
+import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit.tsx";
+import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit.tsx";
 import {
   BoostConverter_TPS61299X,
   TPS61299XBoostConverter,
-} from "./lib/subcircuits/BoostConverter_TPS61299X.circuit";
-import { PowerManagement_TPS6521835 } from "./lib/subcircuits/PowerManagement_TPS6521835.circuit";
-import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit";
-import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit";
-import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit";
-import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
-import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit";
-import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit";
-import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit";
+} from "./lib/subcircuits/BoostConverter_TPS61299X.circuit.tsx";
+import { PowerManagement_TPS6521835 } from "./lib/subcircuits/PowerManagement_TPS6521835.circuit.tsx";
+import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit.tsx";
+import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit.tsx";
+import { PowerManagement_TPS7A20 } from "./lib/subcircuits/PowerManagement_TPS7A20.circuit.tsx";
+import { PowerManagement_TPS7A2018 } from "./lib/subcircuits/PowerManagement_TPS7A2018.circuit.tsx";
+import { PowerManagement_TPS7A2028 } from "./lib/subcircuits/PowerManagement_TPS7A2028.circuit.tsx";
+import { PowerManagement_TLV755P } from "./lib/subcircuits/PowerManagement_TLV755P.circuit.tsx";
+import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit.tsx";
+import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit.tsx";
+import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
+import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
+import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
+import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits/BatteryCharging_2to5CellNVDCBuckBoost_BQ25731.circuit.tsx";
+import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
+import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
+import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
+import { CommunicationInterface_LIN_TLIN1028 } from "./lib/subcircuits/CommunicationInterface_LIN_TLIN1028.circuit.tsx";
+import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/CommunicationInterface_TCAN1042_TIDA01428.circuit.tsx";
+import { LightDriver_TIDA01330 } from "./lib/subcircuits/LightDriver_TIDA01330.circuit.tsx";
+import { PositionFeedback_DRV5013_TIDA01389 } from "./lib/subcircuits/PositionFeedback_DRV5013_TIDA01389.circuit.tsx";
+import { PowerSupply_LM5050_TIDA00992 } from "./lib/subcircuits/PowerSupply_LM5050_TIDA00992.circuit.tsx";
+import { ElectrochromicMirrorDriver_TIDA01539 } from "./lib/subcircuits/ElectrochromicMirrorDriver_TIDA01539.circuit.tsx";
+import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS92638_TIDA00356.circuit.tsx";
+import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
+import { LogicBuffer_SN74LVC1G34 } from "./lib/subcircuits/LogicBuffer_SN74LVC1G34.circuit.tsx";
+import { WirelessAntenna_W3006_TIDCWL1837MODCOM8I } from "./lib/subcircuits/WirelessAntenna_W3006_TIDCWL1837MODCOM8I.circuit.tsx";
+import { WirelessConnectivity_CC2540_TIDCCC2540BLEUSB } from "./lib/subcircuits/WirelessConnectivity_CC2540_TIDCCC2540BLEUSB.circuit.tsx";
+import { InputOutputProtection_TPD2E009_TIDA00399 } from "./lib/subcircuits/InputOutputProtection_TPD2E009_TIDA00399.circuit.tsx";
+import { BuckConverter_TPS62086_TIDA00399 } from "./lib/subcircuits/BuckConverter_TPS62086_TIDA00399.circuit.tsx";
+import { InputPowerProtection_TPS25910_TIDA00890 } from "./lib/subcircuits/InputPowerProtection_TPS25910_TIDA00890.circuit.tsx";
+import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/TemperatureSensor_TMP103_TIDA00399.circuit.tsx";
+import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
+import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
+import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
+import { RadarClock_FW4000044Q } from "./lib/subcircuits/RadarClock_FW4000044Q.circuit.tsx";
+import {
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing,
+} from "./lib/subcircuits/RadarFrontEndProcessing.circuit.tsx";
+import { RadarQspiFlash_MX25V1635FZNQ } from "./lib/subcircuits/RadarQspiFlash_MX25V1635FZNQ.circuit.tsx";
+import { RadarSoc_AWR1843ARBGALPQ1 } from "./lib/subcircuits/RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
+import { AnalogSignalConditioning_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogSignalConditioning_LMV324A_TIDA010266.circuit.tsx";
+import { InstrumentationAmplifier_INA350_TIDA010266 } from "./lib/subcircuits/InstrumentationAmplifier_INA350_TIDA010266.circuit.tsx";
+import { InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266 } from "./lib/subcircuits/InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266.circuit.tsx";
+import { Microcontroller_MSPM0L1306_TIDA010266 } from "./lib/subcircuits/Microcontroller_MSPM0L1306_TIDA010266.circuit.tsx";
+import { MotorDriver_DRV8210_TIDA010266 } from "./lib/subcircuits/MotorDriver_DRV8210_TIDA010266.circuit.tsx";
+import { PowerManagement_TPS7A2433_TIDA010266 } from "./lib/subcircuits/PowerManagement_TPS7A2433_TIDA010266.circuit.tsx";
+import { PressureSensor_2SMPP03_TIDA010266 } from "./lib/subcircuits/PressureSensor_2SMPP03_TIDA010266.circuit.tsx";
+import { VoltageReference_ATL431LI_TIDA010266 } from "./lib/subcircuits/VoltageReference_ATL431LI_TIDA010266.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
+export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
+  AnalogSignalConditioning_LMV324A_TIDA010266,
+  InstrumentationAmplifier_INA350_TIDA010266,
+  InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266,
+  Microcontroller_MSPM0L1306_TIDA010266,
+  MotorDriver_DRV8210_TIDA010266,
+  PowerManagement_TPS7A2433_TIDA010266,
+  PressureSensor_2SMPP03_TIDA010266,
+  VoltageReference_ATL431LI_TIDA010266,
+  BatteryManagement_BQ24072,
+  BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
+  BatteryManagement_2to4Cell_BQ40Z60,
   RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
+  BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
+  GateDriver_DRV8703,
+  HBridge_SQJ940EP,
+  MotorDriver_DRV8210,
+  MotorDriver_DRV8703,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
+  PositionFeedback_DRV5013,
+  MotorDriver_DRV8305_TIDA01330,
   EnvironmentalSensor_HDC2080,
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  PinchDetectionPower_TPS7B69,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
+  PinchDetection_INA240_TLV2316_LMV7275,
+  InstrumentationAmplifier_INA350,
+  PressureTransmitter_PGA300,
+  IsolatedRS485_ISOW7841,
+  PowerSupply_WindowModule,
+  ReverseBatteryProtection_TLV1805_SQJ461EP,
+  SupervisorWatchdog_TPS3850,
+  VoltageRegulator_LM73605,
+  ClockBuffer_LMK1C1104,
+  AudioAmplifier_TAS2505,
+  TargetSocket_MSPTS430D8,
+  BluetoothAudioHost_MSP430F5229,
+  Microcontroller_MSPM0L1306,
+  Microcontroller_MSPM0L1306Q1_TIDA020065,
   Microcontroller_MSPM0G3507,
+  Microcontroller_MSPM0G5117,
+  Microcontroller_MSPM0G5187,
+  Microcontroller_MSP430FR6007,
+  Microcontroller_MSP430FR6007_MultiSheet,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
+  OutputUserInterface_LEDMatrix_LP5892_Q1,
+  Sensors_TMP116_OPT3004,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
+  MotorThermalProtection_TMP390,
+  TMP390_FIGURE_8_3_DEFAULTS,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
@@ -91,76 +279,246 @@ export {
   PowerManagement_TPS6521835,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
+  PowerManagement_TPS7A20,
+  PowerManagement_TPS7A2018,
+  PowerManagement_TPS7A2028,
+  PowerManagement_TLV755P,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
+  BoostConverter_TPS61236,
+  Microcontroller_MSP430G2332,
+  USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_LIN_TLIN1028,
+  CommunicationInterface_TCAN1042_TIDA01428,
+  LightDriver_TIDA01330,
+  PositionFeedback_DRV5013_TIDA01389,
+  PowerSupply_LM5050_TIDA00992,
+  ElectrochromicMirrorDriver_TIDA01539,
+  LampDriver_TPS92638_TIDA00356,
+  LightSensor_OPT3001_TIDA01539,
+  LogicBuffer_SN74LVC1G34,
+  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
+  InputOutputProtection_TPD2E009_TIDA00399,
+  BuckConverter_TPS62086_TIDA00399,
+  InputPowerProtection_TPS25910_TIDA00890,
+  TemperatureSensor_TMP103_TIDA00399,
+  LVDSDriver_SN65LVDS31_TIDA060017,
+  PowerSupply_LM74202_TPS7E81_Q1,
+  TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 };
 
 export const TiChipComponents = {
+  ATL431LI,
+  LMV324A,
+  SMPP2_03,
+  TPS7A24,
+  AM62L32,
+  AWR1843ARBGALPQ1,
+  BQ24072,
+  BQ24073,
   BQ24074,
   BQ25895,
+  BQ25731RSN,
+  BQ294700DSG,
+  BQ40Z60RHB,
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2540F256RHAR,
+  CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
+  CSD19532Q5B,
+  DAC101C081Q,
+  DRV5013Q1,
+  DRV8210,
+  DRV8703,
   DRV8833,
   DRV8876,
+  DRV83053Q1,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
+  ISOW7841,
+  LM5050Q1,
+  LM50HVQ1,
+  LM73605,
+  LM74202Q1,
+  LMK1C1104,
+  LP5892Q1,
+  MSP430G2230ID,
+  MSP430G2332IPW20,
+  MSP430F5229,
+  MSP430FR6007,
+  MSPM0C1104,
+  MSPM0L1306,
+  MSPM0L1306Q1,
+  MSPM33C3219,
+  MSPM33C321A,
   MSPM33C3x,
   MSPM0G3507,
+  MSPM0G5117,
+  MSPM0G5187,
+  MX25V1635FZNQ,
+  OPT3001,
+  OPT3004,
+  PGA300ARHHR,
+  SN65HVD1473,
+  SN65LVDS31D,
+  SN74LVC1G34DBVR,
+  TAS2505,
+  TCAN1042HGV,
   TLC59116,
+  TLIN1028,
+  TLV316,
+  TLV755P,
+  TLV1805,
+  TLV9152IDR,
+  TMP103AYFF,
+  TMP116,
   TMP1827,
   TMP1075,
+  TMP390Q1,
+  TPD2E009DRTR,
   TPS22919,
+  TPS25910RSA,
+  TPS3850,
   TPS6293,
+  TPS62086RLTR,
   TPS61222,
+  TPS61236RWLR,
+  TPS61288RQQR,
   TPS61299X,
   TPS6521835,
   TPS63802,
   TPS7A02,
+  TPS7A20,
+  TPS7E81Q1,
+  TPS78230DRVR,
+  TPS92638,
   TPSM82823,
   TRF7960RHB,
   TXB0104,
   TXS0102,
   W25Q128JVSIQ,
+  W3006,
 } as const;
 
 export const TiSubcircuitComponents = {
+  AnalogSignalConditioning_LMV324A_TIDA010266,
+  InstrumentationAmplifier_INA350_TIDA010266,
+  InstrumentationAmplifier_MSPM0L1306_InternalOPA_TIDA010266,
+  Microcontroller_MSPM0L1306_TIDA010266,
+  MotorDriver_DRV8210_TIDA010266,
+  PowerManagement_TPS7A2433_TIDA010266,
+  PressureSensor_2SMPP03_TIDA010266,
+  VoltageReference_ATL431LI_TIDA010266,
+  BatteryManagement_BQ24072,
+  BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
+  BatteryManagement_2to4Cell_BQ40Z60,
   RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
+  BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
+  GateDriver_DRV8703,
+  HBridge_SQJ940EP,
+  MotorDriver_DRV8210,
+  MotorDriver_DRV8703,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
+  PositionFeedback_DRV5013,
+  MotorDriver_DRV8305_TIDA01330,
   EnvironmentalSensor_HDC2080,
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  PinchDetectionPower_TPS7B69,
+  PinchDetectionSignalChain_INA240_TLV2316_LMV7275,
+  PinchDetection_INA240_TLV2316_LMV7275,
+  InstrumentationAmplifier_INA350,
+  PressureTransmitter_PGA300,
+  IsolatedRS485_ISOW7841,
+  PowerSupply_WindowModule,
+  ReverseBatteryProtection_TLV1805_SQJ461EP,
+  SupervisorWatchdog_TPS3850,
+  VoltageRegulator_LM73605,
+  ClockBuffer_LMK1C1104,
+  AudioAmplifier_TAS2505,
+  TargetSocket_MSPTS430D8,
+  BluetoothAudioHost_MSP430F5229,
+  Microcontroller_MSPM0L1306,
+  Microcontroller_MSPM0L1306Q1_TIDA020065,
   Microcontroller_MSPM0G3507,
+  Microcontroller_MSPM0G5117,
+  Microcontroller_MSPM0G5187,
+  Microcontroller_MSP430FR6007,
+  Microcontroller_MSP430FR6007_MultiSheet,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
+  OutputUserInterface_LEDMatrix_LP5892_Q1,
+  Sensors_TMP116_OPT3004,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
+  MotorThermalProtection_TMP390,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
   PowerManagement_TPS6521835,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
+  PowerManagement_TPS7A20,
+  PowerManagement_TPS7A2018,
+  PowerManagement_TPS7A2028,
+  PowerManagement_TLV755P,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
+  BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
+  BoostConverter_TPS61236,
+  Microcontroller_MSP430G2332,
+  USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_LIN_TLIN1028,
+  CommunicationInterface_TCAN1042_TIDA01428,
+  LightDriver_TIDA01330,
+  PositionFeedback_DRV5013_TIDA01389,
+  PowerSupply_LM5050_TIDA00992,
+  ElectrochromicMirrorDriver_TIDA01539,
+  LampDriver_TPS92638_TIDA00356,
+  LightSensor_OPT3001_TIDA01539,
+  LogicBuffer_SN74LVC1G34,
+  WirelessAntenna_W3006_TIDCWL1837MODCOM8I,
+  WirelessConnectivity_CC2540_TIDCCC2540BLEUSB,
+  InputOutputProtection_TPD2E009_TIDA00399,
+  BuckConverter_TPS62086_TIDA00399,
+  InputPowerProtection_TPS25910_TIDA00890,
+  TemperatureSensor_TMP103_TIDA00399,
+  LVDSDriver_SN65LVDS31_TIDA060017,
+  PowerSupply_LM74202_TPS7E81_Q1,
+  TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RadarFrontEndProcessing,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

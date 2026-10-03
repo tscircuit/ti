@@ -6,6 +6,9 @@
     "outDir": "dist",
     "rootDir": ".",
     "baseUrl": ".",
+    "paths": {
+      "@tsci/tscircuit.ti": ["./index.ts"]
+    },
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
@@ -14,9 +17,11 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
-    "types": ["tscircuit"]
+    "types": ["tscircuit", "bun"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".claude"]
+  "exclude": ["node_modules", "dist", ".claude", "system-block-ui"]
 }
