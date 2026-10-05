@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -198,6 +199,11 @@ export default () => React.createElement("board", {
 function fixture(t) {
   const cwd = mkdtempSync(join(tmpdir(), "ti-sysconfig-cli-"));
   t.after(() => rmSync(cwd, { recursive: true, force: true }));
+  symlinkSync(
+    new URL("../../node_modules/", import.meta.url),
+    join(cwd, "node_modules"),
+    "junction",
+  );
   writeFileSync(join(cwd, "package.json"), '{"private":true,"type":"module"}');
   writeFileSync(
     join(cwd, "board.circuit.json"),
@@ -225,7 +231,15 @@ function fixture(t) {
 
 test("generate-sysconfig resolves stable signal names and writes CC2340 SysConfig", async (t) => {
   const f = fixture(t);
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    0,
+  );
   assert.deepEqual(f.stderr, []);
   assert.match(f.stdout.join("\n"), /Generated board\.syscfg/);
 
@@ -250,7 +264,15 @@ test("generate-sysconfig follows a circuit pin change without changing the reque
     JSON.stringify(cc2340Circuit(6, "DIO13"), null, 2),
   );
 
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    0,
+  );
   const source = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
   assert.match(source, /CONFIG_ACCEL_INT/);
   assert.match(source, /GPIO3\.gpioPin\.\$assign = "DIO13"/);
@@ -270,7 +292,12 @@ test("generate-sysconfig accepts the pedometer's open-drain I2C declarations", a
   }
   writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(circuitJson));
   assert.equal(
-    await f.run(["generate-sysconfig", "board.circuit.json"]),
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
     0,
     f.stderr.join("\n"),
   );
@@ -279,17 +306,26 @@ test("generate-sysconfig accepts the pedometer's open-drain I2C declarations", a
   assert.match(generated, /I2C1\.i2c\.sclPin\.\$assign = "DIO6_A1_AR\+"/);
 });
 
-test("missing firmware request distinguishes successful circuit generation from firmware choices", async (t) => {
+test("missing pin functions are reported without requiring a firmware request file", async (t) => {
   const f = fixture(t);
   rmSync(join(f.cwd, "board.sysconfig.json"));
-  writeFileSync(join(f.cwd, "index.circuit.tsx"), jsxCircuitSource);
+  writeFileSync(
+    join(f.cwd, "index.circuit.tsx"),
+    jsxCircuitSource.replace(
+      "</board>",
+      '<net name="UNCONFIGURED_OUTPUT" /><trace from=".U1_MCU > .DIO20_A11" to="net.UNCONFIGURED_OUTPUT" /></board>',
+    ),
+  );
   assert.equal(await f.run(["generate-sysconfig", "index.circuit.tsx"]), 1);
   assert.ok(existsSync(join(f.cwd, "dist/index/circuit.json")));
   const message = f.stderr.join("\n");
-  assert.match(message, /Circuit JSON is available/);
-  assert.match(message, /GPIO directions, output startup states, or I2C speed/);
-  assert.match(message, /Create index\.sysconfig\.json/);
-  assert.match(message, /ti\.sysconfig\.json/);
+  assert.match(message, /Unresolved CC2340 pin configuration/);
+  assert.match(message, /pinAttributes/);
+  assert.match(message, /pin 9/);
+  assert.doesNotMatch(
+    message,
+    /request file is missing|Create index\.sysconfig\.json/,
+  );
   assert.equal(existsSync(join(f.cwd, "index.syscfg")), false);
 });
 
@@ -322,7 +358,12 @@ test("generate-sysconfig accepts every advertised source and Circuit JSON input 
         : plainCircuitSource,
     );
     assert.equal(
-      await f.run(["generate-sysconfig", inputName]),
+      await f.run([
+        "generate-sysconfig",
+        inputName,
+        "--config",
+        "board.sysconfig.json",
+      ]),
       0,
       `${inputName}: ${f.stderr.join("\n")}`,
     );
@@ -359,7 +400,15 @@ test("generate-sysconfig rejects non-array GPIO requests instead of dropping the
       join(f.cwd, "board.sysconfig.json"),
       JSON.stringify({ ...request, gpios }),
     );
-    assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+    assert.equal(
+      await f.run([
+        "generate-sysconfig",
+        "board.circuit.json",
+        "--config",
+        "board.sysconfig.json",
+      ]),
+      1,
+    );
     assert.match(f.stderr.at(-1), /gpios must be an array/);
     assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
   }
@@ -372,7 +421,15 @@ test("CC2340 rejects malformed reserved ports instead of dropping them", async (
       join(f.cwd, "board.sysconfig.json"),
       JSON.stringify({ ...request, reserved_ports }),
     );
-    assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+    assert.equal(
+      await f.run([
+        "generate-sysconfig",
+        "board.circuit.json",
+        "--config",
+        "board.sysconfig.json",
+      ]),
+      1,
+    );
     assert.match(f.stderr.at(-1), /reserved_ports must be an array/);
     assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
   }
@@ -386,7 +443,15 @@ test("CC2340 requires an explicit LF clock source", async (t) => {
     join(f.cwd, "board.sysconfig.json"),
     JSON.stringify(missingClock),
   );
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    1,
+  );
   assert.match(
     f.stderr.at(-1),
     /firmware\.lf_clock_source must be explicitly set/,
@@ -438,7 +503,12 @@ test("generate-sysconfig compiles connected TSX traces and follows a pin change"
   );`;
   writeFileSync(sourcePath, source);
   assert.equal(
-    await f.run(["generate-sysconfig", "board.circuit.tsx"]),
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.tsx",
+      "--config",
+      "board.sysconfig.json",
+    ]),
     0,
     f.stderr.join("\n"),
   );
@@ -454,7 +524,12 @@ test("generate-sysconfig compiles connected TSX traces and follows a pin change"
     ),
   );
   assert.equal(
-    await f.run(["generate-sysconfig", "board.circuit.tsx"]),
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.tsx",
+      "--config",
+      "board.sysconfig.json",
+    ]),
     0,
     f.stderr.join("\n"),
   );
@@ -488,7 +563,15 @@ test("generate-sysconfig rejects a net reaching multiple MCU pins through connec
     },
   );
   writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(circuitJson));
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    1,
+  );
   assert.match(
     f.stderr.join("\n"),
     /"DISP_PWR_N" to resolve to one port on U1_MCU; found 2/,
@@ -557,10 +640,13 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
     TI_SDK_ROOT: tiRoot,
   };
   assert.equal(
-    await f.run(["check-sysconfig", "board.jsx"], {
-      spawnSync,
-      env,
-    }),
+    await f.run(
+      ["check-sysconfig", "board.jsx", "--config", "board.sysconfig.json"],
+      {
+        spawnSync,
+        env,
+      },
+    ),
     0,
     f.stderr.join("\n"),
   );
@@ -571,7 +657,10 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
   assert.match(f.stdout.join("\n"), /SysConfig check passed/);
   corruptRate = true;
   assert.equal(
-    await f.run(["check-sysconfig", "board.jsx"], { spawnSync, env }),
+    await f.run(
+      ["check-sysconfig", "board.jsx", "--config", "board.sysconfig.json"],
+      { spawnSync, env },
+    ),
     1,
   );
   assert.match(f.stderr.at(-1), /100 kbit\/s/);
@@ -706,7 +795,12 @@ test("AM2434 TI output must match the requested A7 or B7 GPIO", async (t) => {
       JSON.stringify(am2434Request),
     );
     assert.equal(
-      await f.run(["generate-sysconfig", inputPath]),
+      await f.run([
+        "generate-sysconfig",
+        inputPath,
+        "--config",
+        inputPath.replace(/(?:\.circuit)?\.json$/, ".sysconfig.json"),
+      ]),
       0,
       f.stderr.join("\n"),
     );
@@ -796,13 +890,29 @@ test("check-sysconfig rejects AM2434 TI output for the previous circuit pin", as
     TI_SDK_ROOT: tiRoot,
   };
   assert.equal(
-    await f.run(["check-sysconfig", inputPath], { spawnSync, env }),
+    await f.run(
+      [
+        "check-sysconfig",
+        inputPath,
+        "--config",
+        inputPath.replace(/(?:\.circuit)?\.json$/, ".sysconfig.json"),
+      ],
+      { spawnSync, env },
+    ),
     0,
     f.stderr.join("\n"),
   );
   writeFileSync(inputPath, JSON.stringify(am2434Circuit("B7")));
   assert.equal(
-    await f.run(["check-sysconfig", inputPath], { spawnSync, env }),
+    await f.run(
+      [
+        "check-sysconfig",
+        inputPath,
+        "--config",
+        inputPath.replace(/(?:\.circuit)?\.json$/, ".sysconfig.json"),
+      ],
+      { spawnSync, env },
+    ),
     1,
   );
   assert.match(f.stderr.at(-1), /GPIO_CONVERTED_PIN \(6\)/);
@@ -810,7 +920,15 @@ test("check-sysconfig rejects AM2434 TI output for the previous circuit pin", as
 
 test("CC2340 TI output must match requested pins, states, rate, and clock", async (t) => {
   const f = fixture(t);
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    0,
+  );
   const circuitJson = cc2340Circuit();
   const options = resolveConverterOptions(circuitJson, request).options;
   const directory = join(f.cwd, "ti-output");

@@ -119,13 +119,53 @@ async function testCli({ command, cwd }) {
     }),
   );
   assert.match(
-    run({ command, args: ["generate-sysconfig", "board.circuit.json"], cwd }),
+    run({
+      command,
+      args: [
+        "generate-sysconfig",
+        "board.circuit.json",
+        "--config",
+        "board.sysconfig.json",
+      ],
+      cwd,
+    }),
     /Generated board\.syscfg/,
   );
   assert.match(
     await readFile(join(cwd, "board.syscfg"), "utf8"),
     /GPIO1\.gpioPin\.\$assign = "DIO20_A11"/,
   );
+  await writeFile(
+    join(cwd, "source-pins.circuit.json"),
+    JSON.stringify([
+      {
+        type: "source_component",
+        ftype: "simple_chip",
+        source_component_id: "mcu",
+        name: "U1",
+        manufacturer_part_number: "CC2340R52E0RGER",
+      },
+      {
+        type: "source_port",
+        source_port_id: "output",
+        source_component_id: "mcu",
+        name: "ENABLE",
+        pin_number: 4,
+        is_output: true,
+      },
+    ]),
+  );
+  assert.match(
+    run({
+      command,
+      args: ["generate-sysconfig", "source-pins.circuit.json"],
+      cwd,
+    }),
+    /Pin configuration: Circuit JSON/,
+  );
+  const derived = await readFile(join(cwd, "source-pins.syscfg"), "utf8");
+  assert.match(derived, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
+  assert.doesNotMatch(derived, /initialOutputState|--rtos/);
 }
 
 try {
@@ -150,6 +190,7 @@ try {
     "cli/sysconfig/cc2340-profile.mjs",
     "cli/sysconfig/convert.mjs",
     "cli/sysconfig/generate.mjs",
+    "cli/sysconfig/get-validation-options.mjs",
     "cli/sysconfig/input.mjs",
     "cli/sysconfig/request.mjs",
     "cli/sysconfig/runtime.mjs",
@@ -193,6 +234,31 @@ try {
     ),
     cwd: consumer,
   });
+  await writeFile(
+    join(consumer, "source-pins.circuit.tsx"),
+    `export default () => (
+    <board width="10mm" height="10mm">
+      <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
+        pinLabels={{ pin4: "DIO11", pin5: "DIO12" }}
+        pinAttributes={{ pin4: { isOutput: true }, pin5: { isInput: true } }} />
+    </board>
+  );`,
+  );
+  run({
+    command: process.execPath,
+    args: [
+      "node_modules/@tscircuit/ti/cli/ti.mjs",
+      "generate-sysconfig",
+      "source-pins.circuit.tsx",
+    ],
+    cwd: consumer,
+  });
+  const sourcePins = await readFile(
+    join(consumer, "source-pins.syscfg"),
+    "utf8",
+  );
+  assert.match(sourcePins, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
+  assert.match(sourcePins, /GPIO2\.mode = "Input"/);
   console.log("Locally installed ti command passed");
   await writeFile(
     join(consumer, "smoke.mjs"),

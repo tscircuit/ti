@@ -101,7 +101,7 @@ export function validateTiTarget({ target, env, spawnSync = nodeSpawnSync }) {
   }
 }
 
-export function getTiInvocation({ target, syscfgPath, outputDir, env }) {
+export function getTiInvocation({ target, syscfgPath, outputDir, env, rtos }) {
   const { tiNode, tiCli, product } = validateTiEnvironment(env);
   const args = [tiCli, "--product", product];
   if (target === "cc2340") {
@@ -112,9 +112,8 @@ export function getTiInvocation({ target, syscfgPath, outputDir, env }) {
       cc2340Profile.part,
       "--package",
       cc2340Profile.package,
-      "--rtos",
-      cc2340Profile.rtos,
     );
+    if (rtos) args.push("--rtos", rtos);
   } else if (target === "am2434") {
     args.push(
       "--context",

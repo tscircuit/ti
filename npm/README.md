@@ -56,16 +56,24 @@ ti generate-sysconfig ./board.circuit.tsx
 ti check-sysconfig ./board.circuit.tsx
 ```
 
-Place explicit firmware/peripheral choices in `board.sysconfig.json` next to
-the entrypoint or in project-level `ti.sysconfig.json`. The generate command
-builds TS/TSX to Circuit JSON and writes a `.syscfg`; the check command then
+Use tscircuit 0.0.2745 or newer for TSX export. For supported CC2340 circuits, GPIO/I2C choices come from existing MCU
+`pinAttributes` exported to Circuit JSON. No separate request JSON is required
+or read implicitly. Missing connected-pin functions fail with physical pin and
+source-port details. Use `--component U1` when selecting between multiple MCUs.
+Connected 32768 Hz two-terminal crystals on MCU pins 14/15 select the external
+LF clock. Undeclared startup, interrupt, bitrate and RTOS choices stay unset for
+TI's SDK; these defaults do not establish application requirements.
+
+The generate command builds TS/TSX to Circuit JSON and writes a `.syscfg`; the check command then
 runs a matching locally installed TI SysConfig CLI. The check requires
 `TI_SYSCONFIG_NODE`, `TI_SYSCONFIG_CLI`, and `TI_SDK_ROOT`. For CC2340, use
 SysConfig 1.28.1+4785 and SimpleLink F3 SDK 9.21.00.36; the checker verifies
-these versions and compares TI-generated GPIO, I²C, and clock settings with
-the request. It never downloads TI software or accepts license terms
+these versions and compares TI-generated GPIO, I²C, and declared clock settings with
+the resolved circuit configuration. It never downloads TI software or accepts license terms
 automatically. See the repository
-README for the request-file schema and currently supported converter targets.
+README for the existing pin attributes and currently supported converter targets.
+An explicit `--config board.sysconfig.json` remains available for older callers
+and the AM2434 single-GPIO path; implicit sidecar requests are no longer loaded.
 
 For AM2434, the checker requires SysConfig 1.14.0+2667 and MCU+ SDK
 `MCU_PLUS_SDK@07.03.01`; it compares the supported single output GPIO's

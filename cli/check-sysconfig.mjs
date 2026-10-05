@@ -26,7 +26,8 @@ Required environment:
   TI_SDK_ROOT         Matching TI SDK root containing .metadata/product.json
 
 Options:
-  --config <file>     Explicit SysConfig request JSON
+  --component <selector>  MCU component name or source_component_id
+  --config <file>     Optional explicit SysConfig request JSON
   -h, --help          Show help
 
 This command never installs TI software or accepts license terms.
@@ -55,6 +56,7 @@ export async function runCheckSysconfig(
       allowPositionals: true,
       options: {
         config: { type: "string" },
+        component: { type: "string" },
         help: { type: "boolean", short: "h" },
       },
     });
@@ -77,6 +79,7 @@ export async function runCheckSysconfig(
     const generated = await generateSysconfig(positionals[0], {
       cwd,
       configPath: values.config,
+      componentSelector: values.component,
       outputPath: syscfgPath,
       spawnSync,
       env,
@@ -89,6 +92,7 @@ export async function runCheckSysconfig(
       syscfgPath,
       outputDir: tiOutput,
       env,
+      rtos: generated.converterOptions.firmware?.rtos,
     });
     const result = spawnSync(invocation.command, invocation.args, {
       cwd,

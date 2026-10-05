@@ -70,19 +70,46 @@ stable component/signal names from Circuit JSON, and delegates the device mappin
 to `circuit-json-to-sysconfig`. It also accepts `.circuit.json` directly. The
 generated file defaults to `<input>.syscfg`; use `-o` to choose another path.
 
-The generated `dist/index/circuit.json` describes hardware connections. A separate
-firmware request selects GPIO directions, output startup states, and I2C speed.
-For `index.circuit.tsx`, name this file `index.sysconfig.json` and place it beside
-the TSX input. A successful circuit build does not create this request file.
+For CC2340R52E0RGER, the default path uses existing MCU `pinAttributes` in TSX
+and their exported `source_port` flags. It does not read or require sibling
+`*.sysconfig.json` or `ti.sysconfig.json` files. For example:
 
-For `imrishabh18/pedometer` v1.1.3, copy the
-[tested request](docs/pedometer/index.sysconfig.json) beside `index.circuit.tsx`.
-It selects the demo GPIO/I2C behavior using that board's `U1` component and net
-names. Review these firmware choices before using them in an application.
+```tsx
+<chip
+  name="U1"
+  manufacturerPartNumber="CC2340R52E0RGER"
+  pinLabels={{ pin4: "DIO11", pin5: "DIO12", pin3: "DIO8", pin19: "DIO6_A1" }}
+  pinAttributes={{
+    pin4: { isOutput: true },
+    pin5: { isInput: true, isUsingInternalPullup: true },
+    pin3: { activeCapability: "i2c_sda" },
+    pin19: { activeCapability: "i2c_scl" },
+  }}
+/>
+```
 
-Firmware behavior is intentionally explicit. Put a sibling
-`board.sysconfig.json` next to the input, or use project-level
-`ti.sysconfig.json` (or `--config <file>`). For the current CC2340 scope:
+Use tscircuit 0.0.2745 or newer, which exports these attributes as `is_output`, `is_input`,
+`is_using_internal_pullup`, and `is_configured_for_i2c_sda` / `is_configured_for_i2c_scl`.
+Capability flags such as `isGpio` alone do not select a pin function. Connected
+pins with missing or unsupported functions produce an error identifying the
+physical pins and source ports; no behavior is inferred from signal names.
+If more than one supported MCU is present, select one with `--component U1`
+or its `source_component_id`.
+
+A two-terminal `simple_crystal` declaring 32768 Hz and connected to MCU pins
+14/15 through separate nets selects the external LF crystal. Ambiguous wiring,
+conflicting declarations and unsupported frequencies fail. Unselected SWD pins
+retain TI's reset settings. GPIO names are generated from component/physical
+pin identities, and I2C0 uses the supported physical SDA/SCL pins 3/19.
+
+Startup levels, interrupt triggers, I2C speed and RTOS choices that are not
+declared remain unset for TI's SDK to resolve. The validated SDK defaults include
+Low output startup, no GPIO interrupt/pull, and 100 kbit/s I2C without attached
+target instances. These are SDK defaults, not verified application requirements.
+The converter does not load a pedometer firmware preset.
+
+For older callers and the AM2434 single-GPIO path, explicitly pass
+`--config board.sysconfig.json`. The existing request format remains supported:
 
 ```json
 {
@@ -121,7 +148,7 @@ the generated SysConfig without editing the request file.
 
 Named nets are resolved through connected source traces, including junctions at
 component pins; the resolver does not traverse through a component's body.
-The CC2340 LF clock choice is required: `lf_rcosc` selects the internal oscillator,
+For an explicit request, the CC2340 LF clock choice is required: `lf_rcosc` selects the internal oscillator,
 and `lf_xosc` selects an external crystal. Using or reserving DIO3/DIO4 requires
 `lf_rcosc`. Device-only conversion also disables LaunchPad-specific flash startup.
 
@@ -137,8 +164,10 @@ ti check-sysconfig ./board.circuit.tsx
 
 The command fails if conversion fails, TI rejects the file, or TI generates no
 required non-empty C/header files. For CC2340 it also checks the generated
-C/header against requested GPIO pins and states, I²C pins and 100 kbit/s rate,
-the LF clock, reserved pins, and absence of LaunchPad flash startup. The
+C/header against the resolved GPIO directions and physical pins, selected pulls,
+I²C pins/mux, declared clock and optional explicit choices, reserved pins, and
+absence of LaunchPad flash startup. It does not invent application requirements
+for omitted SDK defaults. The
 CC2340 check requires SysConfig 1.28.1+4785 and SimpleLink F3 SDK 9.21.00.36,
 the versions used for the real TI validation. It never installs TI software or
 accepts TI license terms. Current converter scope is
@@ -148,10 +177,10 @@ AM2434 validation requires MCU+ SDK metadata `MCU_PLUS_SDK@07.03.01` and
 SysConfig 1.14.0+2667. It compares the single requested output GPIO with TI's
 generated name, A7/B7 pin, direction, and MCU pinmux assignment.
 
-The pedometer GPIO/I2C demo was validated in CCS 21.0.1 using SysConfig 1.28.1+4785
+The earlier pedometer GPIO/I2C explicit-request demo was validated in CCS 21.0.1 using SysConfig 1.28.1+4785
 and SimpleLink F3 SDK 9.21.00.36. The converter's `validate:cc2340` runner separately
 checks byte-for-byte C/header parity with a CCS-saved reference.
-`check-sysconfig` validates requested CC2340 settings in TI-generated output;
+`check-sysconfig` validates resolved CC2340 settings in TI-generated output;
 it does not compare arbitrary boards to that pedometer reference, compile
 firmware, or prove hardware behavior. AM2434 checking covers only the supported
 single-output GPIO scope.
