@@ -34,8 +34,11 @@ function findPackageRoot(entryPath, packageName) {
       try {
         const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
         if (manifest.name === packageName) return current;
-      } catch {
-        // Keep walking; a parent package may still be the requested package.
+      } catch (error) {
+        throw new Error(
+          `Unable to read package manifest ${manifestPath}: ${error.message}`,
+          { cause: error },
+        );
       }
     }
     const parent = dirname(current);
@@ -51,15 +54,30 @@ function resolveTscircuitCli(projectDir) {
     fileURLToPath(import.meta.url),
   ];
   for (const base of resolverBases) {
+    const req = createRequire(base);
+    let entry;
     try {
-      const req = createRequire(base);
-      const entry = req.resolve("tscircuit");
-      const packageRoot = findPackageRoot(entry, "tscircuit");
-      const cliPath = packageRoot ? join(packageRoot, "cli.mjs") : null;
-      if (cliPath && existsSync(cliPath)) return cliPath;
-    } catch {
-      // Try the package-local resolver next.
+      entry = req.resolve("tscircuit");
+    } catch (error) {
+      const packageDirectories = req.resolve.paths("tscircuit");
+      const installed = packageDirectories?.some((directory) =>
+        existsSync(join(directory, "tscircuit")),
+      );
+      // The CLI's installed peer is available only when the project has no copy.
+      // An installed but broken project dependency must never be replaced.
+      if (error.code === "MODULE_NOT_FOUND" && !installed) continue;
+      throw new Error(
+        `Unable to resolve tscircuit from ${base}: ${error.message}\nRepair or reinstall that tscircuit dependency before generating SysConfig.`,
+        { cause: error },
+      );
     }
+    const packageRoot = findPackageRoot(entry, "tscircuit");
+    const cliPath = packageRoot ? join(packageRoot, "cli.mjs") : null;
+    if (!cliPath || !existsSync(cliPath))
+      throw new Error(
+        `Resolved tscircuit from ${base}, but its cli.mjs is missing. Repair or reinstall that tscircuit dependency before generating SysConfig.`,
+      );
+    return cliPath;
   }
   throw new Error(
     "Could not resolve the tscircuit package. Install tscircuit in the project before generating SysConfig.",

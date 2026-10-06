@@ -395,3 +395,46 @@ test("complete explicit paths work outside standard folders without scanning the
   );
   assert.equal(f.calls.length, 1);
 });
+
+test("successful discovery reports broken alternatives instead of hiding failures", (t) => {
+  const f = fixture(t);
+  const { tiCli } = installSysconfig({
+    f,
+    directory: join(f.root, "sysconfig-good"),
+  });
+  const broken = installSysconfig({
+    f,
+    directory: join(f.root, "sysconfig-broken"),
+  });
+  const incomplete = installSysconfig({
+    f,
+    directory: join(f.root, "sysconfig-incomplete"),
+  });
+  rmSync(incomplete.tiNode);
+  installSdk({ directory: join(f.root, "sdk-good") });
+  const badSdkRoot = installSdk({ directory: join(f.root, "sdk-broken") });
+  writeFileSync(join(badSdkRoot, ".metadata", "product.json"), "null");
+  const stderr = [];
+  const env = resolveTiEnvironment({
+    target: "cc2340",
+    env: {},
+    installations: discoverTiInstallations({ env: {}, roots: [f.root] }),
+    stderr: (message) => stderr.push(message),
+    spawnSync: (command, args) =>
+      args[0] === broken.tiCli
+        ? { status: 1, stderr: "Permission denied" }
+        : f.spawnSync(command, args),
+  });
+  assert.equal(env.TI_SYSCONFIG_CLI, tiCli);
+  assert.equal(stderr.length, 1);
+  assert.match(
+    stderr[0],
+    /Warning: these discovered TI installations could not be used/,
+  );
+  assert.ok(stderr[0].includes(incomplete.tiCli));
+  assert.ok(stderr[0].includes(broken.tiCli));
+  assert.ok(stderr[0].includes(badSdkRoot));
+  assert.match(stderr[0], /bundled Node is missing/);
+  assert.match(stderr[0], /Permission denied/);
+  assert.match(stderr[0], /Expected an SDK product name and version/);
+});

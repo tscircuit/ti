@@ -112,6 +112,7 @@ export async function runCheckSysconfig(
       installations,
       env,
       spawnSync,
+      stderr,
     });
     const profile = getTiTargetProfile(generated.target);
     stdout(

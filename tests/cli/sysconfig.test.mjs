@@ -331,6 +331,74 @@ test("missing pin functions are reported without requiring a firmware request fi
   assert.equal(existsSync(join(f.cwd, "index.syscfg")), false);
 });
 
+for (const [description, manifest] of [
+  ["malformed manifest", '{"name":"tscircuit", broken}'],
+  ["missing entrypoint", '{"name":"tscircuit","main":"missing.mjs"}'],
+  ["missing CLI", '{"name":"tscircuit","main":"index.mjs"}'],
+]) {
+  test(`a project tscircuit ${description} fails without using another installation`, async (t) => {
+    const f = fixture(t);
+    const projectDir = join(f.cwd, "isolated-project");
+    const packageDir = join(projectDir, "node_modules", "tscircuit");
+    mkdirSync(packageDir, { recursive: true });
+    writeFileSync(join(projectDir, "package.json"), '{"private":true}');
+    writeFileSync(join(packageDir, "package.json"), manifest);
+    writeFileSync(join(packageDir, "index.mjs"), "export {};");
+    writeFileSync(join(projectDir, "board.tsx"), jsxCircuitSource);
+    assert.equal(
+      await f.run(["generate-sysconfig", "board.tsx"], {
+        cwd: projectDir,
+        spawnSync: (command, args) => {
+          assert.equal(command, "bun");
+          assert.deepEqual(args, ["--version"]);
+          return { status: 0, stdout: "1.3.9\n" };
+        },
+      }),
+      1,
+    );
+    assert.match(
+      f.stderr.join("\n"),
+      /Repair or reinstall that tscircuit dependency/,
+    );
+    assert.ok(f.stderr.join("\n").includes(projectDir));
+    assert.equal(existsSync(join(projectDir, "board.syscfg")), false);
+  });
+}
+
+test("a project without tscircuit can use the CLI's installed peer", async (t) => {
+  const f = fixture(t);
+  const projectDir = mkdtempSync(join(tmpdir(), "ti-peer-runtime-"));
+  t.after(() => rmSync(projectDir, { recursive: true, force: true }));
+  mkdirSync(join(projectDir, "node_modules"));
+  symlinkSync(
+    new URL("../../node_modules/react/", import.meta.url),
+    join(projectDir, "node_modules", "react"),
+    "junction",
+  );
+  writeFileSync(
+    join(projectDir, "package.json"),
+    '{"private":true,"type":"module"}',
+  );
+  writeFileSync(join(projectDir, "board.tsx"), jsxCircuitSource);
+  assert.equal(
+    await f.run(
+      [
+        "generate-sysconfig",
+        "board.tsx",
+        "--config",
+        join(f.cwd, "board.sysconfig.json"),
+      ],
+      { cwd: projectDir },
+    ),
+    0,
+    f.stderr.join("\n"),
+  );
+  assert.match(
+    readFileSync(join(projectDir, "board.syscfg"), "utf8"),
+    /CONFIG_DISPLAY_ISOLATE/,
+  );
+});
+
 test("a missing explicit request reports its path without suggesting an implicit request", async (t) => {
   const f = fixture(t);
   assert.equal(

@@ -161,6 +161,8 @@ supported versions. The command discovers standalone SysConfig, CCS-bundled
 SysConfig, and SDK installations under `~/ti` and standard system TI folders
 (`/Applications/ti` on macOS, `/opt/ti` and `/ti` on Unix, and `C:\ti` on Windows).
 It selects versions matching the circuit's target and prints the selected paths.
+Broken discovered installations are reported when another compatible installation
+is selected; probe failures are never hidden.
 No environment file or exported variables are needed for a unique compatible
 installation in these locations:
 
@@ -173,6 +175,10 @@ precedence and are never replaced if invalid or incompatible. Multiple
 compatible installations require an override to select one. Missing tools,
 wrong paths and incompatible versions produce an error explaining how to fix
 the setup; nothing is downloaded or installed automatically.
+
+Source builds use the project's `tscircuit` dependency when installed. If the
+project has none, the CLI's installed peer is used. A broken project dependency
+fails with a repair message instead of selecting another copy.
 
 `check-sysconfig` performs the same conversion in a temporary directory, then
 invokes the matching local TI SysConfig CLI. Optional overrides:

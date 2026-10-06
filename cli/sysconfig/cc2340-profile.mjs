@@ -4,7 +4,6 @@ export const cc2340Profile = {
   device: "CC2340R5RGE",
   part: "Default",
   package: "RGE",
-  rtos: "nortos",
   sdkName: "simplelink_lowpower_f3_sdk",
   sdkVersion: "9.21.00.36",
   sysconfigVersion: "1.28.1+4785",

@@ -10,8 +10,6 @@ import {
 } from "./input.mjs";
 import { resolveConverterOptions, selectComponent } from "./request.mjs";
 
-export const CONVERTER_REVISION = "c097e5841ea618d3b898ca6d66a103067826cefc";
-
 const converterHelperPath = fileURLToPath(
   new URL("./convert.mjs", import.meta.url),
 );

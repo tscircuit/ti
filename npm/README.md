@@ -75,6 +75,9 @@ explaining how to correct them. The check searches `~/ti` and standard system
 TI folders (`/Applications/ti` on macOS, `/opt/ti` and `/ti` on Unix, `C:\ti` on
 Windows), including standalone and CCS-bundled SysConfig. It selects matching
 tool/SDK versions and prints their paths. No environment file is required.
+Broken discovered installations are reported when another compatible installation
+is selected. Source builds use the project's `tscircuit` dependency when present;
+a broken dependency fails with a repair message instead of using another copy.
 `TI_SYSCONFIG_NODE`, `TI_SYSCONFIG_CLI`, and `TI_SDK_ROOT` remain optional
 overrides for custom locations or multiple compatible installations. Explicit
 paths take precedence and are never replaced if invalid or incompatible. For CC2340, use

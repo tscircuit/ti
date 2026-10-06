@@ -132,7 +132,12 @@ export function discoverTiInstallations({
       `Could not find installed TI tools:\n${missing.join("\n")}\nSearched: ${roots.join(", ")}.`,
     );
   }
-  return { sysconfigInstallations, sdkInstallations, roots };
+  return {
+    sysconfigInstallations,
+    sdkInstallations,
+    roots,
+    missingBundledNodes,
+  };
 }
 
 function selectCompatibleInstallation({
@@ -159,6 +164,7 @@ export function resolveTiEnvironment({
   installations,
   env = process.env,
   spawnSync = nodeSpawnSync,
+  stderr = console.error,
 }) {
   const profile = getTiTargetProfile(target);
   if (env.TI_SYSCONFIG_NODE && env.TI_SYSCONFIG_CLI && env.TI_SDK_ROOT) {
@@ -167,12 +173,17 @@ export function resolveTiEnvironment({
   }
   const compatibleSdks = [];
   const rejectedSdks = [];
+  const unusableInstallations = installations.missingBundledNodes.map(
+    (tiCli) => `  ${tiCli}: bundled Node is missing`,
+  );
   for (const sdkRoot of installations.sdkInstallations) {
     let sdk;
     try {
       sdk = readTiSdkMetadata(sdkRoot);
     } catch (error) {
-      rejectedSdks.push(error.message);
+      const diagnostic = error.problem ?? error.message;
+      rejectedSdks.push(diagnostic);
+      unusableInstallations.push(diagnostic);
       continue;
     }
     if (sdk.name === profile.sdkName && sdk.version === profile.sdkVersion) {
@@ -195,7 +206,9 @@ export function resolveTiEnvironment({
     try {
       version = getTiCliVersion({ ...installation, env, spawnSync });
     } catch (error) {
-      rejectedTools.push(error.message);
+      const diagnostic = error.problem ?? error.message;
+      rejectedTools.push(diagnostic);
+      unusableInstallations.push(diagnostic);
       continue;
     }
     if (version === profile.sysconfigVersion) {
@@ -211,6 +224,10 @@ export function resolveTiEnvironment({
     setting: "TI_SYSCONFIG_CLI",
     requirement: `${target.toUpperCase()} requires TI SysConfig ${profile.sysconfigVersion}`,
   });
+  if (unusableInstallations.length)
+    stderr(
+      `Warning: these discovered TI installations could not be used:\n${unusableInstallations.join("\n")}`,
+    );
   return {
     ...env,
     TI_SYSCONFIG_NODE: tiNode,

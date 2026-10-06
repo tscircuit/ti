@@ -12,7 +12,7 @@ const tiPathSettings = [
 ];
 
 export function tiSetupError(problem) {
-  return new Error(
+  const error = new Error(
     [
       problem,
       "Checking with TI requires a local SysConfig installation and the TI SDK for your chip.",
@@ -21,6 +21,8 @@ export function tiSetupError(problem) {
       "To generate a .syscfg file without TI tools, run: ti generate-sysconfig <file>",
     ].join("\n"),
   );
+  error.problem = problem;
+  return error;
 }
 
 function parseTiProductMetadata(source) {
