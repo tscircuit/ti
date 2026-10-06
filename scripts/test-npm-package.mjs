@@ -157,6 +157,7 @@ async function testCli({ command, cwd }) {
         name: "ENABLE",
         pin_number: 4,
         is_output: true,
+        is_bidirectional: true,
       },
     ]),
   );
@@ -202,6 +203,7 @@ async function testCli({ command, cwd }) {
         name: "ENABLE",
         pin_number: 4,
         is_output: true,
+        is_bidirectional: true,
       },
       {
         type: "source_trace",

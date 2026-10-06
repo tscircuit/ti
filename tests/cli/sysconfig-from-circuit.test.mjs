@@ -183,8 +183,8 @@ test("TSX pinAttributes export selected GPIO roles without a request file", asyn
       <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
         pinLabels={{ pin4: "DIO11", pin5: "DIO12" }}
         pinAttributes={{
-          pin4: { isOutput: true },
-          pin5: { isInput: true, isUsingInternalPullup: true },
+          pin4: { isOutput: true, isBidirectional: true },
+          pin5: { isInput: true, isUsingInternalPullup: true, isBidirectional: true },
         }} />
     </board>
   );`,
@@ -199,6 +199,11 @@ test("TSX pinAttributes export selected GPIO roles without a request file", asyn
   assert.match(source, /GPIO2\.pull = "Pull Up"/);
   const exported = JSON.parse(
     readFileSync(join(f.cwd, "dist/board/circuit.json"), "utf8"),
+  );
+  assert.ok(
+    exported
+      .filter((port) => port.type === "source_port")
+      .every((port) => port.is_bidirectional === true),
   );
   assert.equal(
     exported.find(
