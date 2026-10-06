@@ -36,7 +36,7 @@
     "@types/react": "^19.2.17",
     "bun-match-svg": "^0.0.17",
     "circuit-json-to-sysconfig": "github:tscircuit/circuit-json-to-sysconfig#05add591d6d678cc7457c985b08096690d1e3949",
-    "circuit-to-svg": "0.0.410",
+    "circuit-to-svg": "0.0.444",
     "tscircuit": "0.0.2745",
     "typescript": "^5.0.0"
   },
@@ -45,6 +45,6 @@
   },
   "author": "imrishabh18",
   "dependencies": {
-    "easyeda": "0.0.360"
+    "easyeda": "0.0.372"
   }
 }

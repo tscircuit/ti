@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "@types/react": "^19.0.0",
-    "easyeda": "0.0.360"
+    "easyeda": "0.0.372"
   },
   "peerDependencies": {
     "react": "^19.0.0",
