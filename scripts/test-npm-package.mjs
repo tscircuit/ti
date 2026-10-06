@@ -166,6 +166,44 @@ async function testCli({ command, cwd }) {
   const derived = await readFile(join(cwd, "source-pins.syscfg"), "utf8");
   assert.match(derived, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
   assert.doesNotMatch(derived, /initialOutputState|--rtos/);
+  await writeFile(
+    join(cwd, "incomplete-pins.circuit.json"),
+    JSON.stringify([
+      {
+        type: "source_component",
+        ftype: "simple_chip",
+        source_component_id: "mcu",
+        name: "U1",
+        manufacturer_part_number: "CC2340R52E0RGER",
+      },
+      {
+        type: "source_port",
+        source_port_id: "output",
+        source_component_id: "mcu",
+        name: "ENABLE",
+        pin_number: 4,
+        is_output: true,
+      },
+      {
+        type: "source_trace",
+        source_trace_id: "input_trace",
+        connected_source_port_ids: ["missing_input"],
+        connected_source_net_ids: [],
+      },
+    ]),
+  );
+  assert.throws(
+    () =>
+      run({
+        command,
+        args: ["generate-sysconfig", "incomplete-pins.circuit.json"],
+        cwd,
+      }),
+    /input_trace: missing source_port missing_input/,
+  );
+  await assert.rejects(readFile(join(cwd, "incomplete-pins.syscfg")), {
+    code: "ENOENT",
+  });
 }
 
 try {

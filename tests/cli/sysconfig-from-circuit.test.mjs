@@ -102,8 +102,42 @@ test("connected pins with missing roles fail without a request-file suggestion",
   });
   writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(incomplete));
   assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(f.stderr.join("\n"), /U1.*CC2340R52E0RGER/);
   assert.match(f.stderr.join("\n"), /pin 4.*pinAttributes/);
   assert.doesNotMatch(f.stderr.join("\n"), /request file is missing/);
+  assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+});
+
+test("a missing connected pin record fails instead of writing partial SysConfig", async (t) => {
+  const f = fixture(t);
+  const incomplete = circuit().filter(
+    (element) => element.source_port_id !== "input",
+  );
+  incomplete.push({
+    type: "source_trace",
+    source_trace_id: "input_trace",
+    connected_source_port_ids: ["input"],
+    connected_source_net_ids: [],
+  });
+  writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(incomplete));
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(f.stderr.join("\n"), /input_trace: missing source_port input/);
+  assert.match(f.stderr.join("\n"), /Rebuild the circuit/);
+  assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+});
+
+test("an MCU without pin records reports the component and required attributes", async (t) => {
+  const f = fixture(t);
+  writeFileSync(
+    join(f.cwd, "board.circuit.json"),
+    JSON.stringify([circuit()[0]]),
+  );
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(
+    f.stderr.join("\n"),
+    /U1.*CC2340R52E0RGER.*no source_port records/,
+  );
+  assert.match(f.stderr.join("\n"), /pinAttributes/);
   assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
 });
 
