@@ -91,9 +91,12 @@ and their exported `source_port` flags. It does not read or require sibling
 Use tscircuit 0.0.2745 or newer, which exports these attributes as `is_output`, `is_input`,
 `is_using_internal_pullup`, and `is_configured_for_i2c_sda` / `is_configured_for_i2c_scl`.
 Capability flags such as `isGpio` alone do not select a pin function. Connected
-pins with missing or unsupported functions produce an error identifying the
-MCU name/part number, physical pin numbers/labels and required TSX attributes,
-without generated record IDs or a converter stack trace. Missing MCU port
+pins with missing or unsupported functions produce an error. Missing-direction
+errors contain one short line per pin with the component name, physical pin
+number, label and problem, for example
+`- U1 pin 4 (DIO11): GPIO direction is missing`. The CLI adds its standard failure
+prefix; these diagnostics omit manufacturer part numbers, TSX setup instructions,
+generated record IDs and converter stack traces. Missing MCU port
 records or traces referencing absent source ports also fail before a new
 SysConfig file is written; no behavior is inferred from signal names.
 If more than one supported MCU is present, select one with `--component U1`
