@@ -102,14 +102,15 @@ test("connected pins with missing roles fail without a request-file suggestion",
   });
   writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(incomplete));
   assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
-  assert.match(f.stderr.join("\n"), /U1.*CC2340R52E0RGER/);
-  assert.match(f.stderr.join("\n"), /pin 4[\s\S]*pinAttributes/);
+  assert.match(
+    f.stderr.join("\n"),
+    /- U1 pin 4 \(ENABLE\): GPIO direction is missing/,
+  );
   assert.doesNotMatch(
     f.stderr.join("\n"),
     /request file is missing|source_component_id|source_port_id|\bat \S+|throw new Error|convert\.mjs:\d/,
   );
   assert.doesNotMatch(f.stderr.join("\n"), /\(mcu,|\(output,/);
-  assert.match(f.stderr.join("\n"), /isInput: true or isOutput: true/);
   assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
 });
 
@@ -183,8 +184,8 @@ test("TSX pinAttributes export selected GPIO roles without a request file", asyn
       <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
         pinLabels={{ pin4: "DIO11", pin5: "DIO12" }}
         pinAttributes={{
-          pin4: { isOutput: true },
-          pin5: { isInput: true, isUsingInternalPullup: true },
+          pin4: { isOutput: true, isBidirectional: true },
+          pin5: { isInput: true, isUsingInternalPullup: true, isBidirectional: true },
         }} />
     </board>
   );`,
@@ -199,6 +200,11 @@ test("TSX pinAttributes export selected GPIO roles without a request file", asyn
   assert.match(source, /GPIO2\.pull = "Pull Up"/);
   const exported = JSON.parse(
     readFileSync(join(f.cwd, "dist/board/circuit.json"), "utf8"),
+  );
+  assert.ok(
+    exported
+      .filter((port) => port.type === "source_port")
+      .every((port) => port.is_bidirectional === true),
   );
   assert.equal(
     exported.find(
@@ -231,10 +237,8 @@ test("a TSX pin failure prints actionable labels without the converter stack", a
   );
   assert.equal(await f.run(["generate-sysconfig", "board.circuit.tsx"]), 1);
   const message = f.stderr.join("\n");
-  assert.match(message, /U1 \(CC2340R52E0RGER\)/);
-  assert.match(message, /U1 pin 4 \(DIO11\)/);
-  assert.match(message, /U1 pin 6 \(DIO13\)/);
-  assert.match(message, /Update U1's TSX pinAttributes/);
+  assert.match(message, /- U1 pin 4 \(DIO11\): GPIO direction is missing/);
+  assert.match(message, /- U1 pin 6 \(DIO13\): GPIO direction is missing/);
   assert.doesNotMatch(
     message,
     /source_component_\d|source_port_\d|\bat \S+|throw new Error/,

@@ -58,9 +58,12 @@ ti check-sysconfig ./board.circuit.tsx
 
 Use tscircuit 0.0.2745 or newer for TSX export. For supported CC2340 circuits, GPIO/I2C choices come from existing MCU
 `pinAttributes` exported to Circuit JSON. No separate request JSON is required
-or read implicitly. Missing connected-pin functions fail with physical pin and
-signal labels and the required TSX attributes, without generated record IDs
-or a converter stack trace. Missing MCU port records
+or read implicitly. Missing connected-pin functions fail. Missing-direction
+errors contain one short line per pin with the component name, physical pin
+number, label and problem, for example
+`- U1 pin 4 (DIO11): GPIO direction is missing`. The CLI adds its standard failure
+prefix; these diagnostics omit manufacturer part numbers, TSX setup instructions,
+generated record IDs and converter stack traces. Missing MCU port records
 or connected source-port records also fail before a new `.syscfg` is written.
 Use `--component U1` when selecting between multiple MCUs.
 Connected 32768 Hz two-terminal crystals on MCU pins 14/15 select the external

@@ -68,6 +68,7 @@ test("Circuit JSON error output names unresolved pins without IDs or a stack", (
       name: "DIO11",
       pin_number: 4,
       is_gpio: true,
+      is_bidirectional: true,
     },
     {
       type: "source_port",
@@ -76,6 +77,7 @@ test("Circuit JSON error output names unresolved pins without IDs or a stack", (
       name: "DIO13",
       pin_number: 6,
       is_gpio: true,
+      is_bidirectional: true,
     },
     {
       type: "source_trace",
@@ -91,11 +93,8 @@ test("Circuit JSON error output names unresolved pins without IDs or a stack", (
   expect(result).toEqual({ status: 1, stdout: "", sysconfigWritten: false });
   expect(stderr).toMatchInlineSnapshot(`
     "Failed to generate SysConfig: SysConfig conversion failed:
-    Unresolved CC2340 pin configuration for U1 (CC2340R52E0RGER):
-    - U1 pin 4 (DIO11): no GPIO direction or supported peripheral selected
-    - U1 pin 6 (DIO13): no GPIO direction or supported peripheral selected
-    Update U1's TSX pinAttributes with the intended function for each listed pin: set exactly one of isInput: true or isOutput: true for GPIO, or activeCapability: "i2c_sda" / "i2c_scl" for I2C.
-    Datasheet capabilities such as isGpio describe what a pin supports; they do not select how this board uses it.
+    - U1 pin 4 (DIO11): GPIO direction is missing
+    - U1 pin 6 (DIO13): GPIO direction is missing
     "
   `);
 });
@@ -108,8 +107,8 @@ test("TSX error output explains board choices without a request file or stack", 
           <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
             pinLabels={{ pin4: "DIO11", pin6: "DIO13" }}
             pinAttributes={{
-              pin4: { isGpio: true },
-              pin6: { isGpio: true },
+              pin4: { isGpio: true, isBidirectional: true },
+              pin6: { isGpio: true, isBidirectional: true },
             }} />
           <net name="PMIC_LP" /><net name="CHARGER_INT" />
           <trace from=".U1 > .DIO11" to="net.PMIC_LP" />
@@ -120,11 +119,8 @@ test("TSX error output explains board choices without a request file or stack", 
   expect(result).toEqual({ status: 1, stdout: "", sysconfigWritten: false });
   expect(stderr).toMatchInlineSnapshot(`
     "Failed to generate SysConfig: SysConfig conversion failed:
-    Unresolved CC2340 pin configuration for U1 (CC2340R52E0RGER):
-    - U1 pin 4 (DIO11): no GPIO direction or supported peripheral selected
-    - U1 pin 6 (DIO13): no GPIO direction or supported peripheral selected
-    Update U1's TSX pinAttributes with the intended function for each listed pin: set exactly one of isInput: true or isOutput: true for GPIO, or activeCapability: "i2c_sda" / "i2c_scl" for I2C.
-    Datasheet capabilities such as isGpio describe what a pin supports; they do not select how this board uses it.
+    - U1 pin 4 (DIO11): GPIO direction is missing
+    - U1 pin 6 (DIO13): GPIO direction is missing
     "
   `);
 });
