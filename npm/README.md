@@ -59,7 +59,8 @@ ti check-sysconfig ./board.circuit.tsx
 Use tscircuit 0.0.2745 or newer for TSX export. For supported CC2340 circuits, GPIO/I2C choices come from existing MCU
 `pinAttributes` exported to Circuit JSON. No separate request JSON is required
 or read implicitly. Missing connected-pin functions fail with physical pin and
-source-port details and the required TSX attributes. Missing MCU port records
+signal labels and the required TSX attributes, without generated record IDs
+or a converter stack trace. Missing MCU port records
 or connected source-port records also fail before a new `.syscfg` is written.
 Use `--component U1` when selecting between multiple MCUs.
 Connected 32768 Hz two-terminal crystals on MCU pins 14/15 select the external

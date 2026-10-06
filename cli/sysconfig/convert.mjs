@@ -11,20 +11,25 @@ if (!circuitJsonPath || !optionsPath || !outputPath || !configurationPath) {
   );
 }
 
-const circuitJson = JSON.parse(await readFile(circuitJsonPath, "utf8"));
-const options = JSON.parse(await readFile(optionsPath, "utf8"));
-const converter = new CircuitJsonToSysConfigConverter(circuitJson, options);
-converter.runUntilFinished();
-const configuration = converter.getResolvedConfiguration();
-const cc2340 = configuration.cc2340;
-const converterOptions = getValidationOptions({ configuration, circuitJson });
+try {
+  const circuitJson = JSON.parse(await readFile(circuitJsonPath, "utf8"));
+  const options = JSON.parse(await readFile(optionsPath, "utf8"));
+  const converter = new CircuitJsonToSysConfigConverter(circuitJson, options);
+  converter.runUntilFinished();
+  const configuration = converter.getResolvedConfiguration();
+  const cc2340 = configuration.cc2340;
+  const converterOptions = getValidationOptions({ configuration, circuitJson });
 
-await writeFile(outputPath, converter.getOutput().getString());
-await writeFile(
-  configurationPath,
-  JSON.stringify({
-    target: cc2340 ? "cc2340" : "am2434",
-    component: configuration.component,
-    converterOptions,
-  }),
-);
+  await writeFile(outputPath, converter.getOutput().getString());
+  await writeFile(
+    configurationPath,
+    JSON.stringify({
+      target: cc2340 ? "cc2340" : "am2434",
+      component: configuration.component,
+      converterOptions,
+    }),
+  );
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exitCode = 1;
+}
