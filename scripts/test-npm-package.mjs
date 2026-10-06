@@ -218,7 +218,17 @@ async function testCli({ command, cwd }) {
         args: ["generate-sysconfig", "incomplete-pins.circuit.json"],
         cwd,
       }),
-    /input_trace: missing source_port missing_input/,
+    (error) => {
+      assert.match(
+        error.message,
+        /Incomplete Circuit JSON pin records: 1 connection\(s\) reference missing pins[\s\S]*Rebuild the circuit/,
+      );
+      assert.doesNotMatch(
+        error.message,
+        /input_trace|missing_input|throw new Error|\bat \S+ \(/,
+      );
+      return true;
+    },
   );
   await assert.rejects(readFile(join(cwd, "incomplete-pins.syscfg")), {
     code: "ENOENT",

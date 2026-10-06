@@ -323,6 +323,10 @@ test("missing pin functions are reported without requiring a firmware request fi
   const message = f.stderr.join("\n");
   assert.match(message, /Unresolved CC2340 pin configuration/);
   assert.match(message, /pinAttributes/);
+  assert.doesNotMatch(
+    message,
+    /source_component_\d|source_port_\d|throw new Error|\bat \S+/,
+  );
   assert.match(message, /pin 9/);
   assert.doesNotMatch(
     message,
