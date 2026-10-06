@@ -157,11 +157,25 @@ and `lf_xosc` selects an external crystal. Using or reserving DIO3/DIO4 requires
 `generate-sysconfig` needs Node.js and Bun; it does not require TI software.
 For `check-sysconfig`, install standalone TI SysConfig and the SDK for the target
 chip. Full CCS is optional. Run `ti check-sysconfig --help` for downloads and
-supported versions. Setup errors explain missing or invalid paths and how to
-correct them before a circuit build or TI invocation is attempted.
+supported versions. The command discovers standalone SysConfig, CCS-bundled
+SysConfig, and SDK installations under `~/ti` and standard system TI folders
+(`/Applications/ti` on macOS, `/opt/ti` and `/ti` on Unix, and `C:\ti` on Windows).
+It selects versions matching the circuit's target and prints the selected paths.
+No environment file or exported variables are needed for a unique compatible
+installation in these locations:
 
-Once the required tool paths are configured, `check-sysconfig` performs the same
-conversion in a temporary directory, then invokes the matching local TI SysConfig CLI:
+```bash
+ti check-sysconfig ./index.circuit.tsx
+```
+
+For custom locations, use the optional variables below. Explicit paths take
+precedence and are never replaced if invalid or incompatible. Multiple
+compatible installations require an override to select one. Missing tools,
+wrong paths and incompatible versions produce an error explaining how to fix
+the setup; nothing is downloaded or installed automatically.
+
+`check-sysconfig` performs the same conversion in a temporary directory, then
+invokes the matching local TI SysConfig CLI. Optional overrides:
 
 ```bash
 export TI_SYSCONFIG_NODE=/path/to/sysconfig/nodejs/node

@@ -71,8 +71,13 @@ runs a matching locally installed TI SysConfig CLI. Generation needs Node.js and
 Bun, without TI software. Checking requires standalone SysConfig and the SDK
 for the chip; full CCS is optional. Run `ti check-sysconfig --help` for downloads,
 supported versions and setup. Missing or invalid paths produce an error
-explaining how to correct them before the circuit is built. The check requires
-`TI_SYSCONFIG_NODE`, `TI_SYSCONFIG_CLI`, and `TI_SDK_ROOT`. For CC2340, use
+explaining how to correct them. The check searches `~/ti` and standard system
+TI folders (`/Applications/ti` on macOS, `/opt/ti` and `/ti` on Unix, `C:\ti` on
+Windows), including standalone and CCS-bundled SysConfig. It selects matching
+tool/SDK versions and prints their paths. No environment file is required.
+`TI_SYSCONFIG_NODE`, `TI_SYSCONFIG_CLI`, and `TI_SDK_ROOT` remain optional
+overrides for custom locations or multiple compatible installations. Explicit
+paths take precedence and are never replaced if invalid or incompatible. For CC2340, use
 SysConfig 1.28.1+4785 and SimpleLink F3 SDK 9.21.00.36; the checker verifies
 these versions and compares TI-generated GPIO, I²C, and declared clock settings with
 the resolved circuit configuration. It never downloads TI software or accepts license terms

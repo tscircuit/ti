@@ -45,6 +45,10 @@ async function testCli({ command, cwd }) {
   const checkHelp = run({ command, args: ["check-sysconfig", "--help"], cwd });
   assert.match(checkHelp, /Usage: ti check-sysconfig/);
   assert.match(checkHelp, /full CCS is optional/);
+  assert.match(
+    checkHelp,
+    /Optional environment overrides.*searched automatically/,
+  );
   assert.match(checkHelp, /CC2340.*1\.28\.1\+4785.*9\.21\.00\.36/);
   assert.match(checkHelp, /https:\/\/www.ti.com\/tool\/SYSCONFIG/);
   const result = JSON.parse(
@@ -174,12 +178,12 @@ async function testCli({ command, cwd }) {
         args: ["check-sysconfig", "source-pins.circuit.json"],
         cwd,
         env: {
-          TI_SYSCONFIG_NODE: "",
+          TI_SYSCONFIG_NODE: join(cwd, "not-installed", "node"),
           TI_SYSCONFIG_CLI: "",
           TI_SDK_ROOT: "",
         },
       }),
-    /TI tool paths are not configured[\s\S]*full CCS is optional[\s\S]*ti generate-sysconfig <file>/,
+    /Configured TI paths do not exist[\s\S]*Update TI_SYSCONFIG_NODE[\s\S]*full CCS is optional[\s\S]*ti generate-sysconfig <file>/,
   );
   await writeFile(
     join(cwd, "incomplete-pins.circuit.json"),
@@ -242,6 +246,7 @@ try {
     "cli/sysconfig/am2434-profile.mjs",
     "cli/sysconfig/cc2340-profile.mjs",
     "cli/sysconfig/convert.mjs",
+    "cli/sysconfig/discover-ti-tools.mjs",
     "cli/sysconfig/generate.mjs",
     "cli/sysconfig/get-validation-options.mjs",
     "cli/sysconfig/input.mjs",

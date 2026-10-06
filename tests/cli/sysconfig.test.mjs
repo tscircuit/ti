@@ -225,6 +225,7 @@ function fixture(t) {
         cwd,
         stdout: (line) => stdout.push(line),
         stderr: (line) => stderr.push(line),
+        tiInstallationRoots: [join(cwd, "ti")],
         ...overrides,
       }),
   };
@@ -582,10 +583,17 @@ test("generate-sysconfig rejects a net reaching multiple MCU pins through connec
 test("check-sysconfig invokes the configured TI CLI only after conversion", async (t) => {
   const f = fixture(t);
   writeFileSync(join(f.cwd, "board.jsx"), jsxCircuitSource);
-  const tiRoot = join(f.cwd, "ti-sdk");
-  const tiNode = join(f.cwd, "sysconfig-node");
-  const tiCli = join(f.cwd, "cli.js");
+  const tiRoot = join(f.cwd, "ti", "simplelink_lowpower_f3_sdk");
+  const sysconfigRoot = join(f.cwd, "ti", "sysconfig_1.28.1");
+  const tiNode = join(
+    sysconfigRoot,
+    "nodejs",
+    process.platform === "win32" ? "node.exe" : "node",
+  );
+  const tiCli = join(sysconfigRoot, "dist", "cli.js");
   mkdirSync(join(tiRoot, ".metadata"), { recursive: true });
+  mkdirSync(join(sysconfigRoot, "nodejs"), { recursive: true });
+  mkdirSync(join(sysconfigRoot, "dist"), { recursive: true });
   writeFileSync(
     join(tiRoot, ".metadata", "product.json"),
     JSON.stringify({
@@ -656,6 +664,37 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
   assert.ok(observedTiArgs.includes("RGE"));
   assert.ok(observedTiArgs.includes("nortos"));
   assert.match(f.stdout.join("\n"), /SysConfig check passed/);
+  assert.equal(
+    await f.run(
+      ["check-sysconfig", "board.jsx", "--config", "board.sysconfig.json"],
+      {
+        spawnSync,
+        env: {
+          ...process.env,
+          TI_SYSCONFIG_NODE: "",
+          TI_SYSCONFIG_CLI: "",
+          TI_SDK_ROOT: "",
+        },
+      },
+    ),
+    0,
+    f.stderr.join("\n"),
+  );
+  assert.ok(
+    f.stdout.some((line) =>
+      line.includes(`Using TI SysConfig 1.28.1+4785: ${tiCli}`),
+    ),
+  );
+  assert.ok(
+    f.stdout.some((line) => line.includes(`Using TI bundled Node: ${tiNode}`)),
+  );
+  assert.ok(
+    f.stdout.some((line) =>
+      line.includes(
+        `Using TI SDK simplelink_lowpower_f3_sdk@9.21.00.36: ${tiRoot}`,
+      ),
+    ),
+  );
   corruptRate = true;
   assert.equal(
     await f.run(
@@ -1072,19 +1111,16 @@ test("check-sysconfig reports missing TI prerequisites without installing anythi
     }),
     1,
   );
-  assert.match(f.stderr.join("\n"), /TI tool paths are not configured/);
+  assert.match(f.stderr.join("\n"), /Could not find installed TI tools/);
   const message = f.stderr.join("\n");
   assert.match(
     message,
-    /TI_SYSCONFIG_NODE: path to TI's bundled Node executable/,
+    /SysConfig with its bundled Node.*TI_SYSCONFIG_CLI and TI_SYSCONFIG_NODE/,
   );
+  assert.match(message, /Searched:/);
   assert.match(
     message,
-    /TI_SYSCONFIG_CLI: path to SysConfig's dist\/cli.js file/,
-  );
-  assert.match(
-    message,
-    /TI_SDK_ROOT: SDK directory containing .metadata\/product.json/,
+    /TI_SDK_ROOT.*directory containing .metadata\/product.json/,
   );
   assert.match(message, /full CCS is optional/);
   assert.match(
