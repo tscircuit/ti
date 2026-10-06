@@ -6,12 +6,13 @@ import { requireBun } from "./sysconfig/runtime.mjs";
 const help = `Usage: ti generate-sysconfig [options] <file>
 
 Generate a TI .syscfg file from a tscircuit TSX file or Circuit JSON.
-Firmware behavior stays explicit in a sibling *.sysconfig.json file or
-project-level ti.sysconfig.json.
+GPIO/I2C choices come from existing circuit pinAttributes.
+No separate request file is required for supported CC2340 circuits.
 Requires Bun on PATH.
 
 Options:
-  --config <file>   Explicit SysConfig request JSON
+  --component <selector>  MCU component name or source_component_id
+  --config <file>   Optional explicit SysConfig request JSON
   -o, --output <file>
                     Output .syscfg path
   -h, --help        Show help
@@ -38,6 +39,7 @@ export async function runGenerateSysconfig(
       allowPositionals: true,
       options: {
         config: { type: "string" },
+        component: { type: "string" },
         output: { type: "string", short: "o" },
         help: { type: "boolean", short: "h" },
       },
@@ -58,13 +60,19 @@ export async function runGenerateSysconfig(
     const result = await generateSysconfig(positionals[0], {
       cwd,
       configPath: values.config,
+      componentSelector: values.component,
       outputPath: values.output,
       ...(spawnSync ? { spawnSync } : {}),
       env,
       bun,
     });
     stdout(`Generated ${formatPath(result.outputPath, cwd)}.`);
-    stdout(`Request: ${formatPath(result.configPath, cwd)}`);
+    if (result.configPath)
+      stdout(`Request: ${formatPath(result.configPath, cwd)}`);
+    else
+      stdout(
+        "Pin configuration: Circuit JSON. Other settings use TI SDK defaults.",
+      );
     return 0;
   } catch (error) {
     stderr(

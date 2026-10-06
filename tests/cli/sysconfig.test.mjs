@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -15,6 +16,7 @@ import { test } from "node:test";
 import { runCli } from "../../cli/main.mjs";
 import {
   validateGeneratedFiles,
+  validateTiEnvironment,
   validateTiTarget,
 } from "../../cli/sysconfig/ti-cli.mjs";
 import { validateCc2340Output } from "../../cli/sysconfig/validate-cc2340-output.mjs";
@@ -198,6 +200,11 @@ export default () => React.createElement("board", {
 function fixture(t) {
   const cwd = mkdtempSync(join(tmpdir(), "ti-sysconfig-cli-"));
   t.after(() => rmSync(cwd, { recursive: true, force: true }));
+  symlinkSync(
+    new URL("../../node_modules/", import.meta.url),
+    join(cwd, "node_modules"),
+    "junction",
+  );
   writeFileSync(join(cwd, "package.json"), '{"private":true,"type":"module"}');
   writeFileSync(
     join(cwd, "board.circuit.json"),
@@ -218,6 +225,7 @@ function fixture(t) {
         cwd,
         stdout: (line) => stdout.push(line),
         stderr: (line) => stderr.push(line),
+        tiInstallationRoots: [join(cwd, "ti")],
         ...overrides,
       }),
   };
@@ -225,7 +233,15 @@ function fixture(t) {
 
 test("generate-sysconfig resolves stable signal names and writes CC2340 SysConfig", async (t) => {
   const f = fixture(t);
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    0,
+  );
   assert.deepEqual(f.stderr, []);
   assert.match(f.stdout.join("\n"), /Generated board\.syscfg/);
 
@@ -250,7 +266,15 @@ test("generate-sysconfig follows a circuit pin change without changing the reque
     JSON.stringify(cc2340Circuit(6, "DIO13"), null, 2),
   );
 
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    0,
+  );
   const source = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
   assert.match(source, /CONFIG_ACCEL_INT/);
   assert.match(source, /GPIO3\.gpioPin\.\$assign = "DIO13"/);
@@ -270,7 +294,12 @@ test("generate-sysconfig accepts the pedometer's open-drain I2C declarations", a
   }
   writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(circuitJson));
   assert.equal(
-    await f.run(["generate-sysconfig", "board.circuit.json"]),
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
     0,
     f.stderr.join("\n"),
   );
@@ -279,18 +308,95 @@ test("generate-sysconfig accepts the pedometer's open-drain I2C declarations", a
   assert.match(generated, /I2C1\.i2c\.sclPin\.\$assign = "DIO6_A1_AR\+"/);
 });
 
-test("missing firmware request distinguishes successful circuit generation from firmware choices", async (t) => {
+test("missing pin functions are reported without requiring a firmware request file", async (t) => {
   const f = fixture(t);
   rmSync(join(f.cwd, "board.sysconfig.json"));
-  writeFileSync(join(f.cwd, "index.circuit.tsx"), jsxCircuitSource);
+  writeFileSync(
+    join(f.cwd, "index.circuit.tsx"),
+    jsxCircuitSource.replace(
+      "</board>",
+      '<net name="UNCONFIGURED_OUTPUT" /><trace from=".U1_MCU > .DIO20_A11" to="net.UNCONFIGURED_OUTPUT" /></board>',
+    ),
+  );
   assert.equal(await f.run(["generate-sysconfig", "index.circuit.tsx"]), 1);
   assert.ok(existsSync(join(f.cwd, "dist/index/circuit.json")));
   const message = f.stderr.join("\n");
-  assert.match(message, /Circuit JSON is available/);
-  assert.match(message, /GPIO directions, output startup states, or I2C speed/);
-  assert.match(message, /Create index\.sysconfig\.json/);
-  assert.match(message, /ti\.sysconfig\.json/);
+  assert.match(message, /Unresolved CC2340 pin configuration/);
+  assert.match(message, /pinAttributes/);
+  assert.match(message, /pin 9/);
+  assert.doesNotMatch(
+    message,
+    /request file is missing|Create index\.sysconfig\.json/,
+  );
   assert.equal(existsSync(join(f.cwd, "index.syscfg")), false);
+});
+
+for (const [description, manifest] of [
+  ["malformed manifest", '{"name":"tscircuit", broken}'],
+  ["missing entrypoint", '{"name":"tscircuit","main":"missing.mjs"}'],
+  ["missing CLI", '{"name":"tscircuit","main":"index.mjs"}'],
+]) {
+  test(`a project tscircuit ${description} fails without using another installation`, async (t) => {
+    const f = fixture(t);
+    const projectDir = join(f.cwd, "isolated-project");
+    const packageDir = join(projectDir, "node_modules", "tscircuit");
+    mkdirSync(packageDir, { recursive: true });
+    writeFileSync(join(projectDir, "package.json"), '{"private":true}');
+    writeFileSync(join(packageDir, "package.json"), manifest);
+    writeFileSync(join(packageDir, "index.mjs"), "export {};");
+    writeFileSync(join(projectDir, "board.tsx"), jsxCircuitSource);
+    assert.equal(
+      await f.run(["generate-sysconfig", "board.tsx"], {
+        cwd: projectDir,
+        spawnSync: (command, args) => {
+          assert.equal(command, "bun");
+          assert.deepEqual(args, ["--version"]);
+          return { status: 0, stdout: "1.3.9\n" };
+        },
+      }),
+      1,
+    );
+    assert.match(
+      f.stderr.join("\n"),
+      /Repair or reinstall that tscircuit dependency/,
+    );
+    assert.ok(f.stderr.join("\n").includes(projectDir));
+    assert.equal(existsSync(join(projectDir, "board.syscfg")), false);
+  });
+}
+
+test("a project without tscircuit can use the CLI's installed peer", async (t) => {
+  const f = fixture(t);
+  const projectDir = mkdtempSync(join(tmpdir(), "ti-peer-runtime-"));
+  t.after(() => rmSync(projectDir, { recursive: true, force: true }));
+  mkdirSync(join(projectDir, "node_modules"));
+  symlinkSync(
+    new URL("../../node_modules/react/", import.meta.url),
+    join(projectDir, "node_modules", "react"),
+    "junction",
+  );
+  writeFileSync(
+    join(projectDir, "package.json"),
+    '{"private":true,"type":"module"}',
+  );
+  writeFileSync(join(projectDir, "board.tsx"), jsxCircuitSource);
+  assert.equal(
+    await f.run(
+      [
+        "generate-sysconfig",
+        "board.tsx",
+        "--config",
+        join(f.cwd, "board.sysconfig.json"),
+      ],
+      { cwd: projectDir },
+    ),
+    0,
+    f.stderr.join("\n"),
+  );
+  assert.match(
+    readFileSync(join(projectDir, "board.syscfg"), "utf8"),
+    /CONFIG_DISPLAY_ISOLATE/,
+  );
 });
 
 test("a missing explicit request reports its path without suggesting an implicit request", async (t) => {
@@ -322,7 +428,12 @@ test("generate-sysconfig accepts every advertised source and Circuit JSON input 
         : plainCircuitSource,
     );
     assert.equal(
-      await f.run(["generate-sysconfig", inputName]),
+      await f.run([
+        "generate-sysconfig",
+        inputName,
+        "--config",
+        "board.sysconfig.json",
+      ]),
       0,
       `${inputName}: ${f.stderr.join("\n")}`,
     );
@@ -359,7 +470,15 @@ test("generate-sysconfig rejects non-array GPIO requests instead of dropping the
       join(f.cwd, "board.sysconfig.json"),
       JSON.stringify({ ...request, gpios }),
     );
-    assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+    assert.equal(
+      await f.run([
+        "generate-sysconfig",
+        "board.circuit.json",
+        "--config",
+        "board.sysconfig.json",
+      ]),
+      1,
+    );
     assert.match(f.stderr.at(-1), /gpios must be an array/);
     assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
   }
@@ -372,7 +491,15 @@ test("CC2340 rejects malformed reserved ports instead of dropping them", async (
       join(f.cwd, "board.sysconfig.json"),
       JSON.stringify({ ...request, reserved_ports }),
     );
-    assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+    assert.equal(
+      await f.run([
+        "generate-sysconfig",
+        "board.circuit.json",
+        "--config",
+        "board.sysconfig.json",
+      ]),
+      1,
+    );
     assert.match(f.stderr.at(-1), /reserved_ports must be an array/);
     assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
   }
@@ -386,7 +513,15 @@ test("CC2340 requires an explicit LF clock source", async (t) => {
     join(f.cwd, "board.sysconfig.json"),
     JSON.stringify(missingClock),
   );
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    1,
+  );
   assert.match(
     f.stderr.at(-1),
     /firmware\.lf_clock_source must be explicitly set/,
@@ -438,7 +573,12 @@ test("generate-sysconfig compiles connected TSX traces and follows a pin change"
   );`;
   writeFileSync(sourcePath, source);
   assert.equal(
-    await f.run(["generate-sysconfig", "board.circuit.tsx"]),
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.tsx",
+      "--config",
+      "board.sysconfig.json",
+    ]),
     0,
     f.stderr.join("\n"),
   );
@@ -454,7 +594,12 @@ test("generate-sysconfig compiles connected TSX traces and follows a pin change"
     ),
   );
   assert.equal(
-    await f.run(["generate-sysconfig", "board.circuit.tsx"]),
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.tsx",
+      "--config",
+      "board.sysconfig.json",
+    ]),
     0,
     f.stderr.join("\n"),
   );
@@ -488,7 +633,15 @@ test("generate-sysconfig rejects a net reaching multiple MCU pins through connec
     },
   );
   writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(circuitJson));
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    1,
+  );
   assert.match(
     f.stderr.join("\n"),
     /"DISP_PWR_N" to resolve to one port on U1_MCU; found 2/,
@@ -498,10 +651,17 @@ test("generate-sysconfig rejects a net reaching multiple MCU pins through connec
 test("check-sysconfig invokes the configured TI CLI only after conversion", async (t) => {
   const f = fixture(t);
   writeFileSync(join(f.cwd, "board.jsx"), jsxCircuitSource);
-  const tiRoot = join(f.cwd, "ti-sdk");
-  const tiNode = join(f.cwd, "sysconfig-node");
-  const tiCli = join(f.cwd, "cli.js");
+  const tiRoot = join(f.cwd, "ti", "simplelink_lowpower_f3_sdk");
+  const sysconfigRoot = join(f.cwd, "ti", "sysconfig_1.28.1");
+  const tiNode = join(
+    sysconfigRoot,
+    "nodejs",
+    process.platform === "win32" ? "node.exe" : "node",
+  );
+  const tiCli = join(sysconfigRoot, "dist", "cli.js");
   mkdirSync(join(tiRoot, ".metadata"), { recursive: true });
+  mkdirSync(join(sysconfigRoot, "nodejs"), { recursive: true });
+  mkdirSync(join(sysconfigRoot, "dist"), { recursive: true });
   writeFileSync(
     join(tiRoot, ".metadata", "product.json"),
     JSON.stringify({
@@ -557,10 +717,13 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
     TI_SDK_ROOT: tiRoot,
   };
   assert.equal(
-    await f.run(["check-sysconfig", "board.jsx"], {
-      spawnSync,
-      env,
-    }),
+    await f.run(
+      ["check-sysconfig", "board.jsx", "--config", "board.sysconfig.json"],
+      {
+        spawnSync,
+        env,
+      },
+    ),
     0,
     f.stderr.join("\n"),
   );
@@ -569,9 +732,43 @@ test("check-sysconfig invokes the configured TI CLI only after conversion", asyn
   assert.ok(observedTiArgs.includes("RGE"));
   assert.ok(observedTiArgs.includes("nortos"));
   assert.match(f.stdout.join("\n"), /SysConfig check passed/);
+  assert.equal(
+    await f.run(
+      ["check-sysconfig", "board.jsx", "--config", "board.sysconfig.json"],
+      {
+        spawnSync,
+        env: {
+          ...process.env,
+          TI_SYSCONFIG_NODE: "",
+          TI_SYSCONFIG_CLI: "",
+          TI_SDK_ROOT: "",
+        },
+      },
+    ),
+    0,
+    f.stderr.join("\n"),
+  );
+  assert.ok(
+    f.stdout.some((line) =>
+      line.includes(`Using TI SysConfig 1.28.1+4785: ${tiCli}`),
+    ),
+  );
+  assert.ok(
+    f.stdout.some((line) => line.includes(`Using TI bundled Node: ${tiNode}`)),
+  );
+  assert.ok(
+    f.stdout.some((line) =>
+      line.includes(
+        `Using TI SDK simplelink_lowpower_f3_sdk@9.21.00.36: ${tiRoot}`,
+      ),
+    ),
+  );
   corruptRate = true;
   assert.equal(
-    await f.run(["check-sysconfig", "board.jsx"], { spawnSync, env }),
+    await f.run(
+      ["check-sysconfig", "board.jsx", "--config", "board.sysconfig.json"],
+      { spawnSync, env },
+    ),
     1,
   );
   assert.match(f.stderr.at(-1), /100 kbit\/s/);
@@ -597,7 +794,7 @@ test("CC2340 TI validation rejects a mismatched SDK or SysConfig tool", (t) => {
   );
   assert.throws(
     () => validateTiTarget({ target: "cc2340", env }),
-    /CC2340 requires simplelink_lowpower_f3_sdk/,
+    /CC2340 requires simplelink_lowpower_f3_sdk[\s\S]*Install the required SDK and update TI_SDK_ROOT/,
   );
   writeFileSync(
     product,
@@ -613,7 +810,16 @@ test("CC2340 TI validation rejects a mismatched SDK or SysConfig tool", (t) => {
         env,
         spawnSync: () => ({ status: 0, stdout: "1.26.3\n" }),
       }),
-    /requires TI SysConfig 1\.28\.1\+4785/,
+    /requires TI SysConfig 1\.28\.1\+4785[\s\S]*update TI_SYSCONFIG_NODE and TI_SYSCONFIG_CLI/,
+  );
+  assert.throws(
+    () =>
+      validateTiTarget({
+        target: "cc2340",
+        env,
+        spawnSync: () => ({ status: 1, stderr: "Permission denied" }),
+      }),
+    /Could not run the configured TI SysConfig CLI: Permission denied[\s\S]*Check TI_SYSCONFIG_NODE=.*TI_SYSCONFIG_CLI=/,
   );
 });
 
@@ -706,7 +912,12 @@ test("AM2434 TI output must match the requested A7 or B7 GPIO", async (t) => {
       JSON.stringify(am2434Request),
     );
     assert.equal(
-      await f.run(["generate-sysconfig", inputPath]),
+      await f.run([
+        "generate-sysconfig",
+        inputPath,
+        "--config",
+        inputPath.replace(/(?:\.circuit)?\.json$/, ".sysconfig.json"),
+      ]),
       0,
       f.stderr.join("\n"),
     );
@@ -796,13 +1007,29 @@ test("check-sysconfig rejects AM2434 TI output for the previous circuit pin", as
     TI_SDK_ROOT: tiRoot,
   };
   assert.equal(
-    await f.run(["check-sysconfig", inputPath], { spawnSync, env }),
+    await f.run(
+      [
+        "check-sysconfig",
+        inputPath,
+        "--config",
+        inputPath.replace(/(?:\.circuit)?\.json$/, ".sysconfig.json"),
+      ],
+      { spawnSync, env },
+    ),
     0,
     f.stderr.join("\n"),
   );
   writeFileSync(inputPath, JSON.stringify(am2434Circuit("B7")));
   assert.equal(
-    await f.run(["check-sysconfig", inputPath], { spawnSync, env }),
+    await f.run(
+      [
+        "check-sysconfig",
+        inputPath,
+        "--config",
+        inputPath.replace(/(?:\.circuit)?\.json$/, ".sysconfig.json"),
+      ],
+      { spawnSync, env },
+    ),
     1,
   );
   assert.match(f.stderr.at(-1), /GPIO_CONVERTED_PIN \(6\)/);
@@ -810,7 +1037,15 @@ test("check-sysconfig rejects AM2434 TI output for the previous circuit pin", as
 
 test("CC2340 TI output must match requested pins, states, rate, and clock", async (t) => {
   const f = fixture(t);
-  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 0);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--config",
+      "board.sysconfig.json",
+    ]),
+    0,
+  );
   const circuitJson = cc2340Circuit();
   const options = resolveConverterOptions(circuitJson, request).options;
   const directory = join(f.cwd, "ti-output");
@@ -936,11 +1171,84 @@ test("check-sysconfig reports missing TI prerequisites without installing anythi
   assert.equal(
     await f.run(["check-sysconfig", "board.circuit.json"], {
       env: { PATH: process.env.PATH },
+      spawnSync: (command, args) => {
+        assert.equal(command, "bun");
+        assert.deepEqual(args, ["--version"]);
+        return { status: 0, stdout: "1.3.9\n" };
+      },
     }),
     1,
   );
+  assert.match(f.stderr.join("\n"), /Could not find installed TI tools/);
+  const message = f.stderr.join("\n");
   assert.match(
-    f.stderr.join("\n"),
-    /Missing TI environment variable\(s\): TI_SYSCONFIG_NODE, TI_SYSCONFIG_CLI, TI_SDK_ROOT/,
+    message,
+    /SysConfig with its bundled Node.*TI_SYSCONFIG_CLI and TI_SYSCONFIG_NODE/,
+  );
+  assert.match(message, /Searched:/);
+  assert.match(
+    message,
+    /TI_SDK_ROOT.*directory containing .metadata\/product.json/,
+  );
+  assert.match(message, /full CCS is optional/);
+  assert.match(
+    message,
+    /check-sysconfig --help.*downloads and supported versions/,
+  );
+  assert.match(message, /without TI tools.*ti generate-sysconfig <file>/);
+  assert.deepEqual(f.stdout, []);
+});
+
+test("partially configured TI setup lists only unset environment paths", (t) => {
+  const f = fixture(t);
+  assert.throws(
+    () => validateTiEnvironment({ TI_SYSCONFIG_NODE: join(f.cwd, "node") }),
+    (error) => {
+      assert.match(error.message, /TI_SYSCONFIG_CLI: path to/);
+      assert.match(error.message, /TI_SDK_ROOT: SDK directory/);
+      assert.doesNotMatch(error.message, /TI_SYSCONFIG_NODE: path to/);
+      return true;
+    },
+  );
+});
+
+test("invalid TI paths identify every setting and the path to replace", (t) => {
+  const f = fixture(t);
+  const tiNode = join(f.cwd, "missing-node");
+  const tiCli = join(f.cwd, "missing-cli.js");
+  assert.throws(
+    () =>
+      validateTiEnvironment({
+        TI_SYSCONFIG_NODE: tiNode,
+        TI_SYSCONFIG_CLI: tiCli,
+        TI_SDK_ROOT: f.cwd,
+      }),
+    (error) => {
+      assert.match(error.message, /Configured TI paths do not exist/);
+      assert.ok(error.message.includes(`TI_SYSCONFIG_NODE=${tiNode}`));
+      assert.ok(error.message.includes(`TI_SYSCONFIG_CLI=${tiCli}`));
+      assert.match(
+        error.message,
+        /Expected path to SysConfig's dist\/cli.js.*Update TI_SYSCONFIG_CLI/,
+      );
+      return true;
+    },
+  );
+});
+
+test("an incorrect SDK root explains that SysConfig does not install the SDK", (t) => {
+  const f = fixture(t);
+  const tiNode = join(f.cwd, "node");
+  const tiCli = join(f.cwd, "cli.js");
+  writeFileSync(tiNode, "");
+  writeFileSync(tiCli, "");
+  assert.throws(
+    () =>
+      validateTiEnvironment({
+        TI_SYSCONFIG_NODE: tiNode,
+        TI_SYSCONFIG_CLI: tiCli,
+        TI_SDK_ROOT: f.cwd,
+      }),
+    /TI_SDK_ROOT=.*is not a TI SDK root[\s\S]*\.metadata\/product.json is missing[\s\S]*Installing SysConfig alone does not install the SDK/,
   );
 });

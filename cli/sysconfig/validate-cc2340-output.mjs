@@ -97,14 +97,20 @@ function validateGpio({ circuitJson, options, header, drivers, syscfg }) {
         ? [
             "GPIO_CFG_OUTPUT_INTERNAL",
             "GPIO_CFG_OUT_STR_MED",
-            gpio.initial_state === "high"
-              ? "GPIO_CFG_OUT_HIGH"
-              : "GPIO_CFG_OUT_LOW",
+            ...(gpio.initial_state === undefined
+              ? []
+              : [
+                  gpio.initial_state === "high"
+                    ? "GPIO_CFG_OUT_HIGH"
+                    : "GPIO_CFG_OUT_LOW",
+                ]),
           ]
         : [
             "GPIO_CFG_INPUT_INTERNAL",
-            interruptFlags[gpio.interrupt],
-            pullFlags[gpio.pull],
+            ...(gpio.interrupt === undefined
+              ? []
+              : [interruptFlags[gpio.interrupt]]),
+            ...(gpio.pull === undefined ? [] : [pullFlags[gpio.pull]]),
           ];
     for (const flag of expectedFlags) {
       requireLiteral({
@@ -151,22 +157,24 @@ function validateI2c({ circuitJson, options, header, drivers, syscfg }) {
   const prefix = `CONFIG_GPIO_${i2c.i2c_name.replace(/^CONFIG_/, "")}`;
   requireMacro({ header, name: `${prefix}_SDA`, expected: sda });
   requireMacro({ header, name: `${prefix}_SCL`, expected: scl });
-  requireMatch({
-    generatedText: header,
-    pattern: new RegExp(
-      `^#define\\s+${escapeRegExp(i2c.i2c_name)}_MAXSPEED\\s+\\(${i2c.max_bit_rate / 1000}U\\)`,
-      "m",
-    ),
-    setting: `${i2c.i2c_name} ${i2c.max_bit_rate / 1000} kbit/s`,
-  });
-  requireMatch({
-    generatedText: header,
-    pattern: new RegExp(
-      `^#define\\s+${escapeRegExp(i2c.i2c_name)}_MAXBITRATE\\s+\\(\\(I2C_BitRate\\)I2C_100kHz\\)`,
-      "m",
-    ),
-    setting: `${i2c.i2c_name} I2C_100kHz`,
-  });
+  if (i2c.max_bit_rate !== undefined) {
+    requireMatch({
+      generatedText: header,
+      pattern: new RegExp(
+        `^#define\\s+${escapeRegExp(i2c.i2c_name)}_MAXSPEED\\s+\\(${i2c.max_bit_rate / 1000}U\\)`,
+        "m",
+      ),
+      setting: `${i2c.i2c_name} ${i2c.max_bit_rate / 1000} kbit/s`,
+    });
+    requireMatch({
+      generatedText: header,
+      pattern: new RegExp(
+        `^#define\\s+${escapeRegExp(i2c.i2c_name)}_MAXBITRATE\\s+\\(\\(I2C_BitRate\\)I2C_100kHz\\)`,
+        "m",
+      ),
+      setting: `${i2c.i2c_name} I2C_100kHz`,
+    });
+  }
   requireLiteral({
     generatedText: drivers,
     literal: ".baseAddr    = I2C0_BASE",
@@ -192,14 +200,15 @@ function validateI2c({ circuitJson, options, header, drivers, syscfg }) {
     literal: ".sclPinMux   = GPIO_MUX_PORTCFG_PFUNC2",
     setting: `${i2c.i2c_name} SCL mux`,
   });
-  requireMatch({
-    generatedText: syscfg,
-    pattern: new RegExp(
-      `^I2C1\\.maxBitRate = ${i2c.max_bit_rate / 1000};$`,
-      "m",
-    ),
-    setting: `${i2c.i2c_name} source rate`,
-  });
+  if (i2c.max_bit_rate !== undefined)
+    requireMatch({
+      generatedText: syscfg,
+      pattern: new RegExp(
+        `^I2C1\\.maxBitRate = ${i2c.max_bit_rate / 1000};$`,
+        "m",
+      ),
+      setting: `${i2c.i2c_name} source rate`,
+    });
 }
 
 function validateReservedPorts({ circuitJson, options, drivers }) {
@@ -216,18 +225,20 @@ function validateReservedPorts({ circuitJson, options, drivers }) {
 }
 
 function validateClockAndStartup({ options, drivers, syscfg }) {
-  const clock = options.firmware.lf_clock_source;
-  const selected = clock === "lf_rcosc" ? "LFOSC" : "LFXT";
-  const other = clock === "lf_rcosc" ? "LFXT" : "LFOSC";
-  requireLiteral({
-    generatedText: drivers,
-    literal: `PowerLPF3_select${selected}();`,
-    setting: `${clock} startup`,
-  });
-  if (drivers.includes(`PowerLPF3_select${other}();`)) {
-    throw new Error(
-      `TI generated output selects ${other} instead of ${selected}`,
-    );
+  const clock = options.firmware?.lf_clock_source;
+  if (clock) {
+    const selected = clock === "lf_rcosc" ? "LFOSC" : "LFXT";
+    const other = clock === "lf_rcosc" ? "LFXT" : "LFOSC";
+    requireLiteral({
+      generatedText: drivers,
+      literal: `PowerLPF3_select${selected}();`,
+      setting: `${clock} startup`,
+    });
+    if (drivers.includes(`PowerLPF3_select${other}();`)) {
+      throw new Error(
+        `TI generated output selects ${other} instead of ${selected}`,
+      );
+    }
   }
   requireLiteral({
     generatedText: syscfg,

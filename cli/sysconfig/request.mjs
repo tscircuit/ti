@@ -16,7 +16,7 @@ function assertOnlyKeys({ record, allowedKeys, label }) {
   }
 }
 
-function selectComponent(circuitJson, selector) {
+export function selectComponent(circuitJson, selector) {
   if (typeof selector !== "string" || !selector.trim()) {
     throw new Error("SysConfig request component must be a non-empty string");
   }

@@ -29,6 +29,7 @@ export async function runCli(
     spawnSync,
     env = process.env,
     bun = "bun",
+    tiInstallationRoots,
   } = {},
 ) {
   const [command, ...args] = argv;
@@ -60,6 +61,7 @@ export async function runCli(
       spawnSync,
       env,
       bun,
+      tiInstallationRoots,
     });
   }
   if (command !== "search") {

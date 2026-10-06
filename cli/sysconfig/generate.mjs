@@ -1,5 +1,5 @@
 import { spawnSync as nodeSpawnSync } from "node:child_process";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,9 +8,7 @@ import {
   getInputStem,
   loadRequestConfig,
 } from "./input.mjs";
-import { resolveConverterOptions } from "./request.mjs";
-
-export const CONVERTER_REVISION = "b4458ed78fdcfeee3404af45bf30b36e06349c7d";
+import { resolveConverterOptions, selectComponent } from "./request.mjs";
 
 const converterHelperPath = fileURLToPath(
   new URL("./convert.mjs", import.meta.url),
@@ -38,12 +36,19 @@ async function invokeConverter(
   const temporary = await mkdtemp(join(tmpdir(), "ti-sysconfig-convert-"));
   try {
     const optionsPath = join(temporary, "options.json");
+    const configurationPath = join(temporary, "configuration.json");
     await writeFile(optionsPath, JSON.stringify(converterOptions, null, 2));
     await mkdir(dirname(outputPath), { recursive: true });
 
     const result = spawnSync(
       bun,
-      [converterHelperPath, circuitJsonPath, optionsPath, outputPath],
+      [
+        converterHelperPath,
+        circuitJsonPath,
+        optionsPath,
+        outputPath,
+        configurationPath,
+      ],
       {
         cwd,
         env,
@@ -54,6 +59,7 @@ async function invokeConverter(
     if (result.error) throw result.error;
     if (result.status !== 0)
       throw commandFailure("SysConfig conversion", result);
+    return JSON.parse(await readFile(configurationPath, "utf8"));
   } finally {
     await rm(temporary, { recursive: true, force: true });
   }
@@ -64,35 +70,47 @@ export async function generateSysconfig(
   {
     cwd = process.cwd(),
     configPath,
+    componentSelector,
     outputPath,
     spawnSync = nodeSpawnSync,
     env = process.env,
     bun = "bun",
   } = {},
 ) {
+  if (configPath && componentSelector)
+    throw new Error("Use either --component or --config, not both");
   const built = await getCircuitJsonInput(inputPath, {
     cwd,
     spawnSync,
     env,
     bun,
   });
-  const { config, configPath: resolvedConfigPath } = await loadRequestConfig(
-    inputPath,
-    {
-      projectDir: built.projectDir,
+  let resolvedConfigPath;
+  let requestedOptions = {};
+  if (configPath) {
+    const loaded = await loadRequestConfig({
       explicitPath: configPath,
       cwd,
-    },
-  );
-  const resolved = resolveConverterOptions(built.circuitJson, config);
+    });
+    resolvedConfigPath = loaded.configPath;
+    requestedOptions = resolveConverterOptions(
+      built.circuitJson,
+      loaded.config,
+    ).options;
+  } else if (componentSelector) {
+    requestedOptions = {
+      source_component_id: selectComponent(built.circuitJson, componentSelector)
+        .source_component_id,
+    };
+  }
   const resolvedOutputPath = outputPath
     ? resolve(cwd, outputPath)
     : defaultOutputPath(inputPath, cwd);
 
-  await invokeConverter(
+  const configuration = await invokeConverter(
     {
       circuitJsonPath: built.circuitJsonPath,
-      converterOptions: resolved.options,
+      converterOptions: requestedOptions,
       outputPath: resolvedOutputPath,
     },
     {
@@ -107,9 +125,9 @@ export async function generateSysconfig(
     outputPath: resolvedOutputPath,
     circuitJsonPath: built.circuitJsonPath,
     configPath: resolvedConfigPath,
-    target: resolved.target,
-    component: resolved.component,
+    target: configuration.target,
+    component: configuration.component,
     circuitJson: built.circuitJson,
-    converterOptions: resolved.options,
+    converterOptions: configuration.converterOptions,
   };
 }

@@ -4,14 +4,19 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { generateSysconfig } from "./sysconfig/generate.mjs";
+import {
+  discoverTiInstallations,
+  resolveTiEnvironment,
+} from "./sysconfig/discover-ti-tools.mjs";
 import { requireBun } from "./sysconfig/runtime.mjs";
+import { am2434Profile } from "./sysconfig/am2434-profile.mjs";
+import { cc2340Profile } from "./sysconfig/cc2340-profile.mjs";
 import { validateAm2434Output } from "./sysconfig/validate-am2434-output.mjs";
 import { validateCc2340Output } from "./sysconfig/validate-cc2340-output.mjs";
 import {
   getTiInvocation,
+  getTiTargetProfile,
   validateGeneratedFiles,
-  validateTiEnvironment,
-  validateTiTarget,
 } from "./sysconfig/ti-cli.mjs";
 
 const help = `Usage: ti check-sysconfig [options] <file>
@@ -20,22 +25,36 @@ Generate SysConfig from a tscircuit TSX/Circuit JSON input, then run the
 locally installed TI SysConfig CLI in a temporary directory.
 Requires Bun on PATH.
 
-Required environment:
+Optional environment overrides (standard TI installation folders are searched automatically):
   TI_SYSCONFIG_NODE   TI SysConfig bundled Node executable
   TI_SYSCONFIG_CLI    TI SysConfig dist/cli.js
   TI_SDK_ROOT         Matching TI SDK root containing .metadata/product.json
 
 Options:
-  --config <file>     Explicit SysConfig request JSON
+  --component <selector>  MCU component name or source_component_id
+  --config <file>     Optional explicit SysConfig request JSON
   -h, --help          Show help
 
 This command never installs TI software or accepts license terms.
 
+Setup:
+  Standalone SysConfig is sufficient; full CCS is optional.
+  Searches ~/ti and standard system TI folders, including CCS installations.
+  Only matching versions are used. Multiple matching installs require an override.
+  CC2340 (pedometer): SysConfig ${cc2340Profile.sysconfigVersion}, SimpleLink Low Power F3 SDK ${cc2340Profile.sdkVersion}
+  AM2434: SysConfig ${am2434Profile.sysconfigVersion}, SDK product ${am2434Profile.sdkName}@${am2434Profile.sdkVersion}
+  SysConfig download: https://www.ti.com/tool/SYSCONFIG
+  CC2340 SDK download: https://www.ti.com/tool/SIMPLELINK-LOWPOWER-SDK
+  AM2434 SDK setup: https://github.com/tscircuit/ti#ti-sysconfig-commands
+
+To generate a .syscfg file without TI tools:
+  ti generate-sysconfig <file>
+
 Example:
-  TI_SYSCONFIG_NODE=/path/to/sysconfig/nodejs/node \\
-  TI_SYSCONFIG_CLI=/path/to/sysconfig/dist/cli.js \\
-  TI_SDK_ROOT=/path/to/simplelink-sdk \\
-    ti check-sysconfig ./pedometer.circuit.tsx`;
+  ti check-sysconfig ./pedometer.circuit.tsx
+
+SDK in a custom location:
+  TI_SDK_ROOT=/path/to/simplelink-sdk ti check-sysconfig ./pedometer.circuit.tsx`;
 
 export async function runCheckSysconfig(
   args,
@@ -46,6 +65,7 @@ export async function runCheckSysconfig(
     spawnSync = nodeSpawnSync,
     env = process.env,
     bun = "bun",
+    tiInstallationRoots,
   } = {},
 ) {
   let temporary;
@@ -55,6 +75,7 @@ export async function runCheckSysconfig(
       allowPositionals: true,
       options: {
         config: { type: "string" },
+        component: { type: "string" },
         help: { type: "boolean", short: "h" },
       },
     });
@@ -70,29 +91,48 @@ export async function runCheckSysconfig(
     }
 
     requireBun({ bun, spawnSync, env });
-    validateTiEnvironment(env);
+    const installations = discoverTiInstallations({
+      env,
+      roots: tiInstallationRoots,
+    });
     temporary = await mkdtemp(join(tmpdir(), "ti-check-sysconfig-"));
     const syscfgPath = join(temporary, "generated.syscfg");
     const tiOutput = join(temporary, "ti-output");
     const generated = await generateSysconfig(positionals[0], {
       cwd,
       configPath: values.config,
+      componentSelector: values.component,
       outputPath: syscfgPath,
       spawnSync,
       env,
       bun,
     });
-    validateTiTarget({ target: generated.target, env, spawnSync });
+    const tiEnv = resolveTiEnvironment({
+      target: generated.target,
+      installations,
+      env,
+      spawnSync,
+      stderr,
+    });
+    const profile = getTiTargetProfile(generated.target);
+    stdout(
+      `Using TI SysConfig ${profile.sysconfigVersion}: ${tiEnv.TI_SYSCONFIG_CLI}`,
+    );
+    stdout(`Using TI bundled Node: ${tiEnv.TI_SYSCONFIG_NODE}`);
+    stdout(
+      `Using TI SDK ${profile.sdkName}@${profile.sdkVersion}: ${tiEnv.TI_SDK_ROOT}`,
+    );
 
     const invocation = getTiInvocation({
       target: generated.target,
       syscfgPath,
       outputDir: tiOutput,
-      env,
+      env: tiEnv,
+      rtos: generated.converterOptions.firmware?.rtos,
     });
     const result = spawnSync(invocation.command, invocation.args, {
       cwd,
-      env,
+      env: tiEnv,
       encoding: "utf8",
       maxBuffer: 20 * 1024 * 1024,
     });

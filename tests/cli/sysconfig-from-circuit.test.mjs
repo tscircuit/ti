@@ -1,0 +1,213 @@
+import assert from "node:assert/strict";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { test } from "node:test";
+import { runCli } from "../../cli/main.mjs";
+
+function circuit() {
+  return [
+    {
+      type: "source_component",
+      ftype: "simple_chip",
+      source_component_id: "mcu",
+      name: "U1",
+      manufacturer_part_number: "CC2340R52E0RGER",
+    },
+    {
+      type: "source_port",
+      source_port_id: "output",
+      source_component_id: "mcu",
+      name: "ENABLE",
+      pin_number: 4,
+      is_output: true,
+    },
+    {
+      type: "source_port",
+      source_port_id: "input",
+      source_component_id: "mcu",
+      name: "INTERRUPT",
+      pin_number: 5,
+      is_input: true,
+      is_using_internal_pullup: true,
+    },
+  ];
+}
+
+function fixture(t) {
+  const cwd = mkdtempSync(join(tmpdir(), "ti-source-pins-"));
+  t.after(() => rmSync(cwd, { recursive: true, force: true }));
+  symlinkSync(
+    new URL("../../node_modules/", import.meta.url),
+    join(cwd, "node_modules"),
+    "junction",
+  );
+  writeFileSync(join(cwd, "package.json"), '{"private":true,"type":"module"}');
+  writeFileSync(join(cwd, "board.circuit.json"), JSON.stringify(circuit()));
+  const stdout = [],
+    stderr = [];
+  return {
+    cwd,
+    stdout,
+    stderr,
+    run: (args) =>
+      runCli(args, {
+        cwd,
+        stdout: (line) => stdout.push(line),
+        stderr: (line) => stderr.push(line),
+      }),
+  };
+}
+
+test("existing pin attributes generate SysConfig and ignore implicit request files", async (t) => {
+  const f = fixture(t);
+  writeFileSync(join(f.cwd, "board.sysconfig.json"), "invalid old request");
+  writeFileSync(
+    join(f.cwd, "ti.sysconfig.json"),
+    "another invalid old request",
+  );
+  assert.equal(
+    await f.run(["generate-sysconfig", "board.circuit.json"]),
+    0,
+    f.stderr.join("\n"),
+  );
+  assert.match(f.stdout.join("\n"), /Pin configuration: Circuit JSON/);
+  const source = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
+  assert.match(source, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
+  assert.match(source, /GPIO2\.mode = "Input"/);
+  assert.match(source, /GPIO2\.pull = "Pull Up"/);
+  assert.doesNotMatch(source, /--rtos|initialOutputState|interruptTrigger/);
+  assert.equal(
+    readFileSync(join(f.cwd, "board.sysconfig.json"), "utf8"),
+    "invalid old request",
+  );
+});
+
+test("connected pins with missing roles fail without a request-file suggestion", async (t) => {
+  const f = fixture(t);
+  const incomplete = circuit();
+  delete incomplete[1].is_output;
+  incomplete.push({
+    type: "source_trace",
+    source_trace_id: "trace",
+    connected_source_port_ids: ["output"],
+    connected_source_net_ids: [],
+  });
+  writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(incomplete));
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(f.stderr.join("\n"), /U1.*CC2340R52E0RGER/);
+  assert.match(f.stderr.join("\n"), /pin 4.*pinAttributes/);
+  assert.doesNotMatch(f.stderr.join("\n"), /request file is missing/);
+  assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+});
+
+test("a missing connected pin record fails instead of writing partial SysConfig", async (t) => {
+  const f = fixture(t);
+  const incomplete = circuit().filter(
+    (element) => element.source_port_id !== "input",
+  );
+  incomplete.push({
+    type: "source_trace",
+    source_trace_id: "input_trace",
+    connected_source_port_ids: ["input"],
+    connected_source_net_ids: [],
+  });
+  writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(incomplete));
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(f.stderr.join("\n"), /input_trace: missing source_port input/);
+  assert.match(f.stderr.join("\n"), /Rebuild the circuit/);
+  assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+});
+
+test("an MCU without pin records reports the component and required attributes", async (t) => {
+  const f = fixture(t);
+  writeFileSync(
+    join(f.cwd, "board.circuit.json"),
+    JSON.stringify([circuit()[0]]),
+  );
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(
+    f.stderr.join("\n"),
+    /U1.*CC2340R52E0RGER.*no source_port records/,
+  );
+  assert.match(f.stderr.join("\n"), /pinAttributes/);
+  assert.equal(existsSync(join(f.cwd, "board.syscfg")), false);
+});
+
+test("multiple MCUs require a component selection", async (t) => {
+  const f = fixture(t);
+  const multiple = circuit();
+  multiple.push({ ...multiple[0], source_component_id: "second", name: "U2" });
+  writeFileSync(join(f.cwd, "board.circuit.json"), JSON.stringify(multiple));
+  assert.equal(await f.run(["generate-sysconfig", "board.circuit.json"]), 1);
+  assert.match(f.stderr.join("\n"), /found 2/);
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--component",
+      "U1",
+    ]),
+    0,
+    f.stderr.join("\n"),
+  );
+  assert.equal(
+    await f.run([
+      "generate-sysconfig",
+      "board.circuit.json",
+      "--component",
+      "U1",
+      "--config",
+      "request.json",
+    ]),
+    1,
+  );
+  assert.match(f.stderr.at(-1), /not both/);
+});
+
+test("TSX pinAttributes export selected GPIO roles without a request file", async (t) => {
+  const f = fixture(t);
+  writeFileSync(
+    join(f.cwd, "board.circuit.tsx"),
+    `export default () => (
+    <board width="10mm" height="10mm">
+      <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
+        pinLabels={{ pin4: "DIO11", pin5: "DIO12" }}
+        pinAttributes={{
+          pin4: { isOutput: true },
+          pin5: { isInput: true, isUsingInternalPullup: true },
+        }} />
+    </board>
+  );`,
+  );
+  assert.equal(
+    await f.run(["generate-sysconfig", "board.circuit.tsx"]),
+    0,
+    f.stderr.join("\n"),
+  );
+  const source = readFileSync(join(f.cwd, "board.syscfg"), "utf8");
+  assert.match(source, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
+  assert.match(source, /GPIO2\.pull = "Pull Up"/);
+  const exported = JSON.parse(
+    readFileSync(join(f.cwd, "dist/board/circuit.json"), "utf8"),
+  );
+  assert.equal(
+    exported.find(
+      (port) => port.type === "source_port" && port.pin_number === 4,
+    ).is_output,
+    true,
+  );
+  assert.equal(
+    exported.find(
+      (port) => port.type === "source_port" && port.pin_number === 5,
+    ).is_input,
+    true,
+  );
+});
