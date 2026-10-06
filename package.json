@@ -35,7 +35,7 @@
     "@types/bun": "^1.4.0",
     "@types/react": "^19.2.17",
     "bun-match-svg": "^0.0.17",
-    "circuit-json-to-sysconfig": "github:tscircuit/circuit-json-to-sysconfig#aecec5b4b0afe163d4fabf89abd5c640df0bb9a3",
+    "circuit-json-to-sysconfig": "github:tscircuit/circuit-json-to-sysconfig#f31423c8b0547b0c03315b894f955a8b8f2d2436",
     "circuit-to-svg": "0.0.410",
     "tscircuit": "0.0.2745",
     "typescript": "^5.0.0"

@@ -239,7 +239,10 @@ test("a TSX pin failure prints actionable labels without the converter stack", a
   assert.match(message, /U1 \(CC2340R52E0RGER\)/);
   assert.match(message, /U1 pin 4 \(DIO11\)/);
   assert.match(message, /U1 pin 6 \(DIO13\)/);
-  assert.match(message, /Update U1's TSX pinAttributes/);
+  assert.match(
+    message,
+    /Set exactly one of isInput: true or isOutput: true in U1's TSX pinAttributes/,
+  );
   assert.doesNotMatch(
     message,
     /source_component_\d|source_port_\d|\bat \S+|throw new Error/,
