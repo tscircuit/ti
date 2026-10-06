@@ -93,10 +93,8 @@ test("Circuit JSON error output names unresolved pins without IDs or a stack", (
   expect(result).toEqual({ status: 1, stdout: "", sysconfigWritten: false });
   expect(stderr).toMatchInlineSnapshot(`
     "Failed to generate SysConfig: SysConfig conversion failed:
-    Unresolved CC2340 pin configuration for U1 (CC2340R52E0RGER):
     - U1 pin 4 (DIO11): GPIO direction is missing
     - U1 pin 6 (DIO13): GPIO direction is missing
-    Set exactly one of isInput: true or isOutput: true in U1's TSX pinAttributes.
     "
   `);
 });
@@ -121,10 +119,8 @@ test("TSX error output explains board choices without a request file or stack", 
   expect(result).toEqual({ status: 1, stdout: "", sysconfigWritten: false });
   expect(stderr).toMatchInlineSnapshot(`
     "Failed to generate SysConfig: SysConfig conversion failed:
-    Unresolved CC2340 pin configuration for U1 (CC2340R52E0RGER):
     - U1 pin 4 (DIO11): GPIO direction is missing
     - U1 pin 6 (DIO13): GPIO direction is missing
-    Set exactly one of isInput: true or isOutput: true in U1's TSX pinAttributes.
     "
   `);
 });

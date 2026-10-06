@@ -321,8 +321,10 @@ test("missing pin functions are reported without requiring a firmware request fi
   assert.equal(await f.run(["generate-sysconfig", "index.circuit.tsx"]), 1);
   assert.ok(existsSync(join(f.cwd, "dist/index/circuit.json")));
   const message = f.stderr.join("\n");
-  assert.match(message, /Unresolved CC2340 pin configuration/);
-  assert.match(message, /pinAttributes/);
+  assert.match(
+    message,
+    /- U1_MCU pin 9 \(DISP_PWR_N\): GPIO direction is missing/,
+  );
   assert.doesNotMatch(
     message,
     /source_component_\d|source_port_\d|throw new Error|\bat \S+/,
