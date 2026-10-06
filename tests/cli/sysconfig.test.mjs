@@ -16,6 +16,7 @@ import { test } from "node:test";
 import { runCli } from "../../cli/main.mjs";
 import {
   validateGeneratedFiles,
+  validateTiEnvironment,
   validateTiTarget,
 } from "../../cli/sysconfig/ti-cli.mjs";
 import { validateCc2340Output } from "../../cli/sysconfig/validate-cc2340-output.mjs";
@@ -686,7 +687,7 @@ test("CC2340 TI validation rejects a mismatched SDK or SysConfig tool", (t) => {
   );
   assert.throws(
     () => validateTiTarget({ target: "cc2340", env }),
-    /CC2340 requires simplelink_lowpower_f3_sdk/,
+    /CC2340 requires simplelink_lowpower_f3_sdk[\s\S]*Install the required SDK and update TI_SDK_ROOT/,
   );
   writeFileSync(
     product,
@@ -702,7 +703,16 @@ test("CC2340 TI validation rejects a mismatched SDK or SysConfig tool", (t) => {
         env,
         spawnSync: () => ({ status: 0, stdout: "1.26.3\n" }),
       }),
-    /requires TI SysConfig 1\.28\.1\+4785/,
+    /requires TI SysConfig 1\.28\.1\+4785[\s\S]*update TI_SYSCONFIG_NODE and TI_SYSCONFIG_CLI/,
+  );
+  assert.throws(
+    () =>
+      validateTiTarget({
+        target: "cc2340",
+        env,
+        spawnSync: () => ({ status: 1, stderr: "Permission denied" }),
+      }),
+    /Could not run the configured TI SysConfig CLI: Permission denied[\s\S]*Check TI_SYSCONFIG_NODE=.*TI_SYSCONFIG_CLI=/,
   );
 });
 
@@ -1054,11 +1064,87 @@ test("check-sysconfig reports missing TI prerequisites without installing anythi
   assert.equal(
     await f.run(["check-sysconfig", "board.circuit.json"], {
       env: { PATH: process.env.PATH },
+      spawnSync: (command, args) => {
+        assert.equal(command, "bun");
+        assert.deepEqual(args, ["--version"]);
+        return { status: 0, stdout: "1.3.9\n" };
+      },
     }),
     1,
   );
+  assert.match(f.stderr.join("\n"), /TI tool paths are not configured/);
+  const message = f.stderr.join("\n");
   assert.match(
-    f.stderr.join("\n"),
-    /Missing TI environment variable\(s\): TI_SYSCONFIG_NODE, TI_SYSCONFIG_CLI, TI_SDK_ROOT/,
+    message,
+    /TI_SYSCONFIG_NODE: path to TI's bundled Node executable/,
+  );
+  assert.match(
+    message,
+    /TI_SYSCONFIG_CLI: path to SysConfig's dist\/cli.js file/,
+  );
+  assert.match(
+    message,
+    /TI_SDK_ROOT: SDK directory containing .metadata\/product.json/,
+  );
+  assert.match(message, /full CCS is optional/);
+  assert.match(
+    message,
+    /check-sysconfig --help.*downloads and supported versions/,
+  );
+  assert.match(message, /without TI tools.*ti generate-sysconfig <file>/);
+  assert.deepEqual(f.stdout, []);
+});
+
+test("partially configured TI setup lists only unset environment paths", (t) => {
+  const f = fixture(t);
+  assert.throws(
+    () => validateTiEnvironment({ TI_SYSCONFIG_NODE: join(f.cwd, "node") }),
+    (error) => {
+      assert.match(error.message, /TI_SYSCONFIG_CLI: path to/);
+      assert.match(error.message, /TI_SDK_ROOT: SDK directory/);
+      assert.doesNotMatch(error.message, /TI_SYSCONFIG_NODE: path to/);
+      return true;
+    },
+  );
+});
+
+test("invalid TI paths identify every setting and the path to replace", (t) => {
+  const f = fixture(t);
+  const tiNode = join(f.cwd, "missing-node");
+  const tiCli = join(f.cwd, "missing-cli.js");
+  assert.throws(
+    () =>
+      validateTiEnvironment({
+        TI_SYSCONFIG_NODE: tiNode,
+        TI_SYSCONFIG_CLI: tiCli,
+        TI_SDK_ROOT: f.cwd,
+      }),
+    (error) => {
+      assert.match(error.message, /Configured TI paths do not exist/);
+      assert.ok(error.message.includes(`TI_SYSCONFIG_NODE=${tiNode}`));
+      assert.ok(error.message.includes(`TI_SYSCONFIG_CLI=${tiCli}`));
+      assert.match(
+        error.message,
+        /Expected path to SysConfig's dist\/cli.js.*Update TI_SYSCONFIG_CLI/,
+      );
+      return true;
+    },
+  );
+});
+
+test("an incorrect SDK root explains that SysConfig does not install the SDK", (t) => {
+  const f = fixture(t);
+  const tiNode = join(f.cwd, "node");
+  const tiCli = join(f.cwd, "cli.js");
+  writeFileSync(tiNode, "");
+  writeFileSync(tiCli, "");
+  assert.throws(
+    () =>
+      validateTiEnvironment({
+        TI_SYSCONFIG_NODE: tiNode,
+        TI_SYSCONFIG_CLI: tiCli,
+        TI_SDK_ROOT: f.cwd,
+      }),
+    /TI_SDK_ROOT=.*is not a TI SDK root[\s\S]*\.metadata\/product.json is missing[\s\S]*Installing SysConfig alone does not install the SDK/,
   );
 });

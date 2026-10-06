@@ -42,10 +42,11 @@ async function testCli({ command, cwd }) {
     run({ command, args: ["generate-sysconfig", "--help"], cwd }),
     /Usage: ti generate-sysconfig/,
   );
-  assert.match(
-    run({ command, args: ["check-sysconfig", "--help"], cwd }),
-    /Usage: ti check-sysconfig/,
-  );
+  const checkHelp = run({ command, args: ["check-sysconfig", "--help"], cwd });
+  assert.match(checkHelp, /Usage: ti check-sysconfig/);
+  assert.match(checkHelp, /full CCS is optional/);
+  assert.match(checkHelp, /CC2340.*1\.28\.1\+4785.*9\.21\.00\.36/);
+  assert.match(checkHelp, /https:\/\/www.ti.com\/tool\/SYSCONFIG/);
   const result = JSON.parse(
     run({
       command,
@@ -166,6 +167,20 @@ async function testCli({ command, cwd }) {
   const derived = await readFile(join(cwd, "source-pins.syscfg"), "utf8");
   assert.match(derived, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
   assert.doesNotMatch(derived, /initialOutputState|--rtos/);
+  assert.throws(
+    () =>
+      run({
+        command,
+        args: ["check-sysconfig", "source-pins.circuit.json"],
+        cwd,
+        env: {
+          TI_SYSCONFIG_NODE: "",
+          TI_SYSCONFIG_CLI: "",
+          TI_SDK_ROOT: "",
+        },
+      }),
+    /TI tool paths are not configured[\s\S]*full CCS is optional[\s\S]*ti generate-sysconfig <file>/,
+  );
   await writeFile(
     join(cwd, "incomplete-pins.circuit.json"),
     JSON.stringify([

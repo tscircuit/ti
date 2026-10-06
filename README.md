@@ -154,8 +154,14 @@ For an explicit request, the CC2340 LF clock choice is required: `lf_rcosc` sele
 and `lf_xosc` selects an external crystal. Using or reserving DIO3/DIO4 requires
 `lf_rcosc`. Device-only conversion also disables LaunchPad-specific flash startup.
 
-`check-sysconfig` first performs the same conversion in a temporary directory,
-then invokes a matching locally installed TI SysConfig CLI. It requires:
+`generate-sysconfig` needs Node.js and Bun; it does not require TI software.
+For `check-sysconfig`, install standalone TI SysConfig and the SDK for the target
+chip. Full CCS is optional. Run `ti check-sysconfig --help` for downloads and
+supported versions. Setup errors explain missing or invalid paths and how to
+correct them before a circuit build or TI invocation is attempted.
+
+Once the required tool paths are configured, `check-sysconfig` performs the same
+conversion in a temporary directory, then invokes the matching local TI SysConfig CLI:
 
 ```bash
 export TI_SYSCONFIG_NODE=/path/to/sysconfig/nodejs/node

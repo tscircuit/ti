@@ -5,6 +5,8 @@ import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { generateSysconfig } from "./sysconfig/generate.mjs";
 import { requireBun } from "./sysconfig/runtime.mjs";
+import { am2434Profile } from "./sysconfig/am2434-profile.mjs";
+import { cc2340Profile } from "./sysconfig/cc2340-profile.mjs";
 import { validateAm2434Output } from "./sysconfig/validate-am2434-output.mjs";
 import { validateCc2340Output } from "./sysconfig/validate-cc2340-output.mjs";
 import {
@@ -31,6 +33,17 @@ Options:
   -h, --help          Show help
 
 This command never installs TI software or accepts license terms.
+
+Setup:
+  Standalone SysConfig is sufficient; full CCS is optional.
+  CC2340 (pedometer): SysConfig ${cc2340Profile.sysconfigVersion}, SimpleLink Low Power F3 SDK ${cc2340Profile.sdkVersion}
+  AM2434: SysConfig ${am2434Profile.sysconfigVersion}, SDK product ${am2434Profile.sdkName}@${am2434Profile.sdkVersion}
+  SysConfig download: https://www.ti.com/tool/SYSCONFIG
+  CC2340 SDK download: https://www.ti.com/tool/SIMPLELINK-LOWPOWER-SDK
+  AM2434 SDK setup: https://github.com/tscircuit/ti#ti-sysconfig-commands
+
+To generate a .syscfg file without TI tools:
+  ti generate-sysconfig <file>
 
 Example:
   TI_SYSCONFIG_NODE=/path/to/sysconfig/nodejs/node \\

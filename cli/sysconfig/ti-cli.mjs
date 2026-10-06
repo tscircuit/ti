@@ -5,6 +5,24 @@ import { join } from "node:path";
 import { am2434Profile } from "./am2434-profile.mjs";
 import { cc2340Profile } from "./cc2340-profile.mjs";
 
+const tiPathSettings = [
+  ["TI_SYSCONFIG_NODE", "path to TI's bundled Node executable"],
+  ["TI_SYSCONFIG_CLI", "path to SysConfig's dist/cli.js file"],
+  ["TI_SDK_ROOT", "SDK directory containing .metadata/product.json"],
+];
+
+function tiSetupError(problem) {
+  return new Error(
+    [
+      problem,
+      "Checking with TI requires a local SysConfig installation and the TI SDK for your chip.",
+      "You can install standalone SysConfig; full CCS is optional.",
+      "Run `ti check-sysconfig --help` for downloads and supported versions.",
+      "To generate a .syscfg file without TI tools, run: ti generate-sysconfig <file>",
+    ].join("\n"),
+  );
+}
+
 function parseTiProductMetadata(source) {
   // TI's MCU+ SDK product.json contains trailing commas. Remove only commas
   // before a closing array/object token, never comma-like text inside strings.
@@ -35,33 +53,25 @@ export function validateTiEnvironment(env) {
   const tiNode = env.TI_SYSCONFIG_NODE;
   const tiCli = env.TI_SYSCONFIG_CLI;
   const sdkRoot = env.TI_SDK_ROOT;
-  const missing = [
-    ["TI_SYSCONFIG_NODE", tiNode],
-    ["TI_SYSCONFIG_CLI", tiCli],
-    ["TI_SDK_ROOT", sdkRoot],
-  ]
-    .filter(([, configuredPath]) => !configuredPath)
-    .map(([name]) => name);
+  const missing = tiPathSettings.filter(([name]) => !env[name]);
 
   if (missing.length) {
-    throw new Error(
-      `Missing TI environment variable(s): ${missing.join(", ")}. check-sysconfig never installs TI software or accepts licenses automatically.`,
+    throw tiSetupError(
+      `TI tool paths are not configured.\nSet these environment variables to their installed locations:\n${missing.map(([name, description]) => `  ${name}: ${description}`).join("\n")}`,
     );
   }
 
-  for (const [name, filePath] of [
-    ["TI_SYSCONFIG_NODE", tiNode],
-    ["TI_SYSCONFIG_CLI", tiCli],
-    ["TI_SDK_ROOT", sdkRoot],
-  ]) {
-    if (!existsSync(filePath)) {
-      throw new Error(`${name} does not exist: ${filePath}`);
-    }
-  }
+  const invalid = tiPathSettings.filter(([name]) => !existsSync(env[name]));
+  if (invalid.length)
+    throw tiSetupError(
+      `Configured TI paths do not exist:\n${invalid.map(([name, description]) => `  ${name}=${env[name]}\n    Expected ${description}. Update ${name} to that installed location.`).join("\n")}`,
+    );
 
   const product = join(sdkRoot, ".metadata", "product.json");
   if (!existsSync(product)) {
-    throw new Error(`TI SDK product metadata does not exist: ${product}`);
+    throw tiSetupError(
+      `TI_SDK_ROOT=${sdkRoot} is not a TI SDK root: .metadata/product.json is missing.\nSet TI_SDK_ROOT to the SDK directory containing that file. Installing SysConfig alone does not install the SDK.`,
+    );
   }
 
   return { tiNode, tiCli, sdkRoot, product };
@@ -80,11 +90,13 @@ export function validateTiTarget({ target, env, spawnSync = nodeSpawnSync }) {
   try {
     sdk = parseTiProductMetadata(readFileSync(product, "utf8"));
   } catch (error) {
-    throw new Error(`Unable to read TI SDK product metadata: ${error.message}`);
+    throw tiSetupError(
+      `Unable to read TI SDK product metadata at ${product}: ${error.message}\nCheck the SDK installation and set TI_SDK_ROOT to its root directory.`,
+    );
   }
   if (sdk.name !== profile.sdkName || sdk.version !== profile.sdkVersion) {
-    throw new Error(
-      `${target.toUpperCase()} requires ${profile.sdkName}@${profile.sdkVersion}; found ${sdk.name ?? "unknown"}@${sdk.version ?? "unknown"} in ${product}`,
+    throw tiSetupError(
+      `${target.toUpperCase()} requires ${profile.sdkName}@${profile.sdkVersion}; found ${sdk.name ?? "unknown"}@${sdk.version ?? "unknown"} in ${product}.\nInstall the required SDK and update TI_SDK_ROOT to that installation.`,
     );
   }
   const version = spawnSync(tiNode, [tiCli, "--version"], {
@@ -92,11 +104,17 @@ export function validateTiTarget({ target, env, spawnSync = nodeSpawnSync }) {
     encoding: "utf8",
   });
   if (version.error || version.status !== 0) {
-    throw new Error("Unable to determine installed TI SysConfig CLI version");
+    const details =
+      version.error?.message ||
+      version.stderr?.trim() ||
+      `exit code ${version.status}`;
+    throw tiSetupError(
+      `Could not run the configured TI SysConfig CLI: ${details}\nCheck TI_SYSCONFIG_NODE=${tiNode} and TI_SYSCONFIG_CLI=${tiCli}. They must point to TI's bundled Node executable and SysConfig's dist/cli.js file.`,
+    );
   }
   if (version.stdout.trim() !== profile.sysconfigVersion) {
-    throw new Error(
-      `${target.toUpperCase()} requires TI SysConfig ${profile.sysconfigVersion}; found ${version.stdout.trim() || "unknown"}`,
+    throw tiSetupError(
+      `${target.toUpperCase()} requires TI SysConfig ${profile.sysconfigVersion}; found ${version.stdout.trim() || "unknown"}.\nInstall the required version and update TI_SYSCONFIG_NODE and TI_SYSCONFIG_CLI to that installation.`,
     );
   }
 }

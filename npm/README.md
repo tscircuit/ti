@@ -67,7 +67,11 @@ LF clock. Undeclared startup, interrupt, bitrate and RTOS choices stay unset for
 TI's SDK; these defaults do not establish application requirements.
 
 The generate command builds TS/TSX to Circuit JSON and writes a `.syscfg`; the check command then
-runs a matching locally installed TI SysConfig CLI. The check requires
+runs a matching locally installed TI SysConfig CLI. Generation needs Node.js and
+Bun, without TI software. Checking requires standalone SysConfig and the SDK
+for the chip; full CCS is optional. Run `ti check-sysconfig --help` for downloads,
+supported versions and setup. Missing or invalid paths produce an error
+explaining how to correct them before the circuit is built. The check requires
 `TI_SYSCONFIG_NODE`, `TI_SYSCONFIG_CLI`, and `TI_SDK_ROOT`. For CC2340, use
 SysConfig 1.28.1+4785 and SimpleLink F3 SDK 9.21.00.36; the checker verifies
 these versions and compares TI-generated GPIO, I²C, and declared clock settings with
