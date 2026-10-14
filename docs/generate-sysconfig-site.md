@@ -15,15 +15,17 @@ An absent or incompatible renderer gives an installation/version error; no
 alternative viewer is substituted.
 
 The setup pins private viewer `main` at merged commit
-`527364cac16ae00204f875c5a57704f195f96992` (viewer PR #8), which includes the
-standalone renderer and compressed-source URL loading from PRs #6 and #7.
+`ef3543c8f8098677afd821b2d335646d5f716285` (viewer PR #9), which includes the
+standalone renderer, compressed-source URL loading, inline read-only settings,
+pin inspection and recorded I2C-owned GPIO dependencies. Ownership presentation
+hides Alternative Mux for those GPIOs, including the parent dependency sections.
 Install that exact revision in the circuit project for a reproducible handoff. With authorised
 GitHub access, prepare the private package in a separate directory:
 
 ```sh
 gh repo clone tscircuit/sysconfig-viewer
 cd sysconfig-viewer
-git checkout 527364cac16ae00204f875c5a57704f195f96992
+git checkout ef3543c8f8098677afd821b2d335646d5f716285
 bun install --frozen-lockfile
 bun pm pack
 ```
@@ -60,9 +62,11 @@ RunFrame iframe integration; pass its URL through the independent RunFrame/CLI
 tab APIs. This command does not edit project tab configuration, start a vendor
 host, publish a website or depend on a hardcoded host/port.
 
-Values are displayed read-only from source, with SDK declarations/defaults kept
-separate. The source is never executed. Fixed requests are not asserted as solved
-pins. Dynamic callbacks and undeclared effective values remain unevaluated.
+Source assignments, SDK defaults and recorded dependency arguments appear in one
+read-only form with provenance labels. The source is never executed. Fixed
+requests are not asserted as solved pins. The browser uses finite exported
+presentation cases without running SDK callbacks; unrecorded cases are identified
+as unavailable.
 Successful site generation is not TI validation or firmware generation.
 
 Validation includes subprocess protocol tests with an explicitly named renderer
@@ -71,7 +75,8 @@ and configured imrishabh18/pedometer source. Protocol fixtures do not establish
 TI UI parity.
 
 The real package checks also reject missing QFP dimensions, out-of-range package
-pins, and an explicit RTOS/catalog mismatch before writing HTML. The pinned
-`main` revision has the same tracked file tree as the previously verified merged
-URL-viewer revision. URL loading is independent of this standalone HTML command;
-the same private package supplies both APIs.
+pins, and an explicit RTOS/catalog mismatch before writing HTML. URL loading is
+independent of this standalone HTML command; the same private package supplies
+both APIs. The command resolves the package installed in the input project, so
+updating TI alone does not replace an older viewer installation. Install the
+pinned viewer revision and regenerate existing HTML to include its updates.
