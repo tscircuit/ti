@@ -53,8 +53,15 @@ Install [Bun](https://bun.sh/) first; both SysConfig commands require `bun` on
 
 ```sh
 ti generate-sysconfig ./board.circuit.tsx
+ti generate-sysconfig-site ./board.syscfg
 ti check-sysconfig ./board.circuit.tsx
 ```
+
+`generate-sysconfig-site` creates self-contained read-only HTML. It requires Bun
+and an authorised matching private `@tscircuit/sysconfig-viewer` installation in
+the circuit project. The public package contains no copied TI UI. No TI software
+or SDK installation is required; site generation does not run TI validation or
+generate firmware. Existing output files are preserved.
 
 Use tscircuit 0.0.2745 or newer for TSX export. For supported CC2340 circuits, GPIO/I2C choices come from existing MCU
 `pinAttributes` exported to Circuit JSON. No separate request JSON is required

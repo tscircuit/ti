@@ -159,6 +159,10 @@ and `lf_xosc` selects an external crystal. Using or reserving DIO3/DIO4 requires
 `lf_rcosc`. Device-only conversion also disables LaunchPad-specific flash startup.
 
 `generate-sysconfig` needs Node.js and Bun; it does not require TI software.
+`ti generate-sysconfig-site ./index.syscfg` creates a standalone read-only HTML
+page using the separately installed authorised private viewer package. It needs
+no TI installation and also accepts circuit inputs. See
+[site generation](docs/generate-sysconfig-site.md) for setup and scope.
 For `check-sysconfig`, install standalone TI SysConfig and the SDK for the target
 chip. Full CCS is optional. Run `ti check-sysconfig --help` for downloads and
 supported versions. The command discovers standalone SysConfig, CCS-bundled

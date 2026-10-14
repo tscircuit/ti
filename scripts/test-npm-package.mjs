@@ -43,6 +43,10 @@ async function testCli({ command, cwd }) {
     /Usage: ti generate-sysconfig/,
   );
   const checkHelp = run({ command, args: ["check-sysconfig", "--help"], cwd });
+  assert.match(
+    run({ command, args: ["generate-sysconfig-site", "--help"], cwd }),
+    /Usage: ti generate-sysconfig-site/,
+  );
   assert.match(checkHelp, /Usage: ti check-sysconfig/);
   assert.match(checkHelp, /full CCS is optional/);
   assert.match(
@@ -252,6 +256,7 @@ try {
   assert.deepEqual(packed.files.map((file) => file.path).sort(), [
     "README.md",
     "cli/check-sysconfig.mjs",
+    "cli/generate-sysconfig-site.mjs",
     "cli/generate-sysconfig.mjs",
     "cli/import.mjs",
     "cli/main.mjs",
@@ -259,9 +264,11 @@ try {
     "cli/sysconfig/cc2340-profile.mjs",
     "cli/sysconfig/convert.mjs",
     "cli/sysconfig/discover-ti-tools.mjs",
+    "cli/sysconfig/generate-site.mjs",
     "cli/sysconfig/generate.mjs",
     "cli/sysconfig/get-validation-options.mjs",
     "cli/sysconfig/input.mjs",
+    "cli/sysconfig/render-site.mjs",
     "cli/sysconfig/request.mjs",
     "cli/sysconfig/runtime.mjs",
     "cli/sysconfig/ti-cli.mjs",
