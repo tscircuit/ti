@@ -75,6 +75,7 @@ export async function generateSysconfig(
     spawnSync = nodeSpawnSync,
     env = process.env,
     bun = "bun",
+    includePcb = false,
   } = {},
 ) {
   if (configPath && componentSelector)
@@ -84,6 +85,7 @@ export async function generateSysconfig(
     spawnSync,
     env,
     bun,
+    includePcb,
   });
   let resolvedConfigPath;
   let requestedOptions = {};

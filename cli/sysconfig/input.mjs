@@ -119,7 +119,13 @@ function commandFailure(label, result) {
 
 export async function getCircuitJsonInput(
   inputPath,
-  { cwd, spawnSync = nodeSpawnSync, env = process.env, bun = "bun" },
+  {
+    cwd,
+    spawnSync = nodeSpawnSync,
+    env = process.env,
+    bun = "bun",
+    includePcb = false,
+  },
 ) {
   const absoluteInput = resolve(cwd, inputPath);
   if (!existsSync(absoluteInput)) {
@@ -149,7 +155,7 @@ export async function getCircuitJsonInput(
       tscircuitCli,
       "build",
       absoluteInput,
-      "--disable-pcb",
+      ...(includePcb ? [] : ["--disable-pcb"]),
       "--disable-parts-engine",
     ],
     {
