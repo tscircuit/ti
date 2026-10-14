@@ -44,6 +44,23 @@ async function testCli({ command, cwd }) {
   );
   const checkHelp = run({ command, args: ["check-sysconfig", "--help"], cwd });
   assert.match(
+    run({ command, args: ["generate-sysconfig-url", "--help"], cwd }),
+    /Usage: ti generate-sysconfig-url/,
+  );
+  await writeFile(
+    join(cwd, "url-input.syscfg"),
+    '// Unicode: 雪\r\nconst text = "hello";\n',
+  );
+  const viewerUrl = new URL(
+    run({
+      command,
+      args: ["generate-sysconfig-url", "url-input.syscfg"],
+      cwd,
+    }).trim(),
+  );
+  assert.equal(viewerUrl.origin, "https://sysconfig-viewer.vercel.app");
+  assert.match(viewerUrl.hash, /^#data:application\/gzip;base64,/);
+  assert.match(
     run({ command, args: ["generate-sysconfig-site", "--help"], cwd }),
     /Usage: ti generate-sysconfig-site/,
   );
@@ -257,6 +274,7 @@ try {
     "README.md",
     "cli/check-sysconfig.mjs",
     "cli/generate-sysconfig-site.mjs",
+    "cli/generate-sysconfig-url.mjs",
     "cli/generate-sysconfig.mjs",
     "cli/import.mjs",
     "cli/main.mjs",
@@ -265,10 +283,12 @@ try {
     "cli/sysconfig/convert.mjs",
     "cli/sysconfig/discover-ti-tools.mjs",
     "cli/sysconfig/generate-site.mjs",
+    "cli/sysconfig/generate-url.mjs",
     "cli/sysconfig/generate.mjs",
     "cli/sysconfig/get-validation-options.mjs",
     "cli/sysconfig/input.mjs",
     "cli/sysconfig/render-site.mjs",
+    "cli/sysconfig/render-url.mjs",
     "cli/sysconfig/request.mjs",
     "cli/sysconfig/runtime.mjs",
     "cli/sysconfig/ti-cli.mjs",
