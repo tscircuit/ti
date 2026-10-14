@@ -14,9 +14,31 @@ package does not contain the private copied UI or bundle the private renderer.
 An absent or incompatible renderer gives an installation/version error; no
 alternative viewer is substituted.
 
-For development, build/test the private viewer PR and use the handbook's local
-yalc workflow in the circuit project. Install an approved private GitHub revision
-for a reproducible handoff; the required viewer API is `generateReadOnlyHtml`,
+The command is verified against private viewer `main` at merged commit
+`fdb109716ca8e45613c182dd633e8631a1536d61` (viewer PR #6). Install that exact
+revision in the circuit project for a reproducible handoff. With authorised
+GitHub access, prepare the private package in a separate directory:
+
+```sh
+gh repo clone tscircuit/sysconfig-viewer
+cd sysconfig-viewer
+git checkout fdb109716ca8e45613c182dd633e8631a1536d61
+bun install --frozen-lockfile
+bun pm pack
+```
+
+Then, from the circuit project's directory, install the resulting archive:
+
+```sh
+bun add --dev /path/to/sysconfig-viewer/tscircuit-sysconfig-viewer-0.0.1.tgz
+ti generate-sysconfig-site ./index.syscfg
+```
+
+Keep this package and generated HTML private. The command resolves the viewer
+from the input project, so installing it beside a global TI executable is not
+sufficient. No private Git dependency or copied viewer assets are added to the
+public TI distribution. For ongoing development, use the handbook's local yalc
+workflow. The required viewer API is `generateReadOnlyHtml`,
 `getBundledSdkCatalog`, and `readReadOnlyViewerInput` from its `/html` export.
 
 An existing `.syscfg` is read unchanged. Circuit JSON uses the existing converter.
@@ -46,3 +68,10 @@ Validation includes subprocess protocol tests with an explicitly named renderer
 fixture, and separate local end-to-end generation against the real private viewer
 and configured imrishabh18/pedometer source. Protocol fixtures do not establish
 TI UI parity.
+
+The real package checks also reject missing QFP dimensions, out-of-range package
+pins, and an explicit RTOS/catalog mismatch before writing HTML. The same command
+was verified against merged URL-viewer revision
+`d7ff1bd564f9a256a2ab9c434a1e8656b8965bf3` (viewer PR #7). That PR merged into
+`feat/sdk-module-reference`. URL loading is independent of this standalone HTML
+command; the pinned `main` revision above supplies its required renderer API.
