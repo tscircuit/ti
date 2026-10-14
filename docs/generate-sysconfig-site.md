@@ -14,15 +14,16 @@ package does not contain the private copied UI or bundle the private renderer.
 An absent or incompatible renderer gives an installation/version error; no
 alternative viewer is substituted.
 
-The command is verified against private viewer `main` at merged commit
-`fdb109716ca8e45613c182dd633e8631a1536d61` (viewer PR #6). Install that exact
-revision in the circuit project for a reproducible handoff. With authorised
+The setup pins private viewer `main` at merged commit
+`527364cac16ae00204f875c5a57704f195f96992` (viewer PR #8), which includes the
+standalone renderer and compressed-source URL loading from PRs #6 and #7.
+Install that exact revision in the circuit project for a reproducible handoff. With authorised
 GitHub access, prepare the private package in a separate directory:
 
 ```sh
 gh repo clone tscircuit/sysconfig-viewer
 cd sysconfig-viewer
-git checkout fdb109716ca8e45613c182dd633e8631a1536d61
+git checkout 527364cac16ae00204f875c5a57704f195f96992
 bun install --frozen-lockfile
 bun pm pack
 ```
@@ -70,8 +71,7 @@ and configured imrishabh18/pedometer source. Protocol fixtures do not establish
 TI UI parity.
 
 The real package checks also reject missing QFP dimensions, out-of-range package
-pins, and an explicit RTOS/catalog mismatch before writing HTML. The same command
-was verified against merged URL-viewer revision
-`d7ff1bd564f9a256a2ab9c434a1e8656b8965bf3` (viewer PR #7). That PR merged into
-`feat/sdk-module-reference`. URL loading is independent of this standalone HTML
-command; the pinned `main` revision above supplies its required renderer API.
+pins, and an explicit RTOS/catalog mismatch before writing HTML. The pinned
+`main` revision has the same tracked file tree as the previously verified merged
+URL-viewer revision. URL loading is independent of this standalone HTML command;
+the same private package supplies both APIs.
