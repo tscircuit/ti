@@ -48,14 +48,21 @@ reference subcircuits; available 3D models remain remote links.
 
 SysConfig generation is available from the same executable:
 
-Install [Bun](https://bun.sh/) first; both SysConfig commands require `bun` on
+Install [Bun](https://bun.sh/) first; all SysConfig commands require `bun` on
 `PATH` in addition to Node.js.
 
 ```sh
 ti generate-sysconfig ./board.circuit.tsx
+ti generate-sysconfig-url ./board.circuit.tsx
 ti generate-sysconfig-site ./board.syscfg
 ti check-sysconfig ./board.circuit.tsx
 ```
+
+`generate-sysconfig-url` prints a hosted viewer URL from a circuit entrypoint,
+Circuit JSON or an existing `.syscfg`. Circuit inputs use the existing converter
+and a temporary `.syscfg`, preserving sibling configuration files. Select an MCU
+with `--component U1`, or use an explicit legacy request with `--config`.
+URL generation needs no private viewer package or TI installation.
 
 `generate-sysconfig-site` creates self-contained read-only HTML. It requires Bun
 and an authorised matching private `@tscircuit/sysconfig-viewer` installation in

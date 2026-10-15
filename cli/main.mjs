@@ -4,7 +4,7 @@ const help = `Usage: ti search [options] <query...>
        ti import <part-number>
        ti generate-sysconfig [options] <file>
        ti generate-sysconfig-site [options] <file>
-       ti generate-sysconfig-url [options] <file.syscfg>
+       ti generate-sysconfig-url [options] <file>
        ti check-sysconfig [options] <file>
 
 Search/import TI parts, or generate and validate TI SysConfig from tscircuit.

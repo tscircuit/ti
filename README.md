@@ -55,8 +55,9 @@ internet connection and an available EasyEDA part.
 
 ### TI SysConfig commands
 
-For hosted viewing, use `ti generate-sysconfig-url ./index.syscfg` to print a
-compressed viewer URL without installing the private viewer. See the
+For hosted viewing, use `ti generate-sysconfig-url ./index.circuit.tsx` to build
+the circuit and print a compressed viewer URL without installing the private
+viewer. Existing `.syscfg` and Circuit JSON inputs also work. See the
 [URL command guide](docs/generate-sysconfig-url.md).
 
 The same `ti` executable can generate TI SysConfig from a tscircuit entrypoint:
