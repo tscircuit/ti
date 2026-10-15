@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { gunzipSync } from "node:zlib";
 import { test } from "node:test";
 import { runCli } from "../../cli/main.mjs";
@@ -30,6 +31,45 @@ async function run(args, context) {
     invocations,
   };
 }
+
+test("URL command converts TSX without overwriting a sibling SysConfig file", async (t) => {
+  const cwd = await mkdtemp(join(tmpdir(), "ti-url-tsx-"));
+  t.after(() => rm(cwd, { recursive: true, force: true }));
+  await writeFile(
+    join(cwd, "package.json"),
+    '{"private":true,"type":"module"}',
+  );
+  await symlink(
+    new URL("../../node_modules/", import.meta.url),
+    join(cwd, "node_modules"),
+    "junction",
+  );
+  await writeFile(join(cwd, "index.syscfg"), "// existing configuration\n");
+  await writeFile(
+    join(cwd, "index.circuit.tsx"),
+    `export default () => (
+    <board width="20mm" height="20mm">
+      <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER" footprint="qfn24"
+        pinLabels={{ pin4: "DIO11" }} pinAttributes={{ pin4: { isOutput: true } }} />
+    </board>
+  );`,
+  );
+  const result = await run(["index.circuit.tsx"], { cwd });
+  assert.equal(result.status, 0, result.stderr);
+  const payload = JSON.parse(
+    gunzipSync(
+      Buffer.from(new URL(result.stdout).hash.split(",")[1], "base64"),
+    ).toString("utf8"),
+  );
+  assert.equal(payload.filename, "index.syscfg");
+  assert.match(payload.source, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
+  assert.equal(
+    await readFile(join(cwd, "index.syscfg"), "utf8"),
+    "// existing configuration\n",
+  );
+  const encoder = result.invocations.at(-1);
+  assert.equal(existsSync(dirname(encoder.arguments_[1])), false);
+});
 
 test("URL command needs no private viewer or TI tools and preserves exact UTF-8 source", async () => {
   const cwd = await mkdtemp(join(tmpdir(), "ti-url-"));

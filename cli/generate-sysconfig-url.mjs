@@ -2,10 +2,10 @@ import { parseArgs } from "node:util";
 import { generateSysconfigUrl } from "./sysconfig/generate-url.mjs";
 import { requireBun } from "./sysconfig/runtime.mjs";
 
-const help = `Usage: ti generate-sysconfig-url [options] <file.syscfg>
+const help = `Usage: ti generate-sysconfig-url [options] <file>
 
-Print a gzip/base64 URL for an existing .syscfg file. Source is never executed.
-Requires Bun. No private viewer package, TI tools, SDK or network request is needed.
+Print a gzip/base64 URL from .syscfg, TS/TSX or Circuit JSON.
+Requires Bun. No private viewer package, TI tools or SDK is needed.
 
 Options:
   --viewer-url <url>  Viewer address (default: https://sysconfig-viewer.vercel.app/)
@@ -14,8 +14,9 @@ Options:
 The URL contains the configuration source. Share it only with intended recipients.
 Encoding is not TI validation. The hosted viewer must support the file's target.
 
-Example:
-  ti generate-sysconfig-url ./index.syscfg`;
+Examples:
+  ti generate-sysconfig-url ./index.syscfg
+  ti generate-sysconfig-url ./index.circuit.tsx`;
 
 export async function runGenerateSysconfigUrl(args, context = {}) {
   const {
@@ -38,7 +39,7 @@ export async function runGenerateSysconfigUrl(args, context = {}) {
     }
     if (positionals.length !== 1 || !positionals[0].trim())
       throw new Error(
-        "One .syscfg file is required. Run ti generate-sysconfig-url --help.",
+        "One input file is required. Run ti generate-sysconfig-url --help.",
       );
     if (values["viewer-url"] !== undefined && !values["viewer-url"].trim())
       throw new Error("--viewer-url cannot be empty");

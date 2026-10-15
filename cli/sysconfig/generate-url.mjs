@@ -1,7 +1,11 @@
 import { spawnSync as nodeSpawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { generateSysconfig } from "./generate.mjs";
+import { getInputStem } from "./input.mjs";
 
 export const DEFAULT_SYSCONFIG_VIEWER_URL =
   "https://sysconfig-viewer.vercel.app/";
@@ -20,10 +24,6 @@ export async function generateSysconfigUrl(
   } = {},
 ) {
   const absoluteInput = resolve(cwd, inputPath);
-  if (!absoluteInput.toLowerCase().endsWith(".syscfg"))
-    throw new Error(
-      "Input must be an existing .syscfg file. Use ti generate-sysconfig for circuit inputs.",
-    );
   if (!existsSync(absoluteInput))
     throw new Error(`Input file does not exist: ${inputPath}`);
   const parsedUrl = new URL(viewerUrl);
@@ -35,6 +35,32 @@ export async function generateSysconfigUrl(
     throw new Error(
       "The SysConfig viewer requires an HTTP(S) URL without credentials",
     );
+  if (!absoluteInput.toLowerCase().endsWith(".syscfg")) {
+    const temporary = await mkdtemp(join(tmpdir(), "ti-sysconfig-url-"));
+    try {
+      const sourcePath = join(
+        temporary,
+        `${getInputStem(absoluteInput)}.syscfg`,
+      );
+      await generateSysconfig(absoluteInput, {
+        cwd,
+        outputPath: sourcePath,
+        spawnSync,
+        env,
+        bun,
+        includePcb: true,
+      });
+      return await generateSysconfigUrl(sourcePath, {
+        cwd,
+        viewerUrl,
+        spawnSync,
+        env,
+        bun,
+      });
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  }
   const result = spawnSync(bun, [rendererPath, absoluteInput, parsedUrl.href], {
     cwd,
     env,
