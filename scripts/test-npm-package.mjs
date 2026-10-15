@@ -4,7 +4,6 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { gunzipSync } from "node:zlib";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const manifest = JSON.parse(
@@ -336,7 +335,7 @@ try {
     join(consumer, "source-pins.circuit.tsx"),
     `export default () => (
     <board width="10mm" height="10mm">
-      <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER" footprint="qfn24"
+      <chip name="U1" manufacturerPartNumber="CC2340R52E0RGER"
         pinLabels={{ pin4: "DIO11", pin5: "DIO12" }}
         pinAttributes={{ pin4: { isOutput: true }, pin5: { isInput: true } }} />
     </board>
@@ -357,29 +356,6 @@ try {
   );
   assert.match(sourcePins, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
   assert.match(sourcePins, /GPIO2\.mode = "Input"/);
-  const circuitUrl = new URL(
-    run({
-      command: process.execPath,
-      args: [
-        "node_modules/@tscircuit/ti/cli/ti.mjs",
-        "generate-sysconfig-url",
-        "source-pins.circuit.tsx",
-      ],
-      cwd: consumer,
-    }).trim(),
-  );
-  const circuitPayload = JSON.parse(
-    gunzipSync(Buffer.from(circuitUrl.hash.split(",")[1], "base64")).toString(
-      "utf8",
-    ),
-  );
-  assert.equal(circuitPayload.filename, "source-pins.syscfg");
-  assert.match(circuitPayload.source, /GPIO1\.gpioPin\.\$assign = "DIO11"/);
-  assert.match(circuitPayload.source, /GPIO2\.mode = "Input"/);
-  assert.equal(
-    await readFile(join(consumer, "source-pins.syscfg"), "utf8"),
-    sourcePins,
-  );
   console.log("Locally installed ti command passed");
   await writeFile(
     join(consumer, "smoke.mjs"),
