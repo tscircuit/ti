@@ -51,21 +51,23 @@ await cp(new URL("../cli/", import.meta.url), new URL("cli/", output), {
 });
 // The component package only needs the converter while building this CLI.
 // Ship its Bun-compatible bundle so installing components never fetches Git deps.
-const converterBundlePath = fileURLToPath(
-  new URL("cli/sysconfig/convert.mjs", output),
-);
-const converterBuild = spawnSync(
-  "bun",
-  [
-    "build",
-    "cli/sysconfig/convert.mjs",
-    "--target=bun",
-    "--outfile",
-    converterBundlePath,
-  ],
-  { cwd: root, stdio: "inherit" },
-);
-if (converterBuild.error) throw converterBuild.error;
-if (converterBuild.status !== 0) process.exit(converterBuild.status ?? 1);
+for (const entrypoint of ["convert.mjs", "render-url.mjs"]) {
+  const bundlePath = fileURLToPath(
+    new URL(`cli/sysconfig/${entrypoint}`, output),
+  );
+  const bundle = spawnSync(
+    "bun",
+    [
+      "build",
+      `cli/sysconfig/${entrypoint}`,
+      "--target=bun",
+      "--outfile",
+      bundlePath,
+    ],
+    { cwd: root, stdio: "inherit" },
+  );
+  if (bundle.error) throw bundle.error;
+  if (bundle.status !== 0) process.exit(bundle.status ?? 1);
+}
 await chmod(new URL("cli/ti.mjs", output), 0o755);
 console.log("Built @tscircuit/ti in dist/npm");

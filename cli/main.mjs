@@ -4,6 +4,7 @@ const help = `Usage: ti search [options] <query...>
        ti import <part-number>
        ti generate-sysconfig [options] <file>
        ti generate-sysconfig-site [options] <file>
+       ti generate-sysconfig-url [options] <file.syscfg>
        ti check-sysconfig [options] <file>
 
 Search/import TI parts, or generate and validate TI SysConfig from tscircuit.
@@ -58,6 +59,19 @@ export async function runCli(
       "./generate-sysconfig-site.mjs"
     );
     return runGenerateSysconfigSite(args, {
+      stdout,
+      stderr,
+      cwd,
+      spawnSync,
+      env,
+      bun,
+    });
+  }
+  if (command === "generate-sysconfig-url") {
+    const { runGenerateSysconfigUrl } = await import(
+      "./generate-sysconfig-url.mjs"
+    );
+    return runGenerateSysconfigUrl(args, {
       stdout,
       stderr,
       cwd,

@@ -55,9 +55,13 @@ internet connection and an available EasyEDA part.
 
 ### TI SysConfig commands
 
+For hosted viewing, use `ti generate-sysconfig-url ./index.syscfg` to print a
+compressed viewer URL without installing the private viewer. See the
+[URL command guide](docs/generate-sysconfig-url.md).
+
 The same `ti` executable can generate TI SysConfig from a tscircuit entrypoint:
 
-Install [Bun](https://bun.sh/) first; both SysConfig commands require `bun` on
+Install [Bun](https://bun.sh/) first; all SysConfig commands require `bun` on
 `PATH`, including when `ti` was installed with npm.
 
 ```bash
