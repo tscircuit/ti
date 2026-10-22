@@ -2,14 +2,13 @@
 
 This repo contains hand-curated tscircuit TSX schematics for Texas Instruments
 devices, reusable TI reference subcircuits, and raw TI chip definitions.
-
 - [View component library](https://ti.tscircuit.app/#file=lib%2Fchips%2FBQ24072.circuit.tsx)
 - [View System Block Editor](https://tiblocks.tscircuit.com/)
 
 The published package is `@tsci/tscircuit.ti`. It provides ready-to-use
 subcircuit components and low-level chip components that can be imported into a
 local tscircuit project, placed on a board, and connected to from the
-surrounding circuit. 
+surrounding circuit.
 
 
 ## Installation
@@ -89,7 +88,7 @@ and their exported `source_port` flags. It does not read or require sibling
     pin3: { activeCapability: "i2c_sda" },
     pin19: { activeCapability: "i2c_scl" },
   }}
-/>
+/>;
 ```
 
 Use tscircuit 0.0.2745 or newer, which exports these attributes as `is_output`, `is_input`,
@@ -233,13 +232,13 @@ instructions. Node.js 22.14 or newer is required for the npm distribution.
 Import the TI part you need from the package and place it inside a board.
 
 ```tsx
-import { PowerMonitor_INA237 } from "@tsci/tscircuit.ti"
+import { PowerMonitor_INA237 } from "@tsci/tscircuit.ti";
 
 export default () => (
   <board width="18mm" height="14mm">
     <PowerMonitor_INA237 name="INA237" />
   </board>
-)
+);
 ```
 
 ## Complete Examples
@@ -260,7 +259,6 @@ the released schematic and BOM. It preserves reference designators U1-U7,
 R1-R23, C1-C18, J1-J10, TP1-TP7, and S1, including the DNP shutdown resistor
 and both selectable instrumentation-amplifier paths. The example composes these
 reusable modules:
-
 - `PowerManagement_TPS7A2433_TIDA010266`
 - `VoltageReference_ATL431LI_TIDA010266`
 - `InstrumentationAmplifier_INA350`
@@ -335,13 +333,13 @@ definition available and exposes the short-name wrapper from the package
 entrypoint.
 
 ```tsx
-import { BQ24074 } from "@tsci/tscircuit.ti"
+import { BQ24074 } from "@tsci/tscircuit.ti";
 
 export default () => (
   <board width="14mm" height="14mm">
     <BQ24074 name="U1" footprintVariant="vqfn_16_ep_3x3" pcbX={0} pcbY={0} />
   </board>
-)
+);
 ```
 
 `footprintVariant` is optional today and defaults to the currently available
@@ -355,7 +353,7 @@ inside one of those subcircuits, use a selector string that starts with the
 placed subcircuit name, then selects the internal component and pin.
 
 ```tsx
-import { PowerMonitor_INA237 } from "@tsci/tscircuit.ti"
+import { PowerMonitor_INA237 } from "@tsci/tscircuit.ti";
 
 export default () => (
   <board width="22mm" height="16mm">
@@ -371,11 +369,10 @@ export default () => (
       }}
     />
   </board>
-)
+);
 ```
 
 The selector `".INA237 .J1 .SCL"` means:
-
 - `.INA237` selects the placed `INA237` subcircuit.
 - `.J1` selects the internal connector named `J1` inside that subcircuit.
 - `.SCL` selects the `SCL` pin on that connector.
@@ -404,7 +401,7 @@ amplifier, while low disables it. `shutdown="enabled"` ties SHDN to VS. Do not
 populate a pull-down on SHDN if the amplifier must remain enabled.
 
 ```tsx
-import { InstrumentationAmplifier_INA350 } from "@tsci/tscircuit.ti"
+import { InstrumentationAmplifier_INA350 } from "@tsci/tscircuit.ti";
 
 export default () => (
   <board width="12mm" height="10mm" routingDisabled>
@@ -417,7 +414,7 @@ export default () => (
     <trace from=".Amp .U1 > .REF" to="net.VREF_1_25" />
     <trace from=".Amp .U1 > .GS" to="net.INA_GS" />
   </board>
-)
+);
 ```
 
 The supply, reference generator, sensor, ADC/filter, and optional controls belong
@@ -451,13 +448,13 @@ of those signals. The two PWM inputs drive IN1 and IN2; OUT1 and OUT2 connect
 to the motor.
 
 ```tsx
-import { MotorDriver_DRV8210 } from "@tsci/tscircuit.ti"
+import { MotorDriver_DRV8210 } from "@tsci/tscircuit.ti";
 
 export default () => (
   <board width="16mm" height="12mm">
     <MotorDriver_DRV8210 name="Driver" />
   </board>
-)
+);
 ```
 
 Connect a parent circuit to `.Driver .U1 > .IN1`, `.Driver .U1 > .IN2`,
@@ -488,7 +485,7 @@ selectors such as `.DisplayDriver > net.SCLK`, `.DisplayDriver > net.R0`, and
 `.DisplayDriver > net.GND`.
 
 ```tsx
-import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "@tsci/tscircuit.ti"
+import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "@tsci/tscircuit.ti";
 
 export default () => (
   <board width="28mm" height="24mm" isViaInPadAllowed>
@@ -503,7 +500,7 @@ export default () => (
       }}
     />
   </board>
-)
+);
 ```
 
 The internal 23 kohm IREF resistor matches TI's 3 mA, BC=`011` design example;
@@ -521,7 +518,6 @@ related [LP5891Q1EVM hardware guide](https://www.ti.com/lit/pdf/snvu836).
 ### Available subcircuits
 
 The package currently exports these subcircuit components:
-
 - `BatteryManagement_BQ24072`
 - `BatteryManagement_BQ24073`
 - `BatteryManagement_BQ24074`
@@ -608,80 +604,80 @@ The package also exports these low-level chip components from `lib/chips`. Each
 chip is listed individually below, including whether it supports a
 `footprintVariant` selector on the short-name export.
 
-| Chip Export | `footprintVariant` | Underlying Component Export |
-| --- | --- | --- |
-| `AM62L32` | `fccsp_373_anb` | `AM62L32BOGHAANBR` |
-| `BQ24074` | `vqfn_16_ep_3x3` | `BQ24074RGTR` |
-| `BQ25895` | `wqfn_24_ep_4x4` | `BQ25895RTWR` |
-| `BQ27441G1` | `vson_12_ep_2p5x4` | `BQ27441DRZR_G1B` |
-| `CC2340R5` | `-` | `CC2340R5` |
-| `CC2564C` | `-` | `CC2564C` |
-| `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
-| `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
-| `CSD19532Q5B` | `-` | `CSD19532Q5B` |
-| `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
-| `DRV5013Q1` | `-` | `DRV5013ADQDBZRQ1` |
-| `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
-| `DRV8703` | `vqfn_32_rhb_5x5` | `DRV8703QRHBRQ1` |
-| `DRV8833` | `-` | `DRV8833` |
-| `DRV8876` | `-` | `DRV8876` |
-| `DRV83053Q1` | `-` | `DRV83053QPHPQ1` |
-| `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
-| `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
-| `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
-| `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
-| `INA350` | `wson_8_ep_2x2` | `INA350CDSIDSGR` |
-| `ISOW7841` | `soic_16_wide` | `ISOW7841DWR` |
-| `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
-| `LM73605` | `wqfn_30_rnp_4x6` | `LM73605QRNPRQ1` |
-| `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
-| `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
-| `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
-| `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
-| `MSP430G2230ID` | `-` | `MSP430G2230ID` |
-| `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
-| `MSP430FR6007` | `lqfp_100` | `MSP430FR6007IPZ` |
-| `MSPM0C1104` | `vssop_20_dgs`, `wson_8_dsg` | `MSPM0C1104SDGS20R`, `MSPM0C1104SDSGR` |
-| `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
-| `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
-| `MSPM0G5117` | `lqfp_64` | `MSPM0G5117SPMR` |
-| `MSPM0G5187` | `lqfp_64` | `MSPM0G5187SPMR` |
-| `MSPM33C321A` | `-` | `MSPM33C321ASPZR` |
-| `MSPM33C3219` | `-` | `MSPM33C3219SPZR` |
-| `OPT3001` | `-` | `OPT3001IDNPRQ1` |
-| `OPT3004` | `uson_6_ep_2x2` | `OPT3004DNPR` |
-| `PGA300ARHHR` | `-` | `PGA300ARHHR` |
-| `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
-| `SN65LVDS31D` | `-` | `SN65LVDS31D` |
-| `SN74LVC1G34DBVR` | `-` | `SN74LVC1G34DBVR` |
-| `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
-| `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
-| `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
-| `TLV316` | `-` | `TLV316QDBVTQ1` |
-| `TLV1805` | `sot_23_6` | `TLV1805QDBVRQ1` |
-| `TAS2505` | `-` | `TAS2505` |
-| `TMP103AYFF` | `-` | `TMP103AYFF` |
-| `TMP116` | `wson_6_ep_2x2` | `TMP116NAIDRVR` |
-| `TMP1827` | `-` | `TMP1827` |
-| `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
-| `TMP390Q1` | `-` | `TMP390AQDRLRQ1` |
-| `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
-| `TPS22919` | `-` | `TPS22919` |
-| `TPS25910RSA` | `-` | `TPS25910RSA` |
-| `TPS3850` | `vson_10_drc_3x3` | `TPS3850H33QDRCRQ1` |
-| `TPS62086RLTR` | `-` | `TPS62086RLTR` |
-| `TPS6293` | `-` | `TPS6293` |
-| `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
-| `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
-| `TPS7A02` | `sot_23_5` | `TPS7A0230PDBVR` |
-| `TPS7A20` | `sot_23_5` | `TPS7A2018PDBVR`, `TPS7A2033PDBVR` |
-| `TPS7E81Q1` | `-` | `TPS7E8133QDBVRQ1` |
-| `TPS92638` | `-` | `TPS92638QPWPRQ1` |
-| `TPS7A2028PDBVR` | `-` | `TPS7A2028PDBVR` |
-| `TPSM82823` | `-` | `TPSM82823` |
-| `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
-| `TXS0102` | `vssop_8` | `TXS0102DCUR` |
-| `W3006` | `-` | `W3006` |
+| Chip Export       | `footprintVariant`           | Underlying Component Export            |
+| ----------------- | ---------------------------- | -------------------------------------- |
+| `AM62L32`         | `fccsp_373_anb`              | `AM62L32BOGHAANBR`                     |
+| `BQ24074`         | `vqfn_16_ep_3x3`             | `BQ24074RGTR`                          |
+| `BQ25895`         | `wqfn_24_ep_4x4`             | `BQ25895RTWR`                          |
+| `BQ27441G1`       | `vson_12_ep_2p5x4`           | `BQ27441DRZR_G1B`                      |
+| `CC2340R5`        | `-`                          | `CC2340R5`                             |
+| `CC2564C`         | `-`                          | `CC2564C`                              |
+| `CC2745R10`       | `-`                          | `CC2745R10E0WRHARQ1`                   |
+| `CC3235SF`        | `vqfn_64_ep`                 | `CC3235SF12RGKR`                       |
+| `CSD19532Q5B`     | `-`                          | `CSD19532Q5B`                          |
+| `DAC101C081Q`     | `-`                          | `DAC101C081QISD_NOPB`                  |
+| `DRV5013Q1`       | `-`                          | `DRV5013ADQDBZRQ1`                     |
+| `DRV8210`         | `wson_8_ep_2x2`              | `DRV8210DSGR`                          |
+| `DRV8703`         | `vqfn_32_rhb_5x5`            | `DRV8703QRHBRQ1`                       |
+| `DRV8833`         | `-`                          | `DRV8833`                              |
+| `DRV8876`         | `-`                          | `DRV8876`                              |
+| `DRV83053Q1`      | `-`                          | `DRV83053QPHPQ1`                       |
+| `HDC2080`         | `wson_6_ep_3x3`              | `HDC2080DMBR`                          |
+| `HDC3020`         | `wson_8_ep_2p5x2p5`          | `HDC3020DEFR`                          |
+| `HDC3022`         | `wson_8_ep_2p5x2p5`          | `HDC3022DEJR`                          |
+| `INA237`          | `vssop_10`                   | `INA237AQDGSRQ1`                       |
+| `INA350`          | `wson_8_ep_2x2`              | `INA350CDSIDSGR`                       |
+| `ISOW7841`        | `soic_16_wide`               | `ISOW7841DWR`                          |
+| `LM50HVQ1`        | `-`                          | `LM50HVQDBZRQ1`                        |
+| `LM73605`         | `wqfn_30_rnp_4x6`            | `LM73605QRNPRQ1`                       |
+| `LM74202Q1`       | `-`                          | `LM74202QPWPRQ1`                       |
+| `LMK1C1104`       | `tssop_8`                    | `LMK1C1104PWR`                         |
+| `LM5050Q1`        | `-`                          | `LM5050Q1MKX_1_NOPB`                   |
+| `LP5892Q1`        | `vqfn_76_ep_9x9`             | `LP5892QRRFRQ1`                        |
+| `MSP430G2230ID`   | `-`                          | `MSP430G2230ID`                        |
+| `MSP430F5229`     | `-`                          | `MSP430F5229IRGCR`                     |
+| `MSP430FR6007`    | `lqfp_100`                   | `MSP430FR6007IPZ`                      |
+| `MSPM0C1104`      | `vssop_20_dgs`, `wson_8_dsg` | `MSPM0C1104SDGS20R`, `MSPM0C1104SDSGR` |
+| `MSPM0L1306Q1`    | `-`                          | `MSPM0L1306QRHBRQ1`                    |
+| `MSPM0G3507`      | `lqfp_64`                    | `MSPM0G3507SPMR`                       |
+| `MSPM0G5117`      | `lqfp_64`                    | `MSPM0G5117SPMR`                       |
+| `MSPM0G5187`      | `lqfp_64`                    | `MSPM0G5187SPMR`                       |
+| `MSPM33C321A`     | `-`                          | `MSPM33C321ASPZR`                      |
+| `MSPM33C3219`     | `-`                          | `MSPM33C3219SPZR`                      |
+| `OPT3001`         | `-`                          | `OPT3001IDNPRQ1`                       |
+| `OPT3004`         | `uson_6_ep_2x2`              | `OPT3004DNPR`                          |
+| `PGA300ARHHR`     | `-`                          | `PGA300ARHHR`                          |
+| `SN65HVD1473`     | `vssop_10`                   | `SN65HVD1473DGSR`                      |
+| `SN65LVDS31D`     | `-`                          | `SN65LVDS31D`                          |
+| `SN74LVC1G34DBVR` | `-`                          | `SN74LVC1G34DBVR`                      |
+| `TCAN1042HGV`     | `-`                          | `TCAN1042HGVDRBQ1`                     |
+| `TLIN1028`        | `soic_8_powerpad`            | `TLIN10283DDARQ1`                      |
+| `TLV755P`         | `sot_23_5`                   | `TLV75533PDBVR`                        |
+| `TLV316`          | `-`                          | `TLV316QDBVTQ1`                        |
+| `TLV1805`         | `sot_23_6`                   | `TLV1805QDBVRQ1`                       |
+| `TAS2505`         | `-`                          | `TAS2505`                              |
+| `TMP103AYFF`      | `-`                          | `TMP103AYFF`                           |
+| `TMP116`          | `wson_6_ep_2x2`              | `TMP116NAIDRVR`                        |
+| `TMP1827`         | `-`                          | `TMP1827`                              |
+| `TMP1075`         | `wson_8_ep_2x2`              | `TMP1075DSGR`                          |
+| `TMP390Q1`        | `-`                          | `TMP390AQDRLRQ1`                       |
+| `TPD2E009DRTR`    | `-`                          | `TPD2E009DRTR`                         |
+| `TPS22919`        | `-`                          | `TPS22919`                             |
+| `TPS25910RSA`     | `-`                          | `TPS25910RSA`                          |
+| `TPS3850`         | `vson_10_drc_3x3`            | `TPS3850H33QDRCRQ1`                    |
+| `TPS62086RLTR`    | `-`                          | `TPS62086RLTR`                         |
+| `TPS6293`         | `-`                          | `TPS6293`                              |
+| `TPS61299X`       | `sot_563_6`                  | `TPS61299DRLR`                         |
+| `TPS63802`        | `vson_hr_10`                 | `TPS63802DLAR`                         |
+| `TPS7A02`         | `sot_23_5`                   | `TPS7A0230PDBVR`                       |
+| `TPS7A20`         | `sot_23_5`                   | `TPS7A2018PDBVR`, `TPS7A2033PDBVR`     |
+| `TPS7E81Q1`       | `-`                          | `TPS7E8133QDBVRQ1`                     |
+| `TPS92638`        | `-`                          | `TPS92638QPWPRQ1`                      |
+| `TPS7A2028PDBVR`  | `-`                          | `TPS7A2028PDBVR`                       |
+| `TPSM82823`       | `-`                          | `TPSM82823`                            |
+| `TXB0104`         | `vqfn_14_ep_3p5x3p5`         | `TXB0104RGYR`                          |
+| `TXS0102`         | `vssop_8`                    | `TXS0102DCUR`                          |
+| `W3006`           | `-`                          | `W3006`                                |
 
 Rows with `-` are direct chip exports and do not currently expose a
 `footprintVariant` prop. For the wrapper exports, the underlying component
@@ -689,7 +685,6 @@ exports are also re-exported from the package when you want to import the exact
 low-level definition directly.
 
 The package also exports:
-
 - `TiChipComponents`: an object map of all exported short-name chip components.
 - `TiChipName`: a TypeScript union of keys in `TiChipComponents`.
 - `TiChipComponent`: a TypeScript type for any exported chip component.
@@ -781,6 +776,11 @@ simulation SVG snapshots.
 
 
 ## Development
+
+For the live pedometer SysConfig demo, see
+[`demos/live-sysconfig`](demos/live-sysconfig/README.md). Its `bun run dev`
+starts the circuit server and regenerates the SysConfig iframe URL whenever
+the board's pin attributes change, using the existing published TI commands.
 
 Install dependencies:
 

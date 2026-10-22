@@ -25,6 +25,7 @@ jobs:
       - run: bun install
       - run: bun run typecheck
       - run: bun run test:cli
+      - run: bun run test:live-sysconfig-demo
       - run: bun run build:npm
       - run: bun run test:npm
         env:

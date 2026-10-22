@@ -23,5 +23,11 @@
     "lib": ["ES2023", "DOM", "DOM.Iterable"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".claude", "system-block-ui"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".claude",
+    "system-block-ui",
+    "demos/live-sysconfig/.demo"
+  ]
 }
