@@ -527,6 +527,14 @@ export function App() {
         </div>
 
         <div className="topbar-actions">
+          <a
+            className="github-link"
+            href="https://github.com/tscircuit/ti"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
           <span className="status-chip">
             <span className="status-dot" />
             Automatic resolver active

@@ -111,6 +111,25 @@ button {
   gap: 8px;
 }
 
+.github-link {
+  padding: 6px 9px;
+  color: #bbc3cd;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.github-link:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.github-link:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .status-chip {
   gap: 7px;
   margin-right: 6px;
