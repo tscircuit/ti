@@ -1,16 +1,14 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
 import { test } from "node:test";
-import { waitFor } from "./watch-test-helpers.mjs";
+import { readPublishedTab, waitFor } from "./watch-test-helpers.mjs";
 
-const watcherPath = fileURLToPath(
-  new URL("../fixtures/run-watcher.mjs", import.meta.url),
-);
+const watcherPath = fileURLToPath(new URL("../../cli/ti.mjs", import.meta.url));
 
 test("watch regenerates URL/config on syscfg edits and ignores its own writes", async () => {
   const projectDir = await mkdtemp(join(tmpdir(), "ti-url-watch-"));
@@ -28,10 +26,14 @@ test("watch regenerates URL/config on syscfg edits and ignores its own writes", 
       extraRunFrameTabs: [otherTab],
     }),
   );
-  const child = spawn(process.execPath, [watcherPath, "board.syscfg"], {
-    cwd: projectDir,
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const child = spawn(
+    process.execPath,
+    [watcherPath, "watch-sysconfig", "board.syscfg"],
+    {
+      cwd: projectDir,
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
   let stdout = "";
   let stderr = "";
   child.stdout.setEncoding("utf8").on("data", (chunk) => {
@@ -46,23 +48,27 @@ test("watch regenerates URL/config on syscfg edits and ignores its own writes", 
   });
   try {
     await waitFor(
-      () => stdout.trim().split("\n").length === 1 && stdout.includes("#data:"),
+      async () => Boolean(await readPublishedTab(projectDir)),
       () => stderr,
     );
+    const initialUrl = (await readPublishedTab(projectDir)).iframeUrl;
     await writeFile(sourcePath, secondSource);
     await waitFor(
-      () => stdout.trim().split("\n").length === 2,
+      async () =>
+        (await readPublishedTab(projectDir))?.iframeUrl !== initialUrl,
       () => stderr,
     );
+    const updatedTime = (await stat(configPath)).mtimeMs;
     await new Promise((resolveDelay) => setTimeout(resolveDelay, 700));
-    assert.equal(stdout.trim().split("\n").length, 2, stderr);
+    assert.equal((await stat(configPath)).mtimeMs, updatedTime);
+    assert.equal(stdout, "");
     const config = JSON.parse(await readFile(configPath, "utf8"));
     assert.equal(config.mainEntrypoint, "board.circuit.tsx");
     assert.deepEqual(config.extraRunFrameTabs[0], otherTab);
     const tab = config.extraRunFrameTabs.find(
       (candidate) => candidate.tabName === "SysConfig",
     );
-    assert.equal(tab.iframeUrl, stdout.trim().split("\n")[1]);
+    assert.notEqual(tab.iframeUrl, initialUrl);
     const envelope = JSON.parse(
       gunzipSync(
         Buffer.from(new URL(tab.iframeUrl).hash.split(",")[1], "base64"),

@@ -5,11 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
-import { waitFor } from "./watch-test-helpers.mjs";
+import { readPublishedTab, waitFor } from "./watch-test-helpers.mjs";
 
-const watcherPath = fileURLToPath(
-  new URL("../fixtures/run-watcher.mjs", import.meta.url),
-);
+const watcherPath = fileURLToPath(new URL("../../cli/ti.mjs", import.meta.url));
 
 test("invalid watched source preserves the published URL and recovers after correction", async () => {
   const projectDir = await mkdtemp(join(tmpdir(), "ti-url-watch-recovery-"));
@@ -17,10 +15,14 @@ test("invalid watched source preserves the published URL and recovers after corr
   const configPath = join(projectDir, "tscircuit.config.json");
   await writeFile(sourcePath, "// Initial configuration\n");
   await writeFile(join(projectDir, "package.json"), '{"private":true}\n');
-  const child = spawn(process.execPath, [watcherPath, "board.syscfg"], {
-    cwd: projectDir,
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const child = spawn(
+    process.execPath,
+    [watcherPath, "watch-sysconfig", "board.syscfg"],
+    {
+      cwd: projectDir,
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
   let stdout = "";
   let stderr = "";
   child.stdout.setEncoding("utf8").on("data", (chunk) => {
@@ -35,21 +37,22 @@ test("invalid watched source preserves the published URL and recovers after corr
   });
   try {
     await waitFor(
-      () => stdout.includes("#data:"),
+      async () => Boolean(await readPublishedTab(projectDir)),
       () => stderr,
     );
     const successfulConfig = await readFile(configPath, "utf8");
-    const successfulStdout = stdout;
+    const initialUrl = (await readPublishedTab(projectDir)).iframeUrl;
     await writeFile(sourcePath, "  \n");
     await waitFor(
       () => stderr.includes("Generation failed"),
       () => stderr,
     );
     assert.equal(await readFile(configPath, "utf8"), successfulConfig);
-    assert.equal(stdout, successfulStdout);
+    assert.equal(stdout, "");
     await writeFile(sourcePath, "// Corrected configuration\n");
     await waitFor(
-      () => stdout.trim().split("\n").length === 2,
+      async () =>
+        (await readPublishedTab(projectDir))?.iframeUrl !== initialUrl,
       () => stderr,
     );
     assert.notEqual(await readFile(configPath, "utf8"), successfulConfig);

@@ -8,18 +8,13 @@ export class CommandProcesses {
     this.stopGraceMs = stopGraceMs;
   }
 
-  run(
-    args,
-    { cwd, capture = false, quietStdout = false, env = process.env } = {},
-  ) {
+  run(args, { cwd, env = process.env } = {}) {
     if (this.stopped) throw new Error("Command execution has stopped");
     const child = spawn(process.execPath, args, {
       cwd,
       env,
       detached: true,
-      stdio: capture
-        ? ["ignore", "pipe", "pipe"]
-        : ["inherit", quietStdout ? "ignore" : "inherit", "inherit"],
+      stdio: ["ignore", "pipe", "pipe"],
     });
     this.children.add(child);
     let stdout = "";

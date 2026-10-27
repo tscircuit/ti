@@ -3,10 +3,10 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { watchSysconfigUrl } from "../../scripts/watch/watch-url.mjs";
+import { watchSysconfigUrl } from "../../cli/sysconfig/watch/watch-url.mjs";
 
-test("the demo watcher reports unsupported input/config before starting", async () => {
-  const projectDir = await mkdtemp(join(tmpdir(), "ti-demo-watch-invalid-"));
+test("the TI watcher reports unsupported input/config before starting", async () => {
+  const projectDir = await mkdtemp(join(tmpdir(), "ti-watch-invalid-"));
   try {
     await writeFile(join(projectDir, "package.json"), '{"private":true}');
     await writeFile(join(projectDir, "board.txt"), "unsupported input");

@@ -36,7 +36,6 @@ it still needs the private renderer installed in the circuit project. The URL
 command does not add project tabs automatically. CLI/RunFrame integration can
 pass the printed URL through their existing iframe-tab configuration.
 
-For automatic updates while editing the pedometer, see the
-[live SysConfig demo](../demos/live-sysconfig/README.md). Its `bun run dev`
-starts a demo-owned watcher alongside `tsci dev` and uses the existing TI
-commands to regenerate source and update the RunFrame tab URL after saves.
+For automatic updates while editing a board, use
+[`ti watch-sysconfig`](watch-sysconfig.md). It regenerates the source and
+updates the RunFrame tab URL after saves. The one-shot URL command stays unchanged.

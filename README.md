@@ -58,6 +58,11 @@ For hosted viewing, use `ti generate-sysconfig-url ./index.syscfg` to print a
 compressed viewer URL without installing the private viewer. See the
 [URL command guide](docs/generate-sysconfig-url.md).
 
+For automatic updates during development, run `ti watch-sysconfig ./index.circuit.tsx`
+alongside `tsci dev ./index.circuit.tsx`. It regenerates SysConfig and updates the
+SysConfig tab URL when source files change. See the
+[watch command guide](docs/watch-sysconfig.md) for a combined `bun run dev` script.
+
 The same `ti` executable can generate TI SysConfig from a tscircuit entrypoint:
 
 Install [Bun](https://bun.sh/) first; all SysConfig commands require `bun` on

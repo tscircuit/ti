@@ -1,5 +1,6 @@
-import { test, expect } from "bun:test";
-import { GenerationQueue } from "../scripts/watch/generation-queue.mjs";
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { GenerationQueue } from "../../cli/sysconfig/watch/generation-queue.mjs";
 
 test("shutdown prevents an in-flight generation from publishing", async () => {
   let finishBuild;
@@ -21,5 +22,5 @@ test("shutdown prevents an in-flight generation from publishing", async () => {
   queue.stop();
   finishBuild("stopped-revision");
   await pending;
-  expect(published).toEqual([]);
+  assert.deepEqual(published, []);
 });

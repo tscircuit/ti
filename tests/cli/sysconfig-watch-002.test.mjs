@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { GenerationQueue } from "../../scripts/watch/generation-queue.mjs";
+import { GenerationQueue } from "../../cli/sysconfig/watch/generation-queue.mjs";
 
 test("watch discards superseded builds, reports failures, and recovers", async () => {
   const published = [];

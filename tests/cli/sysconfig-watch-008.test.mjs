@@ -1,5 +1,6 @@
-import { test, expect } from "bun:test";
-import { isCircuitSource } from "../scripts/watch/watch-source.mjs";
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { isCircuitSource } from "../../cli/sysconfig/watch/watch-source.mjs";
 
 test("source watching includes imported pin attributes but excludes generated files", () => {
   for (const filename of [
@@ -8,7 +9,7 @@ test("source watching includes imported pin attributes but excludes generated fi
     "index.sysconfig.json",
     "footprints/chip.kicad_mod",
   ])
-    expect(isCircuitSource(filename)).toBe(true);
+    assert.equal(isCircuitSource(filename), true, filename);
   for (const filename of [
     "node_modules/package/index.ts",
     "dist/index/circuit.json",
@@ -19,5 +20,5 @@ test("source watching includes imported pin attributes but excludes generated fi
     ".git/config",
     "README.md",
   ])
-    expect(isCircuitSource(filename)).toBe(false);
+    assert.equal(isCircuitSource(filename), false, filename);
 });

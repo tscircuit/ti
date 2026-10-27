@@ -2,17 +2,14 @@ import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  findProjectDir,
-  getInputStem,
-} from "../../../../cli/sysconfig/input.mjs";
-import { DEFAULT_SYSCONFIG_VIEWER_URL } from "../../../../cli/sysconfig/generate-url.mjs";
+import { findProjectDir, getInputStem } from "../input.mjs";
+import { DEFAULT_SYSCONFIG_VIEWER_URL } from "../generate-url.mjs";
 import { CommandProcesses } from "./command-processes.mjs";
 import { GenerationQueue } from "./generation-queue.mjs";
 import { publishTab } from "./publish-tab.mjs";
 import { watchSource } from "./watch-source.mjs";
 
-const tiCli = fileURLToPath(new URL("../../../../cli/ti.mjs", import.meta.url));
+const tiCli = fileURLToPath(new URL("../../ti.mjs", import.meta.url));
 const circuitExtensions = new Set([".ts", ".tsx", ".js", ".jsx"]);
 
 class SysconfigUrlWatcher {
@@ -30,7 +27,6 @@ class SysconfigUrlWatcher {
     const {
       cwd = process.cwd(),
       viewerUrl = DEFAULT_SYSCONFIG_VIEWER_URL,
-      stdout = () => {},
       stderr = console.error,
       env = process.env,
     } = options;
@@ -44,7 +40,6 @@ class SysconfigUrlWatcher {
       ? undefined
       : relative(this.projectDir, this.inputPath).replaceAll("\\", "/");
     this.viewerUrl = viewerUrl;
-    this.stdout = stdout;
     this.stderr = stderr;
     this.env = env;
     this.finished = new Promise((resolveStop) => {
@@ -121,7 +116,7 @@ class SysconfigUrlWatcher {
   }
 
   async generate() {
-    const options = { cwd: this.projectDir, capture: true, env: this.env };
+    const options = { cwd: this.projectDir, env: this.env };
     if (!this.isSysconfig)
       await this.commands.run(
         [tiCli, "generate-sysconfig", this.inputPath, "-o", this.outputPath],
@@ -140,15 +135,12 @@ class SysconfigUrlWatcher {
   }
 
   async publish(iframeUrl, revision) {
-    const published = await publishTab({
+    return publishTab({
       projectDir: this.projectDir,
       iframeUrl,
       mainComponentPath: this.mainComponentPath,
       shouldPublish: () => !this.stopped && revision === this.queue.revision,
     });
-    if (published) {
-      this.stdout(iframeUrl);
-    }
   }
 
   stop(exitCode) {

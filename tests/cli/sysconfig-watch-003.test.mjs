@@ -3,7 +3,7 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { publishTab } from "../../scripts/watch/publish-tab.mjs";
+import { publishTab } from "../../cli/sysconfig/watch/publish-tab.mjs";
 
 test("watch scopes tabs to the input board and preserves config on invalid edits", async () => {
   const projectDir = await mkdtemp(join(tmpdir(), "ti-url-watch-tabs-"));
