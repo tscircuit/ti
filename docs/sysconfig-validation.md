@@ -19,14 +19,14 @@ Set `TI_SYSCONFIG_NODE`, `TI_SYSCONFIG_CLI`, and `TI_SDK_ROOT` to the installed
 tools before the check command. The source archive and provenance are retained in
 the converter repository's `tests/fixtures/pedometer` directory.
 
-| Request | TI result |
-| --- | --- |
-| Display isolation | DIO20, push-pull output, initially high |
-| PMIC low-power | DIO3, push-pull output, initially low |
-| Accelerometer interrupt | DIO12, input, no pull or interrupt |
-| I2C SDA/SCL | DIO8 / DIO6, I2C0 |
-| I2C maximum rate | 100 kbit/s; `I2C_100kHz` |
-| LF clock | Internal LF RCOSC, explicitly requested |
+| Request                  | TI result                                     |
+| ------------------------ | --------------------------------------------- |
+| Display isolation        | DIO20, push-pull output, initially high       |
+| PMIC low-power           | DIO3, push-pull output, initially low         |
+| Accelerometer interrupt  | DIO12, input, no pull or interrupt            |
+| I2C SDA/SCL              | DIO8 / DIO6, I2C0                             |
+| I2C maximum rate         | 100 kbit/s; `I2C_100kHz`                      |
+| LF clock                 | Internal LF RCOSC, explicitly requested       |
 | Display/SWD reservations | Display pins unconfigured; SWD pins preserved |
 
 CCS opens the generated file as CC2340R5 / VQFN (RGE), reports no problems, and
