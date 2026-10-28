@@ -27,9 +27,10 @@ uses the same runtime as your circuit project.
 TI requires `@tscircuit/props` exactly at version `0.0.712`, matching the version
 used for development and validation in this repository.
 
-Circuit JSON 0.0.534 or newer is required for the schemas used during circuit
-generation. The peer constraint prevents npm from selecting an older shared
-schema package while tscircuit installs its compatible copy in a nested folder.
+TI also requires `circuit-json` exactly at version `0.0.537` for the schemas used
+during circuit generation, matching this repository's development version. The
+peer constraint prevents npm from selecting an older shared schema package while
+tscircuit installs its compatible copy in a nested folder.
 
 ## Global installation
 

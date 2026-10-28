@@ -43,7 +43,7 @@
     "react": "^19.0.0",
     "tscircuit": ">=0.0.2745 <0.1.0",
     "@tscircuit/props": "0.0.712",
-    "circuit-json": ">=0.0.534 <0.1.0"
+    "circuit-json": "0.0.537"
   },
   "publishConfig": {
     "access": "public",
