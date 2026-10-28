@@ -21,8 +21,12 @@ export default () => (
 ```
 
 The package includes ESM, CommonJS, and TypeScript declarations. Node.js 22.14
-or newer is required. React, tscircuit, and `@tscircuit/props` are peer dependencies so the library
+or newer is required. React, tscircuit, `@tscircuit/props`, and `circuit-json` are peer dependencies so the library
 uses the same runtime as your circuit project.
+
+Circuit JSON 0.0.534 or newer is required for the schemas used during circuit
+generation. The peer constraint prevents npm from selecting an older shared
+schema package while tscircuit installs its compatible copy in a nested folder.
 
 ## Global installation
 

@@ -439,7 +439,9 @@ try {
 import { createRequire } from "node:module";
 import { createElement } from "react";
 import { Circuit } from "tscircuit";
+import { source_component_misconfigured_error } from "circuit-json";
 import * as esm from "@tscircuit/ti";
+assert.equal(typeof source_component_misconfigured_error.parse, "function");
 const cjs = createRequire(import.meta.url)("@tscircuit/ti");
 assert.deepEqual(Object.keys(cjs).sort(), Object.keys(esm).sort());
 for (const ti of [esm, cjs]) {
@@ -584,6 +586,8 @@ export default () => (
       const entry = pathToFileURL(${JSON.stringify(join(globalRoot, "@tscircuit/ti/index.js"))});
       const esm = await import(entry.href);
       const cjs = createRequire(entry)("./index.cjs");
+      const schemas = createRequire(entry)("circuit-json");
+      assert.equal(typeof schemas.source_component_misconfigured_error?.parse, "function");
       assert.equal(typeof esm.BQ24074, "function");
       assert.equal(typeof cjs.BQ24074, "function");
     `,
