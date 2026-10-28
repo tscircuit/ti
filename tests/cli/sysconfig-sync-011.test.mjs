@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { runCli } from "../../cli/main.mjs";
 
-test("watch-sysconfig rejects invalid arguments before starting processes", async () => {
+test("sync-sysconfig rejects invalid arguments before starting processes", async () => {
   for (const args of [
     [],
     ["a.syscfg", "b.syscfg"],
@@ -11,7 +11,7 @@ test("watch-sysconfig rejects invalid arguments before starting processes", asyn
   ]) {
     const errors = [];
     assert.equal(
-      await runCli(["watch-sysconfig", ...args], {
+      await runCli(["sync-sysconfig", ...args], {
         stdout: () => assert.fail("Invalid command printed output"),
         stderr: (message) => errors.push(message),
         spawnSync: () => {

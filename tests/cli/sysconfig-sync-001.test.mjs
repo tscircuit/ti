@@ -28,7 +28,7 @@ test("watch regenerates URL/config on syscfg edits and ignores its own writes", 
   );
   const child = spawn(
     process.execPath,
-    [watcherPath, "watch-sysconfig", "board.syscfg"],
+    [watcherPath, "sync-sysconfig", "board.syscfg"],
     {
       cwd: projectDir,
       stdio: ["ignore", "pipe", "pipe"],

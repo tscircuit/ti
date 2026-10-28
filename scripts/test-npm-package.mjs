@@ -37,13 +37,13 @@ function run({ command, args, cwd, env = {} }) {
   return result.stdout;
 }
 
-async function testWatchSysconfig({ command, cwd }) {
+async function testSyncSysconfig({ command, cwd }) {
   const projectDir = await mkdtemp(join(cwd, "watch-consumer-"));
   const sourcePath = join(projectDir, "board.syscfg");
   const source = "// Installed TI watcher\n";
   await writeFile(join(projectDir, "package.json"), '{"private":true}');
   await writeFile(sourcePath, source);
-  const child = spawn(command, ["watch-sysconfig", "board.syscfg"], {
+  const child = spawn(command, ["sync-sysconfig", "board.syscfg"], {
     cwd: projectDir,
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -103,10 +103,10 @@ async function testWatchSysconfig({ command, cwd }) {
 
 async function testCli({ command, cwd }) {
   assert.match(
-    run({ command, args: ["watch-sysconfig", "--help"], cwd }),
-    /Usage: ti watch-sysconfig/,
+    run({ command, args: ["sync-sysconfig", "--help"], cwd }),
+    /Usage: ti sync-sysconfig/,
   );
-  if (process.platform !== "win32") await testWatchSysconfig({ command, cwd });
+  if (process.platform !== "win32") await testSyncSysconfig({ command, cwd });
   assert.match(run({ command, args: ["--help"], cwd }), /Usage: ti search/);
   assert.match(
     run({ command, args: ["generate-sysconfig", "--help"], cwd }),
@@ -348,6 +348,7 @@ try {
     "cli/generate-sysconfig.mjs",
     "cli/import.mjs",
     "cli/main.mjs",
+    "cli/sync-sysconfig.mjs",
     "cli/sysconfig/am2434-profile.mjs",
     "cli/sysconfig/cc2340-profile.mjs",
     "cli/sysconfig/convert.mjs",
@@ -361,16 +362,15 @@ try {
     "cli/sysconfig/render-url.mjs",
     "cli/sysconfig/request.mjs",
     "cli/sysconfig/runtime.mjs",
+    "cli/sysconfig/sync/command-processes.mjs",
+    "cli/sysconfig/sync/generation-queue.mjs",
+    "cli/sysconfig/sync/publish-tab.mjs",
+    "cli/sysconfig/sync/sync-url.mjs",
+    "cli/sysconfig/sync/watch-source.mjs",
     "cli/sysconfig/ti-cli.mjs",
     "cli/sysconfig/validate-am2434-output.mjs",
     "cli/sysconfig/validate-cc2340-output.mjs",
-    "cli/sysconfig/watch/command-processes.mjs",
-    "cli/sysconfig/watch/generation-queue.mjs",
-    "cli/sysconfig/watch/publish-tab.mjs",
-    "cli/sysconfig/watch/watch-source.mjs",
-    "cli/sysconfig/watch/watch-url.mjs",
     "cli/ti.mjs",
-    "cli/watch-sysconfig.mjs",
     "index.cjs",
     "index.d.ts",
     "index.js",

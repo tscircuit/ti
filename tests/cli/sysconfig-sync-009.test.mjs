@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { CommandProcesses } from "../../cli/sysconfig/watch/command-processes.mjs";
+import { CommandProcesses } from "../../cli/sysconfig/sync/command-processes.mjs";
 
 test("shutdown terminates the command and its build subprocess", async () => {
   const projectDir = await mkdtemp(join(tmpdir(), "ti-watch-process-"));
