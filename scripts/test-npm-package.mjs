@@ -384,8 +384,8 @@ try {
     '{"private":true,"type":"module"}',
   );
   console.log("Installing the tarball in a clean project");
-  // Exercise both the development runtime and the runtime npm selects today.
-  // npm must resolve the remaining peers from the packed package's manifest.
+  // Install only TI and tscircuit. npm must supply the remaining peers,
+  // including props, Circuit JSON, React, and TypeScript, from their manifests.
   run({
     command: npm,
     args: [
@@ -395,7 +395,6 @@ try {
       "--registry=https://registry.npmjs.org",
       tarball,
       `tscircuit@${hostVersion}`,
-      "typescript@5.9.3",
     ],
     cwd: consumer,
   });
@@ -439,7 +438,9 @@ try {
 import { createRequire } from "node:module";
 import { createElement } from "react";
 import { Circuit } from "tscircuit";
+import { source_component_misconfigured_error } from "circuit-json";
 import * as esm from "@tscircuit/ti";
+assert.equal(typeof source_component_misconfigured_error.parse, "function");
 const cjs = createRequire(import.meta.url)("@tscircuit/ti");
 assert.deepEqual(Object.keys(cjs).sort(), Object.keys(esm).sort());
 for (const ti of [esm, cjs]) {
@@ -584,6 +585,8 @@ export default () => (
       const entry = pathToFileURL(${JSON.stringify(join(globalRoot, "@tscircuit/ti/index.js"))});
       const esm = await import(entry.href);
       const cjs = createRequire(entry)("./index.cjs");
+      const schemas = createRequire(entry)("circuit-json");
+      assert.equal(typeof schemas.source_component_misconfigured_error?.parse, "function");
       assert.equal(typeof esm.BQ24074, "function");
       assert.equal(typeof cjs.BQ24074, "function");
     `,
