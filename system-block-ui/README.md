@@ -105,7 +105,6 @@ interfaces with their direction, protocol, voltage range, and exact internal
 selectors.
 
 When a user draws a high-level edge, the resolver:
-
 1. matches the visible connection kind;
 2. requires complementary roles and compatible protocols;
 3. requires the complete source-voltage range to fit the consumer rating;

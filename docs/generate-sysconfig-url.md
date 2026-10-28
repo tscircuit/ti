@@ -35,3 +35,7 @@ metadata to render the configuration.
 it still needs the private renderer installed in the circuit project. The URL
 command does not add project tabs automatically. CLI/RunFrame integration can
 pass the printed URL through their existing iframe-tab configuration.
+
+For automatic updates while editing a board, use
+[`ti watch-sysconfig`](watch-sysconfig.md). It regenerates the source and
+updates the RunFrame tab URL after saves. The one-shot URL command stays unchanged.

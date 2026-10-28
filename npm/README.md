@@ -48,7 +48,7 @@ reference subcircuits; available 3D models remain remote links.
 
 SysConfig generation is available from the same executable:
 
-Install [Bun](https://bun.sh/) first; both SysConfig commands require `bun` on
+Install [Bun](https://bun.sh/) first; SysConfig commands require `bun` on
 `PATH` in addition to Node.js.
 
 ```sh
@@ -56,6 +56,12 @@ ti generate-sysconfig ./board.circuit.tsx
 ti generate-sysconfig-site ./board.syscfg
 ti check-sysconfig ./board.circuit.tsx
 ```
+
+For automatic viewer updates, run `ti watch-sysconfig ./board.circuit.tsx`
+alongside `tsci dev ./board.circuit.tsx`. It regenerates after source saves and
+updates the SysConfig tab in `tscircuit.config.json`. Normal updates are quiet.
+Requires macOS/Linux and JSON project configuration; no private viewer or local
+SDK is needed. Use `ti watch-sysconfig --help` for input types and options.
 
 `generate-sysconfig-site` creates self-contained read-only HTML. It requires Bun
 and an authorised matching private `@tscircuit/sysconfig-viewer` installation in

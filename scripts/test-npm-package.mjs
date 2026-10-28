@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { setTimeout } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -36,7 +37,76 @@ function run({ command, args, cwd, env = {} }) {
   return result.stdout;
 }
 
+async function testWatchSysconfig({ command, cwd }) {
+  const projectDir = await mkdtemp(join(cwd, "watch-consumer-"));
+  const sourcePath = join(projectDir, "board.syscfg");
+  const source = "// Installed TI watcher\n";
+  await writeFile(join(projectDir, "package.json"), '{"private":true}');
+  await writeFile(sourcePath, source);
+  const child = spawn(command, ["watch-sysconfig", "board.syscfg"], {
+    cwd: projectDir,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let stdout = "";
+  let stderr = "";
+  child.stdout.setEncoding("utf8").on("data", (chunk) => {
+    stdout += chunk;
+  });
+  child.stderr.setEncoding("utf8").on("data", (chunk) => {
+    stderr += chunk;
+  });
+  const exited = new Promise((resolveExit, reject) => {
+    child.once("error", reject);
+    child.once("exit", resolveExit);
+  });
+  try {
+    let initialUrl;
+    for (const nextSource of [source, "// Updated installed TI watcher\n"]) {
+      await writeFile(sourcePath, nextSource);
+      let published = false;
+      const deadline = Date.now() + 15000;
+      while (Date.now() < deadline) {
+        let config;
+        try {
+          config = JSON.parse(
+            await readFile(join(projectDir, "tscircuit.config.json"), "utf8"),
+          );
+        } catch (error) {
+          if (error.code !== "ENOENT") throw error;
+        }
+        const iframeUrl = config?.extraRunFrameTabs?.find(
+          (tab) => tab.tabName === "SysConfig",
+        )?.iframeUrl;
+        if (iframeUrl && iframeUrl !== initialUrl) {
+          assert.match(iframeUrl, /#data:application\/gzip;base64,/);
+          initialUrl = iframeUrl;
+          published = true;
+          break;
+        }
+        await setTimeout(25);
+      }
+      assert.ok(
+        published,
+        stderr || "Installed watcher did not publish its URL",
+      );
+    }
+    assert.equal(stdout, "");
+    assert.equal(stderr, "");
+    child.kill("SIGTERM");
+    assert.equal(await exited, 143);
+  } finally {
+    if (child.exitCode === null) child.kill("SIGTERM");
+    await exited;
+    await rm(projectDir, { recursive: true, force: true });
+  }
+}
+
 async function testCli({ command, cwd }) {
+  assert.match(
+    run({ command, args: ["watch-sysconfig", "--help"], cwd }),
+    /Usage: ti watch-sysconfig/,
+  );
+  if (process.platform !== "win32") await testWatchSysconfig({ command, cwd });
   assert.match(run({ command, args: ["--help"], cwd }), /Usage: ti search/);
   assert.match(
     run({ command, args: ["generate-sysconfig", "--help"], cwd }),
@@ -294,7 +364,13 @@ try {
     "cli/sysconfig/ti-cli.mjs",
     "cli/sysconfig/validate-am2434-output.mjs",
     "cli/sysconfig/validate-cc2340-output.mjs",
+    "cli/sysconfig/watch/command-processes.mjs",
+    "cli/sysconfig/watch/generation-queue.mjs",
+    "cli/sysconfig/watch/publish-tab.mjs",
+    "cli/sysconfig/watch/watch-source.mjs",
+    "cli/sysconfig/watch/watch-url.mjs",
     "cli/ti.mjs",
+    "cli/watch-sysconfig.mjs",
     "index.cjs",
     "index.d.ts",
     "index.js",

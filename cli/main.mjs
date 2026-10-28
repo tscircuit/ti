@@ -5,6 +5,7 @@ const help = `Usage: ti search [options] <query...>
        ti generate-sysconfig [options] <file>
        ti generate-sysconfig-site [options] <file>
        ti generate-sysconfig-url [options] <file.syscfg>
+       ti watch-sysconfig [options] <file>
        ti check-sysconfig [options] <file>
 
 Search/import TI parts, or generate and validate TI SysConfig from tscircuit.
@@ -72,6 +73,17 @@ export async function runCli(
       "./generate-sysconfig-url.mjs"
     );
     return runGenerateSysconfigUrl(args, {
+      stdout,
+      stderr,
+      cwd,
+      spawnSync,
+      env,
+      bun,
+    });
+  }
+  if (command === "watch-sysconfig") {
+    const { runWatchSysconfig } = await import("./watch-sysconfig.mjs");
+    return runWatchSysconfig(args, {
       stdout,
       stderr,
       cwd,
