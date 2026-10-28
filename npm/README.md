@@ -24,6 +24,9 @@ The package includes ESM, CommonJS, and TypeScript declarations. Node.js 22.14
 or newer is required. React, tscircuit, `@tscircuit/props`, and `circuit-json` are peer dependencies so the library
 uses the same runtime as your circuit project.
 
+TI requires `tscircuit` exactly at version `0.0.3035`, matching the version used
+for development and validation in this repository.
+
 TI requires `@tscircuit/props` exactly at version `0.0.712`, matching the version
 used for development and validation in this repository.
 
