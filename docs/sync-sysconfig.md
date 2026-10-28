@@ -1,11 +1,11 @@
-# Watch SysConfig during development
+# Sync SysConfig during development
 
 Install `@tscircuit/ti` and a current `tscircuit` in the board project, with Bun
 on PATH. Run these two processes together:
 
 ```sh
 tsci dev ./index.circuit.tsx
-ti watch-sysconfig ./index.circuit.tsx
+ti sync-sysconfig ./index.circuit.tsx
 ```
 
 The TI command builds the circuit, generates `.syscfg`, encodes its viewer URL,
@@ -21,7 +21,7 @@ To start both through `bun run dev`, add this manually to the **board project's*
 ```json
 {
   "scripts": {
-    "dev": "concurrently --kill-others \"tsci dev ./index.circuit.tsx\" \"ti watch-sysconfig ./index.circuit.tsx\""
+    "dev": "concurrently --kill-others \"tsci dev ./index.circuit.tsx\" \"ti sync-sysconfig ./index.circuit.tsx\""
   }
 }
 ```

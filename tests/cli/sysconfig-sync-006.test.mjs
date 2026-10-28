@@ -36,7 +36,7 @@ test("Circuit JSON under dist is watched directly and converts atomic pin update
   await writeFile(sourcePath, JSON.stringify(circuit));
   const child = spawn(
     process.execPath,
-    [watcherPath, "watch-sysconfig", sourcePath],
+    [watcherPath, "sync-sysconfig", sourcePath],
     {
       cwd: projectDir,
       stdio: ["ignore", "pipe", "pipe"],

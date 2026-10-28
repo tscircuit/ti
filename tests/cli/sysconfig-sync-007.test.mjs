@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { GenerationQueue } from "../../cli/sysconfig/watch/generation-queue.mjs";
+import { GenerationQueue } from "../../cli/sysconfig/sync/generation-queue.mjs";
 
 test("shutdown prevents an in-flight generation from publishing", async () => {
   let finishBuild;

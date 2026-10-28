@@ -17,7 +17,7 @@ test("invalid watched source preserves the published URL and recovers after corr
   await writeFile(join(projectDir, "package.json"), '{"private":true}\n');
   const child = spawn(
     process.execPath,
-    [watcherPath, "watch-sysconfig", "board.syscfg"],
+    [watcherPath, "sync-sysconfig", "board.syscfg"],
     {
       cwd: projectDir,
       stdio: ["ignore", "pipe", "pipe"],

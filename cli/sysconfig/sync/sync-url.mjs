@@ -155,7 +155,7 @@ class SysconfigUrlWatcher {
   }
 }
 
-export async function watchSysconfigUrl(inputPath, options = {}) {
+export async function syncSysconfigUrl(inputPath, options = {}) {
   const watcher = new SysconfigUrlWatcher(inputPath, options);
   return watcher.start();
 }

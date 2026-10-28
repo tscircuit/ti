@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isCircuitSource } from "../../cli/sysconfig/watch/watch-source.mjs";
+import { isCircuitSource } from "../../cli/sysconfig/sync/watch-source.mjs";
 
 test("source watching includes imported pin attributes but excludes generated files", () => {
   for (const filename of [

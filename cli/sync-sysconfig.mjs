@@ -1,8 +1,8 @@
 import { parseArgs } from "node:util";
 import { requireBun } from "./sysconfig/runtime.mjs";
-import { watchSysconfigUrl } from "./sysconfig/watch/watch-url.mjs";
+import { syncSysconfigUrl } from "./sysconfig/sync/sync-url.mjs";
 
-const help = `Usage: ti watch-sysconfig [options] <file>
+const help = `Usage: ti sync-sysconfig [options] <file>
 
 Watch circuit TS/JS sources, Circuit JSON, or an existing .syscfg file.
 Generate an initial SysConfig viewer URL and update it after source saves.
@@ -20,9 +20,9 @@ Normal updates are quiet. Errors preserve the last URL; save again to retry.
 No private viewer installation or TI SDK is required. URLs contain the source.
 
 Example:
-  ti watch-sysconfig ./index.circuit.tsx`;
+  ti sync-sysconfig ./index.circuit.tsx`;
 
-export async function runWatchSysconfig(args, context = {}) {
+export async function runSyncSysconfig(args, context = {}) {
   const {
     stdout = console.log,
     stderr = console.error,
@@ -43,19 +43,19 @@ export async function runWatchSysconfig(args, context = {}) {
     }
     if (positionals.length !== 1 || !positionals[0].trim())
       throw new Error(
-        "One input file is required. Run ti watch-sysconfig --help.",
+        "One input file is required. Run ti sync-sysconfig --help.",
       );
     if (values["viewer-url"] !== undefined && !values["viewer-url"].trim())
       throw new Error("--viewer-url cannot be empty");
     requireBun(watchOptions);
-    return await watchSysconfigUrl(positionals[0], {
+    return await syncSysconfigUrl(positionals[0], {
       ...watchOptions,
       stderr,
       viewerUrl: values["viewer-url"],
     });
   } catch (error) {
     stderr(
-      `Failed to watch SysConfig: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to sync SysConfig: ${error instanceof Error ? error.message : String(error)}`,
     );
     return 1;
   }
