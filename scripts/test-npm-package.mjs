@@ -384,8 +384,8 @@ try {
     '{"private":true,"type":"module"}',
   );
   console.log("Installing the tarball in a clean project");
-  // Exercise both the development runtime and the runtime npm selects today.
-  // npm must resolve the remaining peers from the packed package's manifest.
+  // Install only TI and tscircuit. npm must supply the remaining peers,
+  // including props, Circuit JSON, React, and TypeScript, from their manifests.
   run({
     command: npm,
     args: [
@@ -395,7 +395,6 @@ try {
       "--registry=https://registry.npmjs.org",
       tarball,
       `tscircuit@${hostVersion}`,
-      "typescript@5.9.3",
     ],
     cwd: consumer,
   });

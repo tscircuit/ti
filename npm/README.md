@@ -6,7 +6,7 @@ Texas Instruments chip components and reusable reference subcircuits for
 ## Install in a circuit project
 
 ```sh
-npm install @tscircuit/ti tscircuit react
+npm install @tscircuit/ti tscircuit
 ```
 
 ```tsx
@@ -27,13 +27,18 @@ uses the same runtime as your circuit project.
 TI requires `tscircuit` exactly at version `0.0.3035`, matching the version used
 for development and validation in this repository.
 
-TI requires `@tscircuit/props` exactly at version `0.0.712`, matching the version
-used for development and validation in this repository.
+TI requires `@tscircuit/props` exactly at version `0.0.714`, matching the version
+used by tscircuit 0.0.3035 and for development and validation in this repository.
 
 TI also requires `circuit-json` exactly at version `0.0.537` for the schemas used
 during circuit generation, matching this repository's development version. The
 peer constraint prevents npm from selecting an older shared schema package while
 tscircuit installs its compatible copy in a nested folder.
+
+npm and Bun resolve these peer packages when installing TI and tscircuit; a new
+project does not need separate props or Circuit JSON install commands. An existing
+project must first remove or update incompatible direct pins. In particular, a
+board that pins an older `circuit-json` will not have that pin rewritten by TI.
 
 ## Global installation
 

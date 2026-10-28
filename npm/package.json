@@ -42,7 +42,7 @@
   "peerDependencies": {
     "react": "^19.0.0",
     "tscircuit": "0.0.3035",
-    "@tscircuit/props": "0.0.712",
+    "@tscircuit/props": "0.0.714",
     "circuit-json": "0.0.537"
   },
   "publishConfig": {
