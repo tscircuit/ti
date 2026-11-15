@@ -1,0 +1,13 @@
+{
+  "name": "ti-live-sysconfig-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun scripts/dev.mjs",
+    "test": "bun test tests"
+  },
+  "devDependencies": {
+    "@tscircuit/ti": "1.0.11",
+    "tscircuit": "0.0.3003"
+  }
+}
